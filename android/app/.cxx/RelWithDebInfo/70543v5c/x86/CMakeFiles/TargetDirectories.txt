@@ -1,0 +1,2 @@
+I:/POS/pospro-app-codecanyon-main/android/app/.cxx/RelWithDebInfo/70543v5c/x86/CMakeFiles/edit_cache.dir
+I:/POS/pospro-app-codecanyon-main/android/app/.cxx/RelWithDebInfo/70543v5c/x86/CMakeFiles/rebuild_cache.dir
