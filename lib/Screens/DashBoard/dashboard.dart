@@ -17,39 +17,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // List<String> timeList = [
-  //   'Weekly',
-  //   'Monthly',
-  //   'Yearly',
-  // ];
-  // String selectedTimeList = 'Weekly';
-  // DropdownButton<String> getTime(WidgetRef ref) {
-  //   List<DropdownMenuItem<String>> itemList = [];
-  //   for (var des in timeList) {
-  //     var item = DropdownMenuItem(
-  //         value: des,
-  //         child: Text(
-  //           des,
-  //           style: const TextStyle(color: kGreyTextColor, fontSize: 14, fontWeight: FontWeight.w500),
-  //         ));
-  //     itemList.add(item);
-  //   }
-  //   return DropdownButton(
-  //       icon: const Icon(
-  //         Icons.keyboard_arrow_down,
-  //         color: kGreyTextColor,
-  //         size: 18,
-  //       ),
-  //       value: selectedTimeList,
-  //       items: itemList,
-  //       onChanged: (value) {
-  //         setState(() {
-  //           selectedTimeList = value!;
-  //           ref.refresh(dashboardInfoProvider(selectedTimeList.toLowerCase()));
-  //         });
-  //       });
-  // }
-
   final List<String> timeList = ['Weekly', 'Monthly', 'Yearly'];
   String selectedTime = 'Weekly';
 
@@ -208,61 +175,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+
+                    ///_________Items_Category________________________
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
                             child: GlobalContainer(
-                                title: lang.S.of(context).totalItems,
-                                //'Total Items'
-                                image: 'assets/totalItem.svg',
-                                subtitle: dashboard.data?.totalItems?.toStringAsFixed(2) ?? '0')),
+                                title: lang.S.of(context).totalItems, image: 'assets/totalItem.svg', subtitle: dashboard.data?.totalItems?.round().toString() ?? '0')),
                         const SizedBox(
                           width: 12,
                         ),
                         Expanded(
                             child: GlobalContainer(
-                                title: lang.S.of(context).totalCategories,
-                                //'Total Categories',
-                                image: 'assets/purchaseLisst.svg',
-                                subtitle: dashboard.data?.totalCategories?.toStringAsFixed(2) ?? '0'))
+                                title: lang.S.of(context).totalCategories, image: 'assets/purchaseLisst.svg', subtitle: dashboard.data?.totalCategories?.round().toString() ?? '0'))
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+
+                    ///_________Quick Overview________________________
+                    const SizedBox(height: 20),
                     Text(
                       lang.S.of(context).quickOverview,
                       //'Quick Overview',
                       style: gTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 18),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Expanded(
                             child: GlobalContainer(
                                 title: lang.S.of(context).totalIncome,
-                                //'Total Income',
                                 image: 'assets/totalIncome.svg',
-                                subtitle: '$currency ${dashboard.data?.totalIncome?.toStringAsFixed(2) ?? '0'}')),
+                                subtitle: '$currency${dashboard.data?.totalIncome?.toStringAsFixed(2) ?? '0'}')),
                         const SizedBox(
                           width: 12,
                         ),
                         Expanded(
                             child: GlobalContainer(
                                 title: lang.S.of(context).totalExpense,
-                                //'Total Expense',
                                 image: 'assets/expense.svg',
-                                subtitle: '$currency ${dashboard.data?.totalExpense?.toStringAsFixed(2) ?? '0'}'))
+                                subtitle: '$currency${dashboard.data?.totalExpense?.toStringAsFixed(2) ?? '0'}'))
                       ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Expanded(
@@ -281,24 +236,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       lang.S.of(context).lossProfit,
                       style: gTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 18),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+
+                    ///__________Total_Lass_and_Total_profit_____________________________________
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Expanded(
                             child: GlobalContainer(
                                 title: lang.S.of(context).totalProfit,
                                 image: 'assets/lossprofit.svg',
-                                subtitle: '$currency ${dashboard.data?.totalProfit?.toStringAsFixed(2) ?? '0'}')),
-                        const SizedBox(
-                          width: 12,
-                        ),
+                                subtitle: '$currency${dashboard.data?.totalProfit?.toStringAsFixed(2) ?? '0.00'}')),
+                        const SizedBox(width: 12),
                         Expanded(
                             child: GlobalContainer(
                                 title: lang.S.of(context).totalLoss,
                                 image: 'assets/expense.svg',
-                                subtitle: '$currency ${dashboard.data?.totalLoss?.abs().toStringAsFixed(2) ?? '0'}'))
+                                subtitle: '$currency${dashboard.data?.totalLoss?.abs().toStringAsFixed(2) ?? '0.00'}'))
                       ],
                     ),
                   ],

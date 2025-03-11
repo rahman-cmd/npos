@@ -9,6 +9,7 @@ import 'package:mobile_pos/Screens/Income/Providers/income_category_provider.dar
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../Model/income_category.dart';
 
 class IncomeCategoryRepo {
@@ -41,11 +42,9 @@ class IncomeCategoryRepo {
     required String categoryName,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/income-categories');
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
-    var responseData = await http.post(uri, headers: {
-      "Accept": 'application/json',
-      'Authorization': await getAuthToken(),
-    }, body: {
+    var responseData = await customHttpClient.post(url: uri, body: {
       'categoryName': categoryName,
     });
 

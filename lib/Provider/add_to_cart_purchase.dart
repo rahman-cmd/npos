@@ -12,10 +12,12 @@ class CartNotifierPurchase extends ChangeNotifier {
   List<CartProductModelPurchase> cartItemList = [];
   TextEditingController discountTextControllerFlat = TextEditingController();
   TextEditingController vatAmountController = TextEditingController();
+  TextEditingController shippingChargeController = TextEditingController();
 
   ///_________NEW_________________________________
   num totalAmount = 0;
   num discountAmount = 0;
+  num discountPercent = 0;
   num totalPayableAmount = 0;
   VatModel? selectedVat;
   num vatAmount = 0;
@@ -23,6 +25,7 @@ class CartNotifierPurchase extends ChangeNotifier {
   num receiveAmount = 0;
   num changeAmount = 0;
   num dueAmount = 0;
+  num finalShippingCharge = 0;
 
   void changeSelectedVat({VatModel? data}) {
     if (data != null) {
@@ -36,22 +39,63 @@ class CartNotifierPurchase extends ChangeNotifier {
     calculatePrice();
   }
 
-  void calculateDiscount({required String value, bool? rebuilding}) {
-    if (value == '') {
+  void calculateDiscount({
+    required String value,
+    bool? rebuilding,
+    String? selectedTaxType,
+  }) {
+    if (value.isEmpty) {
       discountAmount = 0;
+      discountPercent = 0;
       discountTextControllerFlat.clear();
     } else {
-      if ((num.tryParse(value) ?? 0) <= totalAmount) {
-        discountAmount = num.parse(value);
-      } else {
-        discountTextControllerFlat.clear();
+      num discountValue = num.tryParse(value) ?? 0;
+
+      if (selectedTaxType == null) {
+        EasyLoading.showError('Please select a discount type');
         discountAmount = 0;
-        EasyLoading.showError('Enter a valid discount');
+        discountPercent = 0;
+      } else if (selectedTaxType == "Flat") {
+        discountAmount = discountValue;
+
+        if (discountAmount > totalAmount) {
+          discountTextControllerFlat.clear();
+          discountAmount = 0;
+          EasyLoading.showError('Enter a valid discount');
+        }
+      } else if (selectedTaxType == "Percent") {
+        discountPercent = discountValue;
+        discountAmount = (totalAmount * discountPercent) / 100;
+
+        if (discountAmount > totalAmount) {
+          discountAmount = totalAmount;
+        }
+      } else {
+        EasyLoading.showError('Invalid discount type selected');
+        discountAmount = 0;
       }
     }
+
     if (rebuilding == false) return;
     calculatePrice();
   }
+
+  // void calculateDiscount({required String value, bool? rebuilding,}) {
+  //   if (value == '') {
+  //     discountAmount = 0;
+  //     discountTextControllerFlat.clear();
+  //   } else {
+  //     if ((num.tryParse(value) ?? 0) <= totalAmount) {
+  //       discountAmount = num.parse(value);
+  //     } else {
+  //       discountTextControllerFlat.clear();
+  //       discountAmount = 0;
+  //       EasyLoading.showError('Enter a valid discount');
+  //     }
+  //   }
+  //   if (rebuilding == false) return;
+  //   calculatePrice();
+  // }
 
   void updateProduct({required num productId, required num price, required String qty}) {
     int index = cartItemList.indexWhere((element) => element.productId == productId);
@@ -60,7 +104,7 @@ class CartNotifierPurchase extends ChangeNotifier {
     calculatePrice();
   }
 
-  void calculatePrice({String? receivedAmount, bool? stopRebuild}) {
+  void calculatePrice({String? receivedAmount, String? shippingCharge, bool? stopRebuild}) {
     totalAmount = 0;
     totalPayableAmount = 0;
     dueAmount = 0;
@@ -81,9 +125,18 @@ class CartNotifierPurchase extends ChangeNotifier {
     }
 
     totalPayableAmount += vatAmount;
-    if (!receivedAmount.isEmptyOrNull) {
-      receiveAmount = num.tryParse(receivedAmount!) ?? 0;
+    if (shippingCharge != null && shippingCharge.isNotEmpty) {
+      finalShippingCharge = num.tryParse(shippingCharge) ?? 0;
     }
+    totalPayableAmount += finalShippingCharge;
+    if (receivedAmount != null && receivedAmount.isNotEmpty) {
+      receiveAmount = num.tryParse(receivedAmount) ?? 0;
+    }
+
+    // totalPayableAmount += vatAmount;
+    // if (!receivedAmount.isEmptyOrNull) {
+    //   receiveAmount = num.tryParse(receivedAmount!) ?? 0;
+    // }
     changeAmount = totalPayableAmount < receiveAmount ? receiveAmount - totalPayableAmount : 0;
     dueAmount = totalPayableAmount < receiveAmount ? 0 : totalPayableAmount - receiveAmount;
     if (dueAmount <= 0) isFullPaid = true;

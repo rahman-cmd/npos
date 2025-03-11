@@ -129,10 +129,14 @@ class _EditProfileState extends State<EditProfile> {
                 phone: phoneController.text,
                 vatNumber: vatGstNumberController.text,
                 vatTitle: vatGstTitleController.text,
+                ref: widget.ref,
+                context: context,
               );
 
               if (isProfileUpdated) {
                 widget.ref.refresh(businessInfoProvider);
+                widget.ref.refresh(getExpireDateProvider(widget.ref));
+
                 EasyLoading.showSuccess(
                   lang.S.of(context).dataSavedSuccessfully,
                   //'Data saved successfully.'

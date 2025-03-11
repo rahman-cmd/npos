@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../model/vat_model.dart';
 import '../provider/text_repo.dart';
 
@@ -41,13 +42,13 @@ class TaxRepo {
     final requestBody = jsonEncode({
       'name': taxName,
       'rate': taxRate,
-      // 'status': status,
     });
 
     try {
-      var responseData = await http.post(
-        uri,
-        headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'},
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+      var responseData = await customHttpClient.post(
+        url: uri,
+        addContentTypeInHeader: true,
         body: requestBody,
       );
 
@@ -57,7 +58,7 @@ class TaxRepo {
       if (responseData.statusCode == 200) {
         ref.refresh(taxProvider);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Tax creation failed: ${parsedData['message']}')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Tax creation failed: ${parsedData}')));
         return;
       }
     } catch (error) {
@@ -75,6 +76,7 @@ class TaxRepo {
     required bool status,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/vats');
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
@@ -92,7 +94,8 @@ class TaxRepo {
     }
 
     try {
-      final response = await request.send();
+      final response = await customHttpClient.uploadFile(url: uri,fields: request.fields,);
+      // final response = await request.send();
       final responseData = await response.stream.bytesToString();
       final parsedData = jsonDecode(responseData);
 
@@ -102,6 +105,8 @@ class TaxRepo {
       if (response.statusCode == 200) {
         print('45235');
         ref.refresh(taxProvider);
+      } else if (response.statusCode == 403) {
+        throw Exception('Failed to update tax');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Tax creation failed: ${parsedData['message']}')));
         return;
@@ -131,14 +136,11 @@ class TaxRepo {
     });
 
     try {
-      final authToken = await getAuthToken();
-      final response = await http.post(
-        uri,
-        headers: {
-          "Accept": 'application/json',
-          'Authorization': authToken,
-          'Content-Type': 'application/json',
-        },
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+
+      final response = await customHttpClient.post(
+        url: uri,
+        addContentTypeInHeader: true,
         body: requestBody,
       );
 
@@ -164,6 +166,7 @@ class TaxRepo {
     required bool status,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/vats/$id');
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
@@ -183,7 +186,8 @@ class TaxRepo {
     }
 
     try {
-      final response = await request.send();
+      final response = await customHttpClient.uploadFile(url: uri,fields: request.fields,);
+      // final response = await request.send();
       final responseData = await response.stream.bytesToString();
       final parsedData = jsonDecode(responseData);
 
@@ -202,7 +206,7 @@ class TaxRepo {
   }
 
   ///________Delete_Tax______________________________________________________
-  Future<bool> deleteTax({required String id}) async {
+  Future<bool> deleteTax({required String id, required BuildContext context, required WidgetRef ref}) async {
     try {
       final token = await getAuthToken();
       if (token.isEmpty) {
@@ -210,11 +214,8 @@ class TaxRepo {
       }
 
       final url = Uri.parse('${APIConfig.url}/vats/$id');
-      final headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-      final response = await http.delete(url, headers: headers);
+      CustomHttpClient customHttpClient = CustomHttpClient(ref: ref, context: context, client: http.Client());
+      final response = await customHttpClient.delete(url: url);
 
       if (response.statusCode == 200) {
         return true;

@@ -10,6 +10,7 @@ import '../../../Const/api_config.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../Provider/transactions_provider.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../../Customers/Provider/customer_provider.dart';
 import '../Model/due_collection_invoice_model.dart';
 import '../Model/due_collection_model.dart';
@@ -69,24 +70,22 @@ class DueRepo {
     });
 
     try {
-      var responseData = await http.post(
-        uri,
-        headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'},
-        body: requestBody,
-      );
-
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+      var responseData = await customHttpClient.post(
+          url: uri, headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'}, body: requestBody);
       final parsedData = jsonDecode(responseData.body);
 
       if (responseData.statusCode == 200) {
         EasyLoading.showSuccess('Collected successful!');
 
-       var refreshParty =  ref.refresh(partiesProvider);
-       var purchaseTransactionRefresh = ref.refresh(purchaseTransactionProvider);
+        var refreshParty = ref.refresh(partiesProvider);
+        var purchaseTransactionRefresh = ref.refresh(purchaseTransactionProvider);
         var salesTransactionRefresh = ref.refresh(salesTransactionProvider);
         var businessInfoRefresh = ref.refresh(businessInfoProvider);
+        ref.refresh(getExpireDateProvider(ref));
         var dueInvoiceListRefresh = ref.refresh(dueInvoiceListProvider(partyId.round()));
         var dueCollectionListRefresh = ref.refresh(dueCollectionListProvider);
-       var data=  ref.refresh(summaryInfoProvider);
+        var data = ref.refresh(summaryInfoProvider);
 
         return DueCollection.fromJson(parsedData['data']);
         // Navigator.pop(context);

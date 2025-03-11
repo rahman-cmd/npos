@@ -18,16 +18,17 @@ import 'package:mobile_pos/Screens/Sales/add_promo_code.dart';
 import 'package:mobile_pos/Screens/Sales/sales_contact.dart';
 import 'package:mobile_pos/Screens/SplashScreen/on_board.dart';
 import 'package:mobile_pos/Screens/SplashScreen/splash_screen.dart';
-import 'package:mobile_pos/Screens/stock_list/stock_list.dart';
 import 'package:mobile_pos/Screens/vat_&_tax/tax_report.dart';
 import 'package:provider/provider.dart' as pro;
-import 'Screens/Due Calculation/due_calculation_contact_screen.dart';
+import 'Screens/Due Calculation/due_list_screen.dart';
 import 'Screens/Income/income_list.dart';
 import 'Screens/Loss_Profit/loss_profit_screen.dart';
 import 'Screens/Purchase List/purchase_list_screen.dart';
 import 'Screens/Purchase/choose_supplier_screen.dart';
 import 'Screens/Sales List/sales_list_screen.dart';
 import 'Screens/language/language_provider.dart';
+import 'Screens/stock_list/stock_list_main.dart';
+import 'core/theme/theme.dart';
 import 'generated/l10n.dart';
 
 void main() async {
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: S.delegate.supportedLocales,
-                title: 'POSPro',
+                title: 'NPOS',
                 initialRoute: '/',
                 builder: EasyLoading.init(),
                 routes: {
@@ -86,6 +87,7 @@ class MyApp extends StatelessWidget {
                   '/Purchase List': (context) => const PurchaseListScreen(),
                   '/Loss/Profit': (context) => const LossProfitScreen(),
                 },
+            theme: NposTheme.kLightTheme(context),
               )),
     );
   }

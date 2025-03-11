@@ -78,6 +78,7 @@ class SubscriptionPlanRepo {
       if (responseData.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Subscribe successful!')));
         var data = ref.refresh(businessInfoProvider);
+        ref.refresh(getExpireDateProvider(ref));
 
         Navigator.pop(context);
       } else {

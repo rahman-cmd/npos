@@ -5,6 +5,8 @@ class SalesTransactionModel {
     this.partyId,
     this.userId,
     this.discountAmount,
+    this.discountPercent,
+    this.shippingCharge,
     this.dueAmount,
     this.isPaid,
     this.vatAmount,
@@ -12,6 +14,7 @@ class SalesTransactionModel {
     this.paidAmount,
     this.totalAmount,
     this.paymentType,
+    this.discountType,
     this.invoiceNumber,
     this.saleDate,
     this.createdAt,
@@ -24,14 +27,17 @@ class SalesTransactionModel {
     this.meta,
     this.vatId,
     this.vat,
+    this.image,
   });
 
   SalesTransactionModel.fromJson(dynamic json) {
     id = json['id'];
     businessId = json['business_id'];
-    partyId = json['party_id'];
+    partyId = num.tryParse(json['party_id'].toString()) ?? 0;
     userId = json['user_id'];
     discountAmount = json['discountAmount'];
+    discountPercent = num.tryParse(json['discount_percent'].toString()) ?? 0;
+    shippingCharge = num.tryParse(json['shipping_charge'].toString()) ?? 0;
     dueAmount = json['dueAmount'];
     isPaid = json['isPaid'];
     vatAmount = json['vat_amount'];
@@ -40,6 +46,7 @@ class SalesTransactionModel {
     paidAmount = json['paidAmount'];
     totalAmount = json['totalAmount'];
     paymentType = json['paymentType'];
+    discountType = json['discount_type'];
     invoiceNumber = json['invoiceNumber'];
     saleDate = json['saleDate'];
     createdAt = json['created_at'];
@@ -61,12 +68,15 @@ class SalesTransactionModel {
         salesReturns?.add(SalesReturn.fromJson(v));
       });
     }
+    image = json['image'];
   }
   num? id;
   num? businessId;
   num? partyId;
   num? userId;
   num? discountAmount;
+  num? discountPercent;
+  num? shippingCharge;
   num? dueAmount;
   bool? isPaid;
   num? vatAmount;
@@ -75,6 +85,7 @@ class SalesTransactionModel {
   num? paidAmount;
   num? totalAmount;
   String? paymentType;
+  String? discountType;
   String? invoiceNumber;
   String? saleDate;
   String? createdAt;
@@ -86,7 +97,7 @@ class SalesTransactionModel {
   SalesVat? vat;
   List<SalesDetails>? salesDetails;
   List<SalesReturn>? salesReturns;
-
+  String? image;
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -94,6 +105,8 @@ class SalesTransactionModel {
     map['party_id'] = partyId;
     map['user_id'] = userId;
     map['discountAmount'] = discountAmount;
+    map['discount_percent'] = discountPercent;
+    map['shipping_charge'] = shippingCharge;
     map['dueAmount'] = dueAmount;
     map['isPaid'] = isPaid;
     map['vat_amount'] = vatAmount;
@@ -101,6 +114,7 @@ class SalesTransactionModel {
     map['paidAmount'] = paidAmount;
     map['totalAmount'] = totalAmount;
     map['paymentType'] = paymentType;
+    map['discount_type'] = discountType;
     map['invoiceNumber'] = invoiceNumber;
     map['saleDate'] = saleDate;
     map['created_at'] = createdAt;
@@ -117,6 +131,10 @@ class SalesTransactionModel {
     }
     if (salesReturns != null) {
       map['sale_returns'] = salesReturns?.map((v) => v.toJson()).toList();
+    }
+    map['image'] = image;
+    if (meta != null) {
+      map['meta'] = meta?.toJson();
     }
     return map;
   }
@@ -291,16 +309,20 @@ class User {
 class Meta {
   Meta({
     this.customerPhone,
+    this.note,
   });
 
   Meta.fromJson(dynamic json) {
     customerPhone = json['customer_phone'];
+    note = json['note'];
   }
   String? customerPhone;
+  String? note;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['customer_phone'] = customerPhone;
+    map['note'] = note;
     return map;
   }
 }

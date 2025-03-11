@@ -5,26 +5,28 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
-import 'package:mobile_pos/Screens/Products/Model/brands_model.dart' as brand;
 import 'package:mobile_pos/Screens/Products/Model/product_model.dart';
-import 'package:mobile_pos/Screens/Products/Model/unit_model.dart' as unit;
+import 'package:mobile_pos/Screens/product_unit/model/unit_model.dart' as unit;
 import 'package:mobile_pos/Screens/Products/Repo/product_repo.dart';
-import 'package:mobile_pos/Screens/Products/brands_list.dart';
-import 'package:mobile_pos/Screens/Products/category_list_screen.dart';
-import 'package:mobile_pos/Screens/Products/unit_list.dart';
+import 'package:mobile_pos/Screens/product_category/category_list_screen.dart';
+import 'package:mobile_pos/Screens/product_unit/unit_list.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../Const/api_config.dart';
+import '../../GlobalComponents/bar_code_scaner_widget.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
+import '../product_brand/brands_list.dart';
+import '../product_brand/model/brands_model.dart' as brand;
 import '../vat_&_tax/model/vat_model.dart';
 import '../vat_&_tax/provider/text_repo.dart';
-import 'Model/category_model.dart';
+import '../product_category/model/category_model.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key, this.productModel});
@@ -40,7 +42,7 @@ class AddProductState extends State<AddProduct> {
   brand.Brand? selectedBrand;
   unit.Unit? selectedUnit;
   late String productName, productStock, productSalePrice, productPurchasePrice, productCode;
-
+  String? selectedDate;
   TextEditingController nameController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController brandController = TextEditingController();
@@ -60,6 +62,8 @@ class AddProductState extends State<AddProduct> {
   TextEditingController weightController = TextEditingController();
   TextEditingController typeController = TextEditingController();
   TextEditingController capacityController = TextEditingController();
+  TextEditingController stockAlertController = TextEditingController();
+  TextEditingController fromDateTextEditingController = TextEditingController();
   void initializeControllers() {
     if (widget.productModel != null) {
       nameController = TextEditingController(text: widget.productModel?.productName ?? '');
@@ -106,6 +110,11 @@ class AddProductState extends State<AddProduct> {
       weightController = TextEditingController(text: widget.productModel?.weight ?? '');
       typeController = TextEditingController(text: widget.productModel?.type ?? '');
       capacityController = TextEditingController(text: widget.productModel?.capacity ?? '');
+      stockAlertController = TextEditingController(text: widget.productModel?.alertQty.toString() ?? '');
+      if (widget.productModel?.expireDate != null) {
+        fromDateTextEditingController.text = DateFormat.yMd().format(DateTime.parse(widget.productModel?.expireDate.toString() ?? ''));
+        selectedDate = widget.productModel?.expireDate?.toString();
+      }
     }
   }
 
@@ -189,7 +198,8 @@ class AddProductState extends State<AddProduct> {
   }
 
   GlobalKey<FormState> key = GlobalKey();
-  // GetCategoryAndVariationModel data = GetCategoryAndVariationModel(variations: [], categoryName: CategoryModel());
+
+  bool isAlreadyBuild = false;
 
   @override
   Widget build(BuildContext context) {
@@ -225,47 +235,8 @@ class AddProductState extends State<AddProduct> {
                       hint: lang.S.of(context).enterProductName,
                       validator: (value) => value!.isEmpty ? lang.S.of(context).pleaseEnterAValidProductName : null,
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.all(10.0),
-                    //   child: TextFormField(
-                    //     controller: nameController,
-                    //     validator: (value) {
-                    //       if (value == null || value.isEmpty) {
-                    //         return lang.S.of(context).pleaseEnterAValidProductName;
-                    //       }
-                    //       return null;
-                    //     },
-                    //     decoration: kInputDecoration.copyWith(
-                    //       floatingLabelBehavior: FloatingLabelBehavior.always,
-                    //       labelText: lang.S.of(context).productName,
-                    //       hintText: lang.S.of(context).enterProductName,
-                    //       border: const OutlineInputBorder(),
-                    //     ),
-                    //   ),
-                    // ),
 
                     ///_______Category__________________________________
-                    // _buildReadOnlyField(
-                    //   controller: categoryController,
-                    //   label: lang.S.of(context).productCategory,
-                    //   hint: lang.S.of(context).selectProductCategory,
-                    //   validator: (value) {
-                    //     if (value == null || value.isEmpty) {
-                    //       //return 'Please select a category';
-                    //       return lang.S.of(context).pleaseSelectACategory;
-                    //     }
-                    //     return null;
-                    //   },
-                    //   onTap: () async {
-                    //     data = await const CategoryList(
-                    //       isFromProductList: false,
-                    //     ).launch(context);
-                    //     setState(() {
-                    //       categoryController.text = data.categoryName.categoryName ?? '';
-                    //       selectedCategory = data.categoryName;
-                    //     });
-                    //   },
-                    // ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
@@ -288,7 +259,21 @@ class AddProductState extends State<AddProduct> {
                           });
                         },
                         decoration: kInputDecoration.copyWith(
-                          suffixIcon: const Icon(Icons.keyboard_arrow_down),
+                          suffixIcon: selectedCategory != null
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCategory = null;
+                                      categoryController.clear();
+                                    });
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                    size: 16,
+                                  ),
+                                )
+                              : const Icon(Icons.keyboard_arrow_down),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           //labelText: 'Product Category',
                           labelText: lang.S.of(context).productCategory,
@@ -360,7 +345,21 @@ class AddProductState extends State<AddProduct> {
                           });
                         },
                         decoration: kInputDecoration.copyWith(
-                          suffixIcon: const Icon(Icons.keyboard_arrow_down),
+                          suffixIcon: selectedBrand != null
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedBrand = null;
+                                      brandController.clear();
+                                    });
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                    size: 16,
+                                  ),
+                                )
+                              : const Icon(Icons.keyboard_arrow_down),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           // labelText: 'Product Brand',
                           labelText: lang.S.of(context).productBrand,
@@ -372,21 +371,14 @@ class AddProductState extends State<AddProduct> {
                     ),
 
                     ///__________Code__________________________
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
                             child: TextFormField(
                               controller: productCodeController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  //return 'product code is required';
-                                  return lang.S.of(context).productCodeIsRequired;
-                                }
-                                return null;
-                              },
                               onChanged: (value) {
                                 setState(() {
                                   productCode = value;
@@ -415,77 +407,25 @@ class AddProductState extends State<AddProduct> {
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            flex: 1,
                             child: GestureDetector(
                               onTap: () async {
-                                await showDialog(
+                                showDialog(
                                   context: context,
-                                  useSafeArea: true,
-                                  builder: (context1) {
-                                    MobileScannerController controller = MobileScannerController(
-                                      torchEnabled: false,
-                                      returnImage: false,
-                                    );
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadiusDirectional.circular(6.0),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          AppBar(
-                                            backgroundColor: Colors.transparent,
-                                            iconTheme: const IconThemeData(color: Colors.white),
-                                            leading: IconButton(
-                                              icon: const Icon(Icons.arrow_back),
-                                              onPressed: () {
-                                                Navigator.pop(context1);
-                                              },
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: MobileScanner(
-                                              fit: BoxFit.contain,
-                                              controller: controller,
-                                              onDetect: (capture) {
-                                                final List<Barcode> barcodes = capture.barcodes;
-
-                                                if (barcodes.isNotEmpty) {
-                                                  final Barcode barcode = barcodes.first;
-                                                  debugPrint('Barcode found! ${barcode.rawValue}');
-                                                  // productCode = barcode.rawValue!;
-                                                  productCodeController.text = barcode.rawValue!;
-                                                  // globalKey.currentState!.save();
-                                                  Navigator.pop(context1);
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
+                                  builder: (context) => BarcodeScannerWidget(
+                                    onBarcodeFound: (String code) {
+                                      productCodeController.text = code;
+                                    },
+                                  ),
                                 );
                               },
-                              child: Container(
-                                height: 60.0,
-                                width: 100.0,
-                                padding: const EdgeInsets.all(5.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  border: Border.all(color: kGreyTextColor),
-                                ),
-                                child: const Image(
-                                  image: AssetImage('images/barcode.png'),
-                                ),
-                              ),
+                              child: const BarCodeButton(),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
 
                     ///_____________Stock__&_Unit__________________________
@@ -534,7 +474,21 @@ class AddProductState extends State<AddProduct> {
                                 });
                               },
                               decoration: kInputDecoration.copyWith(
-                                suffixIcon: const Icon(Icons.keyboard_arrow_down),
+                                suffixIcon: selectedUnit != null
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedUnit = null;
+                                            productUnitController.clear();
+                                          });
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: Colors.red,
+                                          size: 16,
+                                        ),
+                                      )
+                                    : const Icon(Icons.keyboard_arrow_down),
                                 floatingLabelBehavior: FloatingLabelBehavior.always,
                                 //labelText: 'Product Unit',
                                 labelText: lang.S.of(context).productUnit,
@@ -554,7 +508,7 @@ class AddProductState extends State<AddProduct> {
                         Expanded(
                           child: taxesData.when(
                             data: (dataList) {
-                              if (widget.productModel != null && widget.productModel?.vatId != null) {
+                              if (widget.productModel != null && widget.productModel?.vatId != null && !isAlreadyBuild) {
                                 VatModel matched = dataList.firstWhere(
                                   (element) => element.id == widget.productModel?.vatId,
                                   orElse: () => VatModel(),
@@ -562,8 +516,55 @@ class AddProductState extends State<AddProduct> {
                                 if (matched.id != null) {
                                   selectedTax = matched;
                                 }
+                                isAlreadyBuild = true;
                               }
-                              return Expanded(
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: DropdownButtonFormField<VatModel>(
+                                  hint: const Text(
+                                    'Select vat',
+                                    style: TextStyle(fontWeight: FontWeight.normal, color: kGreyTextColor),
+                                  ),
+                                  icon: selectedTax != null
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            selectedTax = null;
+                                            calculatePurchaseAndMrp();
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.red,
+                                            size: 16,
+                                          ),
+                                        )
+                                      : const Icon(Icons.keyboard_arrow_down_outlined),
+                                  decoration: kInputDecoration.copyWith(
+                                    labelText: "Select Vat",
+                                  ),
+                                  value: selectedTax,
+                                  items: dataList
+                                      .where((vat) => vat.status == true)
+                                      .map((vat) => DropdownMenuItem<VatModel>(
+                                            value: vat,
+                                            child: Text(
+                                              '${vat.name ?? ''} ${vat.rate}%',
+                                              style: const TextStyle(fontWeight: FontWeight.normal),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  onChanged: (value) {
+                                    selectedTax = value!;
+                                    calculatePurchaseAndMrp();
+                                  },
+                                ),
+                              );
+                            },
+                            error: (error, stackTrace) {
+                              return Text(error.toString());
+                            },
+                            loading: () {
+                              return Skeletonizer(
+                                enabled: true,
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: DropdownButtonFormField<VatModel>(
@@ -575,46 +576,8 @@ class AddProductState extends State<AddProduct> {
                                     decoration: kInputDecoration.copyWith(
                                       labelText: "Select Vat",
                                     ),
-                                    value: selectedTax,
-                                    items: dataList
-                                        .where((vat) => vat.status == true)
-                                        .map((vat) => DropdownMenuItem<VatModel>(
-                                              value: vat,
-                                              child: Text(
-                                                '${vat.name ?? ''} ${vat.rate}%',
-                                                style: const TextStyle(fontWeight: FontWeight.normal),
-                                              ),
-                                            ))
-                                        .toList(),
-                                    onChanged: (value) {
-                                      selectedTax = value!;
-                                      calculatePurchaseAndMrp();
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                            error: (error, stackTrace) {
-                              return Text(error.toString());
-                            },
-                            loading: () {
-                              return Expanded(
-                                child: Skeletonizer(
-                                  enabled: true,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: DropdownButtonFormField<VatModel>(
-                                      hint: const Text(
-                                        'Select vat',
-                                        style: TextStyle(fontWeight: FontWeight.normal, color: kGreyTextColor),
-                                      ),
-                                      icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                                      decoration: kInputDecoration.copyWith(
-                                        labelText: "Select Vat",
-                                      ),
-                                      items: const [],
-                                      onChanged: (value) {},
-                                    ),
+                                    items: const [],
+                                    onChanged: (value) {},
                                   ),
                                 ),
                               );
@@ -805,6 +768,60 @@ class AddProductState extends State<AddProduct> {
                         ),
                       ],
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: stockAlertController,
+                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                              keyboardType: TextInputType.number,
+                              decoration: kInputDecoration.copyWith(
+                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                labelText: 'Low Stock',
+                                hintText: 'Enter low stock',
+                                border: const OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: TextFormField(
+                              keyboardType: TextInputType.name,
+                              readOnly: true,
+                              controller: fromDateTextEditingController,
+                              decoration: kInputDecoration.copyWith(
+                                labelText: 'Exp. Date',
+                                hintText: 'Select Date',
+                                border: const OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                  onPressed: () async {
+                                    final DateTime? picked = await showDatePicker(
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2015, 8),
+                                      lastDate: DateTime(2101),
+                                      context: context,
+                                    );
+                                    setState(() {
+                                      if (picked != null) {
+                                        fromDateTextEditingController.text = DateFormat.yMd().format(picked);
+                                        selectedDate = picked.toString();
+                                      } else {
+                                        fromDateTextEditingController.text = fromDateTextEditingController.text;
+                                      }
+                                    });
+                                  },
+                                  icon: const Icon(IconlyLight.calendar, size: 22),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Row(
                       children: [
                         Expanded(
@@ -966,58 +983,6 @@ class AddProductState extends State<AddProduct> {
                               )
                             ],
                           ),
-                          // child: Stack(
-                          //   children: [
-                          //     Container(
-                          //       height: 120,
-                          //       width: 120,
-                          //       decoration: BoxDecoration(
-                          //         border: Border.all(color: Colors.black54, width: 1),
-                          //         borderRadius: const BorderRadius.all(Radius.circular(120)),
-                          //         image: pickedImage == null
-                          //             ? DecorationImage(
-                          //                 image: AssetImage(noProductImageUrl),
-                          //                 fit: BoxFit.cover,
-                          //               )
-                          //             : DecorationImage(
-                          //                 image: FileImage(File(pickedImage!.path)),
-                          //                 fit: BoxFit.cover,
-                          //               ),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       height: 120,
-                          //       width: 120,
-                          //       decoration: BoxDecoration(
-                          //         border: Border.all(color: Colors.black54, width: 1),
-                          //         borderRadius: const BorderRadius.all(Radius.circular(120)),
-                          //         // image: DecorationImage(
-                          //         //   image: FileImage(File(pickedImage!.path)),
-                          //         //   fit: BoxFit.cover,
-                          //         // ),
-                          //       ),
-                          //       // child: imageFile.path == 'No File' ? null : Image.file(imageFile),
-                          //     ),
-                          //     Positioned(
-                          //       bottom: 0,
-                          //       right: 0,
-                          //       child: Container(
-                          //         height: 35,
-                          //         width: 35,
-                          //         decoration: BoxDecoration(
-                          //           border: Border.all(color: Colors.white, width: 2),
-                          //           borderRadius: const BorderRadius.all(Radius.circular(120)),
-                          //           color: kMainColor,
-                          //         ),
-                          //         child: const Icon(
-                          //           Icons.camera_alt_outlined,
-                          //           size: 20,
-                          //           color: Colors.white,
-                          //         ),
-                          //       ),
-                          //     )
-                          //   ],
-                          // ),
                         ),
                         const SizedBox(height: 10),
                       ],
@@ -1056,6 +1021,8 @@ class AddProductState extends State<AddProduct> {
                                 vatType: selectedTaxType,
                                 profitMargin: profitMarginController.text,
                                 vatAmount: ((num.tryParse(purchaseInclusivePriceController.text) ?? 0) - (num.tryParse(purchaseExclusivePriceController.text) ?? 0)).toString(),
+                                lowStock: stockAlertController.text,
+                                expDate: selectedDate,
                               );
                               EasyLoading.dismiss();
                             } else {
@@ -1085,6 +1052,8 @@ class AddProductState extends State<AddProduct> {
                                 vatType: selectedTaxType,
                                 profitMargin: profitMarginController.text,
                                 vatAmount: ((num.tryParse(purchaseInclusivePriceController.text) ?? 0) - (num.tryParse(purchaseExclusivePriceController.text) ?? 0)).toString(),
+                                lowStock: stockAlertController.text,
+                                expDate: selectedDate,
                               );
                               EasyLoading.dismiss();
                             }
@@ -1135,21 +1104,3 @@ Widget _buildTextField({
     ),
   );
 }
-//
-// Widget _buildReadOnlyField({
-//   required TextEditingController controller,
-//   required String label,
-//   required String hint,
-//   String? Function(String?)? validator,
-//   VoidCallback? onTap,
-// }) {
-//   return _buildTextField(
-//     controller: controller,
-//     label: label,
-//     hint: hint,
-//     validator: validator,
-//     icon: true,
-//     readOnly: true,
-//     onTap: onTap,
-//   );
-// }

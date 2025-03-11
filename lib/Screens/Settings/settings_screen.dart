@@ -452,7 +452,7 @@ class SettingScreenState extends State<SettingScreen> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          'POSPro V-$appVersion',
+                          'NPOS V-$appVersion',
                           style: GoogleFonts.poppins(
                             color: kGreyTextColor,
                             fontSize: 16.0,

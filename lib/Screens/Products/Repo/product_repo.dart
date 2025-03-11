@@ -10,6 +10,7 @@ import 'package:mobile_pos/Provider/product_provider.dart';
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../Model/product_model.dart';
 
 class ProductRepo {
@@ -57,8 +58,12 @@ class ProductRepo {
     String? vatType,
     String? vatAmount,
     String? profitMargin,
+    String? lowStock,
+    String? expDate,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/products');
+
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
@@ -89,8 +94,11 @@ class ProductRepo {
     if (image != null) {
       request.files.add(http.MultipartFile.fromBytes('productPicture', image.readAsBytesSync(), filename: image.path));
     }
+    if (lowStock != null) request.fields['alert_qty'] = lowStock;
+    if (expDate != null) request.fields['expire_date'] = expDate;
 
-    final response = await request.send();
+    // final response = await request.send();
+    final response = await customHttpClient.uploadFile(url: uri, file: image, fileFieldName: 'productPicture', fields: request.fields);
     final responseData = await response.stream.bytesToString();
     final parsedData = jsonDecode(responseData);
     EasyLoading.dismiss();
@@ -172,12 +180,9 @@ class ProductRepo {
     final String apiUrl = '${APIConfig.url}/products/$id';
 
     try {
-      final response = await http.delete(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': await getAuthToken(), // Implement your getAuthToken function
-        },
+      CustomHttpClient customHttpClient = CustomHttpClient(ref: ref, context: context, client: http.Client());
+      final response = await customHttpClient.delete(
+        url: Uri.parse(apiUrl),
       );
 
       EasyLoading.dismiss();
@@ -221,8 +226,11 @@ class ProductRepo {
     String? vatType,
     String? vatAmount,
     String? profitMargin,
+    String? lowStock,
+    String? expDate,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/products/$productId');
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
@@ -241,10 +249,10 @@ class ProductRepo {
     if (weight != null) request.fields['weight'] = weight;
     if (capacity != null) request.fields['capacity'] = capacity;
     if (type != null) request.fields['type'] = type;
-    if (brandId != null) request.fields['brand_id'] = brandId.toString();
-    if (unitId != null) request.fields['unit_id'] = unitId;
+    request.fields['brand_id'] = brandId != null ? brandId.toString() : '';
+    request.fields['unit_id'] = unitId != null ? unitId.toString() : '';
     if (categoryId != null) request.fields['category_id'] = categoryId;
-    if (vatId != null) request.fields['vat_id'] = vatId;
+    request.fields['vat_id'] = vatId ?? '';
     if (vatType != null) request.fields['vat_type'] = vatType;
     if (vatAmount != null) request.fields['vat_amount'] = vatAmount;
     if (profitMargin != null) request.fields['profit_percent'] = profitMargin;
@@ -255,8 +263,16 @@ class ProductRepo {
     if (image != null) {
       request.files.add(http.MultipartFile.fromBytes('productPicture', image.readAsBytesSync(), filename: image.path));
     }
+    if (lowStock != null) request.fields['alert_qty'] = lowStock;
+    if (expDate != null) request.fields['expire_date'] = expDate;
 
-    final response = await request.send();
+    print('Update response : ${request.fields}');
+    final response = await customHttpClient.uploadFile(
+      url: uri,
+      file: image,
+      fileFieldName: 'productPicture',
+      fields: request.fields,
+    );
     final responseData = await response.stream.bytesToString();
 
     final parsedData = jsonDecode(responseData);

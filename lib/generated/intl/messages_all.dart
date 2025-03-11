@@ -11,6 +11,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
 import 'package:intl/src/intl_helpers.dart';
@@ -99,87 +100,87 @@ import 'messages_zu.dart' as messages_zu;
 
 typedef Future<dynamic> LibraryLoader();
 Map<String, LibraryLoader> _deferredLibraries = {
-  'af': () => new Future.value(null),
-  'am': () => new Future.value(null),
-  'ar': () => new Future.value(null),
-  'as': () => new Future.value(null),
-  'az': () => new Future.value(null),
-  'be': () => new Future.value(null),
-  'bg': () => new Future.value(null),
-  'bn': () => new Future.value(null),
-  'bs': () => new Future.value(null),
-  'ca': () => new Future.value(null),
-  'cs': () => new Future.value(null),
-  'cy': () => new Future.value(null),
-  'da': () => new Future.value(null),
-  'de': () => new Future.value(null),
-  'el': () => new Future.value(null),
-  'en': () => new Future.value(null),
-  'es': () => new Future.value(null),
-  'et': () => new Future.value(null),
-  'eu': () => new Future.value(null),
-  'fa': () => new Future.value(null),
-  'fi': () => new Future.value(null),
-  'fil': () => new Future.value(null),
-  'fr': () => new Future.value(null),
-  'gl': () => new Future.value(null),
-  'gsw': () => new Future.value(null),
-  'gu': () => new Future.value(null),
-  'ha': () => new Future.value(null),
-  'he': () => new Future.value(null),
-  'hi': () => new Future.value(null),
-  'hr': () => new Future.value(null),
-  'hu': () => new Future.value(null),
-  'hy': () => new Future.value(null),
-  'id': () => new Future.value(null),
-  'is': () => new Future.value(null),
-  'it': () => new Future.value(null),
-  'ja': () => new Future.value(null),
-  'ka': () => new Future.value(null),
-  'kk': () => new Future.value(null),
-  'km': () => new Future.value(null),
-  'kn': () => new Future.value(null),
-  'ko': () => new Future.value(null),
-  'ky': () => new Future.value(null),
-  'lo': () => new Future.value(null),
-  'lt': () => new Future.value(null),
-  'lv': () => new Future.value(null),
-  'mk': () => new Future.value(null),
-  'ml': () => new Future.value(null),
-  'mn': () => new Future.value(null),
-  'mr': () => new Future.value(null),
-  'ms': () => new Future.value(null),
-  'my': () => new Future.value(null),
-  'nb': () => new Future.value(null),
-  'ne': () => new Future.value(null),
-  'nl': () => new Future.value(null),
-  'no': () => new Future.value(null),
-  'or': () => new Future.value(null),
-  'pa': () => new Future.value(null),
-  'pl': () => new Future.value(null),
-  'ps': () => new Future.value(null),
-  'pt': () => new Future.value(null),
-  'ro': () => new Future.value(null),
-  'ru': () => new Future.value(null),
-  'si': () => new Future.value(null),
-  'sk': () => new Future.value(null),
-  'sl': () => new Future.value(null),
-  'sq': () => new Future.value(null),
-  'sr': () => new Future.value(null),
-  'sv': () => new Future.value(null),
-  'sw': () => new Future.value(null),
-  'ta': () => new Future.value(null),
-  'te': () => new Future.value(null),
-  'th': () => new Future.value(null),
-  'tl': () => new Future.value(null),
-  'tr': () => new Future.value(null),
-  'tt': () => new Future.value(null),
-  'uk': () => new Future.value(null),
-  'ur': () => new Future.value(null),
-  'uz': () => new Future.value(null),
-  'vi': () => new Future.value(null),
-  'zh': () => new Future.value(null),
-  'zu': () => new Future.value(null),
+  'af': () => new SynchronousFuture(null),
+  'am': () => new SynchronousFuture(null),
+  'ar': () => new SynchronousFuture(null),
+  'as': () => new SynchronousFuture(null),
+  'az': () => new SynchronousFuture(null),
+  'be': () => new SynchronousFuture(null),
+  'bg': () => new SynchronousFuture(null),
+  'bn': () => new SynchronousFuture(null),
+  'bs': () => new SynchronousFuture(null),
+  'ca': () => new SynchronousFuture(null),
+  'cs': () => new SynchronousFuture(null),
+  'cy': () => new SynchronousFuture(null),
+  'da': () => new SynchronousFuture(null),
+  'de': () => new SynchronousFuture(null),
+  'el': () => new SynchronousFuture(null),
+  'en': () => new SynchronousFuture(null),
+  'es': () => new SynchronousFuture(null),
+  'et': () => new SynchronousFuture(null),
+  'eu': () => new SynchronousFuture(null),
+  'fa': () => new SynchronousFuture(null),
+  'fi': () => new SynchronousFuture(null),
+  'fil': () => new SynchronousFuture(null),
+  'fr': () => new SynchronousFuture(null),
+  'gl': () => new SynchronousFuture(null),
+  'gsw': () => new SynchronousFuture(null),
+  'gu': () => new SynchronousFuture(null),
+  'ha': () => new SynchronousFuture(null),
+  'he': () => new SynchronousFuture(null),
+  'hi': () => new SynchronousFuture(null),
+  'hr': () => new SynchronousFuture(null),
+  'hu': () => new SynchronousFuture(null),
+  'hy': () => new SynchronousFuture(null),
+  'id': () => new SynchronousFuture(null),
+  'is': () => new SynchronousFuture(null),
+  'it': () => new SynchronousFuture(null),
+  'ja': () => new SynchronousFuture(null),
+  'ka': () => new SynchronousFuture(null),
+  'kk': () => new SynchronousFuture(null),
+  'km': () => new SynchronousFuture(null),
+  'kn': () => new SynchronousFuture(null),
+  'ko': () => new SynchronousFuture(null),
+  'ky': () => new SynchronousFuture(null),
+  'lo': () => new SynchronousFuture(null),
+  'lt': () => new SynchronousFuture(null),
+  'lv': () => new SynchronousFuture(null),
+  'mk': () => new SynchronousFuture(null),
+  'ml': () => new SynchronousFuture(null),
+  'mn': () => new SynchronousFuture(null),
+  'mr': () => new SynchronousFuture(null),
+  'ms': () => new SynchronousFuture(null),
+  'my': () => new SynchronousFuture(null),
+  'nb': () => new SynchronousFuture(null),
+  'ne': () => new SynchronousFuture(null),
+  'nl': () => new SynchronousFuture(null),
+  'no': () => new SynchronousFuture(null),
+  'or': () => new SynchronousFuture(null),
+  'pa': () => new SynchronousFuture(null),
+  'pl': () => new SynchronousFuture(null),
+  'ps': () => new SynchronousFuture(null),
+  'pt': () => new SynchronousFuture(null),
+  'ro': () => new SynchronousFuture(null),
+  'ru': () => new SynchronousFuture(null),
+  'si': () => new SynchronousFuture(null),
+  'sk': () => new SynchronousFuture(null),
+  'sl': () => new SynchronousFuture(null),
+  'sq': () => new SynchronousFuture(null),
+  'sr': () => new SynchronousFuture(null),
+  'sv': () => new SynchronousFuture(null),
+  'sw': () => new SynchronousFuture(null),
+  'ta': () => new SynchronousFuture(null),
+  'te': () => new SynchronousFuture(null),
+  'th': () => new SynchronousFuture(null),
+  'tl': () => new SynchronousFuture(null),
+  'tr': () => new SynchronousFuture(null),
+  'tt': () => new SynchronousFuture(null),
+  'uk': () => new SynchronousFuture(null),
+  'ur': () => new SynchronousFuture(null),
+  'uz': () => new SynchronousFuture(null),
+  'vi': () => new SynchronousFuture(null),
+  'zh': () => new SynchronousFuture(null),
+  'zu': () => new SynchronousFuture(null),
 };
 
 MessageLookupByLibrary? _findExact(String localeName) {
@@ -352,18 +353,20 @@ MessageLookupByLibrary? _findExact(String localeName) {
 }
 
 /// User programs should call this before using [localeName] for messages.
-Future<bool> initializeMessages(String localeName) async {
+Future<bool> initializeMessages(String localeName) {
   var availableLocale = Intl.verifiedLocale(
-      localeName, (locale) => _deferredLibraries[locale] != null,
-      onFailure: (_) => null);
+    localeName,
+    (locale) => _deferredLibraries[locale] != null,
+    onFailure: (_) => null,
+  );
   if (availableLocale == null) {
-    return new Future.value(false);
+    return new SynchronousFuture(false);
   }
   var lib = _deferredLibraries[availableLocale];
-  await (lib == null ? new Future.value(false) : lib());
+  lib == null ? new SynchronousFuture(false) : lib();
   initializeInternalMessageLookup(() => new CompositeMessageLookup());
   messageLookup.addLocale(availableLocale, _findGeneratedMessagesFor);
-  return new Future.value(true);
+  return new SynchronousFuture(true);
 }
 
 bool _messagesExistFor(String locale) {
@@ -375,8 +378,11 @@ bool _messagesExistFor(String locale) {
 }
 
 MessageLookupByLibrary? _findGeneratedMessagesFor(String locale) {
-  var actualLocale =
-      Intl.verifiedLocale(locale, _messagesExistFor, onFailure: (_) => null);
+  var actualLocale = Intl.verifiedLocale(
+    locale,
+    _messagesExistFor,
+    onFailure: (_) => null,
+  );
   if (actualLocale == null) return null;
   return _findExact(actualLocale);
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
+import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Expense/Providers/all_expanse_provider.dart';
 import 'package:mobile_pos/Screens/Expense/add_erxpense.dart';
 import 'package:mobile_pos/Screens/Income/Providers/all_income_provider.dart';
@@ -11,13 +12,14 @@ import 'package:mobile_pos/Screens/Income/Providers/income_category_provider.dar
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
 import '../../currency.dart';
 import 'add_income.dart';
 
 class IncomeList extends StatefulWidget {
-  const IncomeList({Key? key}) : super(key: key);
+  const IncomeList({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -56,6 +58,7 @@ class _IncomeListState extends State<IncomeList> {
     totalExpense = 0;
     return Consumer(builder: (context, ref, __) {
       final incomeData = ref.watch(incomeProvider);
+      final businessInfoData = ref.watch(businessInfoProvider);
 
       return GlobalPopup(
         child: Scaffold(
@@ -293,14 +296,22 @@ class _IncomeListState extends State<IncomeList> {
                 ),
 
                 ///________button________________________________________________
-                ButtonGlobalWithoutIcon(
-                  buttontext: lang.S.of(context).addIncome,
-                  buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-                  onPressed: () {
-                    const AddIncome().launch(context);
-                  },
-                  buttonTextColor: Colors.white,
-                ),
+                businessInfoData.when(data: (details) {
+                  return ButtonGlobalWithoutIcon(
+                    buttontext: lang.S.of(context).addIncome,
+                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                    onPressed: () async {
+                      const AddIncome().launch(context);
+                    },
+                    buttonTextColor: Colors.white,
+                  );
+                }, error: (e, stack) {
+                  return Text(e.toString());
+                }, loading: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                })
               ],
             ),
           ),

@@ -12,6 +12,7 @@ import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../PDF Invoice/generate_pdf.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
+import '../../../core/theme/_app_colors.dart';
 import '../../../currency.dart';
 import '../../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
@@ -67,6 +68,7 @@ class PurchaseReportState extends State<PurchaseReturnReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     final translateTime = getTranslateTime(context);
     return GlobalPopup(
       child: Scaffold(
@@ -87,7 +89,6 @@ class PurchaseReportState extends State<PurchaseReturnReportScreen> {
         body: Consumer(builder: (context, ref, __) {
           final purchaseData = ref.watch(purchaseReturnTransactionProvider);
           final printerData = ref.watch(thermalPrinterProvider);
-          final personalData = ref.watch(businessInfoProvider);
           final profile = ref.watch(businessInfoProvider);
           final businessData = ref.watch(businessSettingProvider);
 
@@ -179,7 +180,7 @@ class PurchaseReportState extends State<PurchaseReturnReportScreen> {
                         ? Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(20.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                 child: Container(
                                   height: 100,
                                   width: double.infinity,
@@ -195,7 +196,7 @@ class PurchaseReportState extends State<PurchaseReturnReportScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "$currency ${totalPurchaseReturn.toStringAsFixed(2)}",
+                                            "$currency${totalPurchaseReturn.toStringAsFixed(2)}",
                                             style: const TextStyle(
                                               color: Colors.green,
                                               fontSize: 20,
@@ -283,44 +284,54 @@ class PurchaseReportState extends State<PurchaseReturnReportScreen> {
                                             DateTime.parse(transaction[index].purchaseDate ?? '').isAtSameMomentAs(fromDate)) &&
                                         (toDate.isAfter(DateTime.parse(transaction[index].purchaseDate ?? '')) ||
                                             DateTime.parse(transaction[index].purchaseDate ?? '').isAtSameMomentAs(toDate)),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        PurchaseInvoiceDetails(
-                                          businessInfo: profile.value!,
-                                          transitionModel: transaction[index],
-                                        ).launch(context);
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            PurchaseInvoiceDetails(
+                                              businessInfo: profile.value!,
+                                              transitionModel: transaction[index],
+                                            ).launch(context);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                             width: context.width(),
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      transaction[index].party?.name ?? '',
-                                                      style: const TextStyle(fontSize: 16),
+                                                    Flexible(
+                                                      child: Text(
+                                                        transaction[index].party?.name ?? '',
+                                                        style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
                                                     ),
-                                                    Text('#${transaction[index].invoiceNumber}'),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      '#${transaction[index].invoiceNumber}',
+                                                      style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                                const SizedBox(height: 10),
+                                                const SizedBox(height: 4),
                                                 Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
                                                         Container(
-                                                          padding: const EdgeInsets.all(8),
+                                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                                           decoration: BoxDecoration(
                                                               color: transaction[index].dueAmount! <= 0
                                                                   ? const Color(0xff0dbf7d).withOpacity(0.1)
                                                                   : const Color(0xFFED1A3B).withOpacity(0.1),
-                                                              borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                                              borderRadius: const BorderRadius.all(Radius.circular(2))),
                                                           child: Text(
                                                             transaction[index].dueAmount! <= 0 ? lang.S.of(context).paid : lang.S.of(context).unPaid,
                                                             style: TextStyle(color: transaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
@@ -330,28 +341,39 @@ class PurchaseReportState extends State<PurchaseReturnReportScreen> {
                                                     ),
                                                     Text(
                                                       DateFormat.yMMMd().format(DateTime.parse(transaction[index].purchaseDate ?? '')),
-                                                      style: const TextStyle(color: Colors.grey),
+                                                      style: const TextStyle(color: DAppColors.kSecondary),
                                                     ),
                                                   ],
                                                 ),
                                                 const SizedBox(height: 10),
-                                                Text(
-                                                  '${lang.S.of(context).total} : $currency ${transaction[index].totalAmount.toString()}',
-                                                  style: const TextStyle(color: Colors.grey),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                  '${lang.S.of(context).paid} : $currency ${transaction[index].totalAmount!.toDouble() - transaction[index].dueAmount!.toDouble()}',
-                                                  style: const TextStyle(color: Colors.grey),
-                                                ),
                                                 Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Text(
-                                                      '${lang.S.of(context).returnAmount}: $currency $returndAmount',
-                                                      style: const TextStyle(fontSize: 16),
+                                                      '${lang.S.of(context).total} : $currency${transaction[index].totalAmount.toString()}',
+                                                      style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 14, color: DAppColors.kSecondary),
                                                     ),
-                                                    personalData.when(data: (data) {
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      '${lang.S.of(context).paid} : $currency${transaction[index].totalAmount!.toDouble() - transaction[index].dueAmount!.toDouble()}',
+                                                      style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 14, color: DAppColors.kSecondary),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Text(
+                                                        '${lang.S.of(context).returnAmount}: $currency$returndAmount',
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                      ),
+                                                    ),
+                                                    profile.when(data: (data) {
                                                       return Row(
                                                         children: [
                                                           IconButton(
@@ -407,13 +429,9 @@ class PurchaseReportState extends State<PurchaseReturnReportScreen> {
                                               ],
                                             ),
                                           ),
-                                          Container(
-                                            height: 0.5,
-                                            width: context.width(),
-                                            color: Colors.grey,
-                                          )
-                                        ],
-                                      ),
+                                        ),
+                                        const Divider(height: 0),
+                                      ],
                                     ),
                                   );
                                 },

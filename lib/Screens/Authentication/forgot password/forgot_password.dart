@@ -30,6 +30,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     TextTheme textTheme = Theme.of(context).textTheme;
     return GlobalPopup(
       child: Scaffold(
@@ -85,8 +86,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   },
                 ),
                 const SizedBox(height: 24.0),
-                UpdateButton(
-                  onpressed: () async {
+                ElevatedButton(
+                  style: OutlinedButton.styleFrom(
+                    maximumSize: const Size(double.infinity, 48),
+                    minimumSize: const Size(double.infinity, 48),
+                    disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                  ),
+                  onPressed: () async {
                     if (isClicked) {
                       return;
                     }
@@ -111,9 +117,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       }
                     }
                   },
-                  text:
-                 lang.S.of(context).continueE,
-                  //'Continue',
+                  child: Text(
+                    lang.S.of(context).continueE,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: _theme.textTheme.bodyMedium?.copyWith(
+                      color: _theme.colorScheme.primaryContainer,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ],
             ),

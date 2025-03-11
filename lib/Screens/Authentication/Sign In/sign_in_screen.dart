@@ -68,6 +68,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    final _theme = Theme.of(context);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: kWhite,
@@ -112,16 +113,16 @@ class _SignInState extends State<SignIn> {
                   TextFormField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: kInputDecoration.copyWith(
+                    decoration: InputDecoration(
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                     // labelText: 'Email',
+                      // labelText: 'Email',
                       labelText: lang.S.of(context).lableEmail,
                       //hintText: 'Enter email address',
                       hintText: lang.S.of(context).hintEmail,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                       // return 'Email can\'t be empty';
+                        // return 'Email can\'t be empty';
                         return lang.S.of(context).emailCannotBeEmpty;
                       } else if (!value.contains('@')) {
                         //return 'Please enter a valid email';
@@ -135,7 +136,7 @@ class _SignInState extends State<SignIn> {
                     controller: passwordController,
                     keyboardType: TextInputType.text,
                     obscureText: showPassword,
-                    decoration: kInputDecoration.copyWith(
+                    decoration: InputDecoration(
                       //labelText: 'Password',
                       labelText: lang.S.of(context).lablePassword,
                       //hintText: 'Enter password',
@@ -149,6 +150,7 @@ class _SignInState extends State<SignIn> {
                         icon: Icon(
                           showPassword ? FeatherIcons.eyeOff : FeatherIcons.eye,
                           color: kGreyTextColor,
+                          size: 18,
                         ),
                       ),
                     ),
@@ -186,7 +188,7 @@ class _SignInState extends State<SignIn> {
                       const SizedBox(width: 8.0),
                       Text(
                         lang.S.of(context).rememberMe,
-                         //'Remember me',
+                        //'Remember me',
                         style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                       ),
                       const Spacer(),
@@ -213,8 +215,13 @@ class _SignInState extends State<SignIn> {
                     ],
                   ),
                   const SizedBox(height: 24.0),
-                  UpdateButton(
-                    onpressed: () async {
+                  ElevatedButton(
+                    style: OutlinedButton.styleFrom(
+                      maximumSize: const Size(double.infinity, 48),
+                      minimumSize: const Size(double.infinity, 48),
+                      disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                    ),
+                    onPressed: () async {
                       if (isClicked) {
                         return;
                       }
@@ -230,12 +237,18 @@ class _SignInState extends State<SignIn> {
                         }
                       }
                     },
-                    text: lang.S.of(context).logIn,
-                    //'Login',
+                    child: Text(
+                      lang.S.of(context).logIn,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.bodyMedium?.copyWith(
+                        color: _theme.colorScheme.primaryContainer,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
+                  const SizedBox(height: 16),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -254,13 +267,12 @@ class _SignInState extends State<SignIn> {
                         hoverColor: kMainColor.withOpacity(0.1),
                         child: RichText(
                           text: TextSpan(
-                            text:
-                           lang.S.of(context).donNotHaveAnAccount,
+                            text: lang.S.of(context).donNotHaveAnAccount,
                             //'Don’t have an account? ',
                             style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                             children: [
                               TextSpan(
-                                text:lang.S.of(context).signUp,
+                                text: lang.S.of(context).signUp,
                                 // text:'Sign Up',
                                 style: textTheme.bodyMedium?.copyWith(color: kMainColor, fontWeight: FontWeight.bold),
                               )

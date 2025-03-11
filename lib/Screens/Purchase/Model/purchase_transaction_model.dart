@@ -5,6 +5,9 @@ class PurchaseTransaction {
     this.businessId,
     this.userId,
     this.discountAmount,
+    this.discountPercent,
+    this.discountType,
+    this.shippingCharge,
     this.dueAmount,
     this.paidAmount,
     this.totalAmount,
@@ -30,6 +33,9 @@ class PurchaseTransaction {
     businessId = json['business_id'];
     userId = json['user_id'];
     discountAmount = json['discountAmount'];
+    discountPercent = json['discount_percent'];
+    shippingCharge = json['shipping_charge'];
+    discountType = json['discount_type'];
     dueAmount = json['dueAmount'];
     vatAmount = json['vat_amount'];
     vatPercent = json['vat_percent'];
@@ -63,6 +69,9 @@ class PurchaseTransaction {
   num? businessId;
   num? userId;
   num? discountAmount;
+  num? discountPercent;
+  num? shippingCharge;
+  String? discountType;
   num? dueAmount;
   num? paidAmount;
   num? vatAmount;
@@ -88,6 +97,9 @@ class PurchaseTransaction {
     map['business_id'] = businessId;
     map['user_id'] = userId;
     map['discountAmount'] = discountAmount;
+    map['discount_percent'] = discountPercent;
+    map['shipping_charge'] = shippingCharge;
+    map['discount_type'] = discountType;
     map['dueAmount'] = dueAmount;
     map['paidAmount'] = paidAmount;
     map['totalAmount'] = totalAmount;

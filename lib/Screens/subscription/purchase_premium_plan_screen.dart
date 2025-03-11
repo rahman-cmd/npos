@@ -10,6 +10,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../GlobalComponents/button_global.dart';
 import '../../constant.dart';
 import '../../model/business_info_model.dart' as bInfo;
+import '../../GlobalComponents/go_to_subscription-package_page_popup_widget.dart';
 import '../Currency/Model/currency_model.dart';
 import '../Currency/Provider/currency_provider.dart';
 import '../Home/home.dart';
@@ -75,54 +76,7 @@ class _PurchasePremiumPlanScreenState extends State<PurchasePremiumPlanScreen> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: kWhite,
-            surfaceTintColor: kWhite,
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            contentPadding: const EdgeInsets.all(20),
-            titlePadding: const EdgeInsets.all(0),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                  'assets/upgradePlan.svg',
-                  height: 198,
-                  width: 238,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  lang.S.of(context).endYourFreePlan,
-                  textAlign: TextAlign.center,
-                  // 'End your Free plan',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: kTitleColor),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  lang.S.of(context).yourFree,
-                  // 'Your Free Package is almost done, buy your next plan Thanks.',
-                  style: gTextStyle.copyWith(color: kGreyTextColor),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                UpdateButton(
-                    text: lang.S.of(context).upgradeNow,
-                    //'Upgrade Now',
-                    onpressed: () {
-                      Navigator.pop(context);
-                    }),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          );
+          return goToPackagePagePopup(context: context, enrolledPlan: widget.enrolledPlan, navigateBack: true);
         });
   }
 
@@ -134,6 +88,7 @@ class _PurchasePremiumPlanScreenState extends State<PurchasePremiumPlanScreen> {
 
     ref.refresh(businessInfoProvider);
     ref.refresh(subscriptionPlanProvider);
+    ref.refresh(getExpireDateProvider(ref));
 
     await Future.delayed(const Duration(seconds: 1)); // Optional delay
     _isRefreshing = false;
@@ -207,12 +162,18 @@ class _PurchasePremiumPlanScreenState extends State<PurchasePremiumPlanScreen> {
                                       );
                                     }
                                   }
-                                : () => ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        backgroundColor: Colors.red,
-                                        content: Text('Please update your plan'),
-                                      ),
+                                : () => Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const Home()),
+                                      (Route<dynamic> route) => false,
                                     ),
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   const SnackBar(
+                            //     backgroundColor: Colors.red,
+                            //     content: Text('Please update your plan'),
+                            //   ),
+                            // ),
+
                             child: Icon(
                               Icons.cancel_outlined,
                               color: widget.isExpired != true ? Colors.grey : Colors.black,
@@ -470,6 +431,7 @@ class _PurchasePremiumPlanScreenState extends State<PurchasePremiumPlanScreen> {
 
                               if (success) {
                                 ref.refresh(businessInfoProvider);
+                                ref.refresh(getExpireDateProvider(ref));
                                 widget.isExpired == false;
                                 EasyLoading.showSuccess(
                                   lang.S.of(context).successfullyPaid,

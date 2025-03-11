@@ -55,6 +55,7 @@ class _SingleLossProfitScreenState extends State<SingleLossProfitScreen> {
   Widget build(BuildContext context) {
     return GlobalPopup(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: Text(
@@ -77,8 +78,9 @@ class _SingleLossProfitScreenState extends State<SingleLossProfitScreen> {
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.transactionModel.party?.name ?? ''),
+                    Flexible(child: Text(widget.transactionModel.party?.name ?? '',maxLines: 2,)),
                     Text(
                       "${lang.S.of(context).dates} ${DateFormat.yMMMd().format(
                         DateTime.parse(widget.transactionModel.saleDate ?? ''),

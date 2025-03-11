@@ -82,7 +82,8 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
             productPrice: (element.price ?? 0),
             quantity: (element.quantities ?? 0),
             totalDiscount: (widget.saleTransactionModel?.discountAmount ?? 0),
-            totalPrice: (widget.saleTransactionModel?.totalAmount ?? 0) + (widget.saleTransactionModel?.discountAmount ?? 0) - (widget.saleTransactionModel?.vatAmount ?? 0),
+            totalPrice: ((widget.saleTransactionModel?.totalAmount ?? 0) + (widget.saleTransactionModel?.discountAmount ?? 0)) -
+                ((widget.saleTransactionModel?.vatAmount ?? 0) + (widget.saleTransactionModel?.shippingCharge ?? 0)),
           ),
           productId: element.id ?? 0,
           quantity: 0,
@@ -104,7 +105,8 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
             productPrice: (element.productPurchasePrice ?? 0),
             quantity: (element.quantities ?? 0),
             totalDiscount: (widget.purchaseTransaction?.discountAmount ?? 0),
-            totalPrice: (widget.purchaseTransaction?.totalAmount ?? 0) + (widget.purchaseTransaction?.discountAmount ?? 0),
+            totalPrice: ((widget.purchaseTransaction?.totalAmount ?? 0) + (widget.purchaseTransaction?.discountAmount ?? 0)) -
+                ((widget.purchaseTransaction?.vatAmount ?? 0) + (widget.purchaseTransaction?.shippingCharge ?? 0)),
           ),
           productId: element.id ?? 0,
           quantity: 0,
@@ -121,6 +123,7 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     return Consumer(builder: (context, consumerRef, __) {
       return GlobalPopup(
         child: Scaffold(
@@ -186,11 +189,18 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                   ///_______Added_ItemS__________________________________________________
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(5),
                       ),
-                      border: Border.all(width: 1, color: const Color(0xffEAEFFA)),
+                      color: _theme.colorScheme.primaryContainer,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xff000000).withValues(alpha: 0.08),
+                          spreadRadius: 0,
+                          offset: const Offset(0, 4),
+                          blurRadius: 24,
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,10 +208,10 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                         Container(
                           width: double.infinity,
                           decoration: const BoxDecoration(
-                            color: Color(0xffEAEFFA),
+                            color: Color(0xffFEF0F1),
                             borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
+                              topLeft: Radius.circular(5),
+                              topRight: Radius.circular(5),
                             ),
                           ),
                           child: Padding(
@@ -242,8 +252,15 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                   contentPadding: const EdgeInsets.all(0),
                                   title: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(returnList[index].productName.toString()),
+                                      Flexible(
+                                        child: Text(
+                                          returnList[index].productName.toString(),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
                                       const SizedBox(width: 5.0),
                                       const Text('Return QTY'),
                                     ],
@@ -254,101 +271,98 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                       Text(
                                         '${(returnList[index].stock ?? 0) - (returnList[index].quantity)} X ${returnList[index].unitPrice.toStringAsFixed(2)} = ${double.tryParse((double.parse(returnList[index].unitPrice.toString()) * ((returnList[index].stock ?? 0) - currentQuantity)).toStringAsFixed(2)) ?? 0}',
                                       ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      returnList[index].quantity > 0 ? returnList[index].quantity-- : returnList[index].quantity = 0;
-                                                      controllers[index].text = returnList[index].quantity.toString();
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    height: 20,
-                                                    width: 20,
-                                                    decoration: const BoxDecoration(
-                                                      color: kMainColor,
-                                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    ),
-                                                    child: const Center(
-                                                      child: Text(
-                                                        '-',
-                                                        style: TextStyle(fontSize: 14, color: Colors.white),
-                                                      ),
-                                                    ),
+                                      SizedBox(
+                                        width: 100,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  returnList[index].quantity > 0 ? returnList[index].quantity-- : returnList[index].quantity = 0;
+                                                  controllers[index].text = returnList[index].quantity.toString();
+                                                });
+                                              },
+                                              child: Container(
+                                                height: 20,
+                                                width: 20,
+                                                decoration: const BoxDecoration(
+                                                  color: kMainColor,
+                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    '-',
+                                                    style: TextStyle(fontSize: 14, color: Colors.white),
                                                   ),
                                                 ),
-                                                const SizedBox(width: 5),
-                                                SizedBox(
-                                                  width: 50,
-                                                  child: TextFormField(
-                                                    onTap: () {
-                                                      controllers[index].clear();
-                                                    },
-                                                    focusNode: focus[index],
-                                                    controller: controllers[index],
-                                                    textAlign: TextAlign.center,
-                                                    keyboardType: TextInputType.number,
-                                                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                                                    onChanged: (value) {
-                                                      num stock = returnList[index].stock ?? 1;
-                                                      if (value.isEmpty || value == '0') {
-                                                        value = '1';
-                                                      } else if (num.tryParse(value) == null) {
-                                                        return;
-                                                      } else {
-                                                        final newQuantity = num.parse(value);
-                                                        if (newQuantity <= stock) {
-                                                          returnList[index].quantity = newQuantity.round();
-                                                        } else {
-                                                          controllers[index].text = '1';
-                                                          EasyLoading.showError(
-                                                            lang.S.of(context).outOfStock,
-                                                            // 'Out Of Stock'
-                                                          );
-                                                        }
-                                                      }
-                                                    },
-                                                    decoration:
-                                                        InputDecoration(border: InputBorder.none, hintText: focus[index].hasFocus ? null : returnList[index].quantity.toString()),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 5),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (returnList[index].quantity < (returnList[index].stock ?? 0)) {
-                                                      setState(() {
-                                                        returnList[index].quantity += 1;
-                                                        controllers[index].text = returnList[index].quantity.toString();
-                                                      });
-                                                    } else {
-                                                      EasyLoading.showError('Out of Stock');
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    height: 20,
-                                                    width: 20,
-                                                    decoration: const BoxDecoration(
-                                                      color: kMainColor,
-                                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    ),
-                                                    child: const Center(
-                                                        child: Text(
-                                                      '+',
-                                                      style: TextStyle(fontSize: 14, color: Colors.white),
-                                                    )),
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(width: 5),
+                                            SizedBox(
+                                              width: 50,
+                                              child: TextFormField(
+                                                onTap: () {
+                                                  controllers[index].clear();
+                                                },
+                                                focusNode: focus[index],
+                                                controller: controllers[index],
+                                                textAlign: TextAlign.center,
+                                                keyboardType: TextInputType.number,
+                                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                                                onChanged: (value) {
+                                                  num stock = returnList[index].stock ?? 1;
+                                                  if (value.isEmpty || value == '0') {
+                                                    value = '1';
+                                                  } else if (num.tryParse(value) == null) {
+                                                    return;
+                                                  } else {
+                                                    final newQuantity = num.parse(value);
+                                                    if (newQuantity <= stock) {
+                                                      returnList[index].quantity = newQuantity.round();
+                                                    } else {
+                                                      controllers[index].text = '1';
+                                                      EasyLoading.showError(
+                                                        lang.S.of(context).outOfStock,
+                                                        // 'Out Of Stock'
+                                                      );
+                                                    }
+                                                  }
+                                                },
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText: focus[index].hasFocus ? null : returnList[index].quantity.toString(),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (returnList[index].quantity < (returnList[index].stock ?? 0)) {
+                                                  setState(() {
+                                                    returnList[index].quantity += 1;
+                                                    controllers[index].text = returnList[index].quantity.toString();
+                                                  });
+                                                } else {
+                                                  EasyLoading.showError('Out of Stock');
+                                                }
+                                              },
+                                              child: Container(
+                                                height: 20,
+                                                width: 20,
+                                                decoration: const BoxDecoration(
+                                                  color: kMainColor,
+                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                ),
+                                                child: const Center(
+                                                    child: Text(
+                                                  '+',
+                                                  style: TextStyle(fontSize: 14, color: Colors.white),
+                                                )),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -362,33 +376,59 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
 
                   ///______________________Total_Return____________________________________
                   Container(
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(color: Colors.grey.shade300, width: 1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xff000000).withValues(alpha: 0.08),
+                          spreadRadius: 0,
+                          offset: const Offset(0, 4),
+                          blurRadius: 24,
+                        ),
+                      ],
+                      color: _theme.colorScheme.primaryContainer,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
                     ),
                     child: Column(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                            color: Color(0xffEAEFFA),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Flexible(
+                              child: Text(
                                 'Total return amount:',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 16),
                               ),
-                              Text(
-                                '$currency ${getTotalReturnAmount().toStringAsFixed(2)}',
-                                style: const TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              '$currency ${getTotalReturnAmount().toStringAsFixed(2)}',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Flexible(
+                              child: Text(
+                                'Non Refundable(VAT/Discount):',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(fontSize: 16),
                               ),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              widget.saleTransactionModel != null
+                                  ? '$currency ${((widget.saleTransactionModel?.vatAmount ?? 0) + (widget.saleTransactionModel?.shippingCharge ?? 0)).toStringAsFixed(2)}'
+                                  : '$currency ${((widget.purchaseTransaction?.vatAmount ?? 0) + (widget.purchaseTransaction?.shippingCharge ?? 0)).toStringAsFixed(2)}',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -398,32 +438,40 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
             ),
           ),
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
             child: Row(
               children: [
                 Expanded(
-                    child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: const BorderRadius.all(Radius.circular(30)),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      maximumSize: const Size(double.infinity, 48),
+                      minimumSize: const Size(double.infinity, 48),
+                      disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(fontSize: 18),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      lang.S.of(context).cancel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.bodyMedium?.copyWith(
+                        color: _theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
                     ),
                   ),
-                )),
-                const SizedBox(width: 10),
+                ),
+                const SizedBox(width: 20),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: widget.saleTransactionModel != null
+                  child: ElevatedButton(
+                    style: OutlinedButton.styleFrom(
+                      maximumSize: const Size(double.infinity, 48),
+                      minimumSize: const Size(double.infinity, 48),
+                      disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                    ),
+                    onPressed: widget.saleTransactionModel != null
                         ? () async {
                             EasyLoading.show();
                             returnList.removeWhere(
@@ -477,8 +525,9 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                 returnAmount: [],
                                 returnQty: [],
                                 lossProfit: [],
-                                dueAmount:
-                                    (widget.purchaseTransaction!.dueAmount ?? 0) < getTotalReturnAmount() ? 0 : (widget.purchaseTransaction!.dueAmount ?? 0) - getTotalReturnAmount(),
+                                dueAmount: (widget.purchaseTransaction!.dueAmount ?? 0) < getTotalReturnAmount()
+                                    ? 0
+                                    : (widget.purchaseTransaction!.dueAmount ?? 0) - getTotalReturnAmount(),
                                 paidAmount: widget.purchaseTransaction!.paidAmount ?? 0,
                                 totalAmount: (widget.purchaseTransaction!.totalAmount ?? 0) - getTotalReturnAmount(),
                                 discountAmount: widget.purchaseTransaction!.discountAmount ?? 0,
@@ -502,17 +551,14 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                               EasyLoading.showError('Please select product for return');
                             }
                           },
-                    child: Container(
-                      height: 60,
-                      decoration: const BoxDecoration(
-                        color: kMainColor,
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Confirm return',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
+                    child: Text(
+                      'Confirm return',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.bodyMedium?.copyWith(
+                        color: _theme.colorScheme.primaryContainer,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
                     ),
                   ),

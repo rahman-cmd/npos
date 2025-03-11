@@ -1,12 +1,12 @@
 import 'dart:convert';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/model/business_setting_model.dart';
 import 'package:mobile_pos/model/dashboard_overview_model.dart';
 import 'package:mobile_pos/model/todays_summary_model.dart';
-
+import '../../http_client/subscription_expire_provider.dart';
 import '../../model/business_info_model.dart';
 import '../constant_functions.dart';
 
@@ -21,9 +21,28 @@ class BusinessRepository {
     });
     if (response.statusCode == 200) {
       final parsedData = jsonDecode(response.body);
-      return BusinessInformation.fromJson(parsedData['data']); // Extract the "data" object from the response
+      final BusinessInformation businessInformation = BusinessInformation.fromJson(parsedData['data']);
+
+      return businessInformation;
     } else {
-      // await LogOutRepo().signOut();
+      throw Exception('Failed to fetch business data');
+    }
+  }
+
+  Future<void> fetchSubscriptionExpireDate({required WidgetRef ref}) async {
+    final uri = Uri.parse('${APIConfig.url}/business');
+    final token = await getAuthToken(); // Replace with your token retrieval logic
+
+    final response = await http.get(uri, headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token', // Assuming Bearer token format
+    });
+    if (response.statusCode == 200) {
+      final parsedData = jsonDecode(response.body);
+      final BusinessInformation businessInformation = BusinessInformation.fromJson(parsedData['data']);
+      ref.read(subscriptionProvider.notifier).updateSubscription(businessInformation.willExpire);
+      // ref.read(subscriptionProvider.notifier).updateSubscription("2025-01-05");
+    } else {
       throw Exception('Failed to fetch business data');
     }
   }

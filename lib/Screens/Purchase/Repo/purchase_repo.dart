@@ -11,6 +11,7 @@ import '../../../Const/api_config.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../Provider/transactions_provider.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../../Customers/Provider/customer_provider.dart';
 import '../Model/purchase_transaction_model.dart';
 
@@ -40,6 +41,7 @@ class PurchaseRepo {
     required num partyId,
     required String purchaseDate,
     required num discountAmount,
+    required num discountPercent,
     required num? vatId,
     required num totalAmount,
     required num vatAmount,
@@ -49,6 +51,8 @@ class PurchaseRepo {
     required bool isPaid,
     required String paymentType,
     required List<CartProductModelPurchase> products,
+    required String discountType,
+    required num shippingCharge,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/purchase');
     final requestBody = jsonEncode({
@@ -56,6 +60,7 @@ class PurchaseRepo {
       'vat_id': vatId,
       'purchaseDate': purchaseDate,
       'discountAmount': discountAmount,
+      'discount_percent': discountPercent,
       'totalAmount': totalAmount,
       'vat_amount': vatAmount,
       'vat_percent': vatPercent,
@@ -64,6 +69,8 @@ class PurchaseRepo {
       'isPaid': isPaid,
       'paymentType': paymentType,
       'products': products.map((product) => product.toJson()).toList(),
+      'discount_type': discountType,
+      'shipping_charge': shippingCharge,
     });
 
     try {
@@ -81,8 +88,10 @@ class PurchaseRepo {
         var data2 = ref.refresh(partiesProvider);
         var data3 = ref.refresh(purchaseTransactionProvider);
         var data4 = ref.refresh(businessInfoProvider);
+        ref.refresh(getExpireDateProvider(ref));
         ref.refresh(summaryInfoProvider);
         // Navigator.pop(context);
+        print('Purchase Response: ${parsedData['data']}');
         return PurchaseTransaction.fromJson(parsedData['data']);
       } else {
         EasyLoading.dismiss();
@@ -132,9 +141,10 @@ class PurchaseRepo {
     });
 
     try {
-      var responseData = await http.post(
-        uri,
-        headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'},
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+      var responseData = await customHttpClient.post(
+        url: uri,
+        addContentTypeInHeader: true,
         body: requestBody,
       );
 
@@ -148,6 +158,7 @@ class PurchaseRepo {
         var data2 = ref.refresh(partiesProvider);
         var data3 = ref.refresh(purchaseTransactionProvider);
         var data4 = ref.refresh(businessInfoProvider);
+        ref.refresh(getExpireDateProvider(ref));
         Navigator.pop(context);
         return PurchaseTransaction.fromJson(parsedData);
       } else {
@@ -171,12 +182,9 @@ class PurchaseRepo {
     final String apiUrl = '${APIConfig.url}/purchase/$id';
 
     try {
-      final response = await http.delete(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': await getAuthToken(), // Implement your getAuthToken function
-        },
+      CustomHttpClient customHttpClient = CustomHttpClient(ref: ref, context: context, client: http.Client());
+      final response = await customHttpClient.delete(
+        url: Uri.parse(apiUrl),
       );
 
       EasyLoading.dismiss();

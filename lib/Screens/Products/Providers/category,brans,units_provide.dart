@@ -17,3 +17,4 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) => brandsRepo.fetchAllB
 
 UnitsRepo unitsRepo = UnitsRepo();
 final unitsProvider = FutureProvider<List<Unit>>((ref) => unitsRepo.fetchAllUnits());
+

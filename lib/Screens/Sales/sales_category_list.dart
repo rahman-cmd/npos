@@ -8,7 +8,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
-import '../Products/add_category_screen.dart';
+import '../product_category/add_category_screen.dart';
 
 class SalesCategoryList extends StatefulWidget {
   const SalesCategoryList({Key? key}) : super(key: key);

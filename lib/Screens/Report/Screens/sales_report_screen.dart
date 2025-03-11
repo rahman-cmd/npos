@@ -12,12 +12,15 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../GlobalComponents/returned_tag_widget.dart';
+import '../../../GlobalComponents/sales_transaction_widget.dart';
 import '../../../PDF Invoice/generate_pdf.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
+import '../../../core/theme/_app_colors.dart';
 import '../../../currency.dart';
 import '../../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
+import '../../../widgets/empty_widget/_empty_widget.dart';
 import '../../invoice_details/sales_invoice_details_screen.dart';
 
 class SalesReportScreen extends StatefulWidget {
@@ -56,12 +59,6 @@ class SalesReportScreenState extends State<SalesReportScreen> {
     });
   }
 
-  Future<String> getPDFPath({required String data}) async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
-    return '$appDocPath/your_pdf_file.pdf'; // Replace with the actual file name
-  }
-
   bool _isRefreshing = false;
 
   Future<void> refreshAllProviders({required WidgetRef ref}) async {
@@ -72,6 +69,7 @@ class SalesReportScreenState extends State<SalesReportScreen> {
       ref.refresh(salesTransactionProvider);
       ref.refresh(thermalPrinterProvider);
       ref.refresh(businessInfoProvider);
+      ref.refresh(getExpireDateProvider(ref));
       await Future.delayed(const Duration(seconds: 3));
     } finally {
       _isRefreshing = false;
@@ -81,7 +79,7 @@ class SalesReportScreenState extends State<SalesReportScreen> {
   @override
   Widget build(BuildContext context) {
     final translateTime = getTranslateTime(context);
-
+    final _theme = Theme.of(context);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: kWhite,
@@ -106,7 +104,7 @@ class SalesReportScreenState extends State<SalesReportScreen> {
           return RefreshIndicator(
             onRefresh: () => refreshAllProviders(ref: ref),
             child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   Padding(
@@ -194,7 +192,12 @@ class SalesReportScreenState extends State<SalesReportScreen> {
                                   height: 100,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                      color: kMainColor.withOpacity(0.1), border: Border.all(width: 1, color: kMainColor), borderRadius: const BorderRadius.all(Radius.circular(15))),
+                                    color: kMainColor.withOpacity(0.1),
+                                    border: Border.all(width: 1, color: kMainColor),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(15),
+                                    ),
+                                  ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
@@ -286,143 +289,12 @@ class SalesReportScreenState extends State<SalesReportScreen> {
                                             DateTime.parse(transaction[index].saleDate ?? '').isAtSameMomentAs(fromDate)) &&
                                         (toDate.isAfter(DateTime.parse(transaction[index].saleDate ?? '')) ||
                                             DateTime.parse(transaction[index].saleDate ?? '').isAtSameMomentAs(toDate)),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        SalesInvoiceDetails(
-                                          saleTransaction: transaction[index],
-                                          businessInfo: personalData.value!,
-                                        ).launch(context);
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(20),
-                                            width: context.width(),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      transaction[index].party?.name ?? '',
-                                                      style: const TextStyle(fontSize: 16),
-                                                    ),
-                                                    Text('#${transaction[index].invoiceNumber}'),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          padding: const EdgeInsets.all(8),
-                                                          decoration: BoxDecoration(
-                                                              color: transaction[index].dueAmount! <= 0
-                                                                  ? const Color(0xff0dbf7d).withOpacity(0.1)
-                                                                  : const Color(0xFFED1A3B).withOpacity(0.1),
-                                                              borderRadius: const BorderRadius.all(Radius.circular(10))),
-                                                          child: Text(
-                                                            transaction[index].dueAmount! <= 0 ? lang.S.of(context).paid : lang.S.of(context).unPaid,
-                                                            style: TextStyle(color: transaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
-                                                          ),
-                                                        ),
-
-                                                        ///________Return_tag_________________________________________
-                                                        ReturnedTagWidget(
-                                                          show: transaction[index].salesReturns?.isNotEmpty ?? false,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Text(
-                                                      DateFormat.yMMMd().format(DateTime.parse(transaction[index].saleDate ?? '')),
-                                                      style: const TextStyle(color: Colors.grey),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                  '${lang.S.of(context).total} : $currency ${transaction[index].totalAmount.toString()}',
-                                                  style: const TextStyle(color: Colors.grey),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                  '${lang.S.of(context).paid} : $currency ${transaction[index].totalAmount!.toDouble() - transaction[index].dueAmount!.toDouble()}',
-                                                  style: const TextStyle(color: Colors.grey),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      '${lang.S.of(context).due}: $currency ${transaction[index].dueAmount.toString()}',
-                                                      style: const TextStyle(fontSize: 16),
-                                                    ).visible(transaction[index].dueAmount!.toInt() != 0),
-                                                    personalData.when(data: (data) {
-                                                      return Row(
-                                                        children: [
-                                                          IconButton(
-                                                              padding: EdgeInsets.zero,
-                                                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                                              onPressed: () async {
-                                                                if ((Theme.of(context).platform == TargetPlatform.android)) {
-                                                                  PrintTransactionModel model =
-                                                                      PrintTransactionModel(transitionModel: transaction[index], personalInformationModel: data);
-
-                                                                  await printerData.printSalesThermalInvoiceNow(
-                                                                    transaction: model,
-                                                                    productList: model.transitionModel!.salesDetails,
-                                                                    context: context,
-                                                                  );
-                                                                }
-                                                              },
-                                                              icon: const Icon(
-                                                                FeatherIcons.printer,
-                                                                color: Colors.grey,
-                                                              )),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          businessSettingData.when(data: (business) {
-                                                            return IconButton(
-                                                                padding: EdgeInsets.zero,
-                                                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                                                onPressed: () => GeneratePdf().generateSaleDocument(transaction[index], data, context, business),
-                                                                icon: const Icon(
-                                                                  Icons.picture_as_pdf,
-                                                                  color: Colors.grey,
-                                                                ));
-                                                          }, error: (e, stack) {
-                                                            return Text(e.toString());
-                                                          }, loading: () {
-                                                            return const Center(
-                                                              child: CircularProgressIndicator(),
-                                                            );
-                                                          })
-                                                        ],
-                                                      );
-                                                    }, error: (e, stack) {
-                                                      return Text(e.toString());
-                                                    }, loading: () {
-                                                      //return  Text('Loading');
-                                                      return Text(
-                                                        lang.S.of(context).loading,
-                                                        //'Loading'
-                                                      );
-                                                    }),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 0.5,
-                                            width: context.width(),
-                                            color: Colors.grey,
-                                          )
-                                        ],
-                                      ),
+                                    child: salesTransactionWidget(
+                                      context: context,
+                                      ref: ref,
+                                      businessInfo: personalData.value!,
+                                      sale: transaction[index],
+                                      advancePermission: false,
                                     ),
                                   );
                                 },
@@ -430,10 +302,10 @@ class SalesReportScreenState extends State<SalesReportScreen> {
                             ],
                           )
                         : Center(
-                            child: Text(
-                              lang.S.of(context).addSale,
-                              maxLines: 2,
-                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
+                            child: EmptyWidget(
+                              message: TextSpan(
+                                text: lang.S.of(context).addSale,
+                              ),
                             ),
                           );
                   }, error: (e, stack) {

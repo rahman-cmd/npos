@@ -9,7 +9,6 @@ import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/Phone%20Auth/Repo/phone_auth_repo.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:nb_utils/nb_utils.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPVerify extends StatefulWidget {
@@ -125,10 +124,14 @@ class _OTPVerifyState extends State<OTPVerify> {
                       errorPinTheme:
                           PinTheme(width: 50, height: 50, decoration: BoxDecoration(color: Colors.red.shade200, borderRadius: const BorderRadius.all(Radius.circular(8)))),
                       validator: (value) {
-                        if (value.isEmptyOrNull) {
-                          //return 'Please enter the OTP';
+                        // if (value.isEmptyOrNull) {
+                        //   //return 'Please enter the OTP';
+                        //   return lang.S.of(context).pleaseEnterTheOTP;
+                        // }
+                        if (value == null || value.isEmpty) {
                           return lang.S.of(context).pleaseEnterTheOTP;
                         }
+
                         if (value!.length < 4) {
                           //return 'Enter a valid OTP';
                           return lang.S.of(context).enterAValidOTP;

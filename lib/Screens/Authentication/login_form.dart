@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/register_screen.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:nb_utils/nb_utils.dart';
 
 import '../../constant.dart';
 import 'forgot_password.dart';
@@ -110,24 +109,27 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          const ForgotPassword().launch(context);
-                          // Navigator.pushNamed(context, '/forgotPassword');
-                        },
-                        child: Text(
-                          lang.S.of(context).forgotPassword,
-                          style: GoogleFonts.poppins(
-                            color: kGreyTextColor,
-                            fontSize: 15.0,
+                  Visibility(
+                    visible: widget.isEmailLogin,
+                    child: Row(
+                      children: [
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPassword()));
+                            // const ForgotPassword().launch(context);
+                          },
+                          child: Text(
+                            lang.S.of(context).forgotPassword,
+                            style: GoogleFonts.poppins(
+                              color: kGreyTextColor,
+                              fontSize: 15.0,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ).visible(widget.isEmailLogin),
+                      ],
+                    ),
+                  ),
                   ButtonGlobalWithoutIcon(
                       buttontext: lang.S.of(context).logIn,
                       buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
@@ -137,29 +139,33 @@ class _LoginFormState extends State<LoginForm> {
                         }
                       },
                       buttonTextColor: Colors.white),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        lang.S.of(context).noAcc,
-                        style: GoogleFonts.poppins(color: kGreyTextColor, fontSize: 15.0),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.pushNamed(context, '/signup');
-                          const RegisterScreen().launch(context);
-                        },
-                        child: Text(
-                          lang.S.of(context).register,
-                          style: GoogleFonts.poppins(
-                            color: kMainColor,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                  Visibility(
+                    visible: widget.isEmailLogin,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          lang.S.of(context).noAcc,
+                          style: GoogleFonts.poppins(color: kGreyTextColor, fontSize: 15.0),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Navigator.pushNamed(context, '/signup');
+                            // const RegisterScreen().launch(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
+                          },
+                          child: Text(
+                            lang.S.of(context).register,
+                            style: GoogleFonts.poppins(
+                              color: kMainColor,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ).visible(widget.isEmailLogin),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

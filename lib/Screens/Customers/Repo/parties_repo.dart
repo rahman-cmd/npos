@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:mobile_pos/Const/api_config.dart';
 
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../Model/parties_model.dart';
 import '../Provider/customer_provider.dart';
 
@@ -43,6 +44,7 @@ class PartyRepository {
     String? address,
     String? due,
   }) async {
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
     final uri = Uri.parse('${APIConfig.url}/parties');
 
     var request = http.MultipartRequest('POST', uri)
@@ -59,7 +61,8 @@ class PartyRepository {
       request.files.add(http.MultipartFile.fromBytes('image', image.readAsBytesSync(), filename: image.path));
     }
 
-    final response = await request.send();
+    // final response = await request.send();
+    final response = await customHttpClient.uploadFile(url: uri, fileFieldName: 'image', file: image, fields: request.fields);
     final responseData = await response.stream.bytesToString();
     final parsedData = jsonDecode(responseData);
 
@@ -86,6 +89,7 @@ class PartyRepository {
     String? due,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/parties/$id');
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
@@ -102,7 +106,8 @@ class PartyRepository {
       request.files.add(http.MultipartFile.fromBytes('image', image.readAsBytesSync(), filename: image.path));
     }
 
-    final response = await request.send();
+    // final response = await request.send();
+    final response = await customHttpClient.uploadFile(url: uri, fields: request.fields, file: image, fileFieldName: 'image');
     final responseData = await response.stream.bytesToString();
 
     final parsedData = jsonDecode(responseData);
@@ -126,12 +131,9 @@ class PartyRepository {
     final String apiUrl = '${APIConfig.url}/parties/$id';
 
     try {
-      final response = await http.delete(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': await getAuthToken(), // Implement your getAuthToken function
-        },
+      CustomHttpClient customHttpClient = CustomHttpClient(ref: ref, context: context, client: http.Client());
+      final response = await customHttpClient.delete(
+        url: Uri.parse(apiUrl),
       );
 
       if (response.statusCode == 200) {

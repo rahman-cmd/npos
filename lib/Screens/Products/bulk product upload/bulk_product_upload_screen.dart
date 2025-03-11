@@ -6,13 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_pos/Provider/product_provider.dart';
+import 'package:mobile_pos/Provider/profile_provider.dart';
+import 'package:mobile_pos/Screens/Products/Repo/unit_repo.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../GlobalComponents/check_subscription.dart';
 import '../../../GlobalComponents/glonal_popup.dart';
+import '../../product_category/provider/product_category_provider/product_unit_provider.dart';
+import '../../product_unit/provider/product_unit_provider.dart';
 import '../Model/product_model.dart';
-import '../Providers/category,brans,units_provide.dart';
-import '../Repo/category_repo.dart';
+import '../../product_brand/product_brand_provider/product_brand_provider.dart';
+import '../../product_category/repo/category_repo.dart';
 
 class BulkUploader extends StatefulWidget {
   const BulkUploader({Key? key, required this.previousProductName, required this.previousProductCode}) : super(key: key);
@@ -106,81 +111,92 @@ class _BulkUploaderState extends State<BulkUploader> {
           title: const Text('Excel Uploader'),
         ),
         body: Consumer(builder: (context, ref, __) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Visibility(
-                    visible: file != null,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Card(
-                          child: ListTile(
-                              leading: Container(
-                                  height: 40,
-                                  width: 40,
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                  child: const Image(image: AssetImage('images/excel.png'))),
-                              title: Text(
-                                getFileExtension(file?.path ?? ''),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              trailing: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      file = null;
-                                    });
-                                  },
-                                  child: const Text('Remove')))),
+          final businessInfo = ref.watch(businessInfoProvider);
+          return businessInfo.when(data: (details) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Visibility(
+                      visible: file != null,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Card(
+                            child: ListTile(
+                                leading: Container(
+                                    height: 40,
+                                    width: 40,
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: const Image(image: AssetImage('images/excel.png'))),
+                                title: Text(
+                                  getFileExtension(file?.path ?? ''),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                trailing: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        file = null;
+                                      });
+                                    },
+                                    child: const Text('Remove')))),
+                      ),
                     ),
-                  ),
-                  Visibility(
-                    visible: file == null,
-                    child: const Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Image(
-                          height: 100,
-                          width: 100,
-                          image: AssetImage('images/file-upload.png'),
-                        )),
-                  ),
-                  ElevatedButton(
-                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(kMainColor)),
-                    onPressed: () async {
-                      if (file == null) {
-                        await pickAndUploadFile(ref: ref);
-                      } else {
-                        EasyLoading.show(status: 'Uploading...');
-                        await uploadProducts(ref: ref, file: file!, context: context);
-                        EasyLoading.dismiss();
-                      }
-                    },
-                    child: Text(file == null ? 'Pick and Upload File' : 'Upload', style: const TextStyle(color: Colors.white)),
-                  ),
-                  TextButton(
-                    // onPressed: () async => await downloadFile('excel_file.xlsx'),
-                    onPressed: () async {
-                      await createExcelFile();
-                    },
-                    child: const Text('Download Excel Format'),
-                  ),
-                ],
+                    Visibility(
+                      visible: file == null,
+                      child: const Padding(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Image(
+                            height: 100,
+                            width: 100,
+                            image: AssetImage('images/file-upload.png'),
+                          )),
+                    ),
+                    ElevatedButton(
+                      style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(kMainColor)),
+                      onPressed: () async {
+                        if (file == null) {
+                          await pickAndUploadFile(ref: ref);
+                        } else {
+                          EasyLoading.show(status: 'Uploading...');
+                          await uploadProducts(ref: ref, file: file!, context: context);
+                          EasyLoading.dismiss();
+                        }
+                      },
+                      child: Text(file == null ? 'Pick and Upload File' : 'Upload', style: const TextStyle(color: Colors.white)),
+                    ),
+                    TextButton(
+                      // onPressed: () async => await downloadFile('excel_file.xlsx'),
+                      onPressed: () async {
+                        await createExcelFile();
+                      },
+                      child: const Text('Download Excel Format'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          }, error: (e, stack) {
+            return Text(e.toString());
+          }, loading: () {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
         }),
       ),
     );
   }
+
+  ///
 
   Future<void> pickAndUploadFile({required WidgetRef ref}) async {
     const XTypeGroup typeGroup = XTypeGroup(
@@ -447,7 +463,7 @@ class _BulkUploaderState extends State<BulkUploader> {
   }
 
   Future<num?> addCategory({required String unitsName}) async {
-    return await categoryRepo.addCategoryForBulk(
+    return await CategoryRepo().addCategoryForBulk(
       name: unitsName,
     );
   }
@@ -459,7 +475,7 @@ class _BulkUploaderState extends State<BulkUploader> {
   }
 
   Future<num?> addUnit({required String unitName}) async {
-    return await unitsRepo.addUnitForBulk(
+    return await UnitsRepo().addUnitForBulk(
       name: unitName,
     );
   }

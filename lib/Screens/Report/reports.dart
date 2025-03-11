@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Report/Screens/due_report_screen.dart';
 import 'package:mobile_pos/Screens/Report/Screens/expense_report.dart';
+import 'package:mobile_pos/Screens/Report/Screens/expire_report.dart';
 import 'package:mobile_pos/Screens/Report/Screens/purchase_report.dart';
 import 'package:mobile_pos/Screens/Report/Screens/sales_report_screen.dart';
 import 'package:mobile_pos/constant.dart';
@@ -11,7 +12,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../GlobalComponents/glonal_popup.dart';
 import '../Loss_Profit/loss_profit_screen.dart';
-import '../stock_list/stock_list.dart';
+import '../stock_list/stock_list_main.dart';
 import 'Screens/income_report.dart';
 import 'Screens/purchase_return_report.dart';
 import 'Screens/sales_return_report_screen.dart';
@@ -31,6 +32,7 @@ class _ReportsState extends State<Reports> {
       child: Scaffold(
         backgroundColor: kWhite,
         appBar: AppBar(
+          surfaceTintColor: Colors.white,
           title: Text(
             lang.S.of(context).reports,
             style: GoogleFonts.poppins(
@@ -88,6 +90,15 @@ class _ReportsState extends State<Reports> {
                     iconPath: 'assets/stock.svg',
                     //title: 'Stock Report'
                     title: lang.S.of(context).stockReport),
+                const SizedBox(height: 16),
+
+                ///_______________Expired_report________________________________________________________________
+                ReportCard(
+                    pressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ExpiredList()));
+                    },
+                    iconPath: 'assets/expenseReport.svg',
+                    title: 'Expired List'),
                 const SizedBox(height: 16),
 
                 ///_______________Loss/Profit________________________________________________________________

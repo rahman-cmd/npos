@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 class ReturnedTagWidget extends StatelessWidget {
-  const ReturnedTagWidget({Key? key, required this.show}) : super(key: key);
+  const ReturnedTagWidget({super.key, required this.show});
 
   final bool show;
 
@@ -11,13 +11,18 @@ class ReturnedTagWidget extends StatelessWidget {
     return Visibility(
       visible: show,
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 8, right: 8),
         child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: Colors.orange.withOpacity(0.2), borderRadius: const BorderRadius.all(Radius.circular(10))),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.orange.withOpacity(0.2),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(2),
+            ),
+          ),
           child: Text(
             lang.S.of(context).returned,
-            style: TextStyle(color: Colors.orange),
+            style: const TextStyle(color: Colors.orange),
           ),
         ),
       ),

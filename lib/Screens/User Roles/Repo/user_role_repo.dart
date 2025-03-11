@@ -10,6 +10,7 @@ import 'package:mobile_pos/Screens/User%20Roles/Provider/user_role_provider.dart
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 
 class UserRoleRepo {
   Future<List<UserRoleModel>> fetchAllUsers() async {
@@ -42,7 +43,7 @@ class UserRoleRepo {
     required Permission permission,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/users');
-
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), ref: ref, context: context);
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
       ..headers['Authorization'] = await getAuthToken();
@@ -55,7 +56,11 @@ class UserRoleRepo {
     });
     request.fields.addAll(permission.toJson());
 
-    final response = await request.send();
+    // final response = await request.send();
+    final response = await customHttpClient.uploadFile(
+      url: uri,
+      fields: request.fields,
+    );
     final responseData = await response.stream.bytesToString();
     final parsedData = jsonDecode(responseData);
     print(response.statusCode);
@@ -81,12 +86,9 @@ class UserRoleRepo {
     final String apiUrl = '${APIConfig.url}/users/$id';
 
     try {
-      final response = await http.delete(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': await getAuthToken(), // Implement your getAuthToken function
-        },
+      CustomHttpClient customHttpClient = CustomHttpClient(ref: ref, context: context, client: http.Client());
+      final response = await customHttpClient.delete(
+        url: Uri.parse(apiUrl),
       );
 
       EasyLoading.dismiss();
@@ -118,6 +120,7 @@ class UserRoleRepo {
     required Permission permission,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/users/$userId');
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
@@ -135,7 +138,8 @@ class UserRoleRepo {
     }
     request.fields.addAll(permission.toJson());
 
-    final response = await request.send();
+    // final response = await request.send();
+    final response = await customHttpClient.uploadFile(url: uri, fields: request.fields);
     final responseData = await response.stream.bytesToString();
 
     final parsedData = jsonDecode(responseData);

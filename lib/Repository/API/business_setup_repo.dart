@@ -21,6 +21,8 @@ class BusinessSetupRepo {
     EasyLoading.show(status: 'Loading...', dismissOnTap: false);
 
     final uri = Uri.parse('${APIConfig.url}/business');
+
+
     var request = http.MultipartRequest('POST', uri)
       ..headers['Authorization'] = await getAuthToken()
       ..headers['Accept'] = 'application/json'

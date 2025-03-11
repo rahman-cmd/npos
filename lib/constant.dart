@@ -12,9 +12,12 @@ const kSuccessColor = Colors.green;
 const kPremiumPlanColor = Color(0xFF8752EE);
 const kPremiumPlanColor2 = Color(0xFFFF5F00);
 const kTitleColor = Color(0xFF000000);
+const kNeutralColor = Color(0xFF4D4D4D);
+const kBorder = Color(0xFF999999);
+const updateBorderColor = Color(0xffD8D8D8);
 bool isPrintEnable = false;
 List<String> paymentsTypeList = ['Cash', 'Card', 'Check', 'Mobile Pay', 'Due'];
-const String appVersion = '4.2';
+const String appVersion = '4.4';
 String noProductImageUrl = 'images/no_product_image.png';
 
 ///_______Purchase_Code________________________________________

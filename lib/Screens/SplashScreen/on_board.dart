@@ -47,6 +47,7 @@ class _OnBoardState extends State<OnBoard> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     sliderList = getSlider(context: context);
     return Scaffold(
       backgroundColor: kWhite,
@@ -144,12 +145,14 @@ class _OnBoardState extends State<OnBoard> {
           // ),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.only(right: 10.0, left: 10),
-            child: ButtonGlobal(
-              iconWidget: Icons.arrow_forward,
-              buttontext: lang.S.of(context).next,
-              iconColor: Colors.white,
-              // buttonDecoration: kButtonDecoration.copyWith(color: kMainColor, borderRadius: const BorderRadius.all(Radius.circular(30))),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ElevatedButton.icon(
+              style: OutlinedButton.styleFrom(
+                maximumSize: const Size(double.infinity, 48),
+                minimumSize: const Size(double.infinity, 48),
+                disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                disabledForegroundColor: const Color(0xff567DF4).withOpacity(0.05),
+              ),
               onPressed: () {
                 setState(
                   () {
@@ -164,6 +167,21 @@ class _OnBoardState extends State<OnBoard> {
                   },
                 );
               },
+              icon: const Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+              ),
+              iconAlignment: IconAlignment.end,
+              label: Text(
+                lang.S.of(context).next,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: _theme.textTheme.bodyMedium?.copyWith(
+                  color: _theme.colorScheme.primaryContainer,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 20),

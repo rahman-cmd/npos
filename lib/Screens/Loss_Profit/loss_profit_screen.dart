@@ -32,7 +32,6 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
   DateTime fromDate = DateTime(2021);
   DateTime toDate = DateTime.now();
 
-
   num calculateTotalProductQtyNow({required SalesTransactionModel sales}) {
     num totalQty = 0;
     for (var element in sales.salesDetails!) {
@@ -83,7 +82,6 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
               onRefresh: () => refreshData(ref),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-
                 child: Column(
                   children: [
                     Padding(
@@ -254,12 +252,15 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                                       children: [
                                                         Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
-                                                            Text(
-                                                              (transaction[index].party?.name != null)
-                                                                  ? transaction[index].party?.name ?? ''
-                                                                  : transaction[index].party?.phone ?? '',
-                                                              style: const TextStyle(fontSize: 16),
+                                                            Flexible(
+                                                              child: Text(
+                                                                (transaction[index].party?.name != null)
+                                                                    ? transaction[index].party?.name ?? ''
+                                                                    : transaction[index].party?.phone ?? '',
+                                                                style: const TextStyle(fontSize: 16),
+                                                              ),
                                                             ),
                                                             Text(
                                                               '#${transaction[index].invoiceNumber}',
@@ -274,7 +275,7 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                                             Row(
                                                               children: [
                                                                 Container(
-                                                                  padding: const EdgeInsets.all(8),
+                                                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                                                   decoration: BoxDecoration(
                                                                       color: transaction[index].dueAmount! <= 0
                                                                           ? const Color(0xff0dbf7d).withOpacity(0.1)
@@ -282,8 +283,7 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                                                   child: Text(
                                                                     transaction[index].dueAmount! <= 0 ? lang.S.of(context).paid : lang.S.of(context).unPaid,
-                                                                    style: TextStyle(
-                                                                        color: transaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
+                                                                    style: TextStyle(color: transaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
                                                                   ),
                                                                 ),
 

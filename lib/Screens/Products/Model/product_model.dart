@@ -13,6 +13,8 @@ class ProductModel {
     this.productSalePrice,
     this.productWholeSalePrice,
     this.productStock,
+    this.alertQty,
+    this.expireDate,
     this.productDiscount,
     this.size,
     this.vatType,
@@ -46,6 +48,8 @@ class ProductModel {
     productSalePrice = json['productSalePrice'];
     productWholeSalePrice = json['productWholeSalePrice'];
     productStock = json['productStock'];
+    alertQty = json['alert_qty'];
+    expireDate = json['expire_date'];
     productDiscount = json['productDiscount'];
     profitMargin = json['profit_percent'];
     vatAmount = json['vat_amount'];
@@ -76,6 +80,8 @@ class ProductModel {
   num? productSalePrice;
   num? productWholeSalePrice;
   num? productStock;
+  num? alertQty;
+  String? expireDate;
   num? productDiscount;
   String? size;
   String? type;
@@ -109,6 +115,8 @@ class ProductModel {
     map['productSalePrice'] = productSalePrice;
     map['productWholeSalePrice'] = productWholeSalePrice;
     map['productStock'] = productStock;
+    map['alert_qty'] = alertQty;
+    map['expire_date'] = expireDate;
     map['productDiscount'] = productDiscount;
     map['size'] = size;
     map['type'] = type;

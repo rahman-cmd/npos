@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:nb_utils/nb_utils.dart';
 
 import '../../constant.dart';
 
@@ -50,8 +49,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: AppTextField(
-                    textFieldType: TextFieldType.EMAIL,
+                  child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {
                       setState(() {
                         email = value;

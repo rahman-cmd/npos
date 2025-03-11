@@ -5,7 +5,6 @@ import 'chart_data.dart';
 import 'package:mobile_pos/model/dashboard_overview_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-
 class DashboardChart extends StatefulWidget {
   const DashboardChart({Key? key, required this.model}) : super(key: key);
 
@@ -192,7 +191,6 @@ class DashboardChart extends StatefulWidget {
 //   }
 // }
 
-
 class _DashboardChartState extends State<DashboardChart> {
   List<ChartData> chartData = [];
 
@@ -296,9 +294,8 @@ class _DashboardChartState extends State<DashboardChart> {
                         padding: const EdgeInsets.only(bottom: 42),
                         child: CustomPaint(
                           size: Size(
-                              chartData.length * 50.0 - _getLeftTitleReservedSize(),  // Adjust to match the width of the BarChart exactly
-                              0.1
-                          ),
+                              chartData.length * 50.0 - _getLeftTitleReservedSize(), // Adjust to match the width of the BarChart exactly
+                              0.1),
                           painter: DashedBarPainter(
                             barHeight: 1,
                             barColor: const Color(0xffD1D5DB),
@@ -307,8 +304,6 @@ class _DashboardChartState extends State<DashboardChart> {
                           ),
                         ),
                       ),
-
-
                     ],
                   ),
                 ],
@@ -377,8 +372,18 @@ class _DashboardChartState extends State<DashboardChart> {
     String text = chartData[value.toInt()].x;
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
       space: 8,
+      meta: TitleMeta(
+        min: meta.min,
+        max: meta.max,
+        parentAxisSize: meta.parentAxisSize,
+        axisPosition: meta.axisPosition,
+        appliedInterval: meta.appliedInterval,
+        sideTitles: meta.sideTitles,
+        formattedValue: meta.formattedValue,
+        axisSide: meta.axisSide,
+        rotationQuarterTurns: meta.rotationQuarterTurns,
+      ),
       child: Text(text, style: style),
     );
   }
@@ -392,7 +397,17 @@ class _DashboardChartState extends State<DashboardChart> {
     }
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: TitleMeta(
+        min: meta.min,
+        max: meta.max,
+        parentAxisSize: meta.parentAxisSize,
+        axisPosition: meta.axisPosition,
+        appliedInterval: meta.appliedInterval,
+        sideTitles: meta.sideTitles,
+        formattedValue: meta.formattedValue,
+        axisSide: meta.axisSide,
+        rotationQuarterTurns: meta.rotationQuarterTurns,
+      ),
       child: Text(
         value.toInt().toString(),
         style: const TextStyle(
@@ -402,7 +417,6 @@ class _DashboardChartState extends State<DashboardChart> {
       ),
     );
   }
-
 
 // Widget _getLeftTitles(double value, TitleMeta meta) {
   //   return SideTitleWidget(
@@ -417,9 +431,6 @@ class _DashboardChartState extends State<DashboardChart> {
   //   );
   // }
 }
-
-
-
 
 ///---------------------------------dash line-------------------------------
 
@@ -454,9 +465,7 @@ class DashedBarPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-
 ///-----------------------------synfusion data chart--------------------------------
-
 
 // class NumericAxisChart extends StatefulWidget {
 //   const NumericAxisChart({Key? key, required this.model}) : super(key: key);
@@ -555,5 +564,3 @@ class DashedBarPainter extends CustomPainter {
 //   final double y;
 //   final double y1;
 // }
-
-

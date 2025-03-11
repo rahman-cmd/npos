@@ -104,7 +104,17 @@ class _TestNumericAxisChartState extends State<TestNumericAxisChart> {
     String text = chartData[value.toInt()].x;
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: TitleMeta(
+        min: meta.min,
+        max: meta.max,
+        parentAxisSize: meta.parentAxisSize,
+        axisPosition: meta.axisPosition,
+        appliedInterval: meta.appliedInterval,
+        sideTitles: meta.sideTitles,
+        formattedValue: meta.formattedValue,
+        axisSide: meta.axisSide,
+        rotationQuarterTurns: meta.rotationQuarterTurns,
+      ),
       space: 8,
       child: Text(text, style: style),
     );
@@ -112,7 +122,17 @@ class _TestNumericAxisChartState extends State<TestNumericAxisChart> {
 
   Widget _getLeftTitles(double value, TitleMeta meta) {
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: TitleMeta(
+        min: meta.min,
+        max: meta.max,
+        parentAxisSize: meta.parentAxisSize,
+        axisPosition: meta.axisPosition,
+        appliedInterval: meta.appliedInterval,
+        sideTitles: meta.sideTitles,
+        formattedValue: meta.formattedValue,
+        axisSide: meta.axisSide,
+        rotationQuarterTurns: meta.rotationQuarterTurns,
+      ),
       child: Text(
         value.toInt().toString(),
         style: const TextStyle(
@@ -132,4 +152,3 @@ class ChartData {
   final double y;
   final double y1;
 }
-

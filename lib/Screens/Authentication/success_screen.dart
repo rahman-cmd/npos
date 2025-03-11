@@ -20,9 +20,9 @@ class SuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Came on Susees screen');
     return Consumer(builder: (context, ref, _) {
       final userRoleData = ref.watch(businessInfoProvider);
+      ref.watch(getExpireDateProvider(ref));
       return userRoleData.when(data: (data) {
         return GlobalPopup(
           child: Scaffold(

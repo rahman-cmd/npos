@@ -154,7 +154,7 @@ class _CreateSingleTaxState extends State<CreateSingleTax> {
               ),
               const Spacer(),
               // Save Button
-              Consumer(builder: (context, ref, __) {
+              Consumer(builder: (context1, ref, __) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: SizedBox(

@@ -7,6 +7,8 @@ import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../Home/home_screen.dart';
+
 class PackageScreen extends StatefulWidget {
   const PackageScreen({super.key});
 
@@ -38,6 +40,7 @@ class _PackageScreenState extends State<PackageScreen> {
     _isRefreshing = true;
 
     ref.refresh(businessInfoProvider);
+    ref.refresh(getExpireDateProvider(ref));
 
     await Future.delayed(const Duration(seconds: 1)); // Optional delay
     _isRefreshing = false;
@@ -127,66 +130,58 @@ class _PackageScreenState extends State<PackageScreen> {
                         height: 80,
                         width: double.infinity,
                         decoration: BoxDecoration(color: kMainColor.withOpacity(0.1), borderRadius: const BorderRadius.all(Radius.circular(10))),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  (info.enrolledPlan?.price ?? 0) > 0 ? lang.S.of(context).premiumPlan : lang.S.of(context).freePlan,
-                                  style: const TextStyle(fontSize: 18),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      lang.S.of(context).youRUsing,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                    Text(
-                                      '${info.enrolledPlan?.plan?.subscriptionName} Package',
+                                      info.enrolledPlan!=null? (info.enrolledPlan?.price ?? 0) > 0 ? lang.S.of(context).premiumPlan : lang.S.of(context).freePlan:'No active plan!',
+                                      style: const TextStyle(fontSize: 18),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: kMainColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Flexible(
+                                      child: info.enrolledPlan?.plan != null
+                                          ? Text.rich(TextSpan(text: lang.S.of(context).youRUsing, children: [
+                                              TextSpan(
+                                                  text: '${info.enrolledPlan?.plan?.subscriptionName} Package',
+                                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                        color: kMainColor,
+                                                        fontWeight: FontWeight.w600,
+                                                      ))
+                                            ]))
+                                          : const Text('You don’t have an active plan.'),
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Container(
-                              height: 63,
-                              width: 63,
-                              decoration: const BoxDecoration(
-                                color: kMainColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(50),
-                                ),
                               ),
-                              child: Center(
+                              Container(
+                                height: 63,
+                                width: 63,
+                                decoration: const BoxDecoration(
+                                  color: kMainColor,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(50),
+                                  ),
+                                ),
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
                                   child: Text(
-                                (() {
-                                  DateTime subscriptionDate = DateTime.parse(info.subscriptionDate ?? '');
-                                  num duration = info.enrolledPlan?.duration ?? 0;
-                                  DateTime expirationDate = subscriptionDate.add(Duration(days: duration.toInt()));
-                                  num daysLeft = expirationDate.difference(DateTime.now()).inDays;
-                                  return daysLeft >= 0 ? '$daysLeft\nDays Left' : 'Expired';
-                                })(),
-                                // '${((DateTime.tryParse(info.subscriptionDate ?? '') ?? DateTime.now()).difference(DateTime.now()).inDays.abs() - (info.enrolledPlan?.duration ?? 0)).abs()} \nDays Left',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 12, color: Colors.white),
-                              )),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
+                                    getDayLeftInExpiring(expireDate: info.willExpire, shortMSG: true),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 12, color: Colors.white),
+                                  ),
+                                )),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),

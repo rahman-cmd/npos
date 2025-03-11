@@ -4,14 +4,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'package:mobile_pos/Screens/Expense/Model/expanse_category.dart';
 import 'package:mobile_pos/Screens/Expense/Providers/expense_category_proivder.dart';
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 
-class ExpanseCategoryRepo{
+class ExpanseCategoryRepo {
   Future<List<ExpenseCategory>> fetchAllExpanseCategory() async {
     final uri = Uri.parse('${APIConfig.url}/expense-categories');
 
@@ -42,10 +43,9 @@ class ExpanseCategoryRepo{
   }) async {
     final uri = Uri.parse('${APIConfig.url}/expense-categories');
 
-    var responseData = await http.post(uri, headers: {
-      "Accept": 'application/json',
-      'Authorization': await getAuthToken(),
-    }, body: {
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+
+    var responseData = await customHttpClient.post(url: uri, body: {
       'categoryName': categoryName,
     });
 
@@ -66,5 +66,4 @@ class ExpanseCategoryRepo{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred: $error')));
     }
   }
-
 }

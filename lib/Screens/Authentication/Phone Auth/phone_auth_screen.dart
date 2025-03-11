@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/Phone%20Auth/phone_OTP_screen.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:nb_utils/nb_utils.dart';
 
 import 'Repo/phone_auth_repo.dart';
 
@@ -53,8 +51,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
               const SizedBox(height: 25),
               Text(
                 lang.S.of(context).phoneVerification,
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
@@ -67,17 +64,13 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 decoration: InputDecoration(
                   //labelText: 'Phone Number',
                   labelText: lang.S.of(context).phoneNumber,
-                  border: const OutlineInputBorder(
-                      borderSide: BorderSide(),
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  border: const OutlineInputBorder(borderSide: BorderSide(), borderRadius: BorderRadius.all(Radius.circular(15))),
                 ),
-                initialCountryCode: 'OM',
+                initialCountryCode: 'BD',
                 onChanged: (phone) {
                   phoneNumber = phone.completeNumber;
                 },
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))
-                ],
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
               ),
               const SizedBox(height: 20),
               // Container(
@@ -153,10 +146,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: kMainColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kMainColor, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                     // onPressed: () async {
                     //   // const OTPVerify().launch(context);
                     //   _key.currentState?.validate();
@@ -175,9 +165,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
                         EasyLoading.show();
                         PhoneAuthRepo repo = PhoneAuthRepo();
 
-                        if (await repo.sentOTP(
-                            phoneNumber: phoneNumber!, context: context)) {
-                          OTPVerify(phoneNumber: phoneNumber!).launch(context);
+                        if (await repo.sentOTP(phoneNumber: phoneNumber!, context: context)) {
+                          // OTPVerify(phoneNumber: phoneNumber!).launch(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => OTPVerify(phoneNumber: phoneNumber!)));
                         }
                       } else {
                         EasyLoading.showError(

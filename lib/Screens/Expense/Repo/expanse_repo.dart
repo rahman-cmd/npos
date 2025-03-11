@@ -10,6 +10,7 @@ import 'package:mobile_pos/Screens/Expense/Providers/all_expanse_provider.dart';
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../Model/expense_modle.dart';
 
 class ExpenseRepo {
@@ -55,9 +56,10 @@ class ExpenseRepo {
     });
 
     try {
-      var responseData = await http.post(
-        uri,
-        headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'},
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+      var responseData = await customHttpClient.post(
+        url: uri,
+        addContentTypeInHeader: true,
         body: requestBody,
       );
 
@@ -68,6 +70,7 @@ class ExpenseRepo {
       if (responseData.statusCode == 200) {
         var data1 = ref.refresh(expenseProvider);
         var data2 = ref.refresh(businessInfoProvider);
+        ref.refresh(getExpireDateProvider(ref));
         ref.refresh(summaryInfoProvider);
         Navigator.pop(context);
         // return PurchaseTransaction.fromJson(parsedData);

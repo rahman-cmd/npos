@@ -1,10 +1,11 @@
 class DashboardOverviewModel {
   DashboardOverviewModel({
-      String? message,
-      Data? data,}){
+    String? message,
+    Data? data,
+  }) {
     _message = message;
     _data = data;
-}
+  }
 
   DashboardOverviewModel.fromJson(dynamic json) {
     _message = json['message'];
@@ -24,22 +25,22 @@ class DashboardOverviewModel {
     }
     return map;
   }
-
 }
 
 class Data {
   Data({
-      num? totalItems,
-      num? totalCategories,
-      num? totalIncome,
-      num? totalExpense,
-      num? totalDue,
-      num? stockQty,
-      num? totalLoss,
-      num? totalProfit,
-      num? stockValue,
-      List<Sales>? sales,
-      List<Purchases>? purchases,}){
+    num? totalItems,
+    num? totalCategories,
+    num? totalIncome,
+    num? totalExpense,
+    num? totalDue,
+    num? stockQty,
+    num? totalLoss,
+    num? totalProfit,
+    num? stockValue,
+    List<Sales>? sales,
+    List<Purchases>? purchases,
+  }) {
     _totalItems = totalItems;
     _totalCategories = totalCategories;
     _totalIncome = totalIncome;
@@ -50,7 +51,7 @@ class Data {
     _totalProfit = totalProfit;
     _sales = sales;
     _purchases = purchases;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _totalItems = json['total_items'];
@@ -117,16 +118,16 @@ class Data {
     }
     return map;
   }
-
 }
 
 class Purchases {
   Purchases({
-      String? date,
-      num? amount,}){
+    String? date,
+    num? amount,
+  }) {
     _date = date;
     _amount = amount;
-}
+  }
 
   Purchases.fromJson(dynamic json) {
     _date = json['date'];
@@ -144,16 +145,16 @@ class Purchases {
     map['amount'] = _amount;
     return map;
   }
-
 }
 
 class Sales {
   Sales({
-      String? date,
-      num? amount,}){
+    String? date,
+    num? amount,
+  }) {
     _date = date;
     _amount = amount;
-}
+  }
 
   Sales.fromJson(dynamic json) {
     _date = json['date'];
@@ -171,5 +172,4 @@ class Sales {
     map['amount'] = _amount;
     return map;
   }
-
 }

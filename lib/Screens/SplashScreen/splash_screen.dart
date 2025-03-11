@@ -40,13 +40,12 @@ class SplashScreenState extends State<SplashScreen> {
     if (isConnected) {
       await PurchaseModel().isActiveBuyer().then((value) {
         if (!value) {
-          if (mounted) {
+          if(mounted){
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text("Not Active User"),
-                content: const Text(
-                    "Please use the valid purchase code to use the app."),
+                content: const Text("Please use the valid purchase code to use the app."),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -68,16 +67,15 @@ class SplashScreenState extends State<SplashScreen> {
         }
       });
     } else {
-      if (retryCount < 3) {
+      if(retryCount < 3){
         retryCount++;
         checkUserValidity();
-      } else {
+      }else{
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text("No Internet Connection"),
-            content: const Text(
-                "Please check your internet connection and try again."),
+            content: const Text("Please check your internet connection and try again."),
             actions: [
               TextButton(
                 onPressed: () {
@@ -104,8 +102,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   Future<void> setLanguage() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedLanguageCode =
-        prefs.getString('lang') ?? 'en'; // Default to English code
+    final savedLanguageCode = prefs.getString('lang') ?? 'en'; // Default to English code
     setState(() {
       selectedLanguage = savedLanguageCode;
     });
@@ -119,16 +116,13 @@ class SplashScreenState extends State<SplashScreen> {
       BusinessInformation? data;
       data = await BusinessRepository().checkBusinessData();
       if (data == null) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const OnBoard()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoard()));
       } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const Home()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Home()));
       }
     } else {
       CurrencyMethods().removeCurrencyFromLocalDatabase();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const OnBoard()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoard()));
     }
   }
 
@@ -145,8 +139,7 @@ class SplashScreenState extends State<SplashScreen> {
             Container(
               height: 230,
               width: 230,
-              decoration: const BoxDecoration(
-                  image: DecorationImage(image: AssetImage(splashLogo))),
+              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(splashLogo))),
             ),
             const Spacer(),
             Column(
@@ -154,19 +147,13 @@ class SplashScreenState extends State<SplashScreen> {
                 Center(
                   child: Text(
                     lang.S.of(context).powerdedByNpos,
-                    style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 20.0),
+                    style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.normal, fontSize: 20.0),
                   ),
                 ),
                 Center(
                   child: Text(
                     'V $appVersion',
-                    style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15.0),
+                    style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.normal, fontSize: 15.0),
                   ),
                 ),
                 const SizedBox(height: 10),

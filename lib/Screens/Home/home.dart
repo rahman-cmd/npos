@@ -1,4 +1,3 @@
-import 'package:circle_nav_bar/circle_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -76,6 +75,7 @@ class _HomeState extends State<Home> {
       },
       child: Consumer(builder: (context, ref, __) {
         final profile = ref.watch(businessInfoProvider);
+        ref.watch(getExpireDateProvider(ref));
         return GlobalPopup(
           child: Scaffold(
             body: PageView(

@@ -8,8 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen(
-      {super.key, required this.planId, required this.businessId});
+  const PaymentScreen({super.key, required this.planId, required this.businessId});
 
   final String planId;
   final String businessId;
@@ -18,8 +17,7 @@ class PaymentScreen extends StatefulWidget {
   PaymentScreenState createState() => PaymentScreenState();
 }
 
-String paymentUrl =
-    'https://npos.vip/payments-gateways/plan_id/business_id?platform=app';
+String paymentUrl = 'https://pospro.acnoo.com/payments-gateways/plan_id/business_id?platform=app';
 const String successUrl = 'order-status?status=success';
 const String failureUrl = 'order-status?status=failed';
 
@@ -31,10 +29,7 @@ class PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    paymentUrl = paymentUrl
-        .replaceAll('https://npos.vip/', APIConfig.domain)
-        .replaceAll('plan_id', widget.planId)
-        .replaceAll('business_id', widget.businessId);
+    paymentUrl = paymentUrl.replaceAll('https://pospro.acnoo.com/', APIConfig.domain).replaceAll('plan_id', widget.planId).replaceAll('business_id', widget.businessId);
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)

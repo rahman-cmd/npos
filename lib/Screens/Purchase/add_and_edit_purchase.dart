@@ -53,7 +53,11 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
         id: widget.transitionModel?.party?.id,
         name: widget.transitionModel?.party?.name,
       );
-
+      if (widget.transitionModel?.discountType == 'flat') {
+        discountType = 'Flat';
+      } else {
+        discountType = 'Percent';
+      }
       addProductsInCartFromEditList();
     }
     super.initState();
@@ -86,16 +90,25 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
             fromEditSales: true);
       }
     }
+
     cart.discountAmount = widget.transitionModel?.discountAmount ?? 0;
-    cart.discountTextControllerFlat.text = widget.transitionModel?.discountAmount.toString() ?? '';
+    if (widget.transitionModel?.discountType == 'flat') {
+      cart.discountTextControllerFlat.text = widget.transitionModel?.discountAmount.toString() ?? '';
+    } else {
+      cart.discountTextControllerFlat.text = widget.transitionModel?.discountPercent?.toString() ?? '';
+    }
+    cart.finalShippingCharge = widget.transitionModel?.shippingCharge ?? 0;
+    cart.shippingChargeController.text = widget.transitionModel?.shippingCharge.toString() ?? '';
+    // cart.discountTextControllerFlat.text = widget.transitionModel?.discountAmount.toString() ?? '';
     cart.vatAmountController.text = widget.transitionModel?.vatAmount.toString() ?? '';
     cart.calculatePrice(receivedAmount: widget.transitionModel?.paidAmount.toString(), stopRebuild: true);
   }
 
   bool hasPreselected = false; // Flag to ensure preselection happens only once
-
+  String discountType = 'Flat';
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     final providerData = ref.watch(cartNotifierPurchaseNew);
     final personalData = ref.watch(businessInfoProvider);
     final taxesData = ref.watch(taxProvider);
@@ -173,7 +186,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                           readOnly: true,
                           controller: dateController,
                           decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: lang.S.of(context).date,
                             suffixIcon: IconButton(
@@ -537,7 +549,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                         ///________Total_title_reader_________________________
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(color: Color(0xffEAEFFA), borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+                          decoration: const BoxDecoration(color: Color(0xffFEF0F1), borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -563,15 +575,76 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                 lang.S.of(context).discount,
                                 style: const TextStyle(fontSize: 16),
                               ),
+                              const Spacer(),
+                              SizedBox(
+                                width: context.width() / 4,
+                                height: 30,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: kBorder, width: 1)),
+                                  ),
+                                  child: DropdownButton<String?>(
+                                    dropdownColor: Colors.white,
+                                    isExpanded: true,
+                                    isDense: true,
+                                    padding: EdgeInsets.zero,
+                                    icon: const Icon(Icons.keyboard_arrow_down, color: kGreyTextColor),
+                                    hint: Text(
+                                      'Select',
+                                      style: _theme.textTheme.bodyMedium?.copyWith(
+                                        color: kGreyTextColor,
+                                      ),
+                                    ),
+                                    value: discountType,
+                                    items: [
+                                      "Flat",
+                                      "Percent",
+                                    ]
+                                        .map((type) => DropdownMenuItem<String?>(
+                                              value: type,
+                                              child: Text(
+                                                type,
+                                                style: _theme.textTheme.bodyMedium?.copyWith(color: kNeutralColor),
+                                              ),
+                                            ))
+                                        .toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        discountType = value!;
+                                        providerData.calculateDiscount(
+                                          value: providerData.discountTextControllerFlat.text,
+                                          selectedTaxType: discountType,
+                                        );
+                                        print(providerData.discountPercent);
+                                        print(providerData.discountAmount);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
                               SizedBox(
                                 width: context.width() / 4,
                                 height: 30,
                                 child: TextField(
                                   controller: providerData.discountTextControllerFlat,
-                                  onChanged: (value) => providerData.calculateDiscount(value: value),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      providerData.calculateDiscount(
+                                        value: value,
+                                        selectedTaxType: discountType,
+                                      );
+                                    });
+                                  },
+                                  // onChanged: (value) => providerData.calculateDiscount(value: value),
                                   textAlign: TextAlign.right,
                                   decoration: const InputDecoration(
                                     hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
                                   ),
                                   keyboardType: TextInputType.number,
                                 ),
@@ -584,80 +657,138 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                         Padding(
                           padding: const EdgeInsets.only(right: 10, left: 10),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               const Text(
                                 'Vat',
                                 style: TextStyle(fontSize: 16),
                               ),
                               const Spacer(),
-                              SizedBox(
-                                width: context.width() / 4,
-                                height: 40,
-                                child: taxesData.when(
-                                  data: (data) {
-                                    List<VatModel> dataList = data.where((tax) => tax.status == true).toList();
-                                    if (widget.transitionModel != null && widget.transitionModel?.vatId != null && !hasPreselected) {
-                                      VatModel matched = dataList.firstWhere(
-                                        (element) => element.id == widget.transitionModel?.vatId,
-                                        orElse: () => VatModel(),
-                                      );
-                                      if (matched.id != null) {
-                                        hasPreselected = true;
-                                        providerData.selectedVat = matched;
-                                        // providerData.calculatePrice();
-                                      }
-                                    }
-                                    return DropdownButtonFormField<VatModel>(
-                                      icon: providerData.selectedVat != null
-                                          ? GestureDetector(
-                                              onTap: () => providerData.changeSelectedVat(data: null),
-                                              child: const Icon(
-                                                Icons.close,
-                                                color: Colors.red,
-                                              ),
-                                            )
-                                          : const Icon(Icons.keyboard_arrow_down),
-                                      decoration: const InputDecoration(
-                                        hintText: 'Select one',
-                                        hintStyle: TextStyle(
-                                          color: kTitleColor,
-                                        ),
-                                        border: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xff404040))),
-                                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xff404040))),
-                                      ),
-                                      isExpanded: true,
-                                      value: providerData.selectedVat,
-                                      items: dataList.map((VatModel tax) {
-                                        return DropdownMenuItem<VatModel>(
-                                          value: tax,
-                                          child: Text(
-                                            tax.name ?? '',
-                                            maxLines: 1,
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (VatModel? newValue) => providerData.changeSelectedVat(data: newValue),
+                              taxesData.when(
+                                data: (data) {
+                                  List<VatModel> dataList = data.where((tax) => tax.status == true).toList();
+                                  if (widget.transitionModel != null && widget.transitionModel?.vatId != null && !hasPreselected) {
+                                    VatModel matched = dataList.firstWhere(
+                                      (element) => element.id == widget.transitionModel?.vatId,
+                                      orElse: () => VatModel(),
                                     );
-                                  },
-                                  error: (error, stackTrace) {
-                                    return Text(error.toString());
-                                  },
-                                  loading: () {
-                                    return const SizedBox.shrink();
-                                  },
-                                ),
+                                    if (matched.id != null) {
+                                      hasPreselected = true;
+                                      providerData.selectedVat = matched;
+                                      // providerData.calculatePrice();
+                                    }
+                                  }
+                                  return SizedBox(
+                                    width: context.width() / 4,
+                                    height: 30,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        border: Border(bottom: BorderSide(color: kBorder, width: 1)),
+                                      ),
+                                      child: DropdownButton<VatModel?>(
+                                        icon: providerData.selectedVat != null
+                                            ? GestureDetector(
+                                                onTap: () => providerData.changeSelectedVat(data: null),
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.red,
+                                                  size: 16,
+                                                ),
+                                              )
+                                            : const Icon(Icons.keyboard_arrow_down, color: kGreyTextColor),
+                                        dropdownColor: Colors.white,
+                                        isExpanded: true,
+                                        isDense: true,
+                                        padding: EdgeInsets.zero,
+                                        hint: Text(
+                                          'Select',
+                                          style: _theme.textTheme.bodyMedium?.copyWith(
+                                            color: kGreyTextColor,
+                                          ),
+                                        ),
+                                        value: providerData.selectedVat,
+                                        items: dataList.map((VatModel tax) {
+                                          return DropdownMenuItem<VatModel>(
+                                            value: tax,
+                                            child: Text(
+                                              tax.name ?? '',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: _theme.textTheme.bodyMedium?.copyWith(
+                                                color: kGreyTextColor,
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        onChanged: (VatModel? newValue) {
+                                          providerData.changeSelectedVat(data: newValue);
+                                        },
+                                      ),
+                                    ),
+                                  );
+
+                                  //   DropdownButton<VatModel>(
+                                  //   icon: providerData.selectedVat != null
+                                  //       ? GestureDetector(
+                                  //           onTap: () => providerData.changeSelectedVat(data: null),
+                                  //           child: const Icon(
+                                  //             Icons.close,
+                                  //             color: Colors.red,
+                                  //           ),
+                                  //         )
+                                  //       : const Icon(Icons.keyboard_arrow_down),
+                                  //   hint: Text(
+                                  //     'Select one',
+                                  //     maxLines: 1,
+                                  //     overflow: TextOverflow.ellipsis,
+                                  //     style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
+                                  //   ),
+                                  //   isExpanded: true,
+                                  //   isDense: true,
+                                  //   value: providerData.selectedVat,
+                                  //   items: dataList.map((VatModel tax) {
+                                  //     return DropdownMenuItem<VatModel>(
+                                  //       value: tax,
+                                  //       child: Text(
+                                  //         tax.name ?? '',
+                                  //         maxLines: 1,
+                                  //         overflow: TextOverflow.ellipsis,
+                                  //         style: _theme.textTheme.bodyMedium?.copyWith(
+                                  //           color: kGreyTextColor,
+                                  //         ),
+                                  //       ),
+                                  //     );
+                                  //   }).toList(),
+                                  //   onChanged: (VatModel? newValue) {
+                                  //     providerData.changeSelectedVat(data: newValue);
+                                  //   },
+                                  // );
+                                },
+                                error: (error, stackTrace) {
+                                  return Text(error.toString());
+                                },
+                                loading: () {
+                                  return const SizedBox.shrink();
+                                },
                               ),
                               const SizedBox(width: 10),
                               SizedBox(
                                 width: context.width() / 4,
-                                height: 40,
-                                child: TextField(
+                                height: 30,
+                                child: TextFormField(
                                   controller: providerData.vatAmountController,
                                   readOnly: true,
-                                  onChanged: (value) => providerData.calculateDiscount(value: value),
+                                  onChanged: (value) => providerData.calculateDiscount(value: value, selectedTaxType: discountType.toString()),
                                   textAlign: TextAlign.right,
                                   decoration: const InputDecoration(
                                     hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
                                   ),
                                   keyboardType: TextInputType.number,
                                 ),
@@ -718,6 +849,37 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                           ),
                         ),
 
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Shipping Charge',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(
+                                width: context.width() / 4,
+                                height: 30,
+                                child: TextFormField(
+                                  controller: providerData.shippingChargeController,
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (value) => providerData.calculatePrice(shippingCharge: value.isEmpty?'0':value),
+                                  textAlign: TextAlign.right,
+                                  decoration: const InputDecoration(
+                                    hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
                         ///________Total_______________________________________
                         Padding(
                           padding: const EdgeInsets.only(right: 10, left: 10, top: 7),
@@ -754,7 +916,14 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) => providerData.calculatePrice(receivedAmount: value),
                                   textAlign: TextAlign.right,
-                                  decoration: const InputDecoration(hintText: '0'),
+                                  decoration: const InputDecoration(
+                                    hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  ),
                                 ),
                               ),
                             ],
@@ -802,11 +971,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                   const SizedBox(height: 20),
 
                   ///_______Payment_Type_______________________________
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.grey,
-                  ),
+                  const Divider(height: 0),
                   const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -842,39 +1007,43 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(height: 30),
+                  const Divider(height: 0),
+                  const SizedBox(height: 24),
 
                   ///_____Action_Button_____________________________________
                   Row(
                     children: [
                       Expanded(
-                          child: GestureDetector(
-                        onTap: () async {
-                          const Home().launch(context, isNewTask: true);
-                        },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            maximumSize: const Size(double.infinity, 48),
+                            minimumSize: const Size(double.infinity, 48),
+                            disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
                           ),
-                          child: Center(
-                            child: Text(
-                              lang.S.of(context).cancel,
-                              style: const TextStyle(fontSize: 18),
+                          onPressed: () async {
+                            const Home().launch(context, isNewTask: true);
+                          },
+                          child: Text(
+                            lang.S.of(context).cancel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: _theme.textTheme.bodyMedium?.copyWith(
+                              color: _theme.colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
                             ),
                           ),
                         ),
-                      )),
-                      const SizedBox(width: 10),
+                      ),
+                      const SizedBox(width: 20),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
+                        child: ElevatedButton(
+                          style: OutlinedButton.styleFrom(
+                            maximumSize: const Size(double.infinity, 48),
+                            minimumSize: const Size(double.infinity, 48),
+                            disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                          ),
+                          onPressed: () async {
                             if (providerData.cartItemList.isEmpty) {
                               EasyLoading.showError(lang.S.of(context).addProductFirst);
                               return;
@@ -911,6 +1080,9 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                   dueAmount: providerData.dueAmount <= 0 ? 0 : providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
                                   paidAmount: providerData.receiveAmount,
+                                  shippingCharge: providerData.finalShippingCharge,
+                                  discountPercent: providerData.discountPercent,
+                                  discountType: discountType.toLowerCase() ?? '',
                                 );
 
                                 if (purchaseData != null) {
@@ -970,23 +1142,20 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                               });
                             }
                           },
-                          child: Container(
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              color: kMainColor,
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: Center(
-                              child: Text(
-                                lang.S.of(context).save,
-                                style: const TextStyle(fontSize: 18, color: Colors.white),
-                              ),
+                          child: Text(
+                            lang.S.of(context).save,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: _theme.textTheme.bodyMedium?.copyWith(
+                              color: _theme.colorScheme.primaryContainer,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
                             ),
                           ),
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

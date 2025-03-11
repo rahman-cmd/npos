@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
+import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
+import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/product_provider.dart';
 import '../Products/Model/product_model.dart';
@@ -107,264 +109,280 @@ class _BarcodeGeneratorScreenState extends State<BarcodeGeneratorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GlobalPopup(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            lang.S.of(context).barcodeGenerator,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-            ),
-          ),
-          backgroundColor: Colors.white,
-        ),
-        body: Consumer(
-          builder: (context, ref, __) {
-            final productData = ref.watch(productProvider);
-            return productData.when(
-              data: (snapshot) {
-                products = snapshot; // Assuming snapshot is a List<ProductModel>
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        //-----------------search_bar
-                        TypeAheadField<ProductModel>(
-                          builder: (context, controller, focusNode) {
-                            return TextField(
-                              controller: controller,
-                              focusNode: focusNode,
-                              autofocus: false,
-                              decoration: kInputDecoration.copyWith(
-                                fillColor: kWhite,
-                                border: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kMainColor,
+    return Consumer(
+      builder: (context, ref, __) {
+        final productData = ref.watch(productProvider);
+        final businessInfo = ref.watch(businessInfoProvider);
+        return GlobalPopup(
+          child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                centerTitle: true,
+                title: Text(
+                  lang.S.of(context).barcodeGenerator,
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                  ),
+                ),
+                backgroundColor: Colors.white,
+              ),
+              body: productData.when(
+                data: (snapshot) {
+                  products = snapshot; // Assuming snapshot is a List<ProductModel>
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          //-----------------search_bar
+                          TypeAheadField<ProductModel>(
+                            builder: (context, controller, focusNode) {
+                              return TextField(
+                                controller: controller,
+                                focusNode: focusNode,
+                                autofocus: false,
+                                decoration: kInputDecoration.copyWith(
+                                  fillColor: kWhite,
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: kMainColor,
+                                    ),
                                   ),
+                                  hintText: lang.S.of(context).searchProduct,
+                                  suffixIcon: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: kMainColor,
+                                    ),
+                                    child: const Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                                 ),
-                                hintText: lang.S.of(context).searchProduct,
-                                suffixIcon: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: kMainColor,
-                                  ),
-                                  child: const Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                  ),
+                              );
+                            },
+                            suggestionsCallback: (pattern) {
+                              return products.where((product) => product.productName!.toLowerCase().startsWith(pattern.toLowerCase())).toList();
+                            },
+                            itemBuilder: (context, ProductModel suggestion) {
+                              return Container(
+                                color: Colors.white, // Set the background color to white
+                                child: ListTile(
+                                  title: Text(suggestion.productName!),
+                                  subtitle: Text('${lang.S.of(context).showCode}: ${suggestion.productCode?.toString() ?? '0'}'),
+                                  trailing: Text('${lang.S.of(context).price}: ${suggestion.productSalePrice?.toString() ?? '0'}'),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                              );
+                            },
+                            onSelected: (ProductModel value) {
+                              _addProduct(value);
+                            },
+                          ),
+                          const SizedBox(height: 14),
+                          //-----------------check_box
+                          Row(
+                            children: [
+                              Checkbox(
+                                activeColor: kMainColor,
+                                value: showCode,
+                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                onChanged: (bool? value) => _toggleCheckbox(value!, (val) => showCode = val),
                               ),
-                            );
-                          },
-                          suggestionsCallback: (pattern) {
-                            return products.where((product) => product.productName!.toLowerCase().startsWith(pattern.toLowerCase())).toList();
-                          },
-                          itemBuilder: (context, ProductModel suggestion) {
-                            return Container(
-                              color: Colors.white, // Set the background color to white
-                              child: ListTile(
-                                title: Text(suggestion.productName!),
-                                subtitle: Text('${lang.S.of(context).showCode}: ${suggestion.productCode?.toString() ?? '0'}'),
-                                trailing: Text('${lang.S.of(context).price}: ${suggestion.productSalePrice?.toString() ?? '0'}'),
+                              Flexible(
+                                child: Text(
+                                  // 'Show Code',
+                                  lang.S.of(context).showCode,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            );
-                          },
-                          onSelected: (ProductModel value) {
-                            _addProduct(value);
-                          },
-                        ),
-                        const SizedBox(height: 14),
-                        //-----------------check_box
-                        Row(
-                          children: [
-                            Checkbox(
-                              activeColor: kMainColor,
-                              value: showCode,
-                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                              onChanged: (bool? value) => _toggleCheckbox(value!, (val) => showCode = val),
-                            ),
-                            Flexible(
-                              child: Text(
-                                // 'Show Code',
-                                lang.S.of(context).showCode,
-                                overflow: TextOverflow.ellipsis,
+                              const SizedBox(width: 10),
+                              Checkbox(
+                                activeColor: kMainColor,
+                                value: showPrice,
+                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                onChanged: (bool? value) => _toggleCheckbox(value!, (val) => showPrice = val),
                               ),
-                            ),
-                            const SizedBox(width: 10),
-                            Checkbox(
-                              activeColor: kMainColor,
-                              value: showPrice,
-                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                              onChanged: (bool? value) => _toggleCheckbox(value!, (val) => showPrice = val),
-                            ),
-                            Flexible(
-                              child: Text(
-                                // 'Show Price',
-                                lang.S.of(context).showPrice,
-                                overflow: TextOverflow.ellipsis,
+                              Flexible(
+                                child: Text(
+                                  // 'Show Price',
+                                  lang.S.of(context).showPrice,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 10),
-                            Checkbox(
-                              activeColor: kMainColor,
-                              value: showName,
-                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                              onChanged: (bool? value) => _toggleCheckbox(value!, (val) => showName = val),
-                            ),
-                            Flexible(
-                              child: Text(
-                                lang.S.of(context).showName,
-                                overflow: TextOverflow.ellipsis,
+                              const SizedBox(width: 10),
+                              Checkbox(
+                                activeColor: kMainColor,
+                                value: showName,
+                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                onChanged: (bool? value) => _toggleCheckbox(value!, (val) => showName = val),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        //-----------------data_table
-                        selectedProducts.isNotEmpty
-                            ? SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                  headingRowColor: WidgetStateProperty.all(Colors.red.shade50),
-                                  showBottomBorder: true,
-                                  horizontalMargin: 8,
-                                  columns: [
-                                    DataColumn(label: Text(lang.S.of(context).name)),
-                                    DataColumn(label: Text(lang.S.of(context).stock)),
-                                    DataColumn(label: Text(lang.S.of(context).quantity)),
-                                    DataColumn(label: Text(lang.S.of(context).actions)),
-                                  ],
-                                  rows: selectedProducts.map((selectedProduct) {
-                                    final controller = _controllers[selectedProduct.quantity];
-                                    return DataRow(
-                                      cells: [
-                                        DataCell(
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                selectedProduct.product.productName ?? 'N/A',
-                                                style: gTextStyle.copyWith(color: kTitleColor, fontSize: 14),
-                                              ),
-                                              Text(
-                                                selectedProduct.product.productCode ?? 'N/A',
-                                                style: gTextStyle.copyWith(color: kGreyTextColor, fontSize: 12),
-                                              ),
-                                            ],
+                              Flexible(
+                                child: Text(
+                                  lang.S.of(context).showName,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          //-----------------data_table
+                          selectedProducts.isNotEmpty
+                              ? SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: DataTable(
+                                    headingRowColor: WidgetStateProperty.all(Colors.red.shade50),
+                                    showBottomBorder: true,
+                                    horizontalMargin: 8,
+                                    columns: [
+                                      DataColumn(label: Text(lang.S.of(context).name)),
+                                      DataColumn(label: Text(lang.S.of(context).stock)),
+                                      DataColumn(label: Text(lang.S.of(context).quantity)),
+                                      DataColumn(label: Text(lang.S.of(context).actions)),
+                                    ],
+                                    rows: selectedProducts.map((selectedProduct) {
+                                      final controller = _controllers[selectedProduct.quantity];
+                                      return DataRow(
+                                        cells: [
+                                          DataCell(
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  selectedProduct.product.productName ?? 'N/A',
+                                                  style: gTextStyle.copyWith(color: kTitleColor, fontSize: 14),
+                                                ),
+                                                Text(
+                                                  selectedProduct.product.productCode ?? 'N/A',
+                                                  style: gTextStyle.copyWith(color: kGreyTextColor, fontSize: 12),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        DataCell(
-                                          Text(selectedProduct.product.productStock?.toString() ?? '0'),
-                                        ),
-                                        DataCell(
-                                          SizedBox(
-                                            height: 38,
-                                            child: TextFormField(
-                                              initialValue: selectedProduct.quantity.toString(),
-                                              controller: controller,
-                                              keyboardType: TextInputType.number,
-                                              textAlign: TextAlign.center,
-                                              onChanged: (value) {
+                                          DataCell(
+                                            Text(selectedProduct.product.productStock?.toString() ?? '0'),
+                                          ),
+                                          DataCell(
+                                            SizedBox(
+                                              height: 38,
+                                              child: TextFormField(
+                                                initialValue: selectedProduct.quantity.toString(),
+                                                controller: controller,
+                                                keyboardType: TextInputType.number,
+                                                textAlign: TextAlign.center,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedProduct.quantity = int.tryParse(value) ?? 1;
+                                                  });
+                                                },
+                                                decoration: const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  contentPadding: EdgeInsets.symmetric(vertical: 8.0),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: kMainColor,
+                                              ),
+                                              onPressed: () {
                                                 setState(() {
-                                                  selectedProduct.quantity = int.tryParse(value) ?? 1;
+                                                  selectedProducts.remove(selectedProduct); // Remove the whole product
                                                 });
                                               },
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                contentPadding: EdgeInsets.symmetric(vertical: 8.0),
-                                              ),
                                             ),
                                           ),
-                                        ),
-                                        DataCell(
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.delete,
-                                              color: kMainColor,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                selectedProducts.remove(selectedProduct); // Remove the whole product
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }).toList(),
-                                ),
-                              )
-                            : Center(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(height: 50),
-                                    const Icon(
-                                      IconlyLight.document,
-                                      color: kMainColor,
-                                      size: 70,
-                                    ),
-                                    Text(
-                                      lang.S.of(context).noItemSelected,
-                                      style: gTextStyle.copyWith(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
+                                        ],
+                                      );
+                                    }).toList(),
+                                  ),
+                                )
+                              : Center(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 50),
+                                      const Icon(
+                                        IconlyLight.document,
+                                        color: kMainColor,
+                                        size: 70,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        lang.S.of(context).noItemSelected,
+                                        style: gTextStyle.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                      ],
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                error: (e, stack) => Text(e.toString()),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              ),
+              bottomNavigationBar: //-----------------submit_button
+                  businessInfo.when(data: (details) {
+                return Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      backgroundColor: kMainColor,
+                      minimumSize: const Size(double.maxFinite, 48),
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    // onPressed: selectedProducts.isNotEmpty
+                    //     ? _preview
+                    //     : () => ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(content: Text(lang.S.of(context).noProductSelected)),
+                    //         ),
+                    onPressed: () async {
+                      if (selectedProducts.isNotEmpty) {
+                        await _preview(); // ✅ Properly calling the function
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(lang.S.of(context).noProductSelected)),
+                        );
+                      }
+                    },
+
+                    label: Text(
+                      lang.S.of(context).previewPdf,
+                      style: gTextStyle.copyWith(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 );
-              },
-              error: (e, stack) => Text(e.toString()),
-              loading: () => const Center(child: CircularProgressIndicator()),
-            );
-          },
-        ),
-        bottomNavigationBar: //-----------------submit_button
-            Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              backgroundColor: kMainColor,
-              minimumSize: const Size(double.maxFinite, 48),
-              textStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            onPressed: selectedProducts.isNotEmpty
-                ? _preview
-                : () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(lang.S.of(context).noProductSelected)),
-                    );
-                  },
-            label: Text(
-              lang.S.of(context).previewPdf,
-              style: gTextStyle.copyWith(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ),
-      ),
+              }, error: (e, stack) {
+                return Text(e.toString());
+              }, loading: () {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              })),
+        );
+      },
     );
   }
 }

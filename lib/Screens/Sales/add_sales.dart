@@ -1,8 +1,14 @@
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconly/iconly.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile_pos/Provider/add_to_cart.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Sales/Repo/sales_repo.dart';
@@ -11,6 +17,7 @@ import 'package:mobile_pos/Screens/Sales/sales_products_list_screen.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../Const/api_config.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Repository/API/future_invoice.dart';
 import '../../constant.dart';
@@ -44,6 +51,8 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController recevedAmountController = TextEditingController();
 
+  TextEditingController noteController = TextEditingController();
+
   @override
   void initState() {
     if (widget.transitionModel != null) {
@@ -54,7 +63,11 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
         id: widget.transitionModel?.party?.id,
         name: widget.transitionModel?.party?.name,
       );
-
+      if (widget.transitionModel?.discountType == 'flat') {
+        discountType = 'Flat';
+      } else {
+        discountType = 'Percent';
+      }
       addProductsInCartFromEditList();
     }
     super.initState();
@@ -86,15 +99,41 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
       }
     }
     cart.discountAmount = widget.transitionModel?.discountAmount ?? 0;
-    cart.discountTextControllerFlat.text = widget.transitionModel?.discountAmount.toString() ?? '';
+    noteController.text = widget.transitionModel?.meta?.note?.toString() ?? '';
+    if (widget.transitionModel?.discountType == 'flat') {
+      cart.discountTextControllerFlat.text = widget.transitionModel?.discountAmount.toString() ?? '';
+    } else {
+      cart.discountTextControllerFlat.text = widget.transitionModel?.discountPercent?.toString() ?? '';
+    }
+
+    cart.finalShippingCharge = widget.transitionModel?.shippingCharge ?? 0;
+    cart.shippingChargeController.text = widget.transitionModel?.shippingCharge.toString() ?? '';
     cart.vatAmountController.text = widget.transitionModel?.vatAmount.toString() ?? '';
+
     cart.calculatePrice(receivedAmount: widget.transitionModel?.paidAmount.toString(), stopRebuild: true);
   }
 
   bool hasPreselected = false; // Flag to ensure preselection happens only once
 
+  String discountType = 'Flat';
+
+  File? _imageFile;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    double _height = 100;
     final providerData = ref.watch(cartNotifier);
     final personalData = ref.watch(businessInfoProvider);
     final taxesData = ref.watch(taxProvider);
@@ -172,7 +211,6 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                           readOnly: true,
                           controller: dateController,
                           decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: lang.S.of(context).date,
                             suffixIcon: IconButton(
@@ -420,9 +458,14 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                   ///_______Add_Button__________________________________________________
                   GestureDetector(
                     onTap: () {
-                      SaleProductsList(
-                        customerModel: widget.customerModel,
-                      ).launch(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SaleProductsList(
+                            customerModel: widget.customerModel,
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       height: 50,
@@ -447,7 +490,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                         ///________Total_title_reader_________________________
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(color: Color(0xffEAEFFA), borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+                          decoration: const BoxDecoration(color: Color(0xffFEF0F1), borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -468,20 +511,85 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                           padding: const EdgeInsets.only(right: 10, left: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              // Text for "Discount"
                               Text(
                                 lang.S.of(context).discount,
                                 style: const TextStyle(fontSize: 16),
                               ),
+
+                              Spacer(),
                               SizedBox(
                                 width: context.width() / 4,
                                 height: 30,
-                                child: TextField(
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: kBorder, width: 1)),
+                                  ),
+                                  child: DropdownButton<String?>(
+                                    icon: const Icon(Icons.keyboard_arrow_down, color: kGreyTextColor),
+                                    dropdownColor: Colors.white,
+                                    isExpanded: true,
+                                    isDense: true,
+                                    padding: EdgeInsets.zero,
+                                    hint: Text(
+                                      'Select',
+                                      style: _theme.textTheme.bodyMedium?.copyWith(
+                                        color: kGreyTextColor,
+                                      ),
+                                    ),
+                                    value: discountType,
+                                    items: [
+                                      "Flat",
+                                      "Percent",
+                                    ]
+                                        .map((type) => DropdownMenuItem<String?>(
+                                              value: type,
+                                              child: Text(
+                                                type,
+                                                style: _theme.textTheme.bodyMedium?.copyWith(color: kNeutralColor),
+                                              ),
+                                            ))
+                                        .toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        discountType = value!;
+                                        providerData.calculateDiscount(
+                                          value: providerData.discountTextControllerFlat.text,
+                                          selectedTaxType: discountType,
+                                        );
+                                        print(providerData.discountPercent);
+                                        print(providerData.discountAmount);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(width: 10),
+
+                              SizedBox(
+                                width: context.width() / 4,
+                                height: 30,
+                                child: TextFormField(
                                   controller: providerData.discountTextControllerFlat,
-                                  onChanged: (value) => providerData.calculateDiscount(value: value),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      providerData.calculateDiscount(
+                                        value: value,
+                                        selectedTaxType: discountType,
+                                      );
+                                    });
+                                  },
                                   textAlign: TextAlign.right,
                                   decoration: const InputDecoration(
                                     hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
                                   ),
                                   keyboardType: TextInputType.number,
                                 ),
@@ -492,138 +600,133 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
 
                         ///_________Vat_Dropdown_______________________________
                         Padding(
-                          padding: const EdgeInsets.only(right: 10, left: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Text(
                                 'Vat',
                                 style: TextStyle(fontSize: 16),
                               ),
-                              const Spacer(),
-                              SizedBox(
-                                width: context.width() / 4,
-                                height: 40,
-                                child: taxesData.when(
-                                  data: (data) {
-                                    List<VatModel> dataList = data.where((tax) => tax.status == true).toList();
-                                    if (widget.transitionModel != null && widget.transitionModel?.vatId != null && !hasPreselected) {
-                                      VatModel matched = dataList.firstWhere(
-                                        (element) => element.id == widget.transitionModel?.vatId,
-                                        orElse: () => VatModel(),
-                                      );
-                                      if (matched.id != null) {
-                                        hasPreselected = true;
-                                        providerData.selectedVat = matched;
-                                        // providerData.calculatePrice();
-                                      }
-                                    }
-                                    return DropdownButtonFormField<VatModel>(
-                                      icon: providerData.selectedVat != null
-                                          ? GestureDetector(
-                                              onTap: () => providerData.changeSelectedVat(data: null),
-                                              child: const Icon(
-                                                Icons.close,
-                                                color: Colors.red,
-                                              ),
-                                            )
-                                          : const Icon(Icons.keyboard_arrow_down),
-                                      decoration: const InputDecoration(
-                                        hintText: 'Select one',
-                                        hintStyle: TextStyle(
-                                          color: kTitleColor,
-                                        ),
-                                        border: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xff404040))),
-                                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xff404040))),
-                                      ),
-                                      isExpanded: true,
-                                      value: providerData.selectedVat,
-                                      items: dataList.map((VatModel tax) {
-                                        return DropdownMenuItem<VatModel>(
-                                          value: tax,
-                                          child: Text(
-                                            tax.name ?? '',
-                                            maxLines: 1,
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (VatModel? newValue) => providerData.changeSelectedVat(data: newValue),
-                                    );
-                                  },
-                                  error: (error, stackTrace) {
-                                    return Text(error.toString());
-                                  },
-                                  loading: () {
-                                    return const SizedBox.shrink();
-                                  },
-                                ),
-                              ),
                               const SizedBox(width: 10),
+
+                              const Spacer(),
+                              taxesData.when(
+                                data: (data) {
+                                  List<VatModel> dataList = data.where((tax) => tax.status == true).toList();
+                                  if (widget.transitionModel != null && widget.transitionModel?.vatId != null && !hasPreselected) {
+                                    VatModel matched = dataList.firstWhere(
+                                      (element) => element.id == widget.transitionModel?.vatId,
+                                      orElse: () => VatModel(),
+                                    );
+                                    if (matched.id != null) {
+                                      hasPreselected = true;
+                                      providerData.selectedVat = matched;
+                                    }
+                                  }
+                                  return SizedBox(
+                                    width: context.width() / 4,
+                                    height: 30,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        border: Border(bottom: BorderSide(color: kBorder, width: 1)),
+                                      ),
+                                      child: DropdownButton<VatModel?>(
+                                        icon: providerData.selectedVat != null
+                                            ? GestureDetector(
+                                                onTap: () => providerData.changeSelectedVat(data: null),
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.red,
+                                                  size: 16,
+                                                ),
+                                              )
+                                            : const Icon(Icons.keyboard_arrow_down, color: kGreyTextColor),
+                                        dropdownColor: Colors.white,
+                                        isExpanded: true,
+                                        isDense: true,
+                                        padding: EdgeInsets.zero,
+                                        hint: Text(
+                                          'Select one',
+                                          style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
+                                        ),
+                                        value: providerData.selectedVat,
+                                        items: dataList.map((VatModel tax) {
+                                          return DropdownMenuItem<VatModel>(
+                                            value: tax,
+                                            child: Text(
+                                              tax.name ?? '',
+                                              maxLines: 1,
+                                              style: _theme.textTheme.bodyMedium?.copyWith(color: kNeutralColor),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        onChanged: (VatModel? newValue) => providerData.changeSelectedVat(data: newValue),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                error: (error, stackTrace) {
+                                  return Text(error.toString());
+                                },
+                                loading: () {
+                                  return const SizedBox.shrink();
+                                },
+                              ),
+
+                              const SizedBox(width: 10),
+
+                              // VAT Amount Input Field
                               SizedBox(
-                                width: context.width() / 4,
-                                height: 40,
-                                child: TextField(
+                                height: 30,
+                                width: 100,
+                                child: TextFormField(
                                   controller: providerData.vatAmountController,
                                   readOnly: true,
-                                  onChanged: (value) => providerData.calculateDiscount(value: value),
+                                  onChanged: (value) => providerData.calculateDiscount(value: value, selectedTaxType: discountType.toString()),
                                   textAlign: TextAlign.right,
                                   decoration: const InputDecoration(
                                     hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
                                   ),
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                              // SizedBox(
-                              //   width: context.width() / 4,
-                              //   height: 40,
-                              //   child: TextFormField(
-                              //     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                              //     textAlign: TextAlign.right,
-                              //     readOnly: true,
-                              //     controller: providerData.vatAmountController,
-                              //     cursorColor: const Color(0xff00987F),
-                              //     decoration: const InputDecoration(
-                              //       // contentPadding: const EdgeInsets.only(right: 6.0),
-                              //       hintText: '0',
-                              //       border: UnderlineInputBorder(
-                              //         // gapPadding: 0.0,
-                              //         borderSide: BorderSide(
-                              //           color: Color(0xff00987F),
-                              //         ),
-                              //       ),
-                              //       // enabledBorder: UnderlineInputBorder(
-                              //       //   // gapPadding: 0.0,
-                              //       //   borderSide: BorderSide(
-                              //       //     color: Color(0xff00987F),
-                              //       //   ),
-                              //       // ),
-                              //       // disabledBorder: UnderlineInputBorder(
-                              //       //   // gapPadding: 0.0,
-                              //       //   borderSide: BorderSide(
-                              //       //     color: Color(0xff00987F),
-                              //       //   ),
-                              //       // ),
-                              //       focusedBorder: OutlineInputBorder(gapPadding: 0.0, borderSide: BorderSide(color: Color(0xff00987F))),
-                              //       prefixIconConstraints: BoxConstraints(maxWidth: 30.0, minWidth: 30.0),
-                              //       // prefixIcon: Container(
-                              //       //   alignment: Alignment.center,
-                              //       //   height: 40,
-                              //       //   decoration: const BoxDecoration(
-                              //       //     color: Color(0xff00987F),
-                              //       //     borderRadius: BorderRadius.only(
-                              //       //       topLeft: Radius.circular(4.0),
-                              //       //       bottomLeft: Radius.circular(4.0),
-                              //       //     ),
-                              //       //   ),
-                              //       //   child: const Icon(
-                              //       //     LineIcons.dollar_sign,
-                              //       //     size: 16,
-                              //       //     color: Colors.white,
-                              //       //   ),
-                              //       // ),
-                              //     ),
-                              //     keyboardType: TextInputType.number,
-                              //   ),
-                              // ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Shipping Charge',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(
+                                width: context.width() / 4,
+                                height: 30,
+                                child: TextFormField(
+                                  controller: providerData.shippingChargeController,
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (value) => providerData.calculatePrice(shippingCharge: value, stopRebuild: false),
+                                  textAlign: TextAlign.right,
+                                  decoration: const InputDecoration(
+                                    hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -659,12 +762,19 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               SizedBox(
                                 width: context.width() / 4,
                                 height: 30,
-                                child: TextField(
+                                child: TextFormField(
                                   controller: recevedAmountController,
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) => providerData.calculatePrice(receivedAmount: value),
                                   textAlign: TextAlign.right,
-                                  decoration: const InputDecoration(hintText: '0'),
+                                  decoration: const InputDecoration(
+                                    hintText: '0',
+                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  ),
                                 ),
                               ),
                             ],
@@ -712,11 +822,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                   const SizedBox(height: 20),
 
                   ///_______Payment_Type_______________________________
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.grey,
-                  ),
+                  const Divider(height: 0),
                   const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -752,39 +858,142 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(height: 30),
+                  const Divider(height: 0),
 
-                  ///_____Action_Button_____________________________________
-                  Row(
-                    children: [
-                      Expanded(
-                          child: GestureDetector(
-                        onTap: () async {
-                          const Home().launch(context, isNewTask: true);
-                        },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              lang.S.of(context).cancel,
-                              style: const TextStyle(fontSize: 18),
+                  const SizedBox(height: 30),
+                  Container(
+                    height: 56, // Set a fixed height for the Row
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          // Use Expanded to allow the TextFormField to take available space
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              maxHeight: 200,
+                            ),
+                            child: TextFormField(
+                              controller: noteController,
+                              maxLines: null,
+                              decoration: const InputDecoration(
+                                hintText: 'Enter your opinion',
+                              ),
+                              onChanged: (text) {
+                                setState(() {
+                                  _height = (text.split('\n').length * 24).toDouble();
+                                });
+                              },
+                              style: _theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                             ),
                           ),
                         ),
-                      )),
-                      const SizedBox(width: 10),
+                        const SizedBox(width: 10),
+                        _imageFile == null
+                            ? widget.transitionModel?.image?.isNotEmpty ?? false
+                                ? InkWell(
+                                    onTap: () {
+                                      showImagePickerDialog(context, _theme.textTheme);
+                                    },
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 48,
+                                        minHeight: 48,
+                                        maxWidth: 107,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        color: const Color(0xffF5F3F3),
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                              '${APIConfig.domain}${widget.transitionModel?.image.toString()}',
+                                            ),
+                                            fit: BoxFit.contain),
+                                      ),
+                                    ),
+                                  )
+                                : InkWell(
+                                    onTap: () {
+                                      showImagePickerDialog(context, _theme.textTheme);
+                                    },
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 48,
+                                        minHeight: 48,
+                                        maxWidth: 107,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: const Color(0xffF5F3F3),
+                                      ),
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(IconlyLight.camera),
+                                          SizedBox(width: 4.0),
+                                          Text('Image'),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                            : InkWell(
+                                onTap: () {
+                                  showImagePickerDialog(context, _theme.textTheme);
+                                },
+                                child: Container(
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 48,
+                                    minHeight: 48,
+                                    maxWidth: 107,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    image: DecorationImage(
+                                      image: FileImage(_imageFile!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+
+                  ///_____Action_Button_____________________________________
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            maximumSize: const Size(double.infinity, 48),
+                            minimumSize: const Size(double.infinity, 48),
+                            disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                          ),
+                          onPressed: () async {
+                            const Home().launch(context, isNewTask: true);
+                          },
+                          child: Text(
+                            lang.S.of(context).cancel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: _theme.textTheme.bodyMedium?.copyWith(
+                              color: _theme.colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: OutlinedButton.styleFrom(
+                            maximumSize: const Size(double.infinity, 48),
+                            minimumSize: const Size(double.infinity, 48),
+                            disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                          ),
+                          onPressed: () async {
                             if (providerData.cartItemList.isEmpty) {
                               EasyLoading.showError(lang.S.of(context).addProductFirst);
                               return;
@@ -815,6 +1024,11 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 );
                               }).toList();
 
+                              // image
+                              File? imageFile;
+                              if (_imageFile != null) {
+                                imageFile = File(_imageFile!.path);
+                              }
                               // Create the sale
                               SaleRepo repo = SaleRepo();
                               if (widget.transitionModel == null) {
@@ -834,6 +1048,11 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   dueAmount: providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
                                   paidAmount: providerData.receiveAmount,
+                                  discountType: discountType.toLowerCase() ?? '',
+                                  note: noteController.text,
+                                  shippingCharge: providerData.finalShippingCharge,
+                                  image: imageFile,
+                                  discountPercent: providerData.discountPercent,
                                 );
 
                                 if (saleData != null) {
@@ -855,10 +1074,16 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   partyId: widget.transitionModel?.party?.id,
                                   vatAmount: providerData.vatAmount,
                                   vatPercent: providerData.selectedVat != null ? providerData.selectedVat!.rate! : 0,
+                                  vatId: providerData.selectedVat?.id,
                                   isPaid: providerData.isFullPaid,
                                   dueAmount: providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
                                   paidAmount: providerData.receiveAmount,
+                                  discountType: discountType.toLowerCase() ?? '',
+                                  note: noteController.text,
+                                  shippingCharge: providerData.finalShippingCharge,
+                                  image: imageFile,
+                                  discountPercent: providerData.discountPercent,
                                 );
                               }
                             } catch (e) {
@@ -870,23 +1095,20 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               });
                             }
                           },
-                          child: Container(
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              color: kMainColor,
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: Center(
-                              child: Text(
-                                lang.S.of(context).save,
-                                style: const TextStyle(fontSize: 18, color: Colors.white),
-                              ),
+                          child: Text(
+                            lang.S.of(context).save,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: _theme.textTheme.bodyMedium?.copyWith(
+                              color: _theme.colorScheme.primaryContainer,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
                             ),
                           ),
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -900,5 +1122,61 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
     }, loading: () {
       return const Center(child: CircularProgressIndicator());
     });
+  }
+
+  Future<dynamic> showImagePickerDialog(BuildContext context, TextTheme textTheme) {
+    return showCupertinoDialog(
+      context: context,
+      builder: (BuildContext contexts) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: CupertinoAlertDialog(
+          insetAnimationCurve: Curves.bounceInOut,
+          title: Text(
+            'Upload Image',
+            textAlign: TextAlign.center,
+            style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          // content: const Text('Are you sure you want to delete this account? This will permanently erase this account.'),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Column(
+                children: [
+                  const Icon(IconlyLight.image, size: 30.0),
+                  Text(
+                    'Use gallery',
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              onPressed: () async {
+                _pickImage(ImageSource.gallery);
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            CupertinoDialogAction(
+              child: Column(
+                children: [
+                  const Icon(IconlyLight.camera, size: 30.0),
+                  Text(
+                    'Open Camera',
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              onPressed: () async {
+                _pickImage(ImageSource.camera);
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  Navigator.pop(context);
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

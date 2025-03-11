@@ -4,18 +4,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
+import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Expense/Providers/all_expanse_provider.dart';
 import 'package:mobile_pos/Screens/Expense/add_erxpense.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
 import '../../currency.dart';
 import 'Providers/expense_category_proivder.dart';
 
 class ExpenseList extends StatefulWidget {
-  const ExpenseList({Key? key}) : super(key: key);
+  const ExpenseList({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -54,7 +56,7 @@ class _ExpenseListState extends State<ExpenseList> {
     totalExpense = 0;
     return Consumer(builder: (context, ref, __) {
       final expenseData = ref.watch(expenseProvider);
-
+      final businessInfoData = ref.watch(businessInfoProvider);
       return GlobalPopup(
         child: Scaffold(
           backgroundColor: kWhite,
@@ -291,14 +293,22 @@ class _ExpenseListState extends State<ExpenseList> {
                 ),
 
                 ///________button________________________________________________
-                ButtonGlobalWithoutIcon(
-                  buttontext: lang.S.of(context).addExpense,
-                  buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-                  onPressed: () {
-                    const AddExpense().launch(context);
-                  },
-                  buttonTextColor: Colors.white,
-                ),
+                businessInfoData.when(data: (details) {
+                  return ButtonGlobalWithoutIcon(
+                    buttontext: lang.S.of(context).addExpense,
+                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                    onPressed: () async {
+                      const AddExpense().launch(context);
+                    },
+                    buttonTextColor: Colors.white,
+                  );
+                }, error: (e, stack) {
+                  return Text(e.toString());
+                }, loading: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                })
               ],
             ),
           ),

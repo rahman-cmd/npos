@@ -9,11 +9,13 @@ import 'package:mobile_pos/Screens/Customers/Model/parties_model.dart';
 import 'package:mobile_pos/Screens/Purchase/Repo/purchase_repo.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../GlobalComponents/bar_code_scaner_widget.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/add_to_cart_purchase.dart';
+import '../../core/theme/_app_colors.dart';
+import '../../widgets/empty_widget/_empty_widget.dart';
 
 class PurchaseProducts extends StatefulWidget {
   PurchaseProducts({super.key, this.customerModel});
@@ -36,6 +38,7 @@ class _PurchaseProductsState extends State<PurchaseProducts> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, __) {
+      final _theme = Theme.of(context);
       final providerData = ref.watch(cartNotifierPurchaseNew);
       final productList = ref.watch(productProvider);
       return GlobalPopup(
@@ -54,118 +57,138 @@ class _PurchaseProductsState extends State<PurchaseProducts> {
             backgroundColor: Colors.white,
             elevation: 0.0,
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                  child: Row(
                     children: [
                       Expanded(
                         flex: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: AppTextField(
-                            controller: codeController,
-                            textFieldType: TextFieldType.NAME,
-                            onChanged: (value) {
-                              setState(() {
-                                productCode = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              labelText: lang.S.of(context).productCode,
-                              hintText: productCode == '0000' || productCode == '-1' ? 'Scan product QR code' : productCode,
-                              border: const OutlineInputBorder(),
-                            ),
+                        child: TextFormField(
+                          controller: codeController,
+                          keyboardType: TextInputType.name,
+                          onChanged: (value) {
+                            setState(() {
+                              productCode = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            labelText: lang.S.of(context).productCode,
+                            hintText: productCode == '0000' || productCode == '-1' ? 'Scan product QR code' : productCode,
+                            border: const OutlineInputBorder(),
                           ),
                         ),
                       ),
+                      const SizedBox(width: 10),
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: GestureDetector(
-                            onTap: () async {
-                              await showDialog(
-                                context: context,
-                                useSafeArea: true,
-                                builder: (context1) {
-                                  MobileScannerController controller = MobileScannerController(
-                                    torchEnabled: false,
-                                    returnImage: false,
-                                  );
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadiusDirectional.circular(6.0),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        AppBar(
-                                          backgroundColor: Colors.transparent,
-                                          iconTheme: const IconThemeData(color: Colors.white),
-                                          leading: IconButton(
-                                            icon: const Icon(Icons.arrow_back),
-                                            onPressed: () {
-                                              Navigator.pop(context1);
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: MobileScanner(
-                                            fit: BoxFit.contain,
-                                            controller: controller,
-                                            onDetect: (capture) {
-                                              final List<Barcode> barcodes = capture.barcodes;
-
-                                              if (barcodes.isNotEmpty) {
-                                                final Barcode barcode = barcodes.first;
-                                                debugPrint('Barcode found! ${barcode.rawValue}');
-
-                                                setState(() {
-                                                  productCode = barcode.rawValue!;
-                                                  codeController.text = productCode;
-                                                });
-
-                                                Navigator.pop(context1);
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                        child: GestureDetector(
+                          onTap: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) => BarcodeScannerWidget(
+                                onBarcodeFound: (String code) {
+                                  setState(() {
+                                    productCode = code;
+                                    codeController.text = productCode;
+                                  });
                                 },
-                              );
-                            },
-                            child: Container(
-                              height: 60.0,
-                              width: 100.0,
-                              padding: const EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(color: kGreyTextColor),
                               ),
-                              child: const Image(
-                                image: AssetImage('images/barcode.png'),
-                              ),
-                            ),
-                          ),
+                            );
+                          },
+                          child: const BarCodeButton(),
                         ),
                       ),
                     ],
                   ),
-                  productList.when(data: (products) {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: products.length,
-                        itemBuilder: (_, i) {
-                          return GestureDetector(
+                ),
+                productList.when(data: (products) {
+                  return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: products.length,
+                      itemBuilder: (_, i) {
+                        return Visibility(
+                          visible: ((products[i].productCode == productCode || productCode == '0000' || productCode == '-1')) ||
+                              products[i].productName!.toLowerCase().contains(productCode.toLowerCase()),
+                          child: ListTile(
+                            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                            contentPadding: EdgeInsets.zero,
+                            leading: products[i].productPicture == null
+                                ? CircleAvatarWidget(
+                                    name: products[i].productName,
+                                    size: const Size(50, 50),
+                                  )
+                                : Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(Radius.circular(90)),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          '${APIConfig.domain}${products[i].productPicture!}',
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    products[i].productName.toString(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: _theme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  lang.S.of(context).stock,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: _theme.textTheme.bodyMedium?.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    products[i].brand?.brandName ?? '',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: _theme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: DAppColors.kSecondary,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  products[i].productStock.toString(),
+                                  style: _theme.textTheme.bodyMedium?.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: DAppColors.kSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
                             onTap: () {
                               showDialog(
                                   context: context,
@@ -183,233 +206,17 @@ class _PurchaseProductsState extends State<PurchaseProducts> {
                                     );
 
                                     return purchaseProductAddBottomSheet(context: context, product: cartProduct, ref: ref, fromUpdate: false);
-                                    // return AlertDialog(
-                                    //     content: SizedBox(
-                                    //   child: SingleChildScrollView(
-                                    //     child: Column(
-                                    //       mainAxisSize: MainAxisSize.min,
-                                    //       children: [
-                                    //         Padding(
-                                    //           padding: const EdgeInsets.only(bottom: 10),
-                                    //           child: Row(
-                                    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    //             children: [
-                                    //               Text(
-                                    //                 lang.S.of(context).addItems,
-                                    //                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    //               ),
-                                    //               GestureDetector(
-                                    //                   onTap: () {
-                                    //                     Navigator.pop(context);
-                                    //                   },
-                                    //                   child: const Icon(
-                                    //                     Icons.cancel,
-                                    //                     color: kMainColor,
-                                    //                   )),
-                                    //             ],
-                                    //           ),
-                                    //         ),
-                                    //         Container(
-                                    //           height: 1,
-                                    //           width: double.infinity,
-                                    //           color: Colors.grey,
-                                    //         ),
-                                    //         const SizedBox(height: 10),
-                                    //         Row(
-                                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    //           children: [
-                                    //             Column(
-                                    //               mainAxisSize: MainAxisSize.min,
-                                    //               crossAxisAlignment: CrossAxisAlignment.start,
-                                    //               children: [
-                                    //                 Text(
-                                    //                   products[i].productName.toString(),
-                                    //                   style: const TextStyle(fontSize: 16),
-                                    //                 ),
-                                    //                 Text(
-                                    //                   products[i].brand?.brandName ?? '',
-                                    //                   style: const TextStyle(
-                                    //                     fontSize: 16,
-                                    //                     color: Colors.grey,
-                                    //                   ),
-                                    //                 ),
-                                    //               ],
-                                    //             ),
-                                    //             Column(
-                                    //               mainAxisSize: MainAxisSize.min,
-                                    //               crossAxisAlignment: CrossAxisAlignment.end,
-                                    //               children: [
-                                    //                 Text(
-                                    //                   lang.S.of(context).stock,
-                                    //                   style: const TextStyle(fontSize: 16),
-                                    //                 ),
-                                    //                 Text(
-                                    //                   products[i].productStock.toString(),
-                                    //                   style: const TextStyle(
-                                    //                     fontSize: 16,
-                                    //                     color: Colors.grey,
-                                    //                   ),
-                                    //                 ),
-                                    //               ],
-                                    //             ),
-                                    //           ],
-                                    //         ),
-                                    //         const SizedBox(height: 20),
-                                    //         Row(
-                                    //           mainAxisSize: MainAxisSize.min,
-                                    //           children: [
-                                    //             Expanded(
-                                    //               child: AppTextField(
-                                    //                 textFieldType: TextFieldType.NUMBER,
-                                    //                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                                    //                 onChanged: (value) {
-                                    //                   tempProduct.productStock = num.tryParse(value);
-                                    //                 },
-                                    //                 decoration: InputDecoration(
-                                    //                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    //                   labelText: lang.S.of(context).quantity,
-                                    //                   // hintText: 'Enter quantity',
-                                    //                   hintText: lang.S.of(context).enterQuantity,
-                                    //                   border: const OutlineInputBorder(),
-                                    //                 ),
-                                    //               ),
-                                    //             ),
-                                    //           ],
-                                    //         ),
-                                    //         const SizedBox(height: 20),
-                                    //         Row(
-                                    //           mainAxisSize: MainAxisSize.min,
-                                    //           children: [
-                                    //             Expanded(
-                                    //               child: TextFormField(
-                                    //                 initialValue: products[i].productPurchasePrice.toString(),
-                                    //                 keyboardType: TextInputType.number,
-                                    //                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                                    //                 onChanged: (value) {
-                                    //                   tempProduct.productPurchasePrice = num.tryParse(value);
-                                    //                 },
-                                    //                 decoration: InputDecoration(
-                                    //                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    //                   labelText: lang.S.of(context).purchasePrice,
-                                    //                   border: const OutlineInputBorder(),
-                                    //                 ),
-                                    //               ),
-                                    //             ),
-                                    //             const SizedBox(width: 10),
-                                    //             Expanded(
-                                    //               child: TextFormField(
-                                    //                 initialValue: products[i].productSalePrice.toString(),
-                                    //                 keyboardType: TextInputType.number,
-                                    //                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                                    //                 onChanged: (value) {
-                                    //                   tempProduct.productSalePrice = num.tryParse(value);
-                                    //                 },
-                                    //                 decoration: InputDecoration(
-                                    //                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    //                   labelText: lang.S.of(context).salePrice,
-                                    //                   border: const OutlineInputBorder(),
-                                    //                 ),
-                                    //               ),
-                                    //             ),
-                                    //           ],
-                                    //         ),
-                                    //         const SizedBox(height: 20),
-                                    //         Row(
-                                    //           mainAxisSize: MainAxisSize.min,
-                                    //           children: [
-                                    //             Expanded(
-                                    //               child: TextFormField(
-                                    //                 initialValue: products[i].productWholeSalePrice.toString(),
-                                    //                 keyboardType: TextInputType.number,
-                                    //                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                                    //                 onChanged: (value) {
-                                    //                   tempProduct.productWholeSalePrice = num.tryParse(value);
-                                    //                 },
-                                    //                 decoration: InputDecoration(
-                                    //                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    //                   labelText: lang.S.of(context).wholeSalePrice,
-                                    //                   border: const OutlineInputBorder(),
-                                    //                 ),
-                                    //               ),
-                                    //             ),
-                                    //             const SizedBox(width: 10),
-                                    //             Expanded(
-                                    //               child: TextFormField(
-                                    //                 initialValue: products[i].productDealerPrice.toString(),
-                                    //                 keyboardType: TextInputType.number,
-                                    //                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                                    //                 onChanged: (value) {
-                                    //                   tempProduct.productDealerPrice = num.tryParse(value);
-                                    //                 },
-                                    //                 decoration: InputDecoration(
-                                    //                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    //                   labelText: lang.S.of(context).dealerPrice,
-                                    //                   border: const OutlineInputBorder(),
-                                    //                 ),
-                                    //               ),
-                                    //             ),
-                                    //           ],
-                                    //         ),
-                                    //         const SizedBox(height: 20),
-                                    //         GestureDetector(
-                                    //           onTap: () {
-                                    //             if ((tempProduct.productStock ?? 0) > 0) {
-                                    //               providerData.addToCartRiverPod(
-                                    //                   cartItem: CartProducts(
-                                    //                 productId: tempProduct.id ?? 0,
-                                    //                 productName: tempProduct.productName ?? '',
-                                    //                 productDealerPrice: tempProduct.productDealerPrice,
-                                    //                 productPurchasePrice: tempProduct.productPurchasePrice,
-                                    //                 productSalePrice: tempProduct.productSalePrice,
-                                    //                 productWholeSalePrice: tempProduct.productWholeSalePrice,
-                                    //                 quantities: tempProduct.productStock,
-                                    //               ));
-                                    //               ref.refresh(productProvider);
-                                    //               int count = 0;
-                                    //               Navigator.popUntil(context, (route) {
-                                    //                 return count++ == 2;
-                                    //               });
-                                    //             } else {
-                                    //               EasyLoading.showError(
-                                    //                 lang.S.of(context).pleaseAddQuantity,
-                                    //                 // 'Please add quantity'
-                                    //               );
-                                    //             }
-                                    //           },
-                                    //           child: Container(
-                                    //             height: 60,
-                                    //             width: context.width(),
-                                    //             decoration: const BoxDecoration(color: kMainColor, borderRadius: BorderRadius.all(Radius.circular(15))),
-                                    //             child: Center(
-                                    //               child: Text(
-                                    //                 lang.S.of(context).save,
-                                    //                 style: const TextStyle(fontSize: 18, color: Colors.white),
-                                    //               ),
-                                    //             ),
-                                    //           ),
-                                    //         )
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // ));
                                   });
                             },
-                            child: ProductCard(
-                              productTitle: products[i].productName.toString(),
-                              productDescription: products[i].brand?.brandName ?? '',
-                              stock: products[i].productStock.toString(),
-                              productImage: products[i].productPicture,
-                            ).visible(((products[i].productCode == productCode || productCode == '0000' || productCode == '-1')) ||
-                                products[i].productName!.toLowerCase().contains(productCode.toLowerCase())),
-                          );
-                        });
-                  }, error: (e, stack) {
-                    return Text(e.toString());
-                  }, loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  }),
-                ],
-              ),
+                          ),
+                        );
+                      });
+                }, error: (e, stack) {
+                  return Text(e.toString());
+                }, loading: () {
+                  return const Center(child: CircularProgressIndicator());
+                }),
+              ],
             ),
           ),
         ),
@@ -552,44 +359,52 @@ purchaseProductAddBottomSheet({required BuildContext context, required CartProdu
             color: Colors.grey,
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Text(
                     product.productName.toString(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 16),
                   ),
-                  Text(
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  lang.S.of(context).stock,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Text(
                     product.brandName ?? '',
+                    maxLines: 1,
                     style: const TextStyle(
                       fontSize: 16,
+                      overflow: TextOverflow.ellipsis,
                       color: Colors.grey,
                     ),
                   ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    lang.S.of(context).stock,
-                    style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  product.stock.toString(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
                   ),
-                  Text(
-                    product.stock.toString(),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           Row(
@@ -696,7 +511,7 @@ purchaseProductAddBottomSheet({required BuildContext context, required CartProdu
                         cartItem: CartProductModelPurchase(
                       brandName: tempProduct.brandName,
                       stock: tempProduct.stock,
-                      productId: tempProduct.productId ,
+                      productId: tempProduct.productId,
                       productName: tempProduct.productName ?? '',
                       productDealerPrice: tempProduct.productDealerPrice,
                       productPurchasePrice: tempProduct.productPurchasePrice,

@@ -12,6 +12,7 @@ import '../../../Const/api_config.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../Provider/transactions_provider.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/custome_http_client.dart';
 
 class InvoiceReturnRepo {
   ///__________Sales_return___________________________________________
@@ -23,6 +24,7 @@ class InvoiceReturnRepo {
     final uri = Uri.parse('${APIConfig.url}/sales-return');
 
     try {
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
       // Create a multipart request
       var request = http.MultipartRequest('POST', uri)
         ..headers.addAll({
@@ -48,7 +50,8 @@ class InvoiceReturnRepo {
       request.fields['totalAmount'] = salesReturn.totalAmount.toString();
       request.fields['discountAmount'] = salesReturn.discountAmount.toString();
 
-      var response = await request.send();
+      // var response = await request.send();
+      var response = await customHttpClient.uploadFile(url: uri,fields: request.fields, );
       var responseData = await http.Response.fromStream(response);
       final parsedData = jsonDecode(responseData.body);
 
@@ -91,6 +94,7 @@ class InvoiceReturnRepo {
     final uri = Uri.parse('${APIConfig.url}/purchases-return');
 
     try {
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
       var request = http.MultipartRequest('POST', uri)
         ..headers.addAll({
           "Accept": 'application/json',
@@ -111,7 +115,8 @@ class InvoiceReturnRepo {
       request.fields['discountAmount'] = returnData.discountAmount.toString();
 
       // Send the request and get the response
-      var response = await request.send();
+      // var response = await request.send();
+      var response = await customHttpClient.uploadFile(url: uri,fields: request.fields,);
       var responseData = await http.Response.fromStream(response);
       final parsedData = jsonDecode(responseData.body);
 

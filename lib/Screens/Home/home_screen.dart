@@ -5,21 +5,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
-import 'package:mobile_pos/Provider/product_provider.dart';
-import 'package:mobile_pos/Provider/transactions_provider.dart';
-import 'package:mobile_pos/Screens/Customers/Provider/customer_provider.dart';
 import 'package:mobile_pos/Screens/DashBoard/dashboard.dart';
-import 'package:mobile_pos/Screens/Expense/Providers/all_expanse_provider.dart';
 import 'package:mobile_pos/Screens/Home/components/grid_items.dart';
-import 'package:mobile_pos/Screens/Income/Providers/all_income_provider.dart';
 import 'package:mobile_pos/Screens/Profile%20Screen/profile_details.dart';
-import 'package:mobile_pos/Screens/vat_&_tax/provider/text_repo.dart';
 import 'package:mobile_pos/currency.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart';
 import '../../model/business_info_model.dart' as business;
+import '../../GlobalComponents/go_to_subscription-package_page_popup_widget.dart';
+import '../Customers/Provider/customer_provider.dart';
 import '../subscription/package_screen.dart';
 import '../subscription/purchase_premium_plan_screen.dart';
 import 'Provider/banner_provider.dart';
@@ -35,105 +31,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   PageController pageController = PageController(initialPage: 0);
 
-  void getUpgradeDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: kWhite,
-            surfaceTintColor: kWhite,
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            contentPadding: const EdgeInsets.all(20),
-            titlePadding: const EdgeInsets.all(0),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    const Spacer(),
-                    IconButton(
-                        padding: EdgeInsets.zero,
-                        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          color: kGreyTextColor,
-                        )),
-                  ],
-                ),
-                SvgPicture.asset(
-                  'assets/upgradePlan.svg',
-                  height: 198,
-                  width: 238,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  lang.S.of(context).endYourFreePlan,
-                  textAlign: TextAlign.center,
-                  // 'End your Free plan',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: kTitleColor),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  lang.S.of(context).yourFree,
-                  // 'Your Free Package is almost done, buy your next plan Thanks.',
-                  style: gTextStyle.copyWith(color: kGreyTextColor),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                UpdateButton(
-                    text: lang.S.of(context).upgradeNow,
-                    //'Upgrade Now',
-                    onpressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageScreen()));
-                    }),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  // get subs status
-  String getSubscriptionStatus(String? subscriptionDate, String expireDate, business.EnrolledPlan? enrolledPlan, BuildContext context) {
-    if (subscriptionDate == null || enrolledPlan == null) {
-      return 'Expired';
-    }
-    DateTime parsedSubscriptionDate = DateTime.parse(subscriptionDate);
-    num duration = enrolledPlan.duration ?? 0;
-    DateTime expirationDate = parsedSubscriptionDate.add(Duration(days: duration.toInt()));
-    num daysLeft = expirationDate.difference(DateTime.now()).inDays;
-    if (daysLeft < 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PurchasePremiumPlanScreen(
-              isExpired: true,
-              isCameBack: false,
-              enrolledPlan: enrolledPlan,
-              willExpire: expireDate,
-            ),
-          ),
-        );
-      });
-      return 'Expired';
-    } else {
-      return '$daysLeft Days Left';
-    }
-  }
-
   bool _isRefreshing = false;
 
   Future<void> refreshAllProviders({required WidgetRef ref}) async {
@@ -144,6 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ref.refresh(summaryInfoProvider);
       ref.refresh(bannerProvider);
       ref.refresh(businessInfoProvider);
+      ref.refresh(partiesProvider);
+      ref.refresh(getExpireDateProvider(ref));
       await Future.delayed(const Duration(seconds: 3));
     } finally {
       _isRefreshing = false;
@@ -258,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: gTextStyle.copyWith(color: kWhite),
                                         ),
                                         Text(
-                                          '$currency ${summary.data?.sales?.toStringAsFixed(2) ?? 0}',
+                                          '$currency${summary.data?.sales?.toStringAsFixed(2) ?? 0.00}',
                                           style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(
@@ -269,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: gTextStyle.copyWith(color: kWhite),
                                         ),
                                         Text(
-                                          '$currency ${summary.data?.income?.abs().toStringAsFixed(2) ?? 0}',
+                                          '$currency${summary.data?.income?.abs().toStringAsFixed(2) ?? 0.00}',
                                           style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                       ],
@@ -284,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: gTextStyle.copyWith(color: kWhite),
                                         ),
                                         Text(
-                                          '$currency ${summary.data?.purchase?.toStringAsFixed(2) ?? 0}',
+                                          '$currency${summary.data?.purchase?.toStringAsFixed(2) ?? 0.00}',
                                           style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(
@@ -296,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: gTextStyle.copyWith(color: kWhite),
                                         ),
                                         Text(
-                                          '$currency ${summary.data?.expense?.toStringAsFixed(2) ?? 0}',
+                                          '$currency${summary.data?.expense?.toStringAsFixed(2) ?? 0.00}',
                                           style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                       ],
@@ -320,7 +219,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Text(
                                       lang.S.of(context).todaySummary,
-                                      //'Today’s Summary',
                                       style: gTextStyle.copyWith(fontWeight: FontWeight.bold, color: kWhite, fontSize: 18),
                                     ),
                                     const Spacer(),
@@ -330,14 +228,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                         child: Text(
                                           lang.S.of(context).sellAll,
-                                          //'Sell All >',
                                           style: const TextStyle(color: kWhite, fontWeight: FontWeight.w500),
                                         )),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 Row(
                                   children: [
                                     Column(
@@ -353,9 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           // 'Not Found',
                                           style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
+                                        const SizedBox(height: 10),
                                         Text(
                                           lang.S.of(context).income,
                                           // 'Income',
@@ -507,7 +400,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
-                          getUpgradeDialog();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return goToPackagePagePopup(context: context, enrolledPlan: details.enrolledPlan);
+                              });
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -525,21 +422,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             title: RichText(
                               text: TextSpan(
-                                text: '${details.enrolledPlan?.plan?.subscriptionName} ${lang.S.of(context).package} ',
+                                text: '${details.enrolledPlan?.plan?.subscriptionName ?? 'No Active'} ${lang.S.of(context).package} ',
                                 style: gTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 16),
-                                children: [
-                                  TextSpan(
-                                      text: getSubscriptionStatus(details.subscriptionDate, details.willExpire, details.enrolledPlan, context),
-                                      // '(${((DateTime.tryParse(details.subscriptionDate ?? '') ?? DateTime.now()).difference(DateTime.now()).inDays.abs() - (details.enrolledPlan?.duration ?? 0)).abs()} Days Left)',
-                                      style: gTextStyle.copyWith(color: kGreyTextColor, fontWeight: FontWeight.w400))
-                                ],
                               ),
                             ),
-                            subtitle: Text(
-                              lang.S.of(context).updateYourSubscription,
-                              //'Update your subscription',
-                              style: gTextStyle.copyWith(color: kGreyTextColor, fontSize: 14),
-                            ),
+                            subtitle: Text(getDayLeftInExpiring(expireDate: details.willExpire, shortMSG: false)),
                             trailing: const Icon(
                               Icons.arrow_forward_ios,
                               color: kGreyTextColor,
@@ -685,10 +572,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class HomeGridCards extends StatefulWidget {
   const HomeGridCards({
-    Key? key,
+    super.key,
     required this.gridItems,
     this.visibility,
-  }) : super(key: key);
+  });
   final GridItems gridItems;
   final business.Visibility? visibility;
 
@@ -738,7 +625,6 @@ class _HomeGridCardsState extends State<HomeGridCards> {
           } else {
             EasyLoading.showError(
               lang.S.of(context).permissionNotGranted,
-              // 'Permission not granted!'
             );
           }
         },
@@ -770,5 +656,20 @@ class _HomeGridCardsState extends State<HomeGridCards> {
         ),
       );
     });
+  }
+}
+
+String getDayLeftInExpiring({required String? expireDate, required bool shortMSG}) {
+  if (expireDate == null) {
+    return shortMSG ? 'N/A' : 'Subscribe Now';
+  }
+  DateTime expiringDay = DateTime.parse(expireDate).add(const Duration(days: 1));
+  if (expiringDay.isBefore(DateTime.now())) {
+    return 'Expired';
+  }
+  if (expiringDay.difference(DateTime.now()).inDays < 1) {
+    return shortMSG ? '${expiringDay.difference(DateTime.now()).inHours}\nHours Left' : '${expiringDay.difference(DateTime.now()).inHours} Hours Left';
+  } else {
+    return shortMSG ? '${expiringDay.difference(DateTime.now()).inDays}\nDays Left' : '${expiringDay.difference(DateTime.now()).inDays} Days Left';
   }
 }

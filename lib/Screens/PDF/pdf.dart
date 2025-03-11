@@ -9,17 +9,17 @@ import 'package:share_plus/share_plus.dart';
 class PDFViewerPage extends StatefulWidget {
   final String path;
 
-  const PDFViewerPage({Key? key, required this.path}) : super(key: key);
+  const PDFViewerPage({super.key, required this.path});
 
   @override
   PDFViewerPageState createState() => PDFViewerPageState();
 }
 
 class PDFViewerPageState extends State<PDFViewerPage> {
-  void _sharePDF() {
+  void _sharePDF() async {
     final file = File(widget.path);
     if (file.existsSync()) {
-      Share.shareXFiles([XFile(widget.path)], text: 'Check out this PDF file');
+     await Share.shareXFiles([XFile(widget.path)], text: 'Check out this Invoice');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("File Not Found")),
@@ -44,8 +44,9 @@ class PDFViewerPageState extends State<PDFViewerPage> {
         elevation: 0.0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.share, color: Colors.black),
-            onPressed: _sharePDF,
+            icon: const Icon(Icons.share),
+            onPressed: _sharePDF, // Call the share function
+            color: Colors.black,
           ),
         ],
       ),

@@ -466,7 +466,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                     ),
 
                     const SizedBox(height: 5.0),
-                    //----------discount----------------------
+                    //----------vat----------------------
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text.rich(
@@ -482,6 +482,24 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                       ),
                     ),
 
+                    const SizedBox(height: 5.0),
+
+                    ///__________shipping_charge______________
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Shipping charge : ',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          children: [
+                            TextSpan(
+                              text: '$currency ${(widget.transitionModel.shippingCharge?.toStringAsFixed(2) ?? 0)}',
+                            ),
+                          ],
+                        ),
+                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ),
                     const SizedBox(height: 5.0),
 
                     //----------total amount-------------

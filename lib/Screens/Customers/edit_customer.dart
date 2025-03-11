@@ -20,7 +20,7 @@ import 'Repo/parties_repo.dart';
 
 // ignore: must_be_immutable
 class EditCustomer extends StatefulWidget {
-  EditCustomer({Key? key, required this.customerModel}) : super(key: key);
+  EditCustomer({super.key, required this.customerModel});
   Party customerModel;
 
   @override
@@ -74,7 +74,7 @@ class _EditCustomerState extends State<EditCustomer> {
           body: Consumer(builder: (context, ref, __) {
             // ignore: unused_local_variable
             final customerData = ref.watch(partiesProvider);
-        
+
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -89,10 +89,9 @@ class _EditCustomerState extends State<EditCustomer> {
                             padding: const EdgeInsets.all(10.0),
                             child: TextFormField(
                               controller: phoneController,
-        
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                 // return 'Please enter a valid phone number';
+                                  // return 'Please enter a valid phone number';
                                   return lang.S.of(context).pleaseEnterAValidPhoneNumber;
                                 }
                                 return null;
@@ -105,7 +104,7 @@ class _EditCustomerState extends State<EditCustomer> {
                               ),
                             ),
                           ),
-        
+
                           ///_________Name_______________________
                           Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -113,7 +112,7 @@ class _EditCustomerState extends State<EditCustomer> {
                               controller: nameController,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                 // return 'Please enter a valid Name';
+                                  // return 'Please enter a valid Name';
                                   return lang.S.of(context).pleaseEnterAValidName;
                                 }
                                 // You can add more validation logic as needed
@@ -145,10 +144,14 @@ class _EditCustomerState extends State<EditCustomer> {
                             ),
                             value: 'Retailer',
                             onChanged: (value) {
-                              setState(() {
-                                groupValue = value.toString();
-                              });
+                              if (widget.customerModel.type != 'Supplier') {
+                                setState(() {
+                                  groupValue = value.toString();
+                                });
+                              }
                             },
+                            // Change the color to indicate it's not selectable
+                            activeColor: widget.customerModel.type == 'Supplier' ? Colors.grey : kMainColor,
                           ),
                         ),
                         Expanded(
@@ -164,10 +167,13 @@ class _EditCustomerState extends State<EditCustomer> {
                             ),
                             value: 'Dealer',
                             onChanged: (value) {
-                              setState(() {
-                                groupValue = value.toString();
-                              });
+                              if (widget.customerModel.type != 'Supplier') {
+                                setState(() {
+                                  groupValue = value.toString();
+                                });
+                              }
                             },
+                            activeColor: widget.customerModel.type == 'Supplier' ? Colors.grey : kMainColor,
                           ),
                         ),
                       ],
@@ -188,9 +194,11 @@ class _EditCustomerState extends State<EditCustomer> {
                             ),
                             value: 'Wholesaler',
                             onChanged: (value) {
-                              setState(() {
-                                groupValue = value.toString();
-                              });
+                              if (widget.customerModel.type != 'Supplier') {
+                                setState(() {
+                                  groupValue = value.toString();
+                                });
+                              }
                             },
                           ),
                         ),
@@ -208,9 +216,11 @@ class _EditCustomerState extends State<EditCustomer> {
                             ),
                             value: 'Supplier',
                             onChanged: (value) {
-                              setState(() {
-                                groupValue = value.toString();
-                              });
+                              if (widget.customerModel.type != 'Retailer' && widget.customerModel.type != 'Dealer' && widget.customerModel.type != 'Wholesaler') {
+                                setState(() {
+                                  groupValue = value.toString();
+                                });
+                              }
                             },
                           ),
                         ),
@@ -383,7 +393,7 @@ class _EditCustomerState extends State<EditCustomer> {
                                     border: const OutlineInputBorder(),
                                     floatingLabelBehavior: FloatingLabelBehavior.always,
                                     labelText: lang.S.of(context).email,
-                                   // hintText: 'Enter your email',
+                                    // hintText: 'Enter your email',
                                     hintText: lang.S.of(context).hintEmail,
                                   ),
                                 ),
@@ -394,11 +404,11 @@ class _EditCustomerState extends State<EditCustomer> {
                                   controller: addressController,
                                   maxLines: 2,
                                   decoration: InputDecoration(
-                                      border: const OutlineInputBorder(),
-                                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                                      labelText: lang.S.of(context).address,
-                                      //hintText: 'Enter your address'
-                                     hintText: lang.S.of(context).hintEmail,
+                                    border: const OutlineInputBorder(),
+                                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                                    labelText: lang.S.of(context).address,
+                                    //hintText: 'Enter your address'
+                                    hintText: lang.S.of(context).hintEmail,
                                   ),
                                 ),
                               ),
@@ -426,9 +436,9 @@ class _EditCustomerState extends State<EditCustomer> {
                         onPressed: () async {
                           if (_formKay.currentState!.validate()) {
                             try {
-                              EasyLoading.show(status:
-                                  lang.S.of(context).updating,
-                             // 'Updating...'
+                              EasyLoading.show(
+                                status: lang.S.of(context).updating,
+                                // 'Updating...'
                               );
                               final party = PartyRepository();
                               await party.updateParty(

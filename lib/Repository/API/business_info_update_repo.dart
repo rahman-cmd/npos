@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_pos/Const/api_config.dart';
 
+import '../../http_client/custome_http_client.dart';
 import '../constant_functions.dart';
 
 class BusinessUpdateRepository {
@@ -10,6 +13,8 @@ class BusinessUpdateRepository {
     required String id,
     required String name,
     required String categoryId,
+    required BuildContext context,
+    required WidgetRef ref,
     String? phone,
     String? vatNumber,
     String? vatTitle,
@@ -17,6 +22,7 @@ class BusinessUpdateRepository {
     String? address,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/business/$id');
+    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = 'application/json'
@@ -34,7 +40,13 @@ class BusinessUpdateRepository {
     }
     print(request.fields);
 
-    final response = await request.send();
+    // final response = await request.send();
+    final response = await customHttpClient.uploadFile(
+      url: uri,
+      fileFieldName: 'pictureUrl',
+      file: image,
+      fields: request.fields,
+    );
     var da = await response.stream.bytesToString();
     print(response.statusCode);
     print(da);

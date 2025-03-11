@@ -42,6 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    final _theme = Theme.of(context);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -64,26 +65,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   const NameWithLogo(),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   Text(
                     lang.S.of(context).createAFreeAccount,
                     //'Create A Free Account',
-                    style: textTheme.titleMedium?.copyWith(fontSize: 24.0,fontWeight: FontWeight.w600),
+                    style: textTheme.titleMedium?.copyWith(fontSize: 24.0, fontWeight: FontWeight.w600),
                   ),
                   Text(
                     lang.S.of(context).pleaseEnterYourDetails,
                     //'Please enter your details',
-                    style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor,fontSize: 16),
+                    style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor, fontSize: 16),
                   ),
                   const SizedBox(height: 24.0),
-      
+
                   ///____________Name______________________________________________
                   TextFormField(
                     controller: nameTextController,
                     keyboardType: TextInputType.name,
-                    decoration: kInputDecoration.copyWith(
+                    decoration: InputDecoration(
                       //labelText: 'Full Name',
                       labelText: lang.S.of(context).fullName,
                       //hintText: 'Enter your full name',
@@ -98,12 +103,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 20.0),
-      
+
                   ///__________Email______________________________________________
                   TextFormField(
                     controller: emailTextController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: kInputDecoration.copyWith(
+                    decoration: InputDecoration(
                       // border: OutlineInputBorder(),
                       // labelText: 'email',
                       labelText: lang.S.of(context).lableEmail,
@@ -122,16 +127,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 20.0),
-      
+
                   ///___________Password_____________________________________________
                   TextFormField(
                     controller: passwordTextController,
                     keyboardType: TextInputType.text,
                     obscureText: showPassword,
-                    decoration: kInputDecoration.copyWith(
+                    decoration: InputDecoration(
                       //labelText: 'Password',
                       labelText: lang.S.of(context).lablePassword,
-                     // hintText: 'Enter password',
+                      // hintText: 'Enter password',
                       hintText: lang.S.of(context).hintPassword,
                       suffixIcon: IconButton(
                         onPressed: () {
@@ -142,6 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         icon: Icon(
                           showPassword ? FeatherIcons.eyeOff : FeatherIcons.eye,
                           color: kGreyTextColor,
+                          size: 18,
                         ),
                       ),
                     ),
@@ -157,10 +163,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 24.0),
-      
+
                   ///________Button___________________________________________________
-                  UpdateButton(
-                    onpressed: () async {
+                  ElevatedButton(
+                    style: OutlinedButton.styleFrom(
+                      maximumSize: const Size(double.infinity, 48),
+                      minimumSize: const Size(double.infinity, 48),
+                      disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                    ),
+                    onPressed: () async {
                       if (isClicked) {
                         return;
                       }
@@ -185,10 +196,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                       }
                     },
-                    text: lang.S.of(context).signUp,
-                    //'Sign Up',
+                    child: Text(
+                      lang.S.of(context).signUp,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.bodyMedium?.copyWith(
+                        color: _theme.colorScheme.primaryContainer,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,13 +222,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         hoverColor: kMainColor.withOpacity(0.1),
                         child: RichText(
                           text: TextSpan(
-                            text:
-                            lang.S.of(context).alreadyHaveAnAccount,
+                            text: lang.S.of(context).alreadyHaveAnAccount,
                             //'Already have an account? ',
                             style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                             children: [
                               TextSpan(
-                                text:lang.S.of(context).signIn,
+                                text: lang.S.of(context).signIn,
                                 //'Sign In',
                                 style: textTheme.bodyMedium?.copyWith(color: kMainColor, fontWeight: FontWeight.bold),
                               )
