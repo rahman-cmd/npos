@@ -83,7 +83,7 @@ class _AddPartyState extends State<AddParty> {
                                 borderSide: BorderSide(),
                               ),
                             ),
-                            initialCountryCode: 'BD',
+                            initialCountryCode: 'OM',
                             onChanged: (phone) {
                               phoneNumber = phone.completeNumber;
                             },
