@@ -660,10 +660,10 @@ class S {
     );
   }
 
-  /// `Thank you for your purchase`
+  /// `Thak you for your purchase`
   String get thakYouForYourPurchase {
     return Intl.message(
-      'Thank you for your purchase',
+      'Thak you for your purchase',
       name: 'thakYouForYourPurchase',
       desc: '',
       args: [],
@@ -905,10 +905,10 @@ class S {
     );
   }
 
-  /// `NPOS app is free, easy to use. In fact, it's one of the best  POS systems around the world.`
+  /// `POSpro app is free, easy to use. In fact, it's one of the best  POS systems around the world.`
   String get easytheusedesciption {
     return Intl.message(
-      'NPOS app is free, easy to use. In fact, it\'s one of the best  POS systems around the world.',
+      'POSpro app is free, easy to use. In fact, it\'s one of the best  POS systems around the world.',
       name: 'easytheusedesciption',
       desc: '',
       args: [],
@@ -925,10 +925,10 @@ class S {
     );
   }
 
-  /// `Features are the important part which makes NPOS different from traditional solutions.`
+  /// `Features are the important part which makes POSpro different from traditional solutions.`
   String get choseyourfeatureDesciption {
     return Intl.message(
-      'Features are the important part which makes NPOS different from traditional solutions.',
+      'Features are the important part which makes POSpro different from traditional solutions.',
       name: 'choseyourfeatureDesciption',
       desc: '',
       args: [],
@@ -945,10 +945,10 @@ class S {
     );
   }
 
-  /// `Npos is a complete business solution with stock, account, sales, expense & loss/profit.`
+  /// `PosPro is a complete business solution with stock, account, sales, expense & loss/profit.`
   String get allBusinessolutionDescrip {
     return Intl.message(
-      'Npos is a complete business solution with stock, account, sales, expense & loss/profit.',
+      'PosPro is a complete business solution with stock, account, sales, expense & loss/profit.',
       name: 'allBusinessolutionDescrip',
       desc: '',
       args: [],
@@ -995,11 +995,11 @@ class S {
     );
   }
 
-  /// `Powered By Npos`
-  String get powerdedByNpos {
+  /// `Powered By Acnoo`
+  String get powerdedByAcnoo {
     return Intl.message(
-      'Powered By Npos',
-      name: 'powerdedByNpos',
+      'Powered By Acnoo',
+      name: 'powerdedByAcnoo',
       desc: '',
       args: [],
     );
@@ -3865,10 +3865,10 @@ class S {
     );
   }
 
-  /// `Enter Salting price`
+  /// `Enter selling price`
   String get enterSaltingPrice {
     return Intl.message(
-      'Enter Salting price',
+      'Enter selling price',
       name: 'enterSaltingPrice',
       desc: '',
       args: [],

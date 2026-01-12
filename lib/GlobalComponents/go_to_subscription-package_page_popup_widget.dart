@@ -53,14 +53,14 @@ Widget goToPackagePagePopup({required BuildContext context, required EnrolledPla
           enrolledPlan?.plan?.subscriptionName != null
               ? 'Your ${enrolledPlan?.plan?.subscriptionName} plan is almost done, buy your next plan Thanks.'
               : 'You don’t have an active plan! buy your next plan now, Thanks',
-          style: gTextStyle.copyWith(color: kGreyTextColor),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
-        UpdateButton(
-            text: lang.S.of(context).upgradeNow,
+        ElevatedButton(
+            child: Text(lang.S.of(context).upgradeNow),
             //'Upgrade Now',
-            onpressed: () {
+            onPressed: () {
               (navigateBack ?? false) ? Navigator.pop(context) : Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageScreen()));
             }),
         const SizedBox(height: 5),

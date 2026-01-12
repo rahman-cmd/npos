@@ -1,5 +1,6 @@
 import '../../../model/sale_transaction_model.dart';
 import '../../Customers/Model/parties_model.dart';
+import '../../payment_type/model/payment_type_model.dart';
 
 class DueCollection {
   DueCollection({
@@ -12,6 +13,7 @@ class DueCollection {
     this.totalDue,
     this.dueAmountAfterPay,
     this.payDueAmount,
+    this.paymentTypeId,
     this.paymentType,
     this.paymentDate,
     this.invoiceNumber,
@@ -31,13 +33,15 @@ class DueCollection {
     totalDue = json['totalDue'];
     dueAmountAfterPay = json['dueAmountAfterPay'];
     payDueAmount = json['payDueAmount'];
-    paymentType = json['paymentType'];
+    paymentTypeId = int.tryParse(json["payment_type_id"].toString());
+    // paymentType = json['paymentType'];
     paymentDate = json['paymentDate'];
     invoiceNumber = json['invoiceNumber'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     party = json['party'] != null ? Party.fromJson(json['party']) : null;
+    paymentType = json['payment_type'] != null ? PaymentType.fromJson(json['payment_type']) : null;
   }
   num? id;
   num? businessId;
@@ -48,7 +52,8 @@ class DueCollection {
   num? totalDue;
   num? dueAmountAfterPay;
   num? payDueAmount;
-  String? paymentType;
+  int? paymentTypeId;
+  PaymentType? paymentType;
   String? invoiceNumber;
   String? paymentDate;
   String? createdAt;
@@ -81,3 +86,25 @@ class DueCollection {
   }
 }
 
+class PaymentType {
+  int? id;
+  String? name;
+
+  PaymentType({required this.id, required this.name});
+
+  // Factory constructor to create an instance from a Map
+  factory PaymentType.fromJson(Map<String, dynamic> json) {
+    return PaymentType(
+      id: json['id'] as int,
+      name: json['name'] as String,
+    );
+  }
+
+  // Method to convert an instance to a Map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+}

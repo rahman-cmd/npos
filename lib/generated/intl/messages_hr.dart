@@ -66,7 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sva poslovna rješenja",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos je potpuno poslovno rješenje s inventarom, računima, prodajom, troškovima i dobitkom/gubitkom.",
+      "PosPro je potpuno poslovno rješenje s inventarom, računima, prodajom, troškovima i dobitkom/gubitkom.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Sve vrijeme"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Već dodano"),
@@ -119,7 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Izaberite svoje značajke",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Značajke su važan dio koji čini Npos drugačijim od tradicionalnih rješenja.",
+      "Značajke su važan dio koji čini PosPro drugačijim od tradicionalnih rješenja.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -213,7 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Lako korištenje mobilne POS blagajne",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Npos aplikacija je besplatna i jednostavna za korištenje. Zapravo, jedan je od najboljih POS sustava diljem svijeta.",
+      "PosPro aplikacija je besplatna i jednostavna za korištenje. Zapravo, jedan je od najboljih POS sustava diljem svijeta.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Uredi"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Uredi broj telefona?"),

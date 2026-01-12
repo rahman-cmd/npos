@@ -78,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Все бизнес-решения",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos - это полное бизнес-решение с учетом склада, счетов, продаж, расходов и прибыли/убытков.",
+      "PosPro - это полное бизнес-решение с учетом склада, счетов, продаж, расходов и прибыли/убытков.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Все время"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Уже добавлено"),
@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выберите свои функции",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Функции - это важная часть, которая делает Npos отличной от традиционных решений.",
+      "Функции - это важная часть, которая делает PosPro отличной от традиционных решений.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Кларенс"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -243,7 +243,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Легко использовать мобильную POS-систему",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Приложение Npos бесплатное и легкое в использовании. Фактически, это одна из лучших POS-систем в мире.",
+      "Приложение PosPro бесплатное и легкое в использовании. Фактически, это одна из лучших POS-систем в мире.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -611,8 +611,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, выберите категорию расхода",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Разработано Npos",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Разработано Acnoo",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Поддержка приложений для Android и iOS",

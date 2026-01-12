@@ -80,23 +80,6 @@ class CartNotifierPurchase extends ChangeNotifier {
     calculatePrice();
   }
 
-  // void calculateDiscount({required String value, bool? rebuilding,}) {
-  //   if (value == '') {
-  //     discountAmount = 0;
-  //     discountTextControllerFlat.clear();
-  //   } else {
-  //     if ((num.tryParse(value) ?? 0) <= totalAmount) {
-  //       discountAmount = num.parse(value);
-  //     } else {
-  //       discountTextControllerFlat.clear();
-  //       discountAmount = 0;
-  //       EasyLoading.showError('Enter a valid discount');
-  //     }
-  //   }
-  //   if (rebuilding == false) return;
-  //   calculatePrice();
-  // }
-
   void updateProduct({required num productId, required num price, required String qty}) {
     int index = cartItemList.indexWhere((element) => element.productId == productId);
     cartItemList[index].productPurchasePrice = price;
@@ -131,12 +114,9 @@ class CartNotifierPurchase extends ChangeNotifier {
     totalPayableAmount += finalShippingCharge;
     if (receivedAmount != null && receivedAmount.isNotEmpty) {
       receiveAmount = num.tryParse(receivedAmount) ?? 0;
+    } else {
+      receiveAmount = 0;
     }
-
-    // totalPayableAmount += vatAmount;
-    // if (!receivedAmount.isEmptyOrNull) {
-    //   receiveAmount = num.tryParse(receivedAmount!) ?? 0;
-    // }
     changeAmount = totalPayableAmount < receiveAmount ? receiveAmount - totalPayableAmount : 0;
     dueAmount = totalPayableAmount < receiveAmount ? 0 : totalPayableAmount - receiveAmount;
     if (dueAmount <= 0) isFullPaid = true;
@@ -150,13 +130,6 @@ class CartNotifierPurchase extends ChangeNotifier {
       totalAmountOfCart = totalAmountOfCart + ((element.productPurchasePrice ?? 0) * (element.quantities ?? 0));
     }
 
-    // if (discount >= 0) {
-    //   if (discountType == 'USD') {
-    //     return totalAmountOfCart - discount;
-    //   } else {
-    //     return totalAmountOfCart - ((totalAmountOfCart * discount) / 100);
-    //   }
-    // }
     return totalAmountOfCart;
   }
 

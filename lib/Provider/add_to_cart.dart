@@ -1,25 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile_pos/Provider/profile_provider.dart';
+import 'package:mobile_pos/model/business_info_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../Screens/Settings/sales settings/model/amount_rounding_dropdown_model.dart';
 import '../Screens/vat_&_tax/model/vat_model.dart';
 import '../model/add_to_cart_model.dart';
 
-final cartNotifier = ChangeNotifierProvider((ref) => CartNotifier());
+final cartNotifier = ChangeNotifierProvider((ref) {
+  return CartNotifier(businessInformation: ref.watch(businessInfoProvider).value);
+});
 
 class CartNotifier extends ChangeNotifier {
+  final BusinessInformation? businessInformation;
+  CartNotifier({required this.businessInformation});
+  @override
+  void addListener(VoidCallback listener) {
+    // TODO: implement addListener
+    super.addListener(listener);
+    roundedOption = businessInformation?.saleRoundingOption ?? roundingMethods[0].value;
+  }
+
   List<AddToCartModel> cartItemList = [];
   TextEditingController discountTextControllerFlat = TextEditingController();
   TextEditingController vatAmountController = TextEditingController();
   TextEditingController shippingChargeController = TextEditingController();
 
-  // final List<ProductModel> productList = [];
-
   ///_________NEW_________________________________
   num totalAmount = 0;
   num discountAmount = 0;
   num discountPercent = 0;
+  num roundingAmount = 0;
+  num actualTotalAmount = 0;
   num totalPayableAmount = 0;
   VatModel? selectedVat;
   num vatAmount = 0;
@@ -28,6 +42,7 @@ class CartNotifier extends ChangeNotifier {
   num changeAmount = 0;
   num dueAmount = 0;
   num finalShippingCharge = 0;
+  String roundedOption = roundingMethods[0].value;
 
   void changeSelectedVat({VatModel? data}) {
     if (data != null) {
@@ -40,23 +55,6 @@ class CartNotifier extends ChangeNotifier {
 
     calculatePrice();
   }
-
-  // void calculateDiscount({required String value, bool? rebuilding}) {
-  //   if (value == '') {
-  //     discountAmount = 0;
-  //     discountTextControllerFlat.clear();
-  //   } else {
-  //     if ((num.tryParse(value) ?? 0) <= totalAmount) {
-  //       discountAmount = num.parse(value);
-  //     } else {
-  //       discountTextControllerFlat.clear();
-  //       discountAmount = 0;
-  //       EasyLoading.showError('Enter a valid discount');
-  //     }
-  //   }
-  //   if (rebuilding == false) return;
-  //   calculatePrice();
-  // }
 
   void calculateDiscount({required String value, bool? rebuilding, String? selectedTaxType}) {
     if (value.isEmpty) {
@@ -98,7 +96,7 @@ class CartNotifier extends ChangeNotifier {
   void updateProduct({required num productId, required String price, required String qty}) {
     int index = cartItemList.indexWhere((element) => element.productId == productId);
     cartItemList[index].unitPrice = price;
-    cartItemList[index].quantity = qty.toInt();
+    cartItemList[index].quantity = num.tryParse(qty) ?? 0;
     calculatePrice();
   }
 
@@ -130,8 +128,14 @@ class CartNotifier extends ChangeNotifier {
       finalShippingCharge = num.tryParse(shippingCharge) ?? 0;
     }
     totalPayableAmount += finalShippingCharge;
+    actualTotalAmount = totalPayableAmount;
+    num tempTotalPayable = roundNumber(value: totalPayableAmount, roundingType: roundedOption);
+    roundingAmount = tempTotalPayable - totalPayableAmount;
+    totalPayableAmount = tempTotalPayable;
     if (receivedAmount != null && receivedAmount.isNotEmpty) {
       receiveAmount = num.tryParse(receivedAmount) ?? 0;
+    } else {
+      receiveAmount = 0;
     }
 
     changeAmount = totalPayableAmount < receiveAmount ? receiveAmount - totalPayableAmount : 0;
@@ -139,22 +143,6 @@ class CartNotifier extends ChangeNotifier {
     if (dueAmount <= 0) isFullPaid = true;
     if (stopRebuild ?? false) return;
     notifyListeners();
-  }
-
-  double getTotalAmount() {
-    double totalAmountOfCart = 0;
-    for (var element in cartItemList) {
-      totalAmountOfCart = totalAmountOfCart + (double.parse(element.unitPrice.toString()) * double.parse(element.quantity.toString()));
-    }
-
-    // if (discount >= 0) {
-    //   if (discountType == 'USD') {
-    //     return totalAmountOfCart - discount;
-    //   } else {
-    //     return totalAmountOfCart - ((totalAmountOfCart * discount) / 100);
-    //   }
-    // }
-    return totalAmountOfCart;
   }
 
   quantityIncrease(int index) {
@@ -184,10 +172,6 @@ class CartNotifier extends ChangeNotifier {
       cartItemList.add(cartItem);
     }
     (fromEditSales ?? false) ? null : calculatePrice();
-  }
-
-  addToCartRiverPodForEdit(List<AddToCartModel> cartItem) {
-    cartItemList = cartItem;
   }
 
   deleteToCart(int index) {

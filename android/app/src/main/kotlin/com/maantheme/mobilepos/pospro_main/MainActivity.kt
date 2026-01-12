@@ -1,4 +1,4 @@
-package com.awamir.npos
+package com.acnoo.pospro
 
 import io.flutter.embedding.android.FlutterActivity
 

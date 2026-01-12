@@ -591,8 +591,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Шығын категориясын таңдаңыз",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Npos бетімен жеткізілген",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Acnoo бетімен жеткізілген",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android және iOS Қолдау",

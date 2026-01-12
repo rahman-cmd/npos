@@ -66,7 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Всички бизнес решения",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos е цялостно бизнес решение със склад, счетоводство, продажби, разходи и печалба/загуба.",
+      "PosPro е цялостно бизнес решение със склад, счетоводство, продажби, разходи и печалба/загуба.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("През цялото време"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Вече добавено"),
@@ -122,7 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Избери своите функции",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Функциите са важна част, която прави NPOS различен от традиционните решения.",
+      "Функциите са важна част, която прави POSpro различен от традиционните решения.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Кларънс"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -225,7 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Лесен за използване мобилен POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS app е безплатен и лесен за използване. Всъщност, той е една от най-добрите POS системи в света.",
+      "POSpro app е безплатен и лесен за използване. Всъщност, той е една от най-добрите POS системи в света.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Редактирай"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -599,8 +599,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Моля, изберете категория на разход",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Задвижван от Npos",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Задвижван от Acnoo",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Премиум клиентска поддръжка",

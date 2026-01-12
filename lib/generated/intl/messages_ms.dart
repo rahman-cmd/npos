@@ -70,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Semua penyelesaian perniagaan",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos adalah penyelesaian perniagaan lengkap dengan stok, akaun, jualan, perbelanjaan & rugi/laba.",
+      "PosPro adalah penyelesaian perniagaan lengkap dengan stok, akaun, jualan, perbelanjaan & rugi/laba.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Semua Masa"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Sudah Ditambah"),
@@ -122,7 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chooseSupplier": MessageLookupByLibrary.simpleMessage("Pilih Pembekal"),
     "choseYourFeature": MessageLookupByLibrary.simpleMessage("Pilih Ciri Anda"),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Ciri-ciri adalah bahagian penting yang menjadikan Npos berbeza daripada penyelesaian tradisional.",
+      "Ciri-ciri adalah bahagian penting yang menjadikan PosPro berbeza daripada penyelesaian tradisional.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -221,7 +221,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mudah digunakan dengan pos mudah alih",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Aplikasi Npos adalah percuma dan mudah digunakan. Sebenarnya, ia adalah salah satu sistem POS terbaik di seluruh dunia.",
+      "Aplikasi PosPro adalah percuma dan mudah digunakan. Sebenarnya, ia adalah salah satu sistem POS terbaik di seluruh dunia.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Sunting"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Edit Nombor Telefon?"),
@@ -601,8 +601,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Sila pilih kategori perbelanjaan",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Dikuasakan oleh Npos",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Dikuasakan oleh Acnoo",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Sokongan Apl Android & iOS",

@@ -78,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Totes les solucions empresarials",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos és una solució empresarial completa amb estoc, comptabilitat, vendes, despeses i pèrdues/benefici.",
+      "PosPro és una solució empresarial completa amb estoc, comptabilitat, vendes, despeses i pèrdues/benefici.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Tot el temps"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Ja afegit"),
@@ -140,7 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Escull les teves característiques",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Les característiques són la part important que fa que NPOS sigui diferent de les solucions tradicionals.",
+      "Les característiques són la part important que fa que POSpro sigui diferent de les solucions tradicionals.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -249,7 +249,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "POS mòbil fàcil d\'usar",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "L\'aplicació NPOS és gratuïta i fàcil d\'usar. De fet, és un dels millors sistemes POS del món.",
+      "L\'aplicació POSpro és gratuïta i fàcil d\'usar. De fet, és un dels millors sistemes POS del món.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Edita"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -653,7 +653,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Si us plau, selecciona una categoria de despesa",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage("Powered By Npos"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Suport al client premium",
     ),

@@ -80,7 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Barcha biznes echimlari",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos bu tovar, hisob, savdo, xarajat va yo\'qotish/foyda bilan to\'liq biznes echimidir.",
+      "PosPro bu tovar, hisob, savdo, xarajat va yo\'qotish/foyda bilan to\'liq biznes echimidir.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Barcha vaqt"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage(
@@ -141,7 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "O\'zingizning Xususiyatlaringizni Tanlang",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Xususiyatlar NPOSni an\'anaviy echimlardan farq qiladigan muhim qismdir.",
+      "Xususiyatlar POSproni an\'anaviy echimlardan farq qiladigan muhim qismdir.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -241,7 +241,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mobil posni ishlatish oson",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS ilovasi bepul, ishlatish oson. Aslida, bu dunyodagi eng yaxshi POS tizimlaridan biri.",
+      "POSpro ilovasi bepul, ishlatish oson. Aslida, bu dunyodagi eng yaxshi POS tizimlaridan biri.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Tahrirlash"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -559,8 +559,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectACategory": MessageLookupByLibrary.simpleMessage(
       "Iltimos, kategoriyani tanlang",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Npos tomonidan quvvatlanadi",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Acnoo tomonidan quvvatlanadi",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Premium Mijozlarga Yordam",

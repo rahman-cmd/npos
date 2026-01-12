@@ -1,2 +1,0 @@
-/Volumes/Softwares/npos/android/app/.cxx/RelWithDebInfo/3m1qt4x5/x86_64/CMakeFiles/edit_cache.dir
-/Volumes/Softwares/npos/android/app/.cxx/RelWithDebInfo/3m1qt4x5/x86_64/CMakeFiles/rebuild_cache.dir

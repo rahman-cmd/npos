@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Сите бизнис решенија",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos е целосно бизнис решение со залиха, сметка, продажба, трошок и загуба/добивка.",
+      "PosPro е целосно бизнис решение со залиха, сметка, продажба, трошок и загуба/добивка.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Секогаш"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Веќе додадено"),
@@ -126,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Избери ги твоите карактеристики",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Карактеристиките се важен дел кој го разликува NPOS од традиционалните решенија.",
+      "Карактеристиките се важен дел кој го разликува POSpro од традиционалните решенија.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -227,7 +227,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Лесен за употреба мобилен ПОС",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS апликацијата е бесплатна и лесна за употреба. Всушност, таа е еден од најдобрите ПОС системи во светот.",
+      "POSpro апликацијата е бесплатна и лесна за употреба. Всушност, таа е еден од најдобрите ПОС системи во светот.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Уреди"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Уреди телефонски број?"),
@@ -601,7 +601,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Ве молиме изберете категорија на трошок",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage("Powered By Npos"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Поддршка за Android & iOS апликации",
     ),

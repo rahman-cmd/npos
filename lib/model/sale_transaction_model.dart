@@ -12,7 +12,9 @@ class SalesTransactionModel {
     this.vatAmount,
     this.vatPercent,
     this.paidAmount,
+    this.changeAmount,
     this.totalAmount,
+    this.paymentTypeId,
     this.paymentType,
     this.discountType,
     this.invoiceNumber,
@@ -28,6 +30,9 @@ class SalesTransactionModel {
     this.vatId,
     this.vat,
     this.image,
+    this.roundingAmount,
+    this.actualTotalAmount,
+    this.roundingOption,
   });
 
   SalesTransactionModel.fromJson(dynamic json) {
@@ -44,16 +49,21 @@ class SalesTransactionModel {
     vatPercent = json['vat_percent'];
     vatId = json['vat_id'];
     paidAmount = json['paidAmount'];
+    changeAmount = json['change_amount'];
     totalAmount = json['totalAmount'];
-    paymentType = json['paymentType'];
+    paymentTypeId = int.tryParse(json['payment_type_id'].toString()) ?? 0;
     discountType = json['discount_type'];
     invoiceNumber = json['invoiceNumber'];
     saleDate = json['saleDate'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    roundingOption = json['rounding_option'].toString();
+    roundingAmount = num.tryParse(json['rounding_amount'].toString()) ?? 0;
+    actualTotalAmount = num.tryParse(json['actual_total_amount'].toString()) ?? 0;
     detailsSumLossProfit = json['lossProfit'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     vat = json['vat'] != null ? SalesVat.fromJson(json['vat']) : null;
+    paymentType = json['payment_type'] != null ? PaymentType.fromJson(json['payment_type']) : null;
     meta = json['meta'] != null ? Meta.fromJson(json['meta']) : null;
     party = json['party'] != null ? SalesParty.fromJson(json['party']) : SalesParty(name: 'Guest', type: 'Guest');
     if (json['details'] != null) {
@@ -70,6 +80,7 @@ class SalesTransactionModel {
     }
     image = json['image'];
   }
+
   num? id;
   num? businessId;
   num? partyId;
@@ -83,8 +94,13 @@ class SalesTransactionModel {
   num? vatPercent;
   num? vatId;
   num? paidAmount;
+  num? changeAmount;
   num? totalAmount;
-  String? paymentType;
+  num? roundingAmount;
+  num? actualTotalAmount;
+  String? roundingOption;
+  PaymentType? paymentType;
+  int? paymentTypeId;
   String? discountType;
   String? invoiceNumber;
   String? saleDate;
@@ -98,6 +114,7 @@ class SalesTransactionModel {
   List<SalesDetails>? salesDetails;
   List<SalesReturn>? salesReturns;
   String? image;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -289,19 +306,23 @@ class User {
   User({
     this.id,
     this.name,
+    this.role,
   });
 
   User.fromJson(dynamic json) {
     id = json['id'];
     name = json['name'];
+    role = json['role'];
   }
   num? id;
   String? name;
+  String? role;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['name'] = name;
+    map['role'] = role;
     return map;
   }
 }
@@ -431,4 +452,18 @@ class SalesVat {
   num? id;
   String? name;
   num? rate;
+}
+
+class PaymentType {
+  PaymentType({
+    this.id,
+    this.name,
+  });
+
+  PaymentType.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+  }
+  num? id;
+  String? name;
 }

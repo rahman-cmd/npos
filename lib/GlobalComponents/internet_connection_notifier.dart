@@ -28,8 +28,4 @@ class InternetConnectionNotifier extends ChangeNotifier {
     _isConnected = await InternetConnection().hasInternetAccess;
     notifyListeners();
   }
-
-  void setOnConnectionRestored(VoidCallback callback) {
-    _onConnectionRestored = callback;
-  }
 }

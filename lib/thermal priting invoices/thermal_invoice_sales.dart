@@ -100,7 +100,8 @@ class SalesThermalPrinterInvoice {
         ),
         linesAfter: 1);
 
-    bytes += generator.text('Seller :${printTransactionModel.transitionModel!.user?.name}', styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text('Seller :${printTransactionModel.transitionModel?.user?.role == "shop-owner" ? 'Admin' : printTransactionModel.transitionModel!.user?.name}',
+        styles: const PosStyles(align: PosAlign.center));
     if (printTransactionModel.personalInformationModel.address != null) {
       bytes += generator.text(printTransactionModel.personalInformationModel.address ?? '', styles: const PosStyles(align: PosAlign.center));
     }
@@ -135,7 +136,7 @@ class SalesThermalPrinterInvoice {
             styles: const PosStyles(
               align: PosAlign.center,
             )),
-        PosColumn(text: getProductQuantity(detailsId: productList?[index].id ?? 0).toString(), width: 2, styles: const PosStyles(align: PosAlign.center)),
+        PosColumn(text: formatPointNumber(getProductQuantity(detailsId: productList?[index].id ?? 0)), width: 2, styles: const PosStyles(align: PosAlign.center)),
         PosColumn(
             text: "${(productList?[index].price ?? 0) * getProductQuantity(detailsId: productList?[index].id ?? 0)}", width: 3, styles: const PosStyles(align: PosAlign.right)),
       ]);
@@ -158,20 +159,6 @@ class SalesThermalPrinterInvoice {
     ]);
     bytes += generator.row([
       PosColumn(
-          text: printTransactionModel.transitionModel?.vat?.name ?? 'VAT',
-          width: 8,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: '${printTransactionModel.transitionModel?.vatAmount ?? 0}',
-          width: 4,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
-    ]);
-    bytes += generator.row([
-      PosColumn(
           text: 'Discount',
           width: 8,
           styles: const PosStyles(
@@ -186,7 +173,68 @@ class SalesThermalPrinterInvoice {
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'Total',
+          text: printTransactionModel.transitionModel?.vat?.name ?? 'VAT',
+          width: 8,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: '${printTransactionModel.transitionModel?.vatAmount ?? 0}',
+          width: 4,
+          styles: const PosStyles(
+            align: PosAlign.right,
+          )),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: 'Shipping Charge',
+          width: 8,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: '${printTransactionModel.transitionModel?.shippingCharge ?? 0}',
+          width: 4,
+          styles: const PosStyles(
+            align: PosAlign.right,
+          )),
+    ]);
+
+    if (printTransactionModel.transitionModel?.roundingAmount != 0) {
+      bytes += generator.row([
+        PosColumn(
+            text: 'Total',
+            width: 8,
+            styles: const PosStyles(
+              align: PosAlign.left,
+            )),
+        PosColumn(
+            text: (formatPointNumber(printTransactionModel.transitionModel?.actualTotalAmount ?? 0)),
+            width: 4,
+            styles: const PosStyles(
+              align: PosAlign.right,
+            )),
+      ]);
+      bytes += generator.row([
+        PosColumn(
+            text: 'Rounding',
+            width: 8,
+            styles: const PosStyles(
+              align: PosAlign.left,
+            )),
+        PosColumn(
+            text:
+                ("${!(printTransactionModel.transitionModel?.roundingAmount?.isNegative ?? true) ? '+' : ''}${formatPointNumber(printTransactionModel.transitionModel?.roundingAmount ?? 0)}"),
+            width: 4,
+            styles: const PosStyles(
+              align: PosAlign.right,
+            )),
+      ]);
+    }
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Total Amount',
           width: 8,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -260,7 +308,7 @@ class SalesThermalPrinterInvoice {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: printTransactionModel.transitionModel?.paymentType ?? 'Cash',
+          text: printTransactionModel.transitionModel?.paymentType?.name ?? 'N/A',
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -268,32 +316,51 @@ class SalesThermalPrinterInvoice {
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'Paid Amount',
+          text: 'Received Amount',
           width: 8,
           styles: const PosStyles(
             align: PosAlign.left,
           )),
       PosColumn(
-          text: '${printTransactionModel.transitionModel!.totalAmount!.toDouble() - printTransactionModel.transitionModel!.dueAmount!.toDouble()}',
+          text: formatPointNumber(((printTransactionModel.transitionModel?.totalAmount ?? 0) - (printTransactionModel.transitionModel?.dueAmount ?? 0)) +
+              (printTransactionModel.transitionModel?.changeAmount ?? 0)),
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
           )),
     ]);
-    bytes += generator.row([
-      PosColumn(
-          text: 'Due Amount',
-          width: 8,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: printTransactionModel.transitionModel!.dueAmount.toString(),
-          width: 4,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
-    ]);
+    if ((printTransactionModel.transitionModel?.dueAmount ?? 0) > 0) {
+      bytes += generator.row([
+        PosColumn(
+            text: 'Due Amount',
+            width: 8,
+            styles: const PosStyles(
+              align: PosAlign.left,
+            )),
+        PosColumn(
+            text: formatPointNumber(printTransactionModel.transitionModel?.dueAmount ?? 0),
+            width: 4,
+            styles: const PosStyles(
+              align: PosAlign.right,
+            )),
+      ]);
+    }
+    if ((printTransactionModel.transitionModel?.changeAmount ?? 0) > 0) {
+      bytes += generator.row([
+        PosColumn(
+            text: 'Change Amount',
+            width: 8,
+            styles: const PosStyles(
+              align: PosAlign.left,
+            )),
+        PosColumn(
+            text: formatPointNumber(printTransactionModel.transitionModel?.changeAmount ?? 0),
+            width: 4,
+            styles: const PosStyles(
+              align: PosAlign.right,
+            )),
+      ]);
+    }
     bytes += generator.hr(ch: '=', linesAfter: 1);
 
     // ticket.feed(2);

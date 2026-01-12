@@ -78,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Enpresako irtenbide guztiak",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos stock, kontu, salmenta, gastu eta irabazi/galera duen negozio irtenbide osoa da.",
+      "PosPro stock, kontu, salmenta, gastu eta irabazi/galera duen negozio irtenbide osoa da.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Dena Denbora"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Dagoeneko gehituta"),
@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Aukeratu zure Ezaugarriak",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Ezaugarriak NPOS beste irtenbide tradizionaletatik bereizten duen zati garrantzitsua dira.",
+      "Ezaugarriak POSpro beste irtenbide tradizionaletatik bereizten duen zati garrantzitsua dira.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -243,7 +243,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "POS erabiltzeko erraza",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS aplikazioa doakoa eta erabiltzeko erraza da. Izan ere, munduko POS sistemetarik onenetako bat da.",
+      "POSpro aplikazioa doakoa eta erabiltzeko erraza da. Izan ere, munduko POS sistemetarik onenetako bat da.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Editatu"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -637,8 +637,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Mesedez, hautatu gastu kategoria bat",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Npos-k ahalbidetuta",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Acnoo-k ahalbidetuta",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android eta iOS Aplikazioaren Laguntza",

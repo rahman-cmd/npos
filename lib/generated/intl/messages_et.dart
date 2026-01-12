@@ -62,7 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Kõik ärilahendused",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos on täielik ärilahendus koos laoseisuga, arvestuse, müügiga, kulude ja kahjumi/kasumiga.",
+      "PosPro on täielik ärilahendus koos laoseisuga, arvestuse, müügiga, kulude ja kahjumi/kasumiga.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Kogu aeg"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Already Added"),
@@ -116,7 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Valige oma funktsioonid",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funktsioonid on oluline osa, mis eristab NPOS traditsioonilistest lahendustest.",
+      "Funktsioonid on oluline osa, mis eristab POSpro traditsioonilistest lahendustest.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -211,7 +211,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Lihtne kasutada mobiilset kassapunkti",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS rakendus on tasuta ja lihtne kasutada. Tegelikult on see üks parimaid kassapunktisüsteeme üle maailma.",
+      "POSpro rakendus on tasuta ja lihtne kasutada. Tegelikult on see üks parimaid kassapunktisüsteeme üle maailma.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Muuda Telefoninumbrit?"),
@@ -571,8 +571,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Palun valige kulukategooria",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Toiteallikas Npos",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Toiteallikas Acnoo",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Premium klienditugi",

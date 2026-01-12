@@ -74,19 +74,11 @@ List<GridItems> getFreeIcons({required BuildContext context}) {
       icon: 'assets/tax.svg',
       route: 'tax',
     ),
-
-    // GridItems(
-    //   title: 'Delivery',
-    //   icon: 'images/delivery.png',
-    // ),
-    // GridItems(
-    //   title: 'Calculator',
-    //   icon: 'images/calculator.png',
-    // ),
-    // GridItems(
-    //   title: 'Expense',
-    //   icon: 'images/expenses.png',
-    // )
+    GridItems(
+      title: "Custom Print",
+      icon: 'assets/printer.svg',
+      route: 'customPrint',
+    ),
   ];
   return freeIcons;
 }

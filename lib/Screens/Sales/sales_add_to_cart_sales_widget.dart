@@ -21,13 +21,13 @@ class ProductAddToCartFormState extends State<SalesAddToCartForm> {
 
   bool isUpdating = false;
   String? selectedDate;
-  TextEditingController productStockController = TextEditingController();
+  TextEditingController productQuantityController = TextEditingController();
   TextEditingController salePriceController = TextEditingController();
 
   @override
   void initState() {
     salePriceController.text = widget.batchWiseStockModel.unitPrice;
-    productStockController.text = widget.batchWiseStockModel.quantity.toString();
+    productQuantityController.text = formatPointNumber(widget.batchWiseStockModel.quantity);
 
     super.initState();
   }
@@ -37,7 +37,6 @@ class ProductAddToCartFormState extends State<SalesAddToCartForm> {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, __) {
       final lang = l.S.of(context);
-      final product = widget.batchWiseStockModel;
 
       return Form(
         key: key,
@@ -51,11 +50,11 @@ class ProductAddToCartFormState extends State<SalesAddToCartForm> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    controller: productStockController,
+                    controller: productQuantityController,
                     validator: (value) {
                       if (value == null || value.isEmpty || (num.tryParse(value) ?? 0) <= 0) {
                         return l.S.of(context).enterQuantity;
-                      } else if (((num.tryParse(value) ?? 0) + (product.quantity)) > (widget.batchWiseStockModel.stock ?? 0)) {
+                      } else if (((num.tryParse(value) ?? 0)) > (widget.batchWiseStockModel.stock ?? 0)) {
                         return lang.outOfStock;
                       }
                       return null;
@@ -105,7 +104,7 @@ class ProductAddToCartFormState extends State<SalesAddToCartForm> {
 
                   isClicked = true;
 
-                  ref.watch(cartNotifier).updateProduct(productId: widget.batchWiseStockModel.productId, price: salePriceController.text, qty: productStockController.text);
+                  ref.watch(cartNotifier).updateProduct(productId: widget.batchWiseStockModel.productId, price: salePriceController.text, qty: productQuantityController.text);
 
                   Navigator.pop(context);
                 },

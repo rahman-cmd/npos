@@ -70,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pob ateb busnes",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Mae Npos yn ateb busnes cyflawn gyda stoc, cyfrifon, gwerthiant, costau a cholled/elw.",
+      "Mae PosPro yn ateb busnes cyflawn gyda stoc, cyfrifon, gwerthiant, costau a cholled/elw.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Bob Amser"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage(
@@ -126,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Dewiswch Eich Nodweddion",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Mae nodweddion yn rhan bwysig sy\'n gwneud NPOS yn wahanol i atebion traddodiadol.",
+      "Mae nodweddion yn rhan bwysig sy\'n gwneud POSpro yn wahanol i atebion traddodiadol.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -223,7 +223,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "POS symudol hawdd ei ddefnyddio",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Mae\'r app NPOS yn rhad ac am ddim, hawdd ei ddefnyddio. Yn wir, mae\'n un o\'r systemau POS gorau ledled y byd.",
+      "Mae\'r app POSpro yn rhad ac am ddim, hawdd ei ddefnyddio. Yn wir, mae\'n un o\'r systemau POS gorau ledled y byd.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Golygu"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Golygu Rhif Ffôn?"),
@@ -589,7 +589,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Dewiswch gategori gwariant, os gwelwch yn dda",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage("Powered By Npos"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Cefnogaeth Cwsmer Premiwm",
     ),

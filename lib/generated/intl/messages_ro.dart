@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Toate soluțiile pentru afaceri",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos este o soluție completă pentru afaceri, cu gestionarea stocului, contabilitate, vânzări, cheltuieli și pierderi/profit.",
+      "PosPro este o soluție completă pentru afaceri, cu gestionarea stocului, contabilitate, vânzări, cheltuieli și pierderi/profit.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Tot timpul"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Deja adaugat"),
@@ -134,7 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Alegeți-vă funcționalitățile",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funcționalitățile sunt partea importantă care diferențiază Npos de soluțiile tradiționale.",
+      "Funcționalitățile sunt partea importantă care diferențiază PosPro de soluțiile tradiționale.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -243,7 +243,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ușor de utilizat pentru punctul de vânzare mobil",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Aplicația Npos este gratuită și ușor de utilizat. De fapt, este unul dintre cele mai bune sisteme POS din lume.",
+      "Aplicația PosPro este gratuită și ușor de utilizat. De fapt, este unul dintre cele mai bune sisteme POS din lume.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Editați | ×"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -631,8 +631,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Te rugăm să selectezi o categorie de cheltuieli",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Furnizat de Npos",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Furnizat de Acnoo",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Suport pentru aplicații Android și iOS",

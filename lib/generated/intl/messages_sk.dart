@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Všetky obchodné riešenia",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos je kompletné obchodné riešenie zahŕňajúce sklad, účty, predaj, výdavky a zisk/stratu.",
+      "PosPro je kompletné obchodné riešenie zahŕňajúce sklad, účty, predaj, výdavky a zisk/stratu.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Celkovo"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Už pridané"),
@@ -132,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vyberte si funkcie",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funkcie sú dôležitou súčasťou, ktorá robí Npos odlišným od tradičných riešení.",
+      "Funkcie sú dôležitou súčasťou, ktorá robí PosPro odlišným od tradičných riešení.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -235,7 +235,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Jednoduchý mobilný pokladničný systém",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Aplikácia Npos je bezplatná a jednoduchá na použitie. Je to jeden z najlepších POS systémov na svete.",
+      "Aplikácia PosPro je bezplatná a jednoduchá na použitie. Je to jeden z najlepších POS systémov na svete.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Upraviť"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -603,8 +603,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Vyberte kategóriu výdavkov",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Používa technológiu Npos",
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Používa technológiu Acnoo",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Podpora aplikácií pre Android a iOS",

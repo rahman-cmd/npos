@@ -65,7 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ସମସ୍ତ ବ୍ୟବସାୟ ସମାଧାନ",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos ଏକ ସମ୍ପୂର୍ଣ୍ଣ ବ୍ୟବସାୟ ସମାଧାନ ଯାହାରେ ଷ୍ଟକ୍, ଖାତା, ବିକ୍ରୟ, ଖର୍ଚ୍ଚ ଓ ଲାଭ/କ୍ଷତି ରହିଛି।",
+      "PosPro ଏକ ସମ୍ପୂର୍ଣ୍ଣ ବ୍ୟବସାୟ ସମାଧାନ ଯାହାରେ ଷ୍ଟକ୍, ଖାତା, ବିକ୍ରୟ, ଖର୍ଚ୍ଚ ଓ ଲାଭ/କ୍ଷତି ରହିଛି।",
     ),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("ପୂର୍ବରୁ ଯୋଡାଯାଇଛି"),
     "alreadyHaveAnAccount": MessageLookupByLibrary.simpleMessage(
@@ -123,7 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ଆପଣଙ୍କର ବୈଶିଷ୍ଟ୍ୟ ବାଛନ୍ତୁ",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "ବୈଶିଷ୍ଟ୍ୟଗୁଡିକ ପରମ୍ପରାଗତ ସମାଧାନଗୁଡିକ ଠାରୁ NPOS କୁ ଅଲଗା କରିଥାଏ।",
+      "ବୈଶିଷ୍ଟ୍ୟଗୁଡିକ ପରମ୍ପରାଗତ ସମାଧାନଗୁଡିକ ଠାରୁ POSpro କୁ ଅଲଗା କରିଥାଏ।",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("ସଫା କରନ୍ତୁ"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -224,7 +224,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ଆସାନରେ ବ୍ୟବହାର କରିପାରିବା ପୋସ୍",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS ଆପ୍ ସବୁଠାରୁ ଭଲ ପୋସ୍ ସିଷ୍ଟମ୍ ମଧ୍ୟରୁ ଗୋଟିଏ, ଯାହା ମାଗଣା ଓ ସହଜ।",
+      "POSpro ଆପ୍ ସବୁଠାରୁ ଭଲ ପୋସ୍ ସିଷ୍ଟମ୍ ମଧ୍ୟରୁ ଗୋଟିଏ, ଯାହା ମାଗଣା ଓ ସହଜ।",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("ସଂପାଦନ"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -576,7 +576,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "ଦୟାକରି ଏକ ଖର୍ଚ୍ଚ ବିଭାଗ ଚୟନ କରନ୍ତୁ",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage("Npos ଦ୍ୱାରା ସଚଳ"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Acnoo ଦ୍ୱାରା ସଚଳ"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "ଆଣ୍ଡ୍ରୟଡ୍ & iOS ଆପ୍ ସମର୍ଥନ",
     ),
