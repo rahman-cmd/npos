@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Currency/Provider/currency_provider.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
@@ -34,9 +33,6 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
             title: Text(
               lang.S.of(context).currency,
               //'Currency',
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -94,7 +90,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
               onTap: () async {
                 try {
                   EasyLoading.show();
-        
+
                   final isSet = await CurrencyRepo().setDefaultCurrency(id: selectedCurrency.id!);
                   if (isSet) {
                     await CurrencyMethods().saveCurrencyDataInLocalDatabase(

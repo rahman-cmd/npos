@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import '../../GlobalComponents/glonal_popup.dart';
@@ -55,10 +54,6 @@ class _PurchaseListState extends State<PurchaseList> {
           title: Text(
             lang.S.of(context).purchaseList,
             //'Purchase List',
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,
@@ -176,10 +171,7 @@ class _PurchaseListState extends State<PurchaseList> {
                                   Text(
                                     'Riead',
                                     textAlign: TextAlign.start,
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      fontSize: 15.0,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 ],
                               ),

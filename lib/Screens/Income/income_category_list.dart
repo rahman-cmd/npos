@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Expense/add_expense_category.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
@@ -24,6 +23,7 @@ class IncomeCategoryList extends StatefulWidget {
 class _IncomeCategoryListState extends State<IncomeCategoryList> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, _) {
       final data = ref.watch(incomeCategoryProvider);
       return GlobalPopup(
@@ -39,10 +39,6 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                 )),
             title: Text(
               lang.S.of(context).incomeCategories,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -61,7 +57,6 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                       child: AppTextField(
                         textFieldType: TextFieldType.NAME,
                         decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
                           hintText: lang.S.of(context).search,
                           prefixIcon: Icon(
                             Icons.search,
@@ -81,10 +76,10 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                          height: 60.0,
+                          height: 48.0,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
-                            border: Border.all(color: kGreyTextColor),
+                            border: Border.all(color: kBorderColor),
                           ),
                           child: const Icon(
                             Icons.add,
@@ -98,6 +93,7 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
                 data.when(data: (data) {
                   return ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -105,25 +101,29 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                     itemCount: data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10),
                         child: Row(
                           children: [
                             Expanded(
                               flex: 3,
                               child: Text(
                                 data[index].categoryName ?? '',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18.0,
-                                  color: Colors.black,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: kGreyTextColor,
                                 ),
                               ),
                             ),
                             Expanded(
                               flex: 2,
-                              child: ButtonGlobalWithoutIcon(
-                                buttontext: lang.S.of(context).select,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: kDarkWhite,
+                                ),
+                                child: Text(
+                                  lang.S.of(context).select,
+                                  style: theme.textTheme.titleMedium,
+                                ),
                                 //'Select',
-                                buttonDecoration: kButtonDecoration.copyWith(color: kDarkWhite),
                                 onPressed: () {
                                   // const AddExpense().launch(context);
                                   Navigator.pop(
@@ -131,7 +131,6 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                                     data[index],
                                   );
                                 },
-                                buttonTextColor: Colors.black,
                               ),
                             ),
                           ],

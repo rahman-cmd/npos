@@ -1,0 +1,1 @@
+/Volumes/Softwares/npos/build/app/intermediates/cxx/RelWithDebInfo/17493lj6/obj/arm64-v8a

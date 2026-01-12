@@ -70,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "সকল ব্যৱসায় সমাধান",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro হৈছে এক পৰিপূৰ্ণ ব্যৱসায় সমাধান য’ত ষ্টক, একাউণ্ট, বিক্ৰী, খৰচ আৰু লোকচান/লাভ অন্তৰ্ভুক্ত।",
+      "NPOS হৈছে এক পৰিপূৰ্ণ ব্যৱসায় সমাধান য’ত ষ্টক, একাউণ্ট, বিক্ৰী, খৰচ আৰু লোকচান/লাভ অন্তৰ্ভুক্ত।",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("সকলো সময়"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage(
@@ -130,7 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "আপোনাৰ বৈশিষ্ট্য বাচনি কৰক",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "বৈশিষ্ট্যসমূহ হৈছে সেইবোৰ যি POSpro ক পৰম্পৰাগত সমাধানৰ পৰা পৃথক কৰে।",
+      "বৈশিষ্ট্যসমূহ হৈছে সেইবোৰ যি NPOS ক পৰম্পৰাগত সমাধানৰ পৰা পৃথক কৰে।",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("ক্লাৰেঞ্চ"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -227,7 +227,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "POS ব্যৱস্থা ব্যৱহাৰ কৰাটো সহজ",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro এপ্লিকেচন মন্নাই কৰিব পৰা, ব্যৱহাৰ কৰিবলৈ সৰল। সঁচা কথা, এইটো বিশ্বৰ অন্যতম উত্তম POS ব্যৱস্থাসমূহৰ ভিতৰত এক।",
+      "NPOS এপ্লিকেচন মন্নাই কৰিব পৰা, ব্যৱহাৰ কৰিবলৈ সৰল। সঁচা কথা, এইটো বিশ্বৰ অন্যতম উত্তম POS ব্যৱস্থাসমূহৰ ভিতৰত এক।",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("সম্পাদনা কৰক"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -581,8 +581,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "দয়া কৰি এক ব্যয় শ্ৰেণী বাচনি কৰক",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Acnoo দ্বাৰা চালিত",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "NPOS দ্বাৰা চালিত",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "এণ্ড্ৰইড আৰু iOS এপ সমৰ্থন",

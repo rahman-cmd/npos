@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/product_unit/model/unit_model.dart';
 import 'package:mobile_pos/Screens/Products/Repo/unit_repo.dart';
@@ -43,10 +42,6 @@ class _AddUnitsState extends State<AddUnits> {
           appBar: AppBar(
             title: Text(
               lang.S.of(context).addUnit,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -70,24 +65,22 @@ class _AddUnitsState extends State<AddUnits> {
                     controller: unitController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                       // return 'Please enter a valid unit name';
-                       return lang.S.of(context).pleaseEnterAValidUnitName;
-
+                        // return 'Please enter a valid unit name';
+                        return lang.S.of(context).pleaseEnterAValidUnitName;
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      border:  const OutlineInputBorder(),
-                     // hintText: 'Please enter unit name',
+                      border: const OutlineInputBorder(),
+                      // hintText: 'Please enter unit name',
                       hintText: lang.S.of(context).pleaseEnterUnitName,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       labelText: lang.S.of(context).unitName,
                     ),
                   ),
                 ),
-                ButtonGlobalWithoutIcon(
-                  buttontext: lang.S.of(context).save,
-                  buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                const SizedBox(height: 15),
+                ElevatedButton(
                   onPressed: () async {
                     if (_key.currentState!.validate()) {
                       UnitsRepo unit = UnitsRepo();
@@ -99,7 +92,7 @@ class _AddUnitsState extends State<AddUnits> {
                       }
                     }
                   },
-                  buttonTextColor: Colors.white,
+                  child: Text(lang.S.of(context).save),
                 ),
               ],
             ),

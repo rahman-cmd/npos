@@ -7,7 +7,7 @@ import 'internet_connection_notifier.dart'; // Update with the correct path
 class GlobalPopup extends ConsumerStatefulWidget {
   final Widget child;
 
-  const GlobalPopup({Key? key, required this.child}) : super(key: key);
+  const GlobalPopup({super.key, required this.child});
 
   @override
   _GlobalPopupState createState() => _GlobalPopupState();
@@ -53,7 +53,7 @@ class _GlobalPopupState extends ConsumerState<GlobalPopup> {
                       style: TextStyle(color: kTitleColor, fontSize: 24),
                     ),
                     const SizedBox(height: 20),
-                    UpdateButton(text: "Try Again", onpressed: _tryAgain),
+                    ElevatedButton(onPressed: _tryAgain, child: const Text("Try Again")),
                   ],
                 ),
               ),

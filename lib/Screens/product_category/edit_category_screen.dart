@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/product_category/model/category_model.dart';
 import 'package:mobile_pos/constant.dart';
@@ -57,10 +56,6 @@ class _AddCategoryState extends State<EditCategory> {
             title: Text(
               lang.S.of(context).addCategory,
               //'Add Category',
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -85,9 +80,9 @@ class _AddCategoryState extends State<EditCategory> {
                   ),
                   TextFormField(
                     controller: categoryNameController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
-                     // hintText: 'Enter category name',
+                      // hintText: 'Enter category name',
                       hintText: lang.S.of(context).enterCategoryName,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       //labelText: 'Category name',
@@ -95,15 +90,17 @@ class _AddCategoryState extends State<EditCategory> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                   Text(lang.S.of(context).selectVariations,),
-                       //'Select variations : '),
+                  Text(
+                    lang.S.of(context).selectVariations,
+                  ),
+                  //'Select variations : '),
                   Row(
                     children: [
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).size,
-                           // "Size",
+                            // "Size",
                             overflow: TextOverflow.ellipsis,
                           ),
                           value: sizeCheckbox,
@@ -118,7 +115,7 @@ class _AddCategoryState extends State<EditCategory> {
                       ),
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).color,
                             //"Color",
                             overflow: TextOverflow.ellipsis,
@@ -139,9 +136,9 @@ class _AddCategoryState extends State<EditCategory> {
                     children: [
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).weight,
-                           // "Weight",
+                            // "Weight",
                             overflow: TextOverflow.ellipsis,
                           ),
                           checkboxShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
@@ -156,9 +153,9 @@ class _AddCategoryState extends State<EditCategory> {
                       ),
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).capacity,
-                           // "Capacity",
+                            // "Capacity",
                             overflow: TextOverflow.ellipsis,
                           ),
                           checkboxShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
@@ -174,7 +171,7 @@ class _AddCategoryState extends State<EditCategory> {
                     ],
                   ),
                   CheckboxListTile(
-                    title:  Text(
+                    title: Text(
                       lang.S.of(context).type,
                       //"Type",
                       overflow: TextOverflow.ellipsis,
@@ -188,10 +185,8 @@ class _AddCategoryState extends State<EditCategory> {
                     },
                     controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
                   ),
-                  ButtonGlobalWithoutIcon(
+                  ElevatedButton(
                     //buttontext: 'Save',
-                    buttontext: lang.S.of(context).save,
-                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
                     onPressed: () async {
                       setState(() {
                         showProgress = true;
@@ -212,7 +207,8 @@ class _AddCategoryState extends State<EditCategory> {
                         showProgress = false;
                       });
                     },
-                    buttonTextColor: Colors.white,
+                    //buttontext: 'Save',
+                    child: Text(lang.S.of(context).save),
                   ),
                 ],
               ),

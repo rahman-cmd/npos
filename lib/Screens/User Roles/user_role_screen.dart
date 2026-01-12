@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/User%20Roles/user_role_details.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
@@ -42,9 +41,9 @@ class _UserRoleScreenState extends State<UserRoleScreen> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).userRole,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
+              // style: GoogleFonts.poppins(
+              //   color: Colors.black,
+              // ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),

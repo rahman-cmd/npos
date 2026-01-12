@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Бүх бизнесийн шийдлүүд",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro бол бүрэн хэмжээний бизнес шийдэл бөгөөд агуулах, данс, борлуулалт, зардал, алдагдал / ашиг зэргийг хамардаг.",
+      "NPOS бол бүрэн хэмжээний бизнес шийдэл бөгөөд агуулах, данс, борлуулалт, зардал, алдагдал / ашиг зэргийг хамардаг.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Бүх цаг үед"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage(
@@ -132,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Өөрийнхөө онцлогуудыг сонго",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Онцлогууд нь POSpro-г уламжлалт шийдлүүдээс ялгаатай болгодог чухал хэсэг юм.",
+      "Онцлогууд нь NPOS-г уламжлалт шийдлүүдээс ялгаатай болгодог чухал хэсэг юм.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Кларенс"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -241,7 +241,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ашиглахад хялбар гар утасны POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro апп нь үнэгүй, хэрэглэхэд хялбар юм. Үнэндээ энэ бол дэлхийн хамгийн сайн POS системүүдийн нэг юм.",
+      "NPOS апп нь үнэгүй, хэрэглэхэд хялбар юм. Үнэндээ энэ бол дэлхийн хамгийн сайн POS системүүдийн нэг юм.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Засварлах"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -605,8 +605,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Зардлын ангилал сонгоно уу",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Acnoo-ээр хүчирхэгжүүлсэн",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "NPOS-ээр хүчирхэгжүүлсэн",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android & iOS аппыг дэмжих",

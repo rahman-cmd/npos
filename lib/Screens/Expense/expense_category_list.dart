@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Expense/add_expense_category.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
@@ -23,6 +22,7 @@ class ExpenseCategoryList extends StatefulWidget {
 class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, _) {
       final data = ref.watch(expanseCategoryProvider);
       return GlobalPopup(
@@ -38,10 +38,6 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                 )),
             title: Text(
               lang.S.of(context).expenseCat,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -80,10 +76,10 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                          height: 60.0,
+                          height: 48.0,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
-                            border: Border.all(color: kGreyTextColor),
+                            border: Border.all(color: kBorderColor),
                           ),
                           child: const Icon(
                             Icons.add,
@@ -97,6 +93,9 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
                 data.when(data: (data) {
                   return ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -104,25 +103,25 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                     itemCount: data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10),
                         child: Row(
                           children: [
                             Expanded(
-                              flex: 3,
+                              flex: 4,
                               child: Text(
                                 data[index].categoryName ?? '',
-                                style: GoogleFonts.poppins(
+                                style: theme.textTheme.titleLarge?.copyWith(
                                   fontSize: 18.0,
-                                  color: Colors.black,
                                 ),
                               ),
                             ),
                             Expanded(
-                              flex: 1,
-                              child: ButtonGlobalWithoutIcon(
-                                buttontext:lang.S.of(context).select,
-                                //'Select',
-                                buttonDecoration: kButtonDecoration.copyWith(color: kDarkWhite),
+                              flex: 2,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: kDarkWhite,
+                                ),
+                                // buttonDecoration: kButtonDecoration.copyWith(color: kDarkWhite),
                                 onPressed: () {
                                   // const AddExpense().launch(context);
                                   Navigator.pop(
@@ -130,7 +129,10 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                                     data[index],
                                   );
                                 },
-                                buttonTextColor: Colors.black,
+                                child: Text(
+                                  lang.S.of(context).select,
+                                  style: theme.textTheme.titleMedium,
+                                ),
                               ),
                             ),
                           ],

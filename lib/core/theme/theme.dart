@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '_app_colors.dart';
 
-abstract class NposTheme {
-  static const _fontFamily = 'Poppins';
+abstract class NPOSTheme {
+  static const _fontFamily = 'NotoSans';
   static ThemeData kLightTheme(BuildContext context) {
     final mainTheme = ThemeData.light();
     final textTheme = _getTextTheme(mainTheme.textTheme);
@@ -14,6 +13,15 @@ abstract class NposTheme {
       textTheme: textTheme,
       scaffoldBackgroundColor: Colors.transparent,
       snackBarTheme: _getSnackBarTheme(),
+      appBarTheme: const AppBarTheme(
+        surfaceTintColor: Colors.white,
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontFamily: 'NotoSans',
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+      ),
       dropdownMenuTheme: const DropdownMenuThemeData(
         textStyle: const TextStyle(color: kTitleColor, fontSize: 16.0, fontWeight: FontWeight.normal),
         menuStyle: MenuStyle(
@@ -27,7 +35,6 @@ abstract class NposTheme {
           contentPadding: EdgeInsets.only(left: 10.0, right: 7.0),
         ),
       ),
-      appBarTheme: const AppBarTheme(surfaceTintColor: Colors.white),
       dialogBackgroundColor: Colors.white,
       dividerTheme: const DividerThemeData(
         color: DAppColors.kDividerColor,
@@ -99,7 +106,7 @@ abstract class NposTheme {
         visualDensity: _buttonDensity,
         foregroundColor: DAppColors.kOnPrimary,
         backgroundColor: DAppColors.kPrimary,
-        textStyle: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'NotoSans'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         minimumSize: const Size.fromHeight(48),
       ),

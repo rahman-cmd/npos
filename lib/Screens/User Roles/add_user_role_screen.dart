@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/User%20Roles/Model/user_role_model.dart' as user;
 import 'package:mobile_pos/constant.dart';
@@ -54,6 +53,7 @@ class _AddUserRoleState extends State<AddUserRole> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
       return GlobalPopup(
         child: Scaffold(
@@ -63,10 +63,6 @@ class _AddUserRoleState extends State<AddUserRole> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).addUserRole,
-              //  'Add User Role',
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -145,7 +141,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                 Expanded(child: Container()),
                               ],
                             ),
-        
+
                             ///_______Edit Profile_&_sale____________________________________________
                             Row(
                               children: [
@@ -166,7 +162,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                     ),
                                   ),
                                 ),
-        
+
                                 ///______sales____________________________
                                 Expanded(
                                   child: CheckboxListTile(
@@ -186,7 +182,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                 ),
                               ],
                             ),
-        
+
                             ///_____parties_&_Purchase_________________________________________
                             Row(
                               children: [
@@ -224,7 +220,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                 ),
                               ],
                             ),
-        
+
                             ///_____Product_&_DueList_________________________________________
                             Row(
                               children: [
@@ -262,7 +258,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                 ),
                               ],
                             ),
-        
+
                             ///_____Stock_&_Reports_________________________________________
                             Row(
                               children: [
@@ -300,7 +296,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                 ),
                               ],
                             ),
-        
+
                             ///_____SalesList_&_Purchase List_________________________________________
                             Row(
                               children: [
@@ -338,7 +334,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                 ),
                               ],
                             ),
-        
+
                             ///_____LossProfit_&_Expense_________________________________________
                             Row(
                               children: [
@@ -376,7 +372,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                                 ),
                               ],
                             ),
-        
+
                             ///_____DashBoard_&_Income_________________________________________
                             Row(
                               children: [
@@ -419,7 +415,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                       ),
                     ),
                   ),
-        
+
                   ///___________Text_fields_____________________________________________
                   Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -428,7 +424,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-        
+
                           ///__________email_________________________________________________________
                           AppTextField(
                             validator: (value) {
@@ -467,7 +463,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                             textFieldType: TextFieldType.EMAIL,
                           ),
                           const SizedBox(height: 20.0),
-        
+
                           ///______password___________________________________________________________
                           AppTextField(
                             validator: (value) {
@@ -500,7 +496,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                             ),
                             textFieldType: TextFieldType.PASSWORD,
                           ),
-        
+
                           ///________confirm password____________________________________________________
                           const SizedBox(height: 20.0),
                           AppTextField(
@@ -536,7 +532,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                             ),
                             textFieldType: TextFieldType.PASSWORD,
                           ),
-        
+
                           ///__________Title_________________________________________________________
                           const SizedBox(height: 20.0),
                           TextFormField(
@@ -576,9 +572,7 @@ class _AddUserRoleState extends State<AddUserRole> {
           ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: ButtonGlobalWithoutIcon(
-                buttontext: lang.S.of(context).create,
-                buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+            child: ElevatedButton(
                 onPressed: (() async {
                   if (salePermission ||
                       partiesPermission ||
@@ -612,9 +606,9 @@ class _AddUserRoleState extends State<AddUserRole> {
                         addIncomePermission: addIncomePermission,
                         dashboardPermission: dashBoardPermission,
                       );
-        
+
                       UserRoleRepo userRepo = UserRoleRepo();
-        
+
                       await userRepo.addUser(
                         ref: ref,
                         context: context,
@@ -631,7 +625,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                     );
                   }
                 }),
-                buttonTextColor: Colors.white),
+                child: Text(lang.S.of(context).create)),
           ),
         ),
       );

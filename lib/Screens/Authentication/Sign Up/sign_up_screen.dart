@@ -54,7 +54,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           title: Text(
             lang.S.of(context).signUp,
             //'Sign Up',
-            style: textTheme.titleMedium?.copyWith(fontSize: 20),
           ),
         ),
         body: SingleChildScrollView(

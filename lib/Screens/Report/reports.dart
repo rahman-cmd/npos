@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Report/Screens/due_report_screen.dart';
 import 'package:mobile_pos/Screens/Report/Screens/expense_report.dart';
 import 'package:mobile_pos/Screens/Report/Screens/expire_report.dart';
@@ -35,10 +34,6 @@ class _ReportsState extends State<Reports> {
           surfaceTintColor: Colors.white,
           title: Text(
             lang.S.of(context).reports,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,
@@ -208,9 +203,6 @@ class ReportCard extends StatelessWidget {
           ),
           title: Text(
             title,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-            ),
           ),
           trailing: const Icon(
             Icons.arrow_forward_ios,

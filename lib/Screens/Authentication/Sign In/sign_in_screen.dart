@@ -81,7 +81,6 @@ class _SignInState extends State<SignIn> {
           title: Text(
             // 'Sign in',
             lang.S.of(context).signIn,
-            style: textTheme.titleSmall?.copyWith(fontSize: 20, color: kTitleColor),
           ),
         ),
         body: SingleChildScrollView(

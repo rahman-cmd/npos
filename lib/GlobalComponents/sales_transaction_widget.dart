@@ -6,7 +6,8 @@ import 'package:mobile_pos/GlobalComponents/returned_tag_widget.dart';
 import 'package:mobile_pos/model/sale_transaction_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../PDF Invoice/generate_pdf.dart';
+import '../PDF Invoice/sales_invoice_pdf.dart';
+import '../PDF Invoice/pdf_common_functions.dart';
 import '../Provider/add_to_cart.dart';
 import '../Provider/profile_provider.dart';
 import '../Screens/Sales/add_sales.dart';
@@ -111,13 +112,15 @@ Widget salesTransactionWidget({
                   if (sale.dueAmount!.toInt() == 0)
                     Text(
                       (returnAmount != null)
-                          ? 'Returned Amount: $currency $returnAmount'
+                          ? 'Returned Amount: $currency$returnAmount'
                           : '${lang.S.of(context).paid} : $currency${(sale.totalAmount!.toDouble() - sale.dueAmount!.toDouble()).toStringAsFixed(2)}',
                       style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
                     ),
                   if (sale.dueAmount!.toInt() != 0)
                     Text(
-                      (returnAmount != null) ? 'Returned Amount: $currency $returnAmount' : '${lang.S.of(context).due}: $currency ${sale.dueAmount.toString()}',
+                      (returnAmount != null)
+                          ? 'Returned Amount: $currency${returnAmount.toStringAsFixed(2)}'
+                          : '${lang.S.of(context).due}: $currency${sale.dueAmount?.toStringAsFixed(2)}',
                       style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
                     ),
                   Row(
@@ -139,14 +142,28 @@ Widget salesTransactionWidget({
                           )),
                       const SizedBox(width: 10),
                       businessSettingData.when(data: (business) {
-                        return IconButton(
-                            padding: EdgeInsets.zero,
-                            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                            onPressed: () => GeneratePdf().generateSaleDocument(sale, businessInfo, context, business),
-                            icon: const Icon(
-                              Icons.picture_as_pdf,
-                              color: Colors.grey,
-                            ));
+                        return Row(
+                          children: [
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                              onPressed: () => SalesInvoicePdf.generateSaleDocument(sale, businessInfo, context, business),
+                              icon: const Icon(
+                                Icons.picture_as_pdf,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                              onPressed: () => SalesInvoicePdf.generateSaleDocument(sale, businessInfo, context, business, share: true),
+                              icon: const Icon(
+                                Icons.share,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        );
                       }, error: (e, stack) {
                         return Text(e.toString());
                       }, loading: () {

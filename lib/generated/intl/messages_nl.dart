@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Alle bedrijfsoplossingen",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro is een complete bedrijfsoplossing met voorraad, boekhouding, verkoop, kosten en verlies/winst.",
+      "NPOS is een complete bedrijfsoplossing met voorraad, boekhouding, verkoop, kosten en verlies/winst.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Alle tijden"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Al toegevoegd"),
@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Kies uw functies",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Functies zijn het belangrijkste onderdeel dat PosPro onderscheidt van traditionele oplossingen.",
+      "Functies zijn het belangrijkste onderdeel dat NPOS onderscheidt van traditionele oplossingen.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -245,7 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Gemakkelijk te gebruiken mobiele POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "De PosPro-app is gratis, gemakkelijk te gebruiken. Sterker nog, het is een van de beste POS-systemen ter wereld.",
+      "De NPOS-app is gratis, gemakkelijk te gebruiken. Sterker nog, het is een van de beste POS-systemen ter wereld.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Bewerking"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -611,8 +611,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Selecteer een uitgaven-categorie",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Aangedreven door Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Aangedreven door NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Ondersteuning voor Android- en iOS-apps",

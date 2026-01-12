@@ -70,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "બધા બિઝનેસ સોલ્યુશન્સ",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro સ્ટોક, એકાઉન્ટ, વેચાણ, ખર્ચ અને નુકસાન/લાભ સાથે સંપૂર્ણ વ્યવસાય ઉકેલ છે.",
+      "NPOS સ્ટોક, એકાઉન્ટ, વેચાણ, ખર્ચ અને નુકસાન/લાભ સાથે સંપૂર્ણ વ્યવસાય ઉકેલ છે.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("બધા સમય"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("પહેલાથી ઉમેર્યું છે"),
@@ -120,7 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "તમારી સુવિધાઓ પસંદ કરો",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "સુવિધાઓ મહત્વપૂર્ણ ભાગ છે જે POSpro ને પરંપરાગત ઉકેલોથી અલગ પાડે છે.",
+      "સુવિધાઓ મહત્વપૂર્ણ ભાગ છે જે NPOS ને પરંપરાગત ઉકેલોથી અલગ પાડે છે.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("ક્લેરેન્સ"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -219,7 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "વાપરવા માટે સરળ મોબાઈલ પોસ",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro એપ ફ્રી છે, વાપરવામાં સરળ છે. હકીકતમાં, તે વિશ્વભરમાં શ્રેષ્ઠ POS સિસ્ટમ્સમાંથી એક છે.",
+      "NPOS એપ ફ્રી છે, વાપરવામાં સરળ છે. હકીકતમાં, તે વિશ્વભરમાં શ્રેષ્ઠ POS સિસ્ટમ્સમાંથી એક છે.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("સંપાદિત કરો"),
     "editPhone": MessageLookupByLibrary.simpleMessage("ફોન નંબર સંપાદિત કરો?"),
@@ -577,7 +577,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "કૃપા કરીને ખર્ચ કેટેગરી પસંદ કરો",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Powered By NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "પ્રીમિયમ ગ્રાહક સપોર્ટ",
     ),

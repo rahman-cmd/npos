@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 import '../../constant.dart';
@@ -15,14 +14,11 @@ class EditSocialmedia extends StatefulWidget {
 class _EditSocialmediaState extends State<EditSocialmedia> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           lang.S.of(context).editSocailMedia,
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 20.0,
-          ),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         centerTitle: true,
@@ -51,7 +47,7 @@ class _EditSocialmediaState extends State<EditSocialmedia> {
                 image: AssetImage('images/twitter.png'),
               ),
               socialMediaName: lang.S.of(context).twitter,
-             // 'Twitter',
+              // 'Twitter',
             ),
           ),
           Padding(
@@ -70,7 +66,7 @@ class _EditSocialmediaState extends State<EditSocialmedia> {
               iconWidget: const Image(
                 image: AssetImage('images/linkedin.png'),
               ),
-              socialMediaName:lang.S.of(context).linkedIN,
+              socialMediaName: lang.S.of(context).linkedIN,
               //'LinkedIN',
             ),
           ),
@@ -93,6 +89,7 @@ class SocialMediaEditCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         iconWidget,
@@ -100,10 +97,7 @@ class SocialMediaEditCard extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
             socialMediaName,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 18,
-            ),
+            style: theme.textTheme.titleLarge,
           ),
         ),
         const Spacer(),
@@ -122,7 +116,9 @@ class SocialMediaEditCard extends StatelessWidget {
               Text(
                 lang.S.of(context).link,
                 //'Link',
-                style: GoogleFonts.poppins(fontSize: 15.0, color: Colors.white),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: Colors.white,
+                ),
               ),
             ],
           ),

@@ -62,7 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ລົງທະບຽນທັງຫມົດ",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro ນຳເປັນລົງທະບຽນທັງຫມົດສຳລັບການຮັບສາຍທັງຫມົດນຳເປັນລົງທະບຽນສຳລັບການຊື້, ລາຍຮັບ, ການຂາຍ, ລາຍຈ່າຍ, ແລະການສູນສຳລັບການຂາຍທັງຫມົດ.",
+      "NPOS ນຳເປັນລົງທະບຽນທັງຫມົດສຳລັບການຮັບສາຍທັງຫມົດນຳເປັນລົງທະບຽນສຳລັບການຊື້, ລາຍຮັບ, ການຂາຍ, ລາຍຈ່າຍ, ແລະການສູນສຳລັບການຂາຍທັງຫມົດ.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("ທຸກເວລາ"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("ເພີ່ມແລ້ວ"),
@@ -205,7 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ໃຊ້ໄດ້ໃນອາຍຸ POS ທີ່ໄວ້",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "ການເຂົ້າສະໜັບສະໜູນ PosPro ສະຫຼຸບ, ເປັນໃນການໃຊ້ແອັບເວີຊັນ POS ທີ່ຍັງບໍ່ຕ້ອງໄດ້ຈາກຮູບແບບຕົວເລືອກ.",
+      "ການເຂົ້າສະໜັບສະໜູນ NPOS ສະຫຼຸບ, ເປັນໃນການໃຊ້ແອັບເວີຊັນ POS ທີ່ຍັງບໍ່ຕ້ອງໄດ້ຈາກຮູບແບບຕົວເລືອກ.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("ແກ້ໄຂ"),
     "editPhone": MessageLookupByLibrary.simpleMessage("ແກ້ໄຂເບີໂທລະສັບບໍ?"),
@@ -527,7 +527,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "ເລືອກໝວດປະເພດຄ່າໃຊ້",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("ສະຫນັບໂດຍ Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("ສະຫນັບໂດຍ NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "ສະໜອງອະບັບ Android ແລະ iOS",
     ),

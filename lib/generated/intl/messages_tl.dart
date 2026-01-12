@@ -82,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Lahat ng solusyon sa negosyo",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Ang PosPro ay isang kumpletong solusyon sa negosyo na may imbentaryo, account, benta, gastos at pagkawala/tubo.",
+      "Ang NPOS ay isang kumpletong solusyon sa negosyo na may imbentaryo, account, benta, gastos at pagkawala/tubo.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Lahat ng Oras"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Nakaragdag na"),
@@ -146,7 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Piliin ang Iyong Mga Tampok",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Ang mga Tampok ay ang mahalagang bahagi na nagpaiba sa POSpro mula sa tradisyunal na solusyon.",
+      "Ang mga Tampok ay ang mahalagang bahagi na nagpaiba sa NPOS mula sa tradisyunal na solusyon.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -269,7 +269,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Madaling gamitin na mobile pos",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Ang POSpro app ay libre, madaling gamitin. Sa katunayan, ito ay isa sa mga pinakamahusay na sistema ng POS sa buong mundo.",
+      "Ang NPOS app ay libre, madaling gamitin. Sa katunayan, ito ay isa sa mga pinakamahusay na sistema ng POS sa buong mundo.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("I-edit"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -673,8 +673,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Mangyaring piliin ang isang kategorya ng gastos",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Pinapatakbo ng Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Pinapatakbo ng NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Premium na Suporta sa Customer",

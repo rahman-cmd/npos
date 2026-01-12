@@ -64,7 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Wszystkie rozwiązania biznesowe",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro to kompleksowe rozwiązanie biznesowe z zapasami, kontami, sprzedażą, wydatkami i stratami/zyskami.",
+      "NPOS to kompleksowe rozwiązanie biznesowe z zapasami, kontami, sprzedażą, wydatkami i stratami/zyskami.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Cały czas"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Już dodane"),
@@ -118,7 +118,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Wybierz swoje funkcje",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funkcje to ważna część, która odróżnia PosPro od tradycyjnych rozwiązań.",
+      "Funkcje to ważna część, która odróżnia NPOS od tradycyjnych rozwiązań.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -215,7 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Łatwy w użyciu mobilny punkt sprzedaży",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Aplikacja PosPro jest bezpłatna i łatwa w użyciu. W rzeczywistości jest jednym z najlepszych systemów POS na świecie.",
+      "Aplikacja NPOS jest bezpłatna i łatwa w użyciu. W rzeczywistości jest jednym z najlepszych systemów POS na świecie.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Edytować"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -587,8 +587,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Proszę wybrać kategorię wydatków",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Napędzane przez Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Napędzane przez NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Wsparcie aplikacji Android i iOS",

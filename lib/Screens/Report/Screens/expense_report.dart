@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/currency.dart';
@@ -51,10 +50,6 @@ class _ExpenseReportState extends State<ExpenseReport> {
           appBar: AppBar(
             title: Text(
               lang.S.of(context).expenseReport,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,

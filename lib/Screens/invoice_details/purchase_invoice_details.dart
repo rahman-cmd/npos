@@ -232,7 +232,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   text: '${_lang.purchaseBy} ',
                                   children: [
                                     TextSpan(
-                                      text: widget.transitionModel.user?.name ?? '',
+                                      text: widget.transitionModel.user?.role == "shop-owner" ? "Admin" : widget.transitionModel.user?.name ?? '',
                                     )
                                   ],
                                 ),
@@ -259,6 +259,34 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   ],
                                 ),
                                 textAlign: TextAlign.end,
+                              ),
+                              Visibility(
+                                visible: widget.businessInfo.address != null,
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: 'Address: ',
+                                    children: [
+                                      TextSpan(
+                                          text: widget.businessInfo.address ?? ''
+                                      )
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                              Visibility(
+                                visible: widget.businessInfo.crNo != null,
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: 'C.R: ',
+                                    children: [
+                                      TextSpan(
+                                          text: widget.businessInfo.crNo ?? ''
+                                      )
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.end,
+                                ),
                               ),
                               Visibility(
                                 visible: widget.businessInfo.vatNumber != null,
@@ -428,7 +456,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                     Row(
                       children: [
                         Text(
-                          "${_lang.paidVia}: ${widget.transitionModel.paymentType}",
+                          "${_lang.paidVia}: ${widget.transitionModel.paymentType?.name ?? 'N/A'}",
                         ),
                         const Spacer(),
                         Align(
@@ -438,7 +466,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                               text: '${lang.S.of(context).subTotal} : ',
                               children: [
                                 TextSpan(
-                                  text: '$currency ${getTotalForOldInvoice().toStringAsFixed(2)}',
+                                  text: '$currency ${mainConstant.formatPointNumber(getTotalForOldInvoice())}',
                                 ),
                               ],
                             ),
@@ -457,7 +485,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).discount} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${((widget.transitionModel.discountAmount ?? 0) + getReturndDiscountAmount()).toStringAsFixed(2)}',
+                              text: '$currency ${mainConstant.formatPointNumber((widget.transitionModel.discountAmount ?? 0) + getReturndDiscountAmount())}',
                             ),
                           ],
                         ),
@@ -474,7 +502,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${widget.transitionModel.vat?.name ?? lang.S.of(context).vat} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${((widget.transitionModel.vatAmount ?? 0)).toStringAsFixed(2)}',
+                              text: '$currency ${mainConstant.formatPointNumber((widget.transitionModel.vatAmount ?? 0))}',
                             ),
                           ],
                         ),
@@ -493,7 +521,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           style: const TextStyle(fontWeight: FontWeight.w500),
                           children: [
                             TextSpan(
-                              text: '$currency ${(widget.transitionModel.shippingCharge?.toStringAsFixed(2) ?? 0)}',
+                              text: '$currency ${mainConstant.formatPointNumber(widget.transitionModel.shippingCharge ?? 0)}',
                             ),
                           ],
                         ),
@@ -510,7 +538,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).totalAmount} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${((widget.transitionModel.totalAmount ?? 0) + getTotalReturndAmount()).toStringAsFixed(2)}',
+                              text: '$currency ${mainConstant.formatPointNumber((widget.transitionModel.totalAmount ?? 0) + getTotalReturndAmount())}',
                             ),
                           ],
                         ),
@@ -605,7 +633,9 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         (serialNumber++).toString(),
-                                        style: kTextStyle.copyWith(color: kGreyTextColor),
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                              color: kGreyTextColor,
+                                            ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -670,7 +700,7 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).totalPayable} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${widget.transitionModel.totalAmount?.toStringAsFixed(2)}',
+                              text: '$currency ${mainConstant.formatPointNumber(widget.transitionModel.totalAmount ?? 0)}',
                             ),
                           ],
                         ),
@@ -687,7 +717,8 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).paid} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${(widget.transitionModel.totalAmount! - widget.transitionModel.dueAmount!.toDouble()).toStringAsFixed(2)}',
+                              text:
+                                  '$currency ${mainConstant.formatPointNumber(((widget.transitionModel.totalAmount ?? 0) - (widget.transitionModel.dueAmount ?? 0)) + (widget.transitionModel.changeAmount ?? 0))}',
                             ),
                           ],
                         ),
@@ -697,18 +728,41 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                     const SizedBox(height: 5.0),
 
                     //-----------due--------------
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text.rich(
-                        TextSpan(
-                          text: '${lang.S.of(context).due} : ',
-                          children: [
-                            TextSpan(
-                              text: '$currency ${widget.transitionModel.dueAmount?.toStringAsFixed(2)}',
-                            ),
-                          ],
+                    Visibility(
+                      visible: (widget.transitionModel.dueAmount ?? 0) > 0,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text.rich(
+                          TextSpan(
+                            text: '${lang.S.of(context).due} : ',
+                            children: [
+                              TextSpan(
+                                text: '$currency ${mainConstant.formatPointNumber(widget.transitionModel.dueAmount ?? 0)}',
+                              ),
+                            ],
+                          ),
+                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+
+                    ///-------------Change Amount---------------
+                    Visibility(
+                      visible: (widget.transitionModel.changeAmount ?? 0) > 0,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text.rich(
+                          TextSpan(
+                            text: 'Change Amount : ',
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            children: [
+                              TextSpan(
+                                text: '$currency${mainConstant.formatPointNumber(widget.transitionModel.changeAmount ?? 0)}',
+                              ),
+                            ],
+                          ),
+                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10.0),

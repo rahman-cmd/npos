@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/Provider/add_to_cart.dart';
 import 'package:mobile_pos/Screens/Customers/add_customer.dart';
@@ -32,6 +31,7 @@ class SalesContactState extends State<SalesContact> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
       final businessInfo = ref.watch(businessInfoProvider);
       final providerData = ref.watch(partiesProvider);
@@ -44,9 +44,6 @@ class SalesContactState extends State<SalesContact> {
               backgroundColor: Colors.white,
               title: Text(
                 lang.S.of(context).chooseCustomer,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                ),
               ),
               centerTitle: true,
               iconTheme: const IconThemeData(color: Colors.black),
@@ -68,7 +65,7 @@ class SalesContactState extends State<SalesContact> {
                                   hintText: lang.S.of(context).search,
                                   prefixIcon: Icon(
                                     Icons.search,
-                                    color: kGreyTextColor.withOpacity(0.5),
+                                    color: kGreyTextColor.withValues(alpha: 0.5),
                                   ),
                                 ),
                                 onChanged: (value) {
@@ -112,18 +109,12 @@ class SalesContactState extends State<SalesContact> {
                                         Text(
                                           lang.S.of(context).walkInCustomer,
                                           //'Walk-in Customer',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.black,
-                                            fontSize: 15.0,
-                                          ),
+                                          style: theme.textTheme.titleMedium,
                                         ),
                                         Text(
                                           lang.S.of(context).guest,
                                           //'Guest',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.grey,
-                                            fontSize: 15.0,
-                                          ),
+                                          style: theme.textTheme.bodyLarge,
                                         ),
                                       ],
                                     ),
@@ -195,17 +186,11 @@ class SalesContactState extends State<SalesContact> {
                                                               customer[index].name ?? '',
                                                               maxLines: 2,
                                                               overflow: TextOverflow.ellipsis,
-                                                              style: GoogleFonts.poppins(
-                                                                color: Colors.black,
-                                                                fontSize: 15.0,
-                                                              ),
+                                                              style: theme.textTheme.titleMedium,
                                                             ),
                                                             Text(
                                                               customer[index].type ?? '',
-                                                              style: GoogleFonts.poppins(
-                                                                color: color,
-                                                                fontSize: 15.0,
-                                                              ),
+                                                              style: theme.textTheme.bodyLarge,
                                                             ),
                                                           ],
                                                         ),
@@ -222,17 +207,11 @@ class SalesContactState extends State<SalesContact> {
                                                       children: [
                                                         Text(
                                                           '$currency ${customer[index].due}',
-                                                          style: GoogleFonts.poppins(
-                                                            color: Colors.black,
-                                                            fontSize: 15.0,
-                                                          ),
+                                                          style: theme.textTheme.bodyLarge,
                                                         ),
                                                         Text(
                                                           lang.S.of(context).due,
-                                                          style: GoogleFonts.poppins(
-                                                            color: const Color(0xFFff5f00),
-                                                            fontSize: 15.0,
-                                                          ),
+                                                          style: theme.textTheme.bodyLarge,
                                                         ),
                                                       ],
                                                     ).visible(customer[index].due != null && customer[index].due != 0),
@@ -285,18 +264,12 @@ class SalesContactState extends State<SalesContact> {
                                     Text(
                                       lang.S.of(context).walkInCustomer,
                                       //'Walk-in Customer',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.black,
-                                        fontSize: 15.0,
-                                      ),
+                                      style: theme.textTheme.bodyLarge,
                                     ),
                                     Text(
                                       lang.S.of(context).guest,
                                       //'Guest',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.grey,
-                                        fontSize: 15.0,
-                                      ),
+                                      style: theme.textTheme.bodyLarge,
                                     ),
                                   ],
                                 ),

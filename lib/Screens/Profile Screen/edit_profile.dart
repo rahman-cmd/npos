@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
@@ -21,7 +20,7 @@ import '../../model/business_category_model.dart';
 import '../../model/business_info_model.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key, required this.profile, required this.ref}) : super(key: key);
+  const EditProfile({super.key, required this.profile, required this.ref});
 
   final BusinessInformation profile;
   final WidgetRef ref;
@@ -96,6 +95,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     counter++;
     return GlobalPopup(
       child: Scaffold(
@@ -104,52 +104,44 @@ class _EditProfileState extends State<EditProfile> {
           iconTheme: const IconThemeData(color: Colors.black),
           title: Text(
             lang.S.of(context).updateProfile,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-            ),
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0.0,
         ),
-        bottomNavigationBar: ButtonGlobal(
-          iconWidget: Icons.arrow_forward,
-          buttontext: lang.S.of(context).continueButton,
-          iconColor: Colors.white,
-          buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              final businessRepository = BusinessUpdateRepository();
-              final isProfileUpdated = await businessRepository.updateProfile(
-                id: widget.profile.id.toString(),
-                name: nameController.text,
-                categoryId: selectedBusinessCategory!.id.toString(),
-                address: addressController.text,
-                image: pickedImage != null ? File(pickedImage!.path) : null,
-                phone: phoneController.text,
-                vatNumber: vatGstNumberController.text,
-                vatTitle: vatGstTitleController.text,
-                ref: widget.ref,
-                context: context,
-              );
-
-              if (isProfileUpdated) {
-                widget.ref.refresh(businessInfoProvider);
-                widget.ref.refresh(getExpireDateProvider(widget.ref));
-
-                EasyLoading.showSuccess(
-                  lang.S.of(context).dataSavedSuccessfully,
-                  //'Data saved successfully.'
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ElevatedButton.icon(
+            icon: const Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+            ),
+            label: Text(lang.S.of(context).continueButton),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                final businessRepository = BusinessUpdateRepository();
+                final isProfileUpdated = await businessRepository.updateProfile(
+                  id: widget.profile.id.toString(),
+                  name: nameController.text,
+                  categoryId: selectedBusinessCategory!.id.toString(),
+                  address: addressController.text,
+                  image: pickedImage != null ? File(pickedImage!.path) : null,
+                  phone: phoneController.text,
+                  vatNumber: vatGstNumberController.text,
+                  vatTitle: vatGstTitleController.text,
+                  ref: widget.ref,
+                  context: context,
+                  fromInvoiceLogo: false,
                 );
-                Navigator.pop(context);
-              } else {
-                EasyLoading.showError(
-                  lang.S.of(context).somethingIs,
-                  // 'Something is '
-                );
+
+                if (isProfileUpdated) {
+                  widget.ref.refresh(businessInfoProvider);
+                  widget.ref.refresh(getExpireDateProvider(widget.ref));
+                  Navigator.pop(context);
+                }
               }
-            }
-          },
+            },
+          ),
         ),
         body: SingleChildScrollView(
           child: Consumer(builder: (context, ref, child) {
@@ -175,9 +167,8 @@ class _EditProfileState extends State<EditProfile> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           color: kGreyTextColor,
-                          fontSize: 15.0,
                         ),
                       ),
                     ),
@@ -223,9 +214,8 @@ class _EditProfileState extends State<EditProfile> {
                                               Text(
                                                 lang.S.of(context).gallery,
                                                 // 'Gallery',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 20.0,
-                                                  color: kMainColor,
+                                                style: theme.textTheme.titleMedium?.copyWith(
+                                                  color: kGreyTextColor,
                                                 ),
                                               ),
                                             ],
@@ -255,8 +245,7 @@ class _EditProfileState extends State<EditProfile> {
                                               Text(
                                                 lang.S.of(context).camera,
                                                 // 'Camera',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 20.0,
+                                                style: theme.textTheme.titleMedium?.copyWith(
                                                   color: kGreyTextColor,
                                                 ),
                                               ),
@@ -328,10 +317,7 @@ class _EditProfileState extends State<EditProfile> {
                               decoration: kInputDecoration.copyWith(
                                   floatingLabelBehavior: FloatingLabelBehavior.always,
                                   labelText: lang.S.of(context).businessCat,
-                                  labelStyle: GoogleFonts.poppins(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                  ),
+                                  labelStyle: theme.textTheme.titleMedium,
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
                               child: DropdownButtonHideUnderline(child: getCategory(list: categoryList)),
                             );

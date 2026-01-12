@@ -47,7 +47,8 @@ class IncomeRepo {
     required String note,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/incomes');
-    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+    CustomHttpClient customHttpClient =
+        CustomHttpClient(client: http.Client(), context: context, ref: ref);
     final requestBody = jsonEncode({
       'amount': amount,
       'income_category_id': expenseCategoryId,
@@ -55,7 +56,7 @@ class IncomeRepo {
       'referenceNo': referenceNo,
       'incomeDate': expenseDate,
       'note': note,
-      'paymentType': paymentType,
+      'payment_type_id': paymentType,
     });
 
     try {
@@ -76,12 +77,14 @@ class IncomeRepo {
         Navigator.pop(context);
         // return PurchaseTransaction.fromJson(parsedData);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Income creation failed: ${parsedData['message']}')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Income creation failed: ${parsedData['message']}')));
         return;
       }
     } catch (error) {
       // Handle unexpected errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred: $error')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('An error occurred: $error')));
       // return null;
     }
   }

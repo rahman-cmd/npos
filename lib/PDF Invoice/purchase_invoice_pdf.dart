@@ -294,6 +294,54 @@ class PurchaseInvoicePDF {
                         ),
                       ),
                     ]),
+                    if (personalInformation.address != null)
+                      pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+                        pw.SizedBox(
+                          width: 100.0,
+                          child: pw.Text(
+                            'Address',
+                            style: pw.Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.black),
+                          ),
+                        ),
+                        pw.SizedBox(
+                          width: 10.0,
+                          child: pw.Text(
+                            ':',
+                            style: pw.Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.black),
+                          ),
+                        ),
+                        pw.SizedBox(
+                          width: 70.0,
+                          child: pw.Text(
+                            personalInformation.address ?? '',
+                            style: pw.Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.black),
+                          ),
+                        ),
+                      ]),
+                    if (personalInformation.crNo != null)
+                      pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+                        pw.SizedBox(
+                          width: 100.0,
+                          child: pw.Text(
+                            'C.R',
+                            style: pw.Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.black),
+                          ),
+                        ),
+                        pw.SizedBox(
+                          width: 10.0,
+                          child: pw.Text(
+                            ':',
+                            style: pw.Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.black),
+                          ),
+                        ),
+                        pw.SizedBox(
+                          width: 70.0,
+                          child: pw.Text(
+                            personalInformation.crNo ?? '',
+                            style: pw.Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.black),
+                          ),
+                        ),
+                      ]),
                     if (personalInformation.vatNumber != null)
                       pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
                         pw.SizedBox(

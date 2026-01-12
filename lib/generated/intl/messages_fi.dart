@@ -66,7 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Kaikki liiketoimintaratkaisut",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro on täydellinen liiketoimintaratkaisu varaston, tilien, myynnin, kulujen ja voiton/tappion osalta.",
+      "NPOS on täydellinen liiketoimintaratkaisu varaston, tilien, myynnin, kulujen ja voiton/tappion osalta.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Kaikki ajat"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Jo lisätty"),
@@ -122,7 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Valitse ominaisuutesi",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Ominaisuudet ovat tärkeä osa, joka erottaa PosPron perinteisistä ratkaisuista.",
+      "Ominaisuudet ovat tärkeä osa, joka erottaa NPOSn perinteisistä ratkaisuista.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -219,7 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Helppo käyttää mobiilia POS-laitetta",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "PosPro -sovellus on ilmainen ja helppokäyttöinen. Itse asiassa se on yksi parhaista POS-järjestelmistä maailmassa.",
+      "NPOS -sovellus on ilmainen ja helppokäyttöinen. Itse asiassa se on yksi parhaista POS-järjestelmistä maailmassa.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Muokata"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -579,7 +579,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Valitse kulukategoria",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Powered By NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android- ja iOS-sovellustuki",
     ),

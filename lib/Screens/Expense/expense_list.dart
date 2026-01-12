@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
@@ -63,10 +62,6 @@ class _ExpenseListState extends State<ExpenseList> {
           appBar: AppBar(
             title: Text(
               lang.S.of(context).expenseReport,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -291,16 +286,15 @@ class _ExpenseListState extends State<ExpenseList> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 10),
 
                 ///________button________________________________________________
                 businessInfoData.when(data: (details) {
-                  return ButtonGlobalWithoutIcon(
-                    buttontext: lang.S.of(context).addExpense,
-                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                  return ElevatedButton(
                     onPressed: () async {
                       const AddExpense().launch(context);
                     },
-                    buttonTextColor: Colors.white,
+                    child: Text(lang.S.of(context).addExpense),
                   );
                 }, error: (e, stack) {
                   return Text(e.toString());

@@ -593,8 +593,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Vyberte kategorii výdajů",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Vytvořeno společností Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Vytvořeno společností NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Podpora aplikací pro Android a iOS",

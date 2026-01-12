@@ -105,6 +105,13 @@ class SalesThermalPrinterInvoice {
     if (printTransactionModel.personalInformationModel.address != null) {
       bytes += generator.text(printTransactionModel.personalInformationModel.address ?? '', styles: const PosStyles(align: PosAlign.center));
     }
+    if (printTransactionModel.personalInformationModel.address != null) {
+      bytes += generator.text(printTransactionModel.personalInformationModel.address ?? '', styles: const PosStyles(align: PosAlign.center));
+    }
+    if (printTransactionModel.personalInformationModel.crNo != null) {
+      bytes += generator.text("C.R : ${printTransactionModel.personalInformationModel.crNo ?? ''}",
+          styles: const PosStyles(align: PosAlign.center));
+    }
     if (printTransactionModel.personalInformationModel.vatNumber != null) {
       bytes += generator.text("${printTransactionModel.personalInformationModel.vatName ?? 'VAT No :'}${printTransactionModel.personalInformationModel.vatNumber ?? ''}",
           styles: const PosStyles(align: PosAlign.center));

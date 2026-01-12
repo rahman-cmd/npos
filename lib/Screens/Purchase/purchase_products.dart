@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/Provider/product_provider.dart';
 import 'package:mobile_pos/Screens/Customers/Model/parties_model.dart';
@@ -47,10 +46,6 @@ class _PurchaseProductsState extends State<PurchaseProducts> {
           appBar: AppBar(
             title: Text(
               lang.S.of(context).productList,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -240,6 +235,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
       return Padding(
         padding: const EdgeInsets.all(5.0),
@@ -271,19 +267,13 @@ class _ProductCardState extends State<ProductCard> {
                     children: [
                       Text(
                         widget.productTitle,
-                        style: GoogleFonts.jost(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
+                        style: theme.textTheme.titleLarge,
                       ),
                     ],
                   ),
                   Text(
                     widget.productDescription,
-                    style: GoogleFonts.jost(
-                      fontSize: 15.0,
-                      color: kGreyTextColor,
-                    ),
+                    style: theme.textTheme.bodyLarge,
                   ),
                 ],
               ),
@@ -294,16 +284,14 @@ class _ProductCardState extends State<ProductCard> {
               children: [
                 Text(
                   lang.S.of(context).stock,
-                  style: GoogleFonts.jost(
-                    fontSize: 18.0,
-                    color: Colors.black,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontSize: 18,
                   ),
                 ),
                 Text(
                   widget.stock,
-                  style: GoogleFonts.jost(
-                    fontSize: 16.0,
-                    color: Colors.grey,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: kGreyTextColor,
                   ),
                 ),
               ],

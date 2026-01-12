@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile_pos/PDF%20Invoice/generate_pdf.dart';
+import 'package:mobile_pos/PDF%20Invoice/pdf_common_functions.dart';
 import 'package:mobile_pos/Screens/Purchase/add_and_edit_purchase.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -13,6 +12,7 @@ import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
 import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
+import '../../PDF Invoice/purchase_invoice_pdf.dart';
 import '../../Provider/add_to_cart_purchase.dart';
 import '../../core/theme/_app_colors.dart';
 import '../../currency.dart';
@@ -56,10 +56,6 @@ class PurchaseReportState extends State<PurchaseListScreen> {
           appBar: AppBar(
             title: Text(
               lang.S.of(context).purchaseList,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -224,14 +220,32 @@ class PurchaseReportState extends State<PurchaseListScreen> {
                                                       width: 10,
                                                     ),
                                                     businessSetting.when(data: (bussiness) {
-                                                      return IconButton(
-                                                          padding: EdgeInsets.zero,
-                                                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                                          onPressed: () => GeneratePdf().generatePurchaseDocument(purchaseTransactions[index], data, context, bussiness),
-                                                          icon: const Icon(
-                                                            Icons.picture_as_pdf,
-                                                            color: Colors.grey,
-                                                          ));
+                                                      return Row(
+                                                        children: [
+                                                          IconButton(
+                                                              padding: EdgeInsets.zero,
+                                                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                                              onPressed: () => PurchaseInvoicePDF.generatePurchaseDocument(purchaseTransactions[index], data, context, bussiness),
+                                                              icon: const Icon(
+                                                                Icons.picture_as_pdf,
+                                                                color: Colors.grey,
+                                                              )),
+                                                          IconButton(
+                                                            style: IconButton.styleFrom(
+                                                                padding: EdgeInsets.zero,
+                                                                visualDensity: const VisualDensity(
+                                                                  horizontal: -4,
+                                                                  vertical: -4,
+                                                                )),
+                                                            onPressed: () =>
+                                                                PurchaseInvoicePDF.generatePurchaseDocument(purchaseTransactions[index], data, context, bussiness, isShare: true),
+                                                            icon: const Icon(
+                                                              Icons.share_outlined,
+                                                              color: Colors.grey,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
                                                     }, error: (e, statck) {
                                                       return Text(e.toString());
                                                     }, loading: () {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mobile_pos/Screens/Products/Model/product_model.dart';
 import 'package:mobile_pos/constant.dart';
@@ -131,7 +130,7 @@ class StockListState extends State<StockList> {
                     items: <String>['All', 'Low Stock', 'Expire'].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value, style: GoogleFonts.poppins(color: Colors.black, fontSize: 14)),
+                        child: Text(value, style: theme.textTheme.bodyMedium),
                       );
                     }).toList(),
                   ),
@@ -203,7 +202,7 @@ class StockListState extends State<StockList> {
                                   dropdownColor: Colors.white,
                                   isDense: true,
                                   value: selectedExpireFilter,
-                                  hint: Text("Select Days", style: GoogleFonts.poppins(color: Colors.black, fontSize: 14)),
+                                  hint: Text("Select Days", style: theme.textTheme.bodyMedium),
                                   icon: const Icon(IconlyLight.arrow_down_2, color: Colors.black, size: 14),
                                   underline: Container(),
                                   onChanged: (String? newValue) {
@@ -214,7 +213,7 @@ class StockListState extends State<StockList> {
                                   items: <String>['7 Days', '15 Days', '30 Days', '60 Days', 'Expired'].map<DropdownMenuItem<String>>((String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
-                                      child: Text(value, style: GoogleFonts.poppins(color: Colors.black, fontSize: 14)),
+                                      child: Text(value, style: theme.textTheme.bodyMedium),
                                     );
                                   }).toList(),
                                 ),
@@ -297,12 +296,12 @@ class StockListState extends State<StockList> {
                                                   )
                                                 : Text(
                                                     product.productName ?? 'N?A',
-                                                    style: GoogleFonts.poppins(color: Colors.black),
+                                                    style: theme.textTheme.bodyMedium,
                                                     textAlign: TextAlign.start,
                                                   ),
                                           ),
                                           DataCell(Text('$currency${product.productPurchasePrice?.toStringAsFixed(2)}',
-                                              style: TextStyle(color: isLowStock ? Colors.red : Colors.black))),
+                                              style: theme.textTheme.bodyMedium?.copyWith(color: isLowStock ? Colors.red : Colors.black))),
                                           DataCell(
                                             Text(
                                               product.productStock.toString(),
@@ -338,11 +337,13 @@ class StockListState extends State<StockList> {
                 children: [
                   Text(
                     lang.S.of(context).stockValue,
-                    style: kTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.black),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Text(
                     '$currency${totalStockValue.toStringAsFixed(2)}',
-                    style: GoogleFonts.poppins(color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.w600),
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                   ),
                 ],
               ),

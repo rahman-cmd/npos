@@ -32,11 +32,13 @@ class LogInRepo {
 
       final responseData = jsonDecode(response.body);
       EasyLoading.dismiss();
+      print('Signin ${response.statusCode}');
+      print('Signin ${response.body}');
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(responseData['message'])));
 
         bool isSetupDone = responseData['data']['is_setup'];
-        try{
+        try {
           await CurrencyMethods()
               .saveCurrencyDataInLocalDatabase(selectedCurrencySymbol: responseData['data']['currency']['symbol'], selectedCurrencyName: responseData['data']['currency']['name']);
         } catch (error) {
@@ -70,8 +72,10 @@ class LogInRepo {
       }
     } catch (error) {
       print(error);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $error')));
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Network error: Please try again')));
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Network error: Please try again')));
-    } finally {}
+    }
 
     return false;
   }

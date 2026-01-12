@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Screens/Income/Providers/all_income_provider.dart';
 import 'package:mobile_pos/constant.dart';
@@ -52,10 +51,6 @@ class _IncomeReportState extends State<IncomeReport> {
           appBar: AppBar(
             title: Text(
               lang.S.of(context).incomeReport,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,

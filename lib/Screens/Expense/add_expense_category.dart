@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Expense/Repo/expanse_category_repo.dart';
 import 'package:mobile_pos/constant.dart';
@@ -43,10 +42,6 @@ class _AddExpenseCategoryState extends State<AddExpenseCategory> {
                 )),
             title: Text(
               lang.S.of(context).addExpenseCat,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -70,7 +65,7 @@ class _AddExpenseCategoryState extends State<AddExpenseCategory> {
                     key: key,
                     child: TextFormField(
                       validator: (value) {
-                        if(value?.trim().isEmptyOrNull??true){
+                        if (value?.trim().isEmptyOrNull ?? true) {
                           //return 'Enter expanse category name';
                           return lang.S.of(context).enterExpanseCategoryName;
                         }
@@ -86,11 +81,9 @@ class _AddExpenseCategoryState extends State<AddExpenseCategory> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  ButtonGlobalWithoutIcon(
-                    buttontext: lang.S.of(context).save,
-                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                  ElevatedButton(
                     onPressed: () async {
-                      if(key.currentState?.validate()??false){
+                      if (key.currentState?.validate() ?? false) {
                         EasyLoading.show();
                         final categoryRepo = ExpanseCategoryRepo();
                         await categoryRepo.addExpanseCategory(
@@ -99,9 +92,8 @@ class _AddExpenseCategoryState extends State<AddExpenseCategory> {
                           categoryName: nameController.text.trim(),
                         );
                       }
-        
                     },
-                    buttonTextColor: Colors.white,
+                    child: Text(lang.S.of(context).save),
                   ),
                 ],
               ),

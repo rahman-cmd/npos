@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Provider/add_to_cart.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
@@ -15,7 +14,7 @@ import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../GlobalComponents/returned_tag_widget.dart';
 import '../../GlobalComponents/sales_transaction_widget.dart';
-import '../../PDF Invoice/generate_pdf.dart';
+import '../../PDF Invoice/pdf_common_functions.dart';
 import '../../currency.dart';
 import '../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
@@ -62,10 +61,6 @@ class _SalesListScreenState extends State<SalesListScreen> {
           appBar: AppBar(
             title: Text(
               lang.S.of(context).saleList,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,

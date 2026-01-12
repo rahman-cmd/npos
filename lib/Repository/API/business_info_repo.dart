@@ -75,6 +75,9 @@ class BusinessRepository {
     });
     if (response.statusCode == 200) {
       final parsedData = jsonDecode(response.body);
+      print('=====================respons body${parsedData}========================');
+      print('=====================data pass${parsedData['data']}========================');
+
       return BusinessInformation.fromJson(parsedData['data']); // Extract the "data" object from the response
     } else {
       return null;

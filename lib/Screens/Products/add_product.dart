@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -203,6 +202,7 @@ class AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: kWhite,
@@ -212,10 +212,6 @@ class AddProductState extends State<AddProduct> {
           iconTheme: const IconThemeData(color: Colors.black),
           title: Text(
             lang.S.of(context).addNewProduct,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
           ),
           centerTitle: true,
         ),
@@ -436,7 +432,6 @@ class AddProductState extends State<AddProduct> {
                             padding: const EdgeInsets.all(10.0),
                             child: TextFormField(
                               controller: productStockController,
-                              readOnly: widget.productModel != null,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   //return 'Enter a valid stock';
@@ -660,7 +655,7 @@ class AddProductState extends State<AddProduct> {
                               decoration: kInputDecoration.copyWith(
                                 floatingLabelBehavior: FloatingLabelBehavior.always,
                                 labelText: "Purchase Price Inc.",
-                                //hintText: 'Enter Salting price',
+                                //hintText: 'Enter selling price',
                                 hintText: lang.S.of(context).enterSaltingPrice,
                                 border: const OutlineInputBorder(),
                               ),
@@ -708,10 +703,8 @@ class AddProductState extends State<AddProduct> {
                               onChanged: (value) => calculatePurchaseAndMrp(from: 'mrp'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  //return 'Please enter a valid Sale price';
                                   return lang.S.of(context).pleaseEnterAValidSalePrice;
                                 }
-                                // You can add more validation logic as needed
                                 return null;
                               },
                               inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
@@ -719,7 +712,7 @@ class AddProductState extends State<AddProduct> {
                               decoration: kInputDecoration.copyWith(
                                 floatingLabelBehavior: FloatingLabelBehavior.always,
                                 labelText: lang.S.of(context).mrp,
-                                //hintText: 'Enter Salting price',
+                                //hintText: 'Enter selling price',
                                 hintText: lang.S.of(context).enterSaltingPrice,
                                 border: const OutlineInputBorder(),
                               ),
@@ -897,9 +890,8 @@ class AddProductState extends State<AddProduct> {
                                                   ),
                                                   Text(
                                                     lang.S.of(context).gallery,
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: 20.0,
-                                                      color: kMainColor,
+                                                    style: theme.textTheme.titleMedium?.copyWith(
+                                                      color: kGreyTextColor,
                                                     ),
                                                   ),
                                                 ],
@@ -924,8 +916,7 @@ class AddProductState extends State<AddProduct> {
                                                   ),
                                                   Text(
                                                     lang.S.of(context).camera,
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: 20.0,
+                                                    style: theme.textTheme.titleMedium?.copyWith(
                                                       color: kGreyTextColor,
                                                     ),
                                                   ),
@@ -987,9 +978,8 @@ class AddProductState extends State<AddProduct> {
                         const SizedBox(height: 10),
                       ],
                     ),
-                    ButtonGlobalWithoutIcon(
-                      buttontext: lang.S.of(context).saveNPublish,
-                      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
                       onPressed: () async {
                         if (key.currentState!.validate()) {
                           try {
@@ -1035,6 +1025,7 @@ class AddProductState extends State<AddProduct> {
                                 categoryId: selectedCategory!.id.toString(),
                                 brandId: selectedBrand?.id.toString(),
                                 unitId: selectedUnit?.id.toString(),
+                                productStock: productStockController.text,
                                 productCode: productCodeController.text,
                                 productSalePrice: salePriceController.text,
                                 productPurchasePrice: selectedTaxType.toLowerCase() == 'exclusive' ? purchaseExclusivePriceController.text : purchaseInclusivePriceController.text,
@@ -1064,8 +1055,9 @@ class AddProductState extends State<AddProduct> {
                           }
                         }
                       },
-                      buttonTextColor: Colors.white,
+                      child: Text(lang.S.of(context).saveNPublish),
                     ),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),

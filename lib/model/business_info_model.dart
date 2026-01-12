@@ -7,13 +7,16 @@ class BusinessInformation {
     this.willExpire,
     this.address,
     this.phoneNumber,
+    this.invoiceLogo,
     this.pictureUrl,
+    this.saleRoundingOption,
     this.language,
     this.subscriptionDate,
     this.remainingShopBalance,
     this.shopOpeningBalance,
     this.vatName,
     this.vatNumber,
+    this.crNo,
     this.createdAt,
     this.updatedAt,
     this.category,
@@ -23,19 +26,22 @@ class BusinessInformation {
 
   BusinessInformation.fromJson(dynamic json) {
     id = json['id'];
-    planSubscribeId = json['plan_subscribe_id'];
-    businessCategoryId = json['business_category_id'];
+    planSubscribeId = num.tryParse(json['plan_subscribe_id'].toString());
+    businessCategoryId = num.tryParse(json['business_category_id'].toString());
     companyName = json['companyName'];
     willExpire = json['will_expire'];
     address = json['address'];
     phoneNumber = json['phoneNumber'];
     pictureUrl = json['pictureUrl'];
+    invoiceLogo = json['invoice_logo'];
     language = json['language'];
     subscriptionDate = json['subscriptionDate'];
     vatName = json['vat_name'];
+    saleRoundingOption = json['sale_rounding_option'];
     vatNumber = json['vat_no'];
-    remainingShopBalance = json['remainingShopBalance'];
-    shopOpeningBalance = json['shopOpeningBalance'];
+    crNo = json['cr_no'];
+    remainingShopBalance = num.tryParse(json['remainingShopBalance'].toString());
+    shopOpeningBalance = num.tryParse(json['shopOpeningBalance'].toString());
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     category = json['category'] != null ? Category.fromJson(json['category']) : null;
@@ -50,9 +56,12 @@ class BusinessInformation {
   String? address;
   String? phoneNumber;
   String? pictureUrl;
+  String? invoiceLogo;
   String? language;
   String? vatName;
   String? vatNumber;
+  String? crNo;
+  String? saleRoundingOption;
   String? subscriptionDate;
   num? remainingShopBalance;
   num? shopOpeningBalance;

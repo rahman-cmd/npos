@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Screens/Products/Model/product_model.dart';
@@ -74,11 +73,6 @@ class ExpiredListState extends State<ExpiredList> {
             appBar: AppBar(
               title: Text(
                 'Expired List',
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w500,
-                ),
               ),
               iconTheme: const IconThemeData(color: Colors.black),
               centerTitle: true,
@@ -114,7 +108,6 @@ class ExpiredListState extends State<ExpiredList> {
                         value: value,
                         child: Text(
                           value,
-                          style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
                         ),
                       );
                     }).toList(),
@@ -141,14 +134,18 @@ class ExpiredListState extends State<ExpiredList> {
                                     showableProducts[i].productName.toString(),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                                    style: _theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 RichText(
                                   text: TextSpan(
-                                    text: 'Sale: ',
-                                    style: GoogleFonts.poppins(color: kGreyTextColor),
+                                    text: '${lang.S.of(context).sale}: ',
+                                    style: _theme.textTheme.bodyMedium?.copyWith(
+                                      color: kGreyTextColor,
+                                    ),
                                     children: [
                                       TextSpan(
                                         text: '$currency${showableProducts[i].productSalePrice.toString() ?? 'N/A'}',
@@ -164,8 +161,8 @@ class ExpiredListState extends State<ExpiredList> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: 'Code: ',
-                                    style: GoogleFonts.poppins(color: kGreyTextColor),
+                                    text: '${lang.S.of(context).code}: ',
+                                    style: _theme.textTheme.bodyMedium,
                                     children: [
                                       TextSpan(
                                         text: showableProducts[i].productCode ?? 'N/A',
@@ -179,8 +176,10 @@ class ExpiredListState extends State<ExpiredList> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
-                                      text: 'Purchase: ',
-                                      style: GoogleFonts.poppins(color: kGreyTextColor),
+                                      text: '${lang.S.of(context).purchase}: ',
+                                      style: _theme.textTheme.bodyMedium?.copyWith(
+                                        color: kGreyTextColor,
+                                      ),
                                       children: [
                                         TextSpan(
                                           text: '$currency${showableProducts[i].productPurchasePrice ?? '0'}',
@@ -199,8 +198,8 @@ class ExpiredListState extends State<ExpiredList> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   text: TextSpan(
-                                    text: 'Stock: ',
-                                    style: GoogleFonts.poppins(color: kGreyTextColor),
+                                    text: '${lang.S.of(context).stock}: ',
+                                    style: _theme.textTheme.bodyMedium,
                                     children: [
                                       TextSpan(
                                         text: showableProducts[i].productStock.toString(),
@@ -262,12 +261,16 @@ class ExpiredListState extends State<ExpiredList> {
                   children: [
                     Text(
                       lang.S.of(context).stockValue,
-                      style: kTextStyle.copyWith(fontWeight: FontWeight.bold, color: kTitleColor, fontSize: 14),
+                      style: _theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Text(
                       '$currency${totalParPrice.toInt().toString()}',
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.bold),
+                      style: _theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
 class TabButton extends StatelessWidget {
@@ -30,9 +29,9 @@ class TabButton extends StatelessWidget {
           onPressed: press,
           child: Text(
             title,
-            style: GoogleFonts.poppins(
-              color: text,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: text,
+                ),
           ),
         ),
       ),
@@ -57,6 +56,7 @@ class TabButtonSmall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       height: 40.0,
       width: 90.0,
@@ -69,7 +69,7 @@ class TabButtonSmall extends StatelessWidget {
           onPressed: press,
           child: Text(
             title,
-            style: GoogleFonts.poppins(
+            style: theme.textTheme.bodyLarge?.copyWith(
               color: text,
             ),
           ),
@@ -96,6 +96,7 @@ class TabButtonBig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       height: 40.0,
       decoration: BoxDecoration(
@@ -107,7 +108,7 @@ class TabButtonBig extends StatelessWidget {
           onPressed: press,
           child: Text(
             title,
-            style: GoogleFonts.poppins(
+            style: theme.textTheme.bodyMedium?.copyWith(
               color: text,
             ),
           ),

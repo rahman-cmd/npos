@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/register_screen.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -34,6 +33,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
         body: Consumer(builder: (context, ref, child) {
@@ -121,24 +121,22 @@ class _LoginFormState extends State<LoginForm> {
                           },
                           child: Text(
                             lang.S.of(context).forgotPassword,
-                            style: GoogleFonts.poppins(
+                            style: theme.textTheme.bodyLarge?.copyWith(
                               color: kGreyTextColor,
-                              fontSize: 15.0,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  ButtonGlobalWithoutIcon(
-                      buttontext: lang.S.of(context).logIn,
-                      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-                      onPressed: () {
-                        if (validateAndSave()) {
-                          // loginProvider.signIn(context);
-                        }
-                      },
-                      buttonTextColor: Colors.white),
+                  ElevatedButton(
+                    child: Text(lang.S.of(context).logIn),
+                    onPressed: () {
+                      if (validateAndSave()) {
+                        // loginProvider.signIn(context);
+                      }
+                    },
+                  ),
                   Visibility(
                     visible: widget.isEmailLogin,
                     child: Row(
@@ -146,7 +144,7 @@ class _LoginFormState extends State<LoginForm> {
                       children: [
                         Text(
                           lang.S.of(context).noAcc,
-                          style: GoogleFonts.poppins(color: kGreyTextColor, fontSize: 15.0),
+                          style: theme.textTheme.bodyLarge?.copyWith(color: kGreyTextColor),
                         ),
                         TextButton(
                           onPressed: () {
@@ -156,10 +154,9 @@ class _LoginFormState extends State<LoginForm> {
                           },
                           child: Text(
                             lang.S.of(context).register,
-                            style: GoogleFonts.poppins(
+                            style: theme.textTheme.titleMedium?.copyWith(
                               color: kMainColor,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),

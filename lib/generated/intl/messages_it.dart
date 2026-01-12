@@ -76,7 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tutte le soluzioni aziendali",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro è una soluzione aziendale completa con gestione di magazzino, contabilità, vendite, spese e perdite/profitti.",
+      "NPOS è una soluzione aziendale completa con gestione di magazzino, contabilità, vendite, spese e perdite/profitti.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Tutto il Tempo"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Già aggiunto"),
@@ -142,7 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Scegli le tue funzionalità",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Le funzionalità sono la parte importante che rende PosPro diverso dalle soluzioni tradizionali.",
+      "Le funzionalità sono la parte importante che rende NPOS diverso dalle soluzioni tradizionali.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -246,7 +246,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Facile da usare il POS mobile",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "L\'app PosPro è gratuita e facile da usare. In effetti, è uno dei migliori sistemi POS al mondo.",
+      "L\'app NPOS è gratuita e facile da usare. In effetti, è uno dei migliori sistemi POS al mondo.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Modificare"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -621,7 +621,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Seleziona una categoria di spesa",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Powered By NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Supporto per app Android e iOS",
     ),

@@ -56,7 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "جميع حلول الأعمال",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "POSpro هو حلاً شاملاً للأعمال مع الأسهم والحسابات والمبيعات والمصروفات والخسائر / الأرباح.",
+      "NPOS هو حلاً شاملاً للأعمال مع الأسهم والحسابات والمبيعات والمصروفات والخسائر / الأرباح.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("كل الوقت"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("اسم التصنيف"),
@@ -108,7 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chooseSupplier": MessageLookupByLibrary.simpleMessage("اختر موردًا"),
     "choseYourFeature": MessageLookupByLibrary.simpleMessage("اختر ميزاتك"),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "الميزات هي الجزء الهام الذي يجعلPosPro مختلفًا عن الحلول التقليدية.",
+      "الميزات هي الجزء الهام الذي يجعلNPOS مختلفًا عن الحلول التقليدية.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("كلارنس"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage("انقر للاتصال"),
@@ -205,7 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "سهولة استخدام نقاط البيع المحمولة",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "تطبيق POSpro مجاني وسهل الاستخدام. في الواقع، إنه واحد من أفضل أنظمة نقاط البيع حول العالم.",
+      "تطبيق NPOS مجاني وسهل الاستخدام. في الواقع، إنه واحد من أفضل أنظمة نقاط البيع حول العالم.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("يحرر"),
     "editPhone": MessageLookupByLibrary.simpleMessage("تحرير رقم الهاتف؟"),
@@ -543,8 +543,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "يرجى اختيار فئة نفقات",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "مشغل بواسطة Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "مشغل بواسطة NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "دعم تطبيقات أندرويد و iOS",

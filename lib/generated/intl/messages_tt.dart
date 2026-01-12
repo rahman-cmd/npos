@@ -69,7 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Барлык бизнес чишемнәре",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro - запас, хисап, сату, чыгым һәм югалту/файда белән тулы бизнес чишеме.",
+      "NPOS - запас, хисап, сату, чыгым һәм югалту/файда белән тулы бизнес чишеме.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Барлык вакыт"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Алдан өстәлгән"),
@@ -131,7 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Үз функцияләрегезне сайлагыз",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Функцияләр - POSproны традицион чишемнәрдән аерып торучы мөһим өлеш.",
+      "Функцияләр - NPOSны традицион чишемнәрдән аерып торучы мөһим өлеш.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Кларенс"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -237,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Мобиль POSны куллану җиңел",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro кушымтасы бушлай, куллану җиңел. Чыннан да, ул дөньяда иң яхшы POS системаларының берсе.",
+      "NPOS кушымтасы бушлай, куллану җиңел. Чыннан да, ул дөньяда иң яхшы POS системаларының берсе.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Үзгәртергә"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -598,8 +598,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Зинһар, чыгым категориясен сайлагыз",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Acnoo тарафыннан эшләнгән",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "NPOS тарафыннан эшләнгән",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android & iOS кушымта ярдәме",

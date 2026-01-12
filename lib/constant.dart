@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const kMainColor = Color(0xFF1B5E20);
 const kGreyTextColor = Color(0xFF828282);
@@ -16,8 +15,7 @@ const kNeutralColor = Color(0xFF4D4D4D);
 const kBorder = Color(0xFF999999);
 const updateBorderColor = Color(0xffD8D8D8);
 bool isPrintEnable = false;
-List<String> paymentsTypeList = ['Cash', 'Card', 'Check', 'Mobile Pay', 'Due'];
-const String appVersion = '4.4';
+const String appVersion = '4.9';
 String noProductImageUrl = 'images/no_product_image.png';
 
 ///_______Purchase_Code________________________________________
@@ -33,6 +31,7 @@ const String logo = 'images/logo.png';
 const String appsName = 'NPOS';
 const String companyWebsite = 'https://npos.vip';
 const String companyName = 'Npos';
+bool connected = false;
 
 const kButtonDecoration = BoxDecoration(
   borderRadius: BorderRadius.all(
@@ -53,9 +52,9 @@ const kInputDecoration = InputDecoration(
   ),
 );
 
-final gTextStyle = GoogleFonts.poppins(
-  color: Colors.white,
-);
+// final gTextStyle = GoogleFonts.poppins(
+//   color: Colors.white,
+// );
 
 OutlineInputBorder outlineInputBorder() {
   return OutlineInputBorder(
@@ -155,6 +154,13 @@ Map<String, String> languageMap = {
   'Tatar': 'tt',
   'Zulu': 'zu',
 };
+String formatPointNumber(num value) {
+  if (value % 1 == 0) {
+    return value.toInt().toString();
+  } else {
+    return value.toStringAsFixed(2);
+  }
+}
 
 String? selectedLanguage = languageMap['English'];
 

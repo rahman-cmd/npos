@@ -8,7 +8,7 @@ import '../../../constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 class SetNewPassword extends StatefulWidget {
-  const SetNewPassword({Key? key,  required this.email}) : super(key: key);
+  const SetNewPassword({super.key, required this.email});
 
   final String email;
 
@@ -58,15 +58,15 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                   lang.S.of(context).setUpNewPassword,
-                   // 'Set Up New Password',
+                    lang.S.of(context).setUpNewPassword,
+                    // 'Set Up New Password',
                     style: textTheme.titleMedium?.copyWith(fontSize: 24.0),
                   ),
                   const SizedBox(height: 8.0),
                   Text(
                     lang.S.of(context).resetPassword,
                     //'Reset your password to recovery and log in your account',
-                    style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor,fontSize: 16),textAlign: TextAlign.center,
+                    style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor, fontSize: 16), textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24.0),
                   TextFormField(
@@ -135,8 +135,8 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                     },
                   ),
                   const SizedBox(height: 24.0),
-                  UpdateButton(
-                    onpressed: () async {
+                  ElevatedButton(
+                    onPressed: () async {
                       if (isClicked) {
                         return;
                       }
@@ -151,7 +151,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                         }
                       }
                     },
-                    text: lang.S.of(context).save,
+                    child: Text(lang.S.of(context).save),
                     //'Save',
                   ),
                 ],

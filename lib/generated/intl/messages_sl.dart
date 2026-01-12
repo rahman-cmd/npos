@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vse poslovne rešitve",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro je popolna poslovna rešitev s skladiščem, računovodstvom, prodajo, stroški in izgubo / dobičkom.",
+      "NPOS je popolna poslovna rešitev s skladiščem, računovodstvom, prodajo, stroški in izgubo / dobičkom.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Ves čas"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Že dodano"),
@@ -128,7 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Izberite svoje funkcije",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funkcije so pomemben del, ki ločuje POSpro od tradicionalnih rešitev.",
+      "Funkcije so pomemben del, ki ločuje NPOS od tradicionalnih rešitev.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -225,7 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Enostaven za uporabo mobilni POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Aplikacija POSpro je brezplačna in enostavna za uporabo. Pravzaprav je eden najboljših POS sistemov na svetu.",
+      "Aplikacija NPOS je brezplačna in enostavna za uporabo. Pravzaprav je eden najboljših POS sistemov na svetu.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Uredi"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -601,7 +601,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Prosimo, izberite kategorijo stroškov",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Poganja Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Poganja NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Premium podpora strankam",
     ),

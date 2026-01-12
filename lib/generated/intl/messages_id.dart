@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Semua Solusi Bisnis",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro adalah solusi bisnis lengkap dengan stok, akun, penjualan, pengeluaran, dan kerugian/keuntungan.",
+      "NPOS adalah solusi bisnis lengkap dengan stok, akun, penjualan, pengeluaran, dan kerugian/keuntungan.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Seluruh Waktu"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Sudah ditambahkan"),
@@ -128,7 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pilih Fitur Anda",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Fitur-fitur penting yang membuat PosPro berbeda dari solusi tradisional.",
+      "Fitur-fitur penting yang membuat NPOS berbeda dari solusi tradisional.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -231,7 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mudah digunakan dalam Poin Penjualan Mobile",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Aplikasi PosPro gratis dan mudah digunakan. Faktanya, ini adalah salah satu sistem POS terbaik di seluruh dunia.",
+      "Aplikasi NPOS gratis dan mudah digunakan. Faktanya, ini adalah salah satu sistem POS terbaik di seluruh dunia.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Sunting"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Sunting Nomor Telepon?"),
@@ -611,8 +611,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Silakan pilih kategori pengeluaran",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Didukung oleh Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Didukung oleh NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Dukungan Aplikasi Android & iOS",

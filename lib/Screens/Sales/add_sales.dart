@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_pos/Provider/add_to_cart.dart';
@@ -14,6 +13,7 @@ import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Sales/Repo/sales_repo.dart';
 import 'package:mobile_pos/Screens/Sales/sales_add_to_cart_sales_widget.dart';
 import 'package:mobile_pos/Screens/Sales/sales_products_list_screen.dart';
+import 'package:mobile_pos/Screens/Settings/sales%20settings/model/amount_rounding_dropdown_model.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
@@ -24,6 +24,7 @@ import '../../constant.dart';
 import '../../currency.dart';
 import '../../model/add_to_cart_model.dart';
 import '../../model/sale_transaction_model.dart';
+import '../../widgets/payment_type/_payment_type_dropdown.dart';
 import '../Customers/Model/parties_model.dart';
 import '../Home/home.dart';
 import '../invoice_details/sales_invoice_details_screen.dart';
@@ -31,7 +32,11 @@ import '../vat_&_tax/model/vat_model.dart';
 import '../vat_&_tax/provider/text_repo.dart';
 
 class AddSalesScreen extends ConsumerStatefulWidget {
-  AddSalesScreen({super.key, required this.customerModel, this.transitionModel});
+  AddSalesScreen({
+    super.key,
+    required this.customerModel,
+    this.transitionModel,
+  });
 
   Party? customerModel;
   final SalesTransactionModel? transitionModel;
@@ -41,7 +46,7 @@ class AddSalesScreen extends ConsumerStatefulWidget {
 }
 
 class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
-  String? paymentType = 'Cash';
+  int? paymentType;
 
   bool isProcessing = false;
 
@@ -68,6 +73,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
       } else {
         discountType = 'Percent';
       }
+      paymentType = widget.transitionModel?.paymentTypeId;
       addProductsInCartFromEditList();
     }
     super.initState();
@@ -83,13 +89,14 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
 
   void addProductsInCartFromEditList() {
     final cart = ref.read(cartNotifier);
+    cart.roundedOption = widget.transitionModel?.roundingOption ?? roundingMethods[0].value;
 
     if (widget.transitionModel?.salesDetails?.isNotEmpty ?? false) {
       for (var detail in widget.transitionModel!.salesDetails!) {
         AddToCartModel cartItem = AddToCartModel(
           productName: detail.product?.productName,
           unitPrice: detail.price.toString(),
-          quantity: detail.quantities?.round() ?? 0,
+          quantity: detail.quantities ?? 0,
           productCode: detail.product?.productCode,
           productPurchasePrice: detail.product?.productPurchasePrice,
           stock: detail.product?.productStock,
@@ -98,6 +105,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
         cart.addToCartRiverPod(cartItem: cartItem, fromEditSales: true);
       }
     }
+
     cart.discountAmount = widget.transitionModel?.discountAmount ?? 0;
     noteController.text = widget.transitionModel?.meta?.note?.toString() ?? '';
     if (widget.transitionModel?.discountType == 'flat') {
@@ -145,9 +153,6 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).addSales,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -374,12 +379,12 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                       contentPadding: const EdgeInsets.all(0),
                                       title: Text(providerData.cartItemList[index].productName.toString()),
                                       subtitle: Text(
-                                          '${providerData.cartItemList[index].quantity} X ${providerData.cartItemList[index].unitPrice} = ${(double.parse(providerData.cartItemList[index].unitPrice) * providerData.cartItemList[index].quantity).toStringAsFixed(2)}'),
+                                          '${formatPointNumber(providerData.cartItemList[index].quantity)} X ${providerData.cartItemList[index].unitPrice} = ${formatPointNumber((double.parse(providerData.cartItemList[index].unitPrice) * providerData.cartItemList[index].quantity))}'),
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           SizedBox(
-                                            width: 80,
+                                            width: 90,
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
@@ -402,14 +407,14 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                                 ),
                                                 const SizedBox(width: 5),
                                                 SizedBox(
-                                                  width: 30,
+                                                  width: 40,
                                                   child: Center(
                                                     child: Text(
-                                                      providerData.cartItemList[index].quantity.toString(),
-                                                      style: GoogleFonts.poppins(
-                                                        color: kGreyTextColor,
-                                                        fontSize: 15.0,
-                                                      ),
+                                                      formatPointNumber(providerData.cartItemList[index].quantity),
+                                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                                            color: kGreyTextColor,
+                                                          ),
+                                                      maxLines: 1,
                                                     ),
                                                   ),
                                                 ),
@@ -485,7 +490,6 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                   Container(
                     decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(10)), border: Border.all(color: Colors.grey.shade300, width: 1)),
                     child: Column(
-                      spacing: 7,
                       children: [
                         ///________Total_title_reader_________________________
                         Container(
@@ -499,7 +503,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                providerData.totalAmount.toStringAsFixed(2),
+                                formatPointNumber(providerData.totalAmount),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -742,8 +746,50 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                providerData.totalPayableAmount.toStringAsFixed(2),
+                                formatPointNumber(providerData.actualTotalAmount),
                                 style: const TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ///________Rounded Total_______________________________________
+                        Visibility(
+                          visible: providerData.roundingAmount != 0,
+                          child: Column(
+                            children: [
+                              ///________Rounded Amount_______________________________________
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10, left: 10, top: 7),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Rounding (+/-)',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      formatPointNumber(providerData.roundingAmount),
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10, left: 10, top: 7),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Rounded Total',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      formatPointNumber(providerData.totalPayableAmount),
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -756,7 +802,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                lang.S.of(context).paidAmount,
+                                lang.S.of(context).receivedAmount,
                                 style: const TextStyle(fontSize: 16),
                               ),
                               SizedBox(
@@ -781,39 +827,45 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                           ),
                         ),
 
-                        ///________Return_Amount_________________________________
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                lang.S.of(context).returnAmount,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              Text(
-                                providerData.changeAmount.toStringAsFixed(2),
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ],
+                        ///________Change amount_________________________________
+                        Visibility(
+                          visible: providerData.changeAmount > 0,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10, left: 10, top: 13, bottom: 13),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Change Amount',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  formatPointNumber(providerData.changeAmount),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
                         ///_______Due_amount_____________________________________
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10, left: 10, top: 13, bottom: 13),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                lang.S.of(context).dueAmount,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              Text(
-                                providerData.dueAmount.toStringAsFixed(2),
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ],
+                        Visibility(
+                          visible: providerData.dueAmount > 0 || (providerData.changeAmount == 0 && providerData.dueAmount == 0),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10, left: 10, top: 13, bottom: 13),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  lang.S.of(context).dueAmount,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  formatPointNumber(providerData.dueAmount),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -824,44 +876,17 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                   ///_______Payment_Type_______________________________
                   const Divider(height: 0),
                   const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            lang.S.of(context).paymentTypes,
-                            style: const TextStyle(fontSize: 16, color: Colors.black54),
-                          ),
-                          const SizedBox(width: 5),
-                          const Icon(
-                            Icons.wallet,
-                            color: Colors.green,
-                          )
-                        ],
-                      ),
-                      DropdownButton(
-                        value: paymentType,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: paymentsTypeList.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            paymentType = newValue.toString();
-                          });
-                        },
-                      ),
-                    ],
+                  PaymentTypeSelectorDropdown(
+                    value: paymentType,
+                    onChanged: (value) => setState(
+                      () => paymentType = value,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   const Divider(height: 0),
 
                   const SizedBox(height: 30),
-                  Container(
+                  SizedBox(
                     height: 56, // Set a fixed height for the Row
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -1002,6 +1027,10 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               EasyLoading.showError('Sales on due are not allowed for walk-in customers.');
                               return;
                             }
+                            if (paymentType == null) {
+                              EasyLoading.showError('Please select a payment type');
+                              return;
+                            }
 
                             ///_______ Prevent multiple clicks________________
                             if (isProcessing) return;
@@ -1017,7 +1046,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               List<CartSaleProducts> selectedProductList = providerData.cartItemList.map((element) {
                                 return CartSaleProducts(
                                   productId: element.productId.toInt(),
-                                  quantities: element.quantity.toInt(),
+                                  quantities: element.quantity,
                                   price: num.tryParse(element.unitPrice.toString()) ?? 0,
                                   lossProfit: (element.quantity * (num.tryParse(element.unitPrice.toString()) ?? 0)) -
                                       (element.quantity * (num.tryParse(element.productPurchasePrice.toString()) ?? 0)),
@@ -1038,7 +1067,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   totalAmount: providerData.totalPayableAmount,
                                   purchaseDate: selectedDate.toString(),
                                   products: selectedProductList,
-                                  paymentType: paymentType ?? 'Cash',
+                                  paymentType: paymentType?.toString() ?? '',
                                   partyId: widget.customerModel?.id,
                                   customerPhone: widget.customerModel == null ? phoneController.text : null,
                                   vatAmount: providerData.vatAmount,
@@ -1047,8 +1076,11 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   isPaid: providerData.isFullPaid,
                                   dueAmount: providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
-                                  paidAmount: providerData.receiveAmount,
-                                  discountType: discountType.toLowerCase() ?? '',
+                                  changeAmount: providerData.changeAmount,
+                                  discountType: discountType.toLowerCase(),
+                                  roundedOption: providerData.roundedOption,
+                                  roundingAmount: providerData.roundingAmount,
+                                  unRoundedTotalAmount: providerData.actualTotalAmount,
                                   note: noteController.text,
                                   shippingCharge: providerData.finalShippingCharge,
                                   image: imageFile,
@@ -1067,19 +1099,22 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   id: widget.transitionModel?.id ?? 0,
                                   ref: ref,
                                   context: context,
+                                  roundingAmount: providerData.roundingAmount,
                                   totalAmount: providerData.totalPayableAmount,
                                   purchaseDate: selectedDate.toString(),
                                   products: selectedProductList,
-                                  paymentType: paymentType ?? 'Cash',
+                                  paymentType: paymentType?.toString() ?? '',
                                   partyId: widget.transitionModel?.party?.id,
+                                  roundedOption: providerData.roundedOption,
                                   vatAmount: providerData.vatAmount,
                                   vatPercent: providerData.selectedVat != null ? providerData.selectedVat!.rate! : 0,
                                   vatId: providerData.selectedVat?.id,
                                   isPaid: providerData.isFullPaid,
                                   dueAmount: providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
-                                  paidAmount: providerData.receiveAmount,
-                                  discountType: discountType.toLowerCase() ?? '',
+                                  unRoundedTotalAmount: providerData.actualTotalAmount,
+                                  changeAmount: providerData.changeAmount,
+                                  discountType: discountType.toLowerCase(),
                                   note: noteController.text,
                                   shippingCharge: providerData.finalShippingCharge,
                                   image: imageFile,

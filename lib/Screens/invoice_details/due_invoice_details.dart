@@ -197,12 +197,36 @@ class _DueInvoiceDetailsState extends State<DueInvoiceDetails> {
                                   text: '${_lang.collectedBys} : ',
                                   children: [
                                     TextSpan(
-                                      text: widget.dueCollection.user?.name ?? '',
+                                      text: widget.dueCollection.user?.role == "shop-owner" ? 'Admin' : widget.dueCollection.user?.name ?? '',
                                     ),
                                   ],
                                 ),
                                 textAlign: TextAlign.end,
                               ),
+                              Text.rich(
+                                TextSpan(
+                                  text: '${widget.personalInformationModel.address ?? 'Address'} : ',
+                                  children: [
+                                    TextSpan(
+                                      text: widget.personalInformationModel.address ?? '',
+                                    )
+                                  ],
+                                ),
+                                textAlign: TextAlign.end,
+                              ).visible(widget.personalInformationModel.address != null),
+
+                              Text.rich(
+                                TextSpan(
+                                  text: '${widget.personalInformationModel.crNo ?? 'C.R'} : ',
+                                  children: [
+                                    TextSpan(
+                                      text: widget.personalInformationModel.crNo ?? '',
+                                    )
+                                  ],
+                                ),
+                                textAlign: TextAlign.end,
+                              ).visible(widget.personalInformationModel.crNo != null),
+
                               Text.rich(
                                 TextSpan(
                                   text: '${widget.personalInformationModel.vatName ?? 'VAT Number'} : ',
@@ -337,7 +361,7 @@ class _DueInvoiceDetailsState extends State<DueInvoiceDetails> {
                     Row(
                       children: [
                         Text(
-                          "${_lang.paidVia}: ${widget.dueCollection.paymentType}",
+                          "${_lang.paidVia}: ${widget.dueCollection.paymentType?.name??'N/A'}",
                           style: const TextStyle(
                             color: Colors.black,
                           ),

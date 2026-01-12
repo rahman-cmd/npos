@@ -905,10 +905,10 @@ class S {
     );
   }
 
-  /// `POSpro app is free, easy to use. In fact, it's one of the best  POS systems around the world.`
+  /// `NPOS app is free, easy to use. In fact, it's one of the best  POS systems around the world.`
   String get easytheusedesciption {
     return Intl.message(
-      'POSpro app is free, easy to use. In fact, it\'s one of the best  POS systems around the world.',
+      'NPOS app is free, easy to use. In fact, it\'s one of the best  POS systems around the world.',
       name: 'easytheusedesciption',
       desc: '',
       args: [],
@@ -925,10 +925,10 @@ class S {
     );
   }
 
-  /// `Features are the important part which makes POSpro different from traditional solutions.`
+  /// `Features are the important part which makes NPOS different from traditional solutions.`
   String get choseyourfeatureDesciption {
     return Intl.message(
-      'Features are the important part which makes POSpro different from traditional solutions.',
+      'Features are the important part which makes NPOS different from traditional solutions.',
       name: 'choseyourfeatureDesciption',
       desc: '',
       args: [],
@@ -945,10 +945,10 @@ class S {
     );
   }
 
-  /// `PosPro is a complete business solution with stock, account, sales, expense & loss/profit.`
+  /// `NPOS is a complete business solution with stock, account, sales, expense & loss/profit.`
   String get allBusinessolutionDescrip {
     return Intl.message(
-      'PosPro is a complete business solution with stock, account, sales, expense & loss/profit.',
+      'NPOS is a complete business solution with stock, account, sales, expense & loss/profit.',
       name: 'allBusinessolutionDescrip',
       desc: '',
       args: [],
@@ -995,11 +995,11 @@ class S {
     );
   }
 
-  /// `Powered By Acnoo`
-  String get powerdedByAcnoo {
+  /// `Powered By NPOS`
+  String get powerdedByNPOS {
     return Intl.message(
-      'Powered By Acnoo',
-      name: 'powerdedByAcnoo',
+      'Powered By NPOS',
+      name: 'powerdedByNPOS',
       desc: '',
       args: [],
     );

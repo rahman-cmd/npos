@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "అన్ని వ్యాపార పరిష్కారాలు",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro అనేది స్టాక్, అకౌంట్, సేల్స్, ఎక్స్‌పెన్స్ & లాస్/ప్రాఫిట్‌తో కూడిన పూర్తి వ్యాపార పరిష్కారం.",
+      "NPOS అనేది స్టాక్, అకౌంట్, సేల్స్, ఎక్స్‌పెన్స్ & లాస్/ప్రాఫిట్‌తో కూడిన పూర్తి వ్యాపార పరిష్కారం.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("అన్ని సమయాలలో"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage(
@@ -138,7 +138,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "మీ ఫీచర్‌లను ఎంచుకోండి",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "ఫీచర్‌లు POSpro ని సాంప్రదాయ పరిష్కారాల నుండి భిన్నంగా చేసే ముఖ్యమైన భాగం.",
+      "ఫీచర్‌లు NPOS ని సాంప్రదాయ పరిష్కారాల నుండి భిన్నంగా చేసే ముఖ్యమైన భాగం.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("క్లారెన్స్"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -247,7 +247,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "మొబైల్ పాస్‌ని ఉపయోగించడం సులభం",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro app ఉచితం, ఉపయోగించడానికి సులభం. నిజానికి, ఇది ప్రపంచంలోని ఉత్తమ POS సిస్టమ్‌లలో ఒకటి.",
+      "NPOS app ఉచితం, ఉపయోగించడానికి సులభం. నిజానికి, ఇది ప్రపంచంలోని ఉత్తమ POS సిస్టమ్‌లలో ఒకటి.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("సవరించు"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -639,7 +639,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "దయచేసి ఖర్చు వర్గాన్ని ఎంచుకోండి",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Powered By NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "ప్రీమియం కస్టమర్ మద్దతు",
     ),

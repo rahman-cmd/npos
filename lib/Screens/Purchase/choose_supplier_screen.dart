@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/Provider/add_to_cart_purchase.dart';
@@ -42,9 +41,6 @@ class _PurchaseContactsState extends State<PurchaseContacts> {
               backgroundColor: Colors.white,
               title: Text(
                 lang.S.of(context).chooseSupplier,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                ),
               ),
               centerTitle: true,
               iconTheme: const IconThemeData(color: Colors.black),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -15,6 +14,7 @@ class CheckEMail extends StatefulWidget {
 class _CheckEMailState extends State<CheckEMail> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -36,10 +36,9 @@ class _CheckEMailState extends State<CheckEMail> {
                     ),
                     Text(
                       lang.S.of(context).gotEmail,
-                      style: GoogleFonts.poppins(
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
                       ),
                     ),
                     Container(
@@ -48,18 +47,14 @@ class _CheckEMailState extends State<CheckEMail> {
                       child: Text(
                         lang.S.of(context).sendEmail,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize: 20.0,
-                          color: Colors.black,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     Text(
                       'example@johndoe.com',
-                      style: GoogleFonts.poppins(
-                        fontSize: 20.0,
-                        color: Colors.black,
-                      ),
+                      style: theme.textTheme.titleLarge,
                     ),
                   ],
                 ),
@@ -68,11 +63,9 @@ class _CheckEMailState extends State<CheckEMail> {
                 flex: 1,
                 child: Column(
                   children: [
-                    ButtonGlobalWithoutIcon(
-                      buttontext: lang.S.of(context).checkEmail,
-                      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                    ElevatedButton(
                       onPressed: null,
-                      buttonTextColor: Colors.white,
+                      child: Text(lang.S.of(context).checkEmail),
                     ),
                     TextButton(
                       onPressed: () {
@@ -80,7 +73,7 @@ class _CheckEMailState extends State<CheckEMail> {
                       },
                       child: Text(
                         lang.S.of(context).checkEmail,
-                        style: GoogleFonts.poppins(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           color: kMainColor,
                         ),
                       ),

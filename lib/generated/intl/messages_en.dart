@@ -66,7 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "All business solutions",
         ),
         "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-          "PosPro is a complete business solution with stock, account, sales, expense & loss/profit.",
+          "NPOS is a complete business solution with stock, account, sales, expense & loss/profit.",
         ),
         "allTime": MessageLookupByLibrary.simpleMessage("All Time"),
         "alreadyAdded": MessageLookupByLibrary.simpleMessage("Already Added"),
@@ -120,7 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Chose Your Features",
         ),
         "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-          "Features are the important part which makes POSpro different from traditional solutions.",
+          "Features are the important part which makes NPOS different from traditional solutions.",
         ),
         "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
         "clickToConnect": MessageLookupByLibrary.simpleMessage("Click to connect"),
@@ -211,7 +211,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Easy to use mobile pos",
         ),
         "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-          "POSpro app is free, easy to use. In fact, it\'s one of the best  POS systems around the world.",
+          "NPOS app is free, easy to use. In fact, it\'s one of the best  POS systems around the world.",
         ),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editPhone": MessageLookupByLibrary.simpleMessage("Edit Phone Number ?"),
@@ -546,7 +546,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
           "Please select a expense category",
         ),
-        "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
+        "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Powered By NPOS"),
         "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
           "Android & iOS App Support",
         ),

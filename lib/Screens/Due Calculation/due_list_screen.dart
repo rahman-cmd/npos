@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Customers/Model/parties_model.dart';
@@ -37,9 +36,6 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
           backgroundColor: Colors.white,
           title: Text(
             lang.S.of(context).dueList,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-            ),
           ),
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),

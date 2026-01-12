@@ -5,7 +5,7 @@ import 'package:mobile_pos/constant.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
-import '../../PDF Invoice/generate_pdf.dart';
+import '../../PDF Invoice/pdf_common_functions.dart';
 import '../../currency.dart';
 
 class CustomerAllTransactionScreen extends StatefulWidget {

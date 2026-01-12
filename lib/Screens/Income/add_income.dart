@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Income/Model/income_category.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
+import 'package:mobile_pos/widgets/payment_type/_payment_type_dropdown.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../GlobalComponents/glonal_popup.dart';
@@ -44,8 +43,8 @@ class _AddIncomeState extends State<AddIncome> {
     'Due',
   ];
 
-  String selectedPaymentType = 'Cash';
-
+  int? selectedPaymentType;
+  /*
   DropdownButton<String> getPaymentMethods() {
     List<DropdownMenuItem<String>> dropDownItems = [];
     for (String des in paymentMethods) {
@@ -65,6 +64,7 @@ class _AddIncomeState extends State<AddIncome> {
       },
     );
   }
+  */
 
   @override
   void initState() {
@@ -74,7 +74,11 @@ class _AddIncomeState extends State<AddIncome> {
   DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(context: context, initialDate: selectedDate, firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -103,9 +107,6 @@ class _AddIncomeState extends State<AddIncome> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).addIncome,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -121,27 +122,31 @@ class _AddIncomeState extends State<AddIncome> {
                     child: Column(
                       children: [
                         ///_______date________________________________
-                        FormField(
-                          builder: (FormFieldState<dynamic> field) {
-                            return InputDecorator(
-                              decoration: kInputDecoration.copyWith(
-                                suffixIcon: const Icon(IconlyLight.calendar, color: kGreyTextColor),
-                                // enabledBorder: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.all(20),
-                                labelText: lang.S.of(context).incomeDate,
-                                hintText: lang.S.of(context).enterExpenseDate,
-                              ),
-                              child: Text(
-                                '${DateFormat.d().format(selectedDate)} ${DateFormat.MMM().format(selectedDate)} ${DateFormat.y().format(selectedDate)}',
-                              ),
-                            );
-                          },
-                        ).onTap(() => _selectDate(context)),
+                        SizedBox(
+                          height: 48,
+                          child: FormField(
+                            builder: (FormFieldState<dynamic> field) {
+                              return InputDecorator(
+                                decoration: kInputDecoration.copyWith(
+                                  suffixIcon: const Icon(IconlyLight.calendar,
+                                      color: kGreyTextColor),
+                                  // enabledBorder: const OutlineInputBorder(),
+                                  contentPadding: const EdgeInsets.all(8),
+                                  labelText: lang.S.of(context).incomeDate,
+                                  hintText: lang.S.of(context).enterExpenseDate,
+                                ),
+                                child: Text(
+                                  '${DateFormat.d().format(selectedDate)} ${DateFormat.MMM().format(selectedDate)} ${DateFormat.y().format(selectedDate)}',
+                                ),
+                              );
+                            },
+                          ).onTap(() => _selectDate(context)),
+                        ),
                         const SizedBox(height: 20),
-        
+
                         ///_________category_______________________________________________
                         Container(
-                          height: 60.0,
+                          height: 48.0,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
@@ -149,13 +154,16 @@ class _AddIncomeState extends State<AddIncome> {
                           ),
                           child: GestureDetector(
                             onTap: () async {
-                              selectedCategory = await const IncomeCategoryList().launch(context);
+                              selectedCategory =
+                                  await const IncomeCategoryList()
+                                      .launch(context);
                               setState(() {});
                             },
                             child: Row(
                               children: [
                                 const SizedBox(width: 10.0),
-                                Text(selectedCategory?.categoryName ?? lang.S.of(context).selectCategory),
+                                Text(selectedCategory?.categoryName ??
+                                    lang.S.of(context).selectCategory),
                                 const Spacer(),
                                 const Icon(Icons.keyboard_arrow_down),
                                 const SizedBox(
@@ -166,7 +174,7 @@ class _AddIncomeState extends State<AddIncome> {
                           ),
                         ),
                         const SizedBox(height: 20),
-        
+
                         ///________Expense_for_______________________________________________
                         TextFormField(
                           showCursor: true,
@@ -188,30 +196,45 @@ class _AddIncomeState extends State<AddIncome> {
                             hintText: lang.S.of(context).enterName,
                           ),
                         ),
-                        const SizedBox(height: 20),
-        
+                        const SizedBox.square(dimension: 20),
+
                         ///________PaymentType__________________________________
-                        FormField(
-                          builder: (FormFieldState<dynamic> field) {
-                            return InputDecorator(
-                              decoration: kInputDecoration.copyWith(
-                                  // enabledBorder: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.all(8.0),
-                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                  labelText: lang.S.of(context).paymentTypes),
-                              child: DropdownButtonHideUnderline(
-                                child: getPaymentMethods(),
-                              ),
-                            );
-                          },
+                        /*
+                        SizedBox(
+                          height: 48,
+                          child: FormField(
+                            builder: (FormFieldState<dynamic> field) {
+                              return InputDecorator(
+                                decoration: kInputDecoration.copyWith(
+                                    // enabledBorder: const OutlineInputBorder(),
+                                    contentPadding: const EdgeInsets.all(8.0),
+                                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                                    labelText: lang.S.of(context).paymentTypes),
+                                child: DropdownButtonHideUnderline(
+                                  child: getPaymentMethods(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        */
+                        PaymentTypeSelectorDropdown(
+                          isFormField: true,
+                          value: selectedPaymentType,
+                          onChanged: (v) => setState(
+                            () => selectedPaymentType = v,
+                          ),
                         ),
                         const SizedBox(height: 20),
-        
+
                         ///_________________Amount_____________________________
                         TextFormField(
                           showCursor: true,
                           controller: incomeAmountController,
-                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d{0,2}'))
+                          ],
                           validator: (value) {
                             if (value.isEmptyOrNull) {
                               //return 'Please Enter Amount';
@@ -233,9 +256,9 @@ class _AddIncomeState extends State<AddIncome> {
                           ),
                           keyboardType: TextInputType.number,
                         ),
-        
+
                         const SizedBox(height: 20),
-        
+
                         ///_______reference_________________________________
                         TextFormField(
                           showCursor: true,
@@ -254,7 +277,7 @@ class _AddIncomeState extends State<AddIncome> {
                           ),
                         ),
                         const SizedBox(height: 20),
-        
+
                         ///_________note____________________________________________________
                         TextFormField(
                           showCursor: true,
@@ -277,38 +300,45 @@ class _AddIncomeState extends State<AddIncome> {
                           ),
                         ),
                         const SizedBox(height: 20),
-        
+
                         ///_______button_________________________________
-                        ButtonGlobal(
-                          buttontext: lang.S.of(context).continueButton,
-                          buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                        ElevatedButton.icon(
+                          iconAlignment: IconAlignment.end,
                           onPressed: () async {
                             if (validateAndSave()) {
                               if (selectedCategory != null) {
                                 EasyLoading.show();
                                 IncomeRepo repo = IncomeRepo();
-        
+
                                 await repo.createIncome(
                                   ref: ref,
                                   context: context,
-                                  amount: num.tryParse(incomeAmountController.text) ?? 0,
+                                  amount: num.tryParse(
+                                          incomeAmountController.text) ??
+                                      0,
                                   expenseCategoryId: selectedCategory?.id ?? 0,
                                   expanseFor: incomeForNameController.text,
-                                  paymentType: selectedPaymentType,
+                                  paymentType:
+                                      selectedPaymentType?.toString() ?? '',
                                   referenceNo: incomeRefController.text,
                                   expenseDate: selectedDate.toString(),
                                   note: incomeNoteController.text,
                                 );
                               } else {
                                 EasyLoading.showError(
-                                  lang.S.of(context).pleaseSelectAExpenseCategory,
+                                  lang.S
+                                      .of(context)
+                                      .pleaseSelectAExpenseCategory,
                                   //'Please select a expense category'
                                 );
                               }
                             }
                           },
-                          iconWidget: Icons.arrow_forward,
-                          iconColor: Colors.white,
+                          icon: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                          label: Text(lang.S.of(context).continueButton),
                         ),
                       ],
                     )),

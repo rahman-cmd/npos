@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Todas as Soluções Empresariais",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "O PosPro é uma solução empresarial completa com estoque, contabilidade, vendas, despesas e lucro/prejuízo.",
+      "O NPOS é uma solução empresarial completa com estoque, contabilidade, vendas, despesas e lucro/prejuízo.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Todo o Tempo"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Já adicionado"),
@@ -129,7 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Escolha Suas Funcionalidades",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "As funcionalidades são a parte importante que diferencia o PosPro das soluções tradicionais.",
+      "As funcionalidades são a parte importante que diferencia o NPOS das soluções tradicionais.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -231,7 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Fácil de usar o ponto de venda móvel",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "O aplicativo PosPro é gratuito e fácil de usar. Na verdade, é um dos melhores sistemas de PDV do mundo.",
+      "O aplicativo NPOS é gratuito e fácil de usar. Na verdade, é um dos melhores sistemas de PDV do mundo.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Editar"),
     "editPhone": MessageLookupByLibrary.simpleMessage(

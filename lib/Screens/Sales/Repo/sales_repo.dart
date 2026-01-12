@@ -43,14 +43,17 @@ class SaleRepo {
     required String purchaseDate,
     required num discountAmount,
     required num discountPercent,
+    required num unRoundedTotalAmount,
     required num totalAmount,
+    required num roundingAmount,
     required num dueAmount,
     required num vatAmount,
     required num vatPercent,
     required num? vatId,
-    required num paidAmount,
+    required num changeAmount,
     required bool isPaid,
     required String paymentType,
+    required String roundedOption,
     required List<CartSaleProducts> products,
     required String discountType,
     required num shippingCharge,
@@ -78,44 +81,59 @@ class SaleRepo {
         'discount_percent': discountPercent.toString(),
         'totalAmount': totalAmount.toString(),
         'dueAmount': dueAmount.toString(),
-        'paidAmount': paidAmount.toString(),
+        'paidAmount': (totalAmount - dueAmount).toString(),
+        'change_amount': changeAmount.toString(),
         'vat_amount': vatAmount.toString(),
         'vat_percent': vatPercent.toString(),
-        'vat_id': vatId?.toString() ?? '',
         'isPaid': isPaid.toString(),
-        'paymentType': paymentType,
+        'payment_type_id': paymentType,
         'discount_type': discountType,
         'shipping_charge': shippingCharge.toString(),
+        'rounding_option': roundedOption,
+        'rounding_amount': roundingAmount.toStringAsFixed(2),
+        'actual_total_amount': unRoundedTotalAmount.toString(),
         'note': note ?? '',
-        'products': jsonEncode(products.map((product) => product.toJson()).toList()),
+        'products': jsonEncode(
+          products.map((product) => product.toJson()).toList(),
+        ),
       });
-
+      if (vatId != null) {
+        request.fields.addAll({
+          'vat_id': vatId.toString(),
+        });
+      }
       // If an image is provided, attach it to the request
       if (image != null) {
         request.files.add(
           await http.MultipartFile.fromPath('image', image.path),
         );
       }
+
       var streamedResponse = await customHttpClient.uploadFile(url: uri, file: image, fileFieldName: 'image', fields: request.fields, countentType: 'multipart/form-data');
       var response = await http.Response.fromStream(streamedResponse);
-
       final parsedData = jsonDecode(response.body);
+      print('Sales Post: ${response.statusCode}');
+      print('Sales Post: ${response.body}');
 
       if (response.statusCode == 200) {
-        EasyLoading.showSuccess('Added successful!');
         ref.refresh(productProvider);
         ref.refresh(partiesProvider);
         ref.refresh(salesTransactionProvider);
         ref.refresh(businessInfoProvider);
         ref.refresh(getExpireDateProvider(ref));
         ref.refresh(summaryInfoProvider);
+        print('${parsedData['data']}');
         final data = SalesTransactionModel.fromJson(parsedData['data']);
         return data;
       } else {
         EasyLoading.dismiss().then(
           (value) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Sales creation failed: ${parsedData['message']}')),
+              SnackBar(
+                content: Text(
+                  'Sales creation failed: ${parsedData['message']}',
+                ),
+              ),
             );
           },
         );
@@ -133,104 +151,6 @@ class SaleRepo {
     }
   }
 
-  // Future<SalesTransactionModel?> updateSale({
-  //   required WidgetRef ref,
-  //   required BuildContext context,
-  //   required num id,
-  //   required num? partyId,
-  //   required String purchaseDate,
-  //   required num discountAmount,
-  //   required num discountPercent,
-  //   required num totalAmount,
-  //   required num dueAmount,
-  //   required num vatAmount,
-  //   required num vatPercent,
-  //   required num? vatId,
-  //   required num paidAmount,
-  //   required bool isPaid,
-  //   required String paymentType,
-  //   required List<CartSaleProducts> products,
-  //   required String discountType,
-  //   required num shippingCharge,
-  //   String? note,
-  //   File? image,
-  // }) async {
-  //   final uri = Uri.parse('${APIConfig.url}/sales/$id');
-  //
-  //   try {
-  //     var request = http.MultipartRequest("POST", uri);
-  //     request.headers.addAll({
-  //       "Accept": 'application/json',
-  //       'Authorization': await getAuthToken(),
-  //       'Content-Type': 'multipart/form-data',
-  //     });
-  //
-  //     // JSON data fields
-  //     request.fields.addAll({
-  //       '_method': 'put',
-  //       // 'party_id': partyId?.toString() ?? '',
-  //       'saleDate': purchaseDate,
-  //       'discountAmount': discountAmount.toString(),
-  //       'discount_percent': discountPercent.toString(),
-  //       'totalAmount': totalAmount.toString(),
-  //       'dueAmount': dueAmount.toString(),
-  //       'paidAmount': paidAmount.toString(),
-  //       'vat_amount': vatAmount.toString(),
-  //       'vat_percent': vatPercent.toString(),
-  //       'vat_id': vatId?.toString() ?? '',
-  //       'isPaid': isPaid.toString(),
-  //       'paymentType': paymentType,
-  //       'discount_type': discountType,
-  //       'shipping_charge': shippingCharge.toString(),
-  //       'note': note ?? '',
-  //       'products': jsonEncode(products.map((product) => product.toJson()).toList()),
-  //     });
-  //
-  //     // If an image is provided, attach it to the request
-  //     if (image != null) {
-  //       request.files.add(
-  //         await http.MultipartFile.fromPath('image', image.path),
-  //       );
-  //     }
-  //
-  //     var streamedResponse = await request.send();
-  //     var response = await http.Response.fromStream(streamedResponse);
-  //
-  //     final parsedData = jsonDecode(response.body);
-  //
-  //     print(response.statusCode);
-  //     print(parsedData);
-  //     if (response.statusCode == 200) {
-  //       EasyLoading.showSuccess('Added successful!');
-  //       ref.refresh(productProvider);
-  //       ref.refresh(partiesProvider);
-  //       ref.refresh(salesTransactionProvider);
-  //       ref.refresh(businessInfoProvider);
-  //       ref.refresh(summaryInfoProvider);
-  //       final data = SalesTransactionModel.fromJson(parsedData['data']);
-  //       return data;
-  //     } else {
-  //       EasyLoading.dismiss().then(
-  //         (value) {
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(content: Text('Sales creation failed: ${parsedData['message']}')),
-  //           );
-  //         },
-  //       );
-  //       return null;
-  //     }
-  //   } catch (error) {
-  //     EasyLoading.dismiss().then(
-  //       (value) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('An error occurred: $error')),
-  //         );
-  //       },
-  //     );
-  //     return null;
-  //   }
-  // }}
-
   Future<void> updateSale({
     required WidgetRef ref,
     required BuildContext context,
@@ -239,14 +159,17 @@ class SaleRepo {
     required String purchaseDate,
     required num discountAmount,
     required num discountPercent,
+    required num unRoundedTotalAmount,
     required num totalAmount,
     required num dueAmount,
     required num vatAmount,
     required num vatPercent,
     required num? vatId,
-    required num paidAmount,
+    required num changeAmount,
+    required num roundingAmount,
     required bool isPaid,
     required String paymentType,
+    required String roundedOption,
     required List<CartSaleProducts> products,
     required String discountType,
     required num shippingCharge,
@@ -265,19 +188,26 @@ class SaleRepo {
       ..fields['discount_percent'] = discountPercent.toString()
       ..fields['totalAmount'] = totalAmount.toString()
       ..fields['dueAmount'] = dueAmount.toString()
-      ..fields['paidAmount'] = paidAmount.toString()
+      ..fields['paidAmount'] = (totalAmount - dueAmount).toString()
+      ..fields['change_amount'] = changeAmount.toString()
       ..fields['vat_amount'] = vatAmount.toString()
       ..fields['vat_percent'] = vatPercent.toString()
-      ..fields['vat_id'] = vatId != null ? vatId.toString() : ''
       ..fields['isPaid'] = isPaid.toString()
-      ..fields['paymentType'] = paymentType
+      ..fields['payment_type_id'] = paymentType
       ..fields['discount_type'] = discountType
       ..fields['shipping_charge'] = shippingCharge.toString()
-      ..fields['note'] = note ?? '';
+      ..fields['note'] = note ?? ''
+      ..fields['rounding_option'] = roundedOption ?? ''
+      ..fields['rounding_amount'] = roundingAmount.toStringAsFixed(2)
+      ..fields['actual_total_amount'] = unRoundedTotalAmount.toString() ?? '';
 
     // Convert the list of products to a JSON string
     String productJson = jsonEncode(products.map((product) => product.toJson()).toList());
     request.fields['products'] = productJson;
+
+    if (vatId != null) {
+      request.fields.addAll({'vat_id': vatId.toString()});
+    }
 
     // Add image if it exists
     if (image != null) {
@@ -287,12 +217,7 @@ class SaleRepo {
 
     try {
       var response = await customHttpClient.uploadFile(url: uri, fields: request.fields, fileFieldName: 'image', file: image);
-      // var response = await request.send();
-      print(response.statusCode);
-      var responseData = await http.Response.fromStream(response);
-      final parsedData = jsonDecode(responseData.body);
-      print('Sales Response : $parsedData');
-      print('Sales Response2 : ${parsedData['message']}');
+
       if (response.statusCode == 200) {
         EasyLoading.showSuccess('Added successful!').then((value) {
           ref.refresh(productProvider);
@@ -306,13 +231,11 @@ class SaleRepo {
         var responseData = await http.Response.fromStream(response);
         final parsedData = jsonDecode(responseData.body);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sales creation failed: ${parsedData['message']}')));
-        print('Sales creation failed: ${parsedData['message']}');
       }
     } catch (error) {
       EasyLoading.dismiss().then((value) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred: $error')));
       });
-      print('An error occurred: $error');
     }
   }
 }

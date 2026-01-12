@@ -138,7 +138,7 @@
   "anewUpdateAvailable": "Yeni bir güncelleme mevcut\nLütfen uygulamanızı güncelleyin",
   "skipTheUpdate": "Güncellemeyi Atla",
   "rememberMeLater": "Beni sonra hatırla",
-  "powerdedByNpos": "Npos tarafından desteklenmektedir",
+  "powerdedByNPOS": "NPOS tarafından desteklenmektedir",
   "lossOrProfit": "Zarar/Kar",
   "expense": "Gider",
   "parties": "Taraflar",

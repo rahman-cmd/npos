@@ -1,17 +1,17 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:mobile_pos/GlobalComponents/glonal_popup.dart';
 import 'package:mobile_pos/Screens/SplashScreen/on_board.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:mobile_pos/model/business_info_model.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:nb_utils/nb_utils.dart' as SystemNavigator;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../Repository/API/business_info_repo.dart';
 import '../../currency.dart';
 import '../Authentication/Repo/licnese_repo.dart';
@@ -39,6 +39,7 @@ class SplashScreenState extends State<SplashScreen> {
     final bool isConnected = await InternetConnection().hasInternetAccess;
     if (isConnected) {
       await PurchaseModel().isActiveBuyer().then((value) {
+        // nextPage();
         if (!value) {
           if(mounted){
             showDialog(
@@ -67,10 +68,10 @@ class SplashScreenState extends State<SplashScreen> {
         }
       });
     } else {
-      if(retryCount < 3){
+      if (retryCount < 3) {
         retryCount++;
         checkUserValidity();
-      }else{
+      } else {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -128,6 +129,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: kMainColor,
@@ -146,14 +148,18 @@ class SplashScreenState extends State<SplashScreen> {
               children: [
                 Center(
                   child: Text(
-                    lang.S.of(context).powerdedByNpos,
-                    style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.normal, fontSize: 20.0),
+                    lang.S.of(context).powerdedByNPOS,
+                    style: theme.textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
                   ),
                 ),
                 Center(
                   child: Text(
                     'V $appVersion',
-                    style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.normal, fontSize: 15.0),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),

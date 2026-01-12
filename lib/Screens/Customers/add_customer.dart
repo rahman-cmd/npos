@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
@@ -45,6 +44,7 @@ class _AddPartyState extends State<AddParty> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
       return GlobalPopup(
         child: Scaffold(
@@ -54,9 +54,6 @@ class _AddPartyState extends State<AddParty> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).addContact,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -146,9 +143,7 @@ class _AddPartyState extends State<AddParty> {
                           title: Text(
                             lang.S.of(context).retailer,
                             maxLines: 1,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12.0,
-                            ),
+                            style: theme.textTheme.bodyMedium,
                           ),
                           value: 'Retailer',
                           onChanged: (value) {
@@ -165,9 +160,7 @@ class _AddPartyState extends State<AddParty> {
                           title: Text(
                             lang.S.of(context).dealer,
                             maxLines: 1,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12.0,
-                            ),
+                            style: theme.textTheme.bodyMedium,
                           ),
                           value: 'Dealer',
                           onChanged: (value) {
@@ -189,9 +182,7 @@ class _AddPartyState extends State<AddParty> {
                           title: Text(
                             lang.S.of(context).wholesaler,
                             maxLines: 1,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12.0,
-                            ),
+                            style: theme.textTheme.bodyMedium,
                           ),
                           value: 'Wholesaler',
                           onChanged: (value) {
@@ -209,9 +200,7 @@ class _AddPartyState extends State<AddParty> {
                           title: Text(
                             lang.S.of(context).supplier,
                             maxLines: 1,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12.0,
-                            ),
+                            style: theme.textTheme.bodyMedium,
                           ),
                           value: 'Supplier',
                           onChanged: (value) {
@@ -250,10 +239,7 @@ class _AddPartyState extends State<AddParty> {
                               TextButton(
                                 child: Text(
                                   lang.S.of(context).moreInfo,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 20.0,
-                                    color: kMainColor,
-                                  ),
+                                  style: theme.textTheme.titleSmall,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -303,8 +289,7 @@ class _AddPartyState extends State<AddParty> {
                                                       Text(
                                                         lang.S.of(context).gallery,
                                                         //'Gallery',
-                                                        style: GoogleFonts.poppins(
-                                                          fontSize: 20.0,
+                                                        style: theme.textTheme.titleMedium?.copyWith(
                                                           color: kMainColor,
                                                         ),
                                                       ),
@@ -333,8 +318,7 @@ class _AddPartyState extends State<AddParty> {
                                                       Text(
                                                         lang.S.of(context).camera,
                                                         //'Camera',
-                                                        style: GoogleFonts.poppins(
-                                                          fontSize: 20.0,
+                                                        style: theme.textTheme.titleMedium?.copyWith(
                                                           color: kGreyTextColor,
                                                         ),
                                                       ),
@@ -434,31 +418,32 @@ class _AddPartyState extends State<AddParty> {
                       ),
                     ],
                   ),
-                  ButtonGlobalWithoutIcon(
-                      buttontext: lang.S.of(context).save,
-                      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-                      onPressed: () async {
-                        // if (_formKay.currentState!.validate()) {
-                        if (!nameController.text.isEmptyOrNull && !phoneNumber.isEmptyOrNull) {
-                          final partyRepo = PartyRepository();
-                          await partyRepo.addParty(
-                            ref: ref,
-                            context: context,
-                            name: nameController.text,
-                            phone: phoneNumber ?? '',
-                            type: groupValue,
-                            image: pickedImage != null ? File(pickedImage!.path) : null,
-                            address: addressController.text.isEmptyOrNull ? null : addressController.text,
-                            email: emailController.text.isEmptyOrNull ? null : emailController.text,
-                            due: dueController.text.isEmptyOrNull ? null : dueController.text,
-                          );
-                        } else {
-                          EasyLoading.showError(lang.S.of(context).pleaseEnterValidPhoneAndNameFirst
-                              //'Please Enter valid phone and name first'
-                              );
-                        }
-                      },
-                      buttonTextColor: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          // if (_formKay.currentState!.validate()) {
+                          if (!nameController.text.isEmptyOrNull && !phoneNumber.isEmptyOrNull) {
+                            final partyRepo = PartyRepository();
+                            await partyRepo.addParty(
+                              ref: ref,
+                              context: context,
+                              name: nameController.text,
+                              phone: phoneNumber ?? '',
+                              type: groupValue,
+                              image: pickedImage != null ? File(pickedImage!.path) : null,
+                              address: addressController.text.isEmptyOrNull ? null : addressController.text,
+                              email: emailController.text.isEmptyOrNull ? null : emailController.text,
+                              due: dueController.text.isEmptyOrNull ? null : dueController.text,
+                            );
+                          } else {
+                            EasyLoading.showError(lang.S.of(context).pleaseEnterValidPhoneAndNameFirst
+                                //'Please Enter valid phone and name first'
+                                );
+                          }
+                        },
+                        child: Text(lang.S.of(context).save)),
+                  ),
                 ],
               ),
             ),

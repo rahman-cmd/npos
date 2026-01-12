@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/Provider/product_provider.dart';
@@ -62,9 +61,6 @@ class _ProductListState extends State<ProductList> {
                 iconTheme: const IconThemeData(color: Colors.black),
                 title: Text(
                   lang.S.of(context).productList,
-                  style: GoogleFonts.poppins(
-                    color: Colors.black,
-                  ),
                 ),
                 actions: [
                   PopupMenuButton<int>(
@@ -88,7 +84,7 @@ class _ProductListState extends State<ProductList> {
                             Text(
                               lang.S.of(context).productCategory,
                               //"Product Category",
-                              style: gTextStyle.copyWith(color: kGreyTextColor),
+                              style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                             )
                           ],
                         ),
@@ -112,7 +108,7 @@ class _ProductListState extends State<ProductList> {
                             Text(
                               lang.S.of(context).brand,
                               //"Brand",
-                              style: gTextStyle.copyWith(color: kGreyTextColor),
+                              style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                             )
                           ],
                         ),
@@ -136,7 +132,7 @@ class _ProductListState extends State<ProductList> {
                             Text(
                               lang.S.of(context).productUnit,
                               // "Product Unit",
-                              style: gTextStyle.copyWith(color: kGreyTextColor),
+                              style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                             )
                           ],
                         ),
@@ -161,7 +157,7 @@ class _ProductListState extends State<ProductList> {
                             Text(
                               'Bulk Upload',
                               // "Product Unit",
-                              style: gTextStyle.copyWith(color: kGreyTextColor),
+                              style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                             )
                           ],
                         ),
@@ -179,7 +175,7 @@ class _ProductListState extends State<ProductList> {
                             const SizedBox(width: 10),
                             Text(
                               'Barcode Generator',
-                              style: gTextStyle.copyWith(color: kGreyTextColor),
+                              style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                             )
                           ],
                         ),
@@ -239,9 +235,8 @@ class _ProductListState extends State<ProductList> {
                                   products[i].productName ?? '',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: _theme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
+                                  style: _theme.textTheme.titleMedium?.copyWith(
+                                    fontSize: 18,
                                   ),
                                 ),
                                 subtitle: Text(
@@ -285,7 +280,7 @@ class _ProductListState extends State<ProductList> {
                                               const SizedBox(width: 10),
                                               Text(
                                                 lang.S.of(context).edit,
-                                                style: gTextStyle.copyWith(color: kGreyTextColor),
+                                                style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                                               ),
                                             ],
                                           ),
@@ -311,7 +306,7 @@ class _ProductListState extends State<ProductList> {
                                               const SizedBox(width: 10),
                                               Text(
                                                 lang.S.of(context).delete,
-                                                style: gTextStyle.copyWith(color: kGreyTextColor),
+                                                style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                                               ),
                                             ],
                                           ),

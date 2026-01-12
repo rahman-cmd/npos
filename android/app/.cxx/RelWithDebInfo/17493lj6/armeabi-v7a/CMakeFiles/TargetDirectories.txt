@@ -1,0 +1,2 @@
+/Volumes/Softwares/npos/android/app/.cxx/RelWithDebInfo/17493lj6/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Volumes/Softwares/npos/android/app/.cxx/RelWithDebInfo/17493lj6/armeabi-v7a/CMakeFiles/rebuild_cache.dir

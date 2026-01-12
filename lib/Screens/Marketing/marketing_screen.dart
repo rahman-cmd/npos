@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Marketing/edit_social_media.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
@@ -17,14 +16,11 @@ class MarketingScreen extends StatefulWidget {
 class _MarketingScreenState extends State<MarketingScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           lang.S.of(context).socialMarketing,
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 20.0,
-          ),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         centerTitle: true,
@@ -48,7 +44,7 @@ class _MarketingScreenState extends State<MarketingScreen> {
                   ),
                   Text(
                     lang.S.of(context).edit,
-                    style: GoogleFonts.poppins(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: kMainColor,
                     ),
                   ),
@@ -79,7 +75,7 @@ class _MarketingScreenState extends State<MarketingScreen> {
               iconWidget: const Image(
                 image: AssetImage('images/twitter.png'),
               ),
-              socialMediaName:lang.S.of(context).twitter,
+              socialMediaName: lang.S.of(context).twitter,
               //'Twitter',
             ),
           ),
@@ -99,8 +95,8 @@ class _MarketingScreenState extends State<MarketingScreen> {
               iconWidget: const Image(
                 image: AssetImage('images/linkedin.png'),
               ),
-              socialMediaName:lang.S.of(context).linkedIN,
-             // 'LinkedIN',
+              socialMediaName: lang.S.of(context).linkedIN,
+              // 'LinkedIN',
             ),
           ),
         ],
@@ -122,6 +118,7 @@ class SocialMediaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         iconWidget,
@@ -129,8 +126,7 @@ class SocialMediaCard extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
             socialMediaName,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
+            style: theme.textTheme.titleLarge?.copyWith(
               fontSize: 18,
             ),
           ),
@@ -146,7 +142,7 @@ class SocialMediaCard extends StatelessWidget {
             children: [
               Text(
                 lang.S.of(context).share,
-                style: GoogleFonts.poppins(fontSize: 15.0, color: Colors.white),
+                style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
               ),
               const Icon(
                 Icons.share,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/constant.dart';
 
 // ignore: must_be_immutable
@@ -28,7 +27,7 @@ class ButtonGlobal extends StatelessWidget {
           children: [
             Text(
               buttontext,
-              style: GoogleFonts.jost(fontSize: 20.0, color: Colors.white),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
             ),
             const SizedBox(
               width: 2,
@@ -69,7 +68,7 @@ class ButtonGlobalWithoutIcon extends StatelessWidget {
           buttontext,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
-          style: GoogleFonts.jost(fontSize: 20.0, color: buttonTextColor),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: buttonTextColor),
         ),
       ),
     );
@@ -106,6 +105,7 @@ class UpdateButton extends StatelessWidget {
   final VoidCallback onpressed;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onpressed,
       child: Container(
@@ -118,7 +118,7 @@ class UpdateButton extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold, fontSize: 16),
+          style: theme.textTheme.titleMedium?.copyWith(color: kWhite),
         ),
       ),
     );

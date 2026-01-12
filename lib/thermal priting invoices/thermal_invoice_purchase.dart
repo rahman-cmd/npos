@@ -12,13 +12,12 @@ class PurchaseThermalPrinterInvoice {
   Future<void> printPurchaseThermalInvoice({required PrintPurchaseTransactionModel printTransactionModel, required List<PurchaseDetails>? productList}) async {
     bool isConnected = await PrintBluetoothThermal.connectionStatus;
     if (isConnected == true) {
-      List<int> bytes = await getPurchaseTicket(printTransactionModel: printTransactionModel,productList: productList);
+      List<int> bytes = await getPurchaseTicket(printTransactionModel: printTransactionModel, productList: productList);
       if (printTransactionModel.purchaseTransitionModel?.details?.isNotEmpty ?? false) {
         await PrintBluetoothThermal.writeBytes(bytes);
       } else {
         toast('No Product Found');
       }
-
     } else {
       EasyLoading.showError('Unable to connect with printer');
     }
@@ -46,9 +45,9 @@ class PurchaseThermalPrinterInvoice {
     String productName({required num detailsId}) {
       return productList![productList.indexWhere(
             (element) => element.id == detailsId,
-      )]
-          .product
-          ?.productName ??
+          )]
+              .product
+              ?.productName ??
           '';
     }
 
@@ -107,13 +106,20 @@ class PurchaseThermalPrinterInvoice {
         ),
         linesAfter: 1);
 
-    bytes += generator.text('Seller :${printTransactionModel.purchaseTransitionModel?.user?.name}', styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        'Seller :${printTransactionModel.purchaseTransitionModel?.user?.role == "shop-owner" ? "Admin" : printTransactionModel.purchaseTransitionModel?.user?.name}',
+        styles: const PosStyles(align: PosAlign.center));
 
     if (printTransactionModel.personalInformationModel.address != null) {
       bytes += generator.text(printTransactionModel.personalInformationModel.address ?? '', styles: const PosStyles(align: PosAlign.center));
     }
+    if (printTransactionModel.personalInformationModel.crNo != null) {
+      bytes += generator.text("C.R : ${printTransactionModel.personalInformationModel.crNo ?? ''}",
+          styles: const PosStyles(align: PosAlign.center));
+    }
     if (printTransactionModel.personalInformationModel.vatNumber != null) {
-      bytes += generator.text("${printTransactionModel.personalInformationModel.vatName ?? 'VAT No :'}${printTransactionModel.personalInformationModel.vatNumber ?? ''}", styles: const PosStyles(align: PosAlign.center));
+      bytes += generator.text("${printTransactionModel.personalInformationModel.vatName ?? 'VAT No :'}${printTransactionModel.personalInformationModel.vatNumber ?? ''}",
+          styles: const PosStyles(align: PosAlign.center));
     }
     bytes += generator.text('Tel: ${printTransactionModel.personalInformationModel.phoneNumber ?? ''}', styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
     bytes += generator.text('Name: ${printTransactionModel.purchaseTransitionModel?.party?.name ?? 'Guest'}', styles: const PosStyles(align: PosAlign.left));
@@ -138,12 +144,12 @@ class PurchaseThermalPrinterInvoice {
               align: PosAlign.left,
             )),
         PosColumn(
-            text: productList?[index].productPurchasePrice.toString() ?? 'Not Defined',
+            text: formatPointNumber(productList?[index].productPurchasePrice ?? 0) ?? 'Not Defined',
             width: 2,
             styles: const PosStyles(
               align: PosAlign.center,
             )),
-        PosColumn(text: getProductQuantity(detailsId: productList?[index].id ?? 0).toString(), width: 2, styles: const PosStyles(align: PosAlign.center)),
+        PosColumn(text: formatPointNumber(getProductQuantity(detailsId: productList?[index].id ?? 0)), width: 2, styles: const PosStyles(align: PosAlign.center)),
         PosColumn(
             text: "${(productList?[index].productPurchasePrice ?? 0) * getProductQuantity(detailsId: productList?[index].id ?? 0)}",
             width: 3,
@@ -174,7 +180,7 @@ class PurchaseThermalPrinterInvoice {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: ((printTransactionModel.purchaseTransitionModel?.discountAmount ?? 0) + getReturndDiscountAmount()).toStringAsFixed(2) ?? '',
+          text: formatPointNumber((printTransactionModel.purchaseTransitionModel?.discountAmount ?? 0) + getReturndDiscountAmount()),
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -188,7 +194,7 @@ class PurchaseThermalPrinterInvoice {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: ((printTransactionModel.purchaseTransitionModel?.vatAmount ?? 0)).toStringAsFixed(2) ?? '',
+          text: formatPointNumber((printTransactionModel.purchaseTransitionModel?.vatAmount ?? 0)),
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -202,7 +208,7 @@ class PurchaseThermalPrinterInvoice {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: ((printTransactionModel.purchaseTransitionModel?.totalAmount ?? 0) + getTotalReturndAmount()).toStringAsFixed(2),
+          text: formatPointNumber((printTransactionModel.purchaseTransitionModel?.totalAmount ?? 0) + getTotalReturndAmount()),
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -219,7 +225,7 @@ class PurchaseThermalPrinterInvoice {
           bytes += generator.row([
             PosColumn(
                 text:
-                'Return-${DateFormat.yMd().format(DateTime.parse(printTransactionModel.purchaseTransitionModel?.purchaseReturns?[i].returnDate ?? DateTime.now().toString()))}',
+                    'Return-${DateFormat.yMd().format(DateTime.parse(printTransactionModel.purchaseTransitionModel?.purchaseReturns?[i].returnDate ?? DateTime.now().toString()))}',
                 width: 7,
                 styles: const PosStyles(align: PosAlign.left, bold: true)),
             PosColumn(text: 'Qty', width: 2, styles: const PosStyles(align: PosAlign.center, bold: true)),
@@ -261,7 +267,7 @@ class PurchaseThermalPrinterInvoice {
     }
     bytes += generator.row([
       PosColumn(text: 'Total Payable', width: 8, styles: const PosStyles(align: PosAlign.left, bold: true)),
-      PosColumn(text: printTransactionModel.purchaseTransitionModel?.totalAmount.toString() ?? '', width: 4, styles: const PosStyles(align: PosAlign.right, bold: true)),
+      PosColumn(text: formatPointNumber(printTransactionModel.purchaseTransitionModel?.totalAmount ?? 0), width: 4, styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
 
     bytes += generator.row([
@@ -272,7 +278,7 @@ class PurchaseThermalPrinterInvoice {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: printTransactionModel.purchaseTransitionModel?.paymentType ?? 'Cash',
+          text: printTransactionModel.purchaseTransitionModel?.paymentType?.name ?? 'N/A',
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -286,26 +292,45 @@ class PurchaseThermalPrinterInvoice {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: '${printTransactionModel.purchaseTransitionModel!.totalAmount!.toDouble() - printTransactionModel.purchaseTransitionModel!.dueAmount!.toDouble()}',
+          text: formatPointNumber(((printTransactionModel.purchaseTransitionModel?.totalAmount ?? 0) - (printTransactionModel.purchaseTransitionModel?.dueAmount ?? 0)) +
+              (printTransactionModel.purchaseTransitionModel?.changeAmount ?? 0)),
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
           )),
     ]);
-    bytes += generator.row([
-      PosColumn(
-          text: 'Due Amount:',
-          width: 8,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: printTransactionModel.purchaseTransitionModel!.dueAmount.toString(),
-          width: 4,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
-    ]);
+    if ((printTransactionModel.purchaseTransitionModel?.dueAmount ?? 0) > 0) {
+      bytes += generator.row([
+        PosColumn(
+            text: 'Due Amount',
+            width: 8,
+            styles: const PosStyles(
+              align: PosAlign.left,
+            )),
+        PosColumn(
+            text: formatPointNumber(printTransactionModel.purchaseTransitionModel?.dueAmount ?? 0),
+            width: 4,
+            styles: const PosStyles(
+              align: PosAlign.right,
+            )),
+      ]);
+    }
+    if ((printTransactionModel.purchaseTransitionModel?.changeAmount ?? 0) > 0) {
+      bytes += generator.row([
+        PosColumn(
+            text: 'Change Amount',
+            width: 8,
+            styles: const PosStyles(
+              align: PosAlign.left,
+            )),
+        PosColumn(
+            text: formatPointNumber(printTransactionModel.purchaseTransitionModel?.changeAmount ?? 0),
+            width: 4,
+            styles: const PosStyles(
+              align: PosAlign.right,
+            )),
+      ]);
+    }
     bytes += generator.hr(ch: '=', linesAfter: 1);
 
     // ticket.feed(2);

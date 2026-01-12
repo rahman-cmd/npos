@@ -8,12 +8,13 @@ class SmsConfirmationPopup extends StatefulWidget {
   final Function onSendSms;
   final VoidCallback onCancel;
 
-  const SmsConfirmationPopup({Key? key,
+  const SmsConfirmationPopup({
+    super.key,
     required this.customerName,
     required this.phoneNumber,
     required this.onSendSms,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   _SmsConfirmationPopupState createState() => _SmsConfirmationPopupState();
@@ -50,12 +51,12 @@ class _SmsConfirmationPopupState extends State<SmsConfirmationPopup> with Single
       },
       child: Dialog(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-               // 'Confirm SMS to ${widget.customerName}',
+                // 'Confirm SMS to ${widget.customerName}',
                 '${lang.S.of(context).confirmSMSTo} ${widget.customerName}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
@@ -64,6 +65,7 @@ class _SmsConfirmationPopupState extends State<SmsConfirmationPopup> with Single
                 //'An SMS will be sent to the following number: ${widget.phoneNumber}',
                 '${lang.S.of(context).anSMSWillBeSentToTheFollowingNumber} ${widget.phoneNumber}',
                 style: Theme.of(context).textTheme.bodySmall,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 20,
@@ -71,23 +73,33 @@ class _SmsConfirmationPopupState extends State<SmsConfirmationPopup> with Single
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                    onPressed: widget.onCancel,
-                    child:  Text(
-                      lang.S.of(context).cancel,
+                  Flexible(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      onPressed: widget.onCancel,
+                      child: Text(
+                        lang.S.of(context).cancel,
                         //'Cancel'
+                      ),
                     ),
                   ),
-                  ElevatedButton(
-                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(kMainColor)),
-                    onPressed: () {
-                      widget.onSendSms();
-                      Navigator.pop(context);
-                    },
-                    child:  Text(
-                      lang.S.of(context).sendSMS,
-                     // 'Send SMS',
-                      style: const TextStyle(color: Colors.white),
+                  SizedBox(width: 15),
+                  Flexible(
+                    child: ElevatedButton(
+                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(kMainColor)),
+                      onPressed: () {
+                        widget.onSendSms();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        lang.S.of(context).sendSMS,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        // 'Send SMS',
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],

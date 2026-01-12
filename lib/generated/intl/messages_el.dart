@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Όλες οι επιχειρηματικές λύσεις",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Το POSpro είναι μια ολοκληρωμένη επιχειρηματική λύση με αποθήκη, λογαριασμό, πωλήσεις, δαπάνες και απώλειες/κέρδη.",
+      "Το NPOS είναι μια ολοκληρωμένη επιχειρηματική λύση με αποθήκη, λογαριασμό, πωλήσεις, δαπάνες και απώλειες/κέρδη.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Όλα τα χρόνια"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Ήδη έχει προστεθεί"),
@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Επιλέξτε τα χαρακτηριστικά σας",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Τα χαρακτηριστικά είναι το σημαντικό μέρος που κάνει το POSpro διαφορετικό από τις παραδοσιακές λύσεις.",
+      "Τα χαρακτηριστικά είναι το σημαντικό μέρος που κάνει το NPOS διαφορετικό από τις παραδοσιακές λύσεις.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Κλαρενς"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -247,7 +247,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Εύκολη χρήση του κινητού σημείου πώλησης",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Η εφαρμογή POSpro είναι δωρεάν και εύκολη στη χρήση. Πράγματι, είναι ένα από τα καλύτερα συστήματα POS σε όλο τον κόσμο.",
+      "Η εφαρμογή NPOS είναι δωρεάν και εύκολη στη χρήση. Πράγματι, είναι ένα από τα καλύτερα συστήματα POS σε όλο τον κόσμο.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Επεξεργασία"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -639,8 +639,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Παρακαλώ επιλέξτε μια κατηγορία δαπανών",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Υποστηρίζεται από Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Υποστηρίζεται από NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Υποστήριξη Εφαρμογών Android & iOS",

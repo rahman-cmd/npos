@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
@@ -55,6 +54,7 @@ class _EditCustomerState extends State<EditCustomer> {
   TextEditingController addressController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, cRef, __) {
       return GlobalPopup(
         child: Scaffold(
@@ -63,9 +63,6 @@ class _EditCustomerState extends State<EditCustomer> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).updateContact,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -138,9 +135,7 @@ class _EditCustomerState extends State<EditCustomer> {
                             title: Text(
                               lang.S.of(context).retailer,
                               maxLines: 1,
-                              style: GoogleFonts.poppins(
-                                fontSize: 12.0,
-                              ),
+                              style: theme.textTheme.bodySmall,
                             ),
                             value: 'Retailer',
                             onChanged: (value) {
@@ -161,9 +156,7 @@ class _EditCustomerState extends State<EditCustomer> {
                             title: Text(
                               lang.S.of(context).dealer,
                               maxLines: 1,
-                              style: GoogleFonts.poppins(
-                                fontSize: 12.0,
-                              ),
+                              style: theme.textTheme.bodySmall,
                             ),
                             value: 'Dealer',
                             onChanged: (value) {
@@ -188,9 +181,7 @@ class _EditCustomerState extends State<EditCustomer> {
                             title: Text(
                               lang.S.of(context).wholesaler,
                               maxLines: 1,
-                              style: GoogleFonts.poppins(
-                                fontSize: 12.0,
-                              ),
+                              style: theme.textTheme.bodySmall,
                             ),
                             value: 'Wholesaler',
                             onChanged: (value) {
@@ -210,9 +201,7 @@ class _EditCustomerState extends State<EditCustomer> {
                             title: Text(
                               lang.S.of(context).supplier,
                               maxLines: 1,
-                              style: GoogleFonts.poppins(
-                                fontSize: 12.0,
-                              ),
+                              style: theme.textTheme.bodySmall,
                             ),
                             value: 'Supplier',
                             onChanged: (value) {
@@ -248,8 +237,7 @@ class _EditCustomerState extends State<EditCustomer> {
                                 TextButton(
                                   child: Text(
                                     lang.S.of(context).moreInfo,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 20.0,
+                                    style: theme.textTheme.titleLarge?.copyWith(
                                       color: kMainColor,
                                     ),
                                   ),
@@ -295,13 +283,7 @@ class _EditCustomerState extends State<EditCustomer> {
                                                           size: 60.0,
                                                           color: kMainColor,
                                                         ),
-                                                        Text(
-                                                          lang.S.of(context).gallery,
-                                                          style: GoogleFonts.poppins(
-                                                            fontSize: 20.0,
-                                                            color: kMainColor,
-                                                          ),
-                                                        ),
+                                                        Text(lang.S.of(context).gallery, style: theme.textTheme.titleLarge?.copyWith(color: kMainColor)),
                                                       ],
                                                     ),
                                                   ),
@@ -324,8 +306,7 @@ class _EditCustomerState extends State<EditCustomer> {
                                                         ),
                                                         Text(
                                                           lang.S.of(context).camera,
-                                                          style: GoogleFonts.poppins(
-                                                            fontSize: 20.0,
+                                                          style: theme.textTheme.titleLarge?.copyWith(
                                                             color: kGreyTextColor,
                                                           ),
                                                         ),
@@ -430,9 +411,7 @@ class _EditCustomerState extends State<EditCustomer> {
                         ),
                       ],
                     ),
-                    ButtonGlobalWithoutIcon(
-                        buttontext: lang.S.of(context).update,
-                        buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                    ElevatedButton(
                         onPressed: () async {
                           if (_formKay.currentState!.validate()) {
                             try {
@@ -460,7 +439,7 @@ class _EditCustomerState extends State<EditCustomer> {
                             }
                           }
                         },
-                        buttonTextColor: Colors.white),
+                        child: Text(lang.S.of(context).update)),
                   ],
                 ),
               ),

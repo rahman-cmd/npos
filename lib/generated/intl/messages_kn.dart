@@ -593,7 +593,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "ದಯವಿಟ್ಟು ಖರ್ಚು ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("ಶಕ್ತಿಯಿಂದ ಆಚನು"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("ಶಕ್ತಿಯಿಂದ ಆಚನು"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "ಆಂಡ್ರಾಯ್ಡ್ ಮತ್ತು iOS ಅಪ್ಲಿಕೇಶನ್ ಬೆಂಬಲ",
     ),

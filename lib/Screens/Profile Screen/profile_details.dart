@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Profile%20Screen/edit_profile.dart';
 import 'package:mobile_pos/currency.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../Const/api_config.dart';
+import '../../GlobalComponents/button_global.dart';
 import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart';
+import '../Authentication/change password/change_password_screen.dart';
+import '../Authentication/forgot password/set_new_password.dart';
 
 class ProfileDetails extends StatefulWidget {
   const ProfileDetails({super.key});
@@ -22,6 +25,7 @@ class ProfileDetails extends StatefulWidget {
 class ProfileDetailsState extends State<ProfileDetails> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
       final businessInfo = ref.watch(businessInfoProvider);
       return businessInfo.when(data: (details) {
@@ -39,10 +43,6 @@ class ProfileDetailsState extends State<ProfileDetails> {
             appBar: AppBar(
               title: Text(
                 lang.S.of(context).profile,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                ),
               ),
               actions: [
                 Visibility(
@@ -72,7 +72,7 @@ class ProfileDetailsState extends State<ProfileDetails> {
                           ),
                           Text(
                             lang.S.of(context).edit,
-                            style: GoogleFonts.poppins(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               color: kMainColor,
                             ),
                           ),
@@ -87,28 +87,15 @@ class ProfileDetailsState extends State<ProfileDetails> {
               backgroundColor: Colors.white,
               elevation: 0.0,
             ),
-            // bottomNavigationBar: ButtonGlobal(
-            //   iconWidget: Icons.arrow_forward,
-            //   buttontext: lang.S.of(context).changePassword,
-            //   iconColor: Colors.white,
-            //   buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-            //   onPressed: () async {
-            //     try {
-            //       EasyLoading.show(status: 'Sending Email', dismissOnTap: false);
-            //       await FirebaseAuth.instance.sendPasswordResetEmail(
-            //         email: FirebaseAuth.instance.currentUser!.email.toString(),
-            //       );
-            //       EasyLoading.showSuccess('Email Sent! Check your Inbox');
-            //       // ignore: use_build_context_synchronously
-            //       const LoginForm(
-            //         isEmailLogin: true,
-            //       ).launch(context);
-            //       FirebaseAuth.instance.signOut();
-            //     } catch (e) {
-            //       EasyLoading.showError(e.toString());
-            //     }
-            //   },
-            // ),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton.icon(
+                label: Text(lang.S.of(context).changePassword),
+                onPressed: ()  {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(),));
+                },
+              ),
+            ),
             body: Padding(
               padding: const EdgeInsets.all(10.0),
               child: SingleChildScrollView(

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -20,64 +19,57 @@ class SuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, _) {
       final userRoleData = ref.watch(businessInfoProvider);
       ref.watch(getExpireDateProvider(ref));
       return userRoleData.when(data: (data) {
         return GlobalPopup(
           child: Scaffold(
-            backgroundColor: kWhite,
-            resizeToAvoidBottomInset: true,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Image(image: AssetImage('images/success.png')),
-                const SizedBox(height: 40.0),
-                Text(
-                  lang.S.of(context).congratulation,
-                  style: GoogleFonts.poppins(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+              backgroundColor: kWhite,
+              resizeToAvoidBottomInset: true,
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Image(image: AssetImage('images/success.png')),
+                  const SizedBox(height: 40.0),
+                  Text(
+                    lang.S.of(context).congratulation,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris cras",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      color: kGreyTextColor,
-                      fontSize: 16.0,
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris cras",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontSize: 16.0,
+                      ),
                     ),
                   ),
-                ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ButtonGlobalWithoutIcon(
-                    buttontext: lang.S.of(context).continueButton,
-                            buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-                            onPressed: () {
-                            const Home().launch(context);
-                            // Navigator.pushNamed(context, '/home');
-                            },
-                            buttonTextColor: Colors.white,
-                            ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const Home().launch(context);
+                        // Navigator.pushNamed(context, '/home');
+                      },
+                      child: Text(lang.S.of(context).continueButton),
+                    ),
                   )
-              ],
-            // ),
-            // bottomNavigationBar: ButtonGlobalWithoutIcon(
-            //   buttontext: lang.S.of(context).continueButton,
-            //   buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-            //   onPressed: () {
-            //     const Home().launch(context);
-            //     // Navigator.pushNamed(context, '/home');
-            //   },
-            //   buttonTextColor: Colors.white,
-            // ),
-          )),
+                ],
+                // ),
+                // bottomNavigationBar: ButtonGlobalWithoutIcon(
+                //   buttontext: lang.S.of(context).continueButton,
+                //   buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                //   onPressed: () {
+                //     const Home().launch(context);
+                //     // Navigator.pushNamed(context, '/home');
+                //   },
+                //   buttonTextColor: Colors.white,
+                // ),
+              )),
         );
       }, error: (e, stack) {
         return Text(e.toString());

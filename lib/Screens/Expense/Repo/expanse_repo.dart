@@ -52,11 +52,12 @@ class ExpenseRepo {
       'referenceNo': referenceNo,
       'expenseDate': expenseDate,
       'note': note,
-      'paymentType': paymentType,
+      'payment_type_id': paymentType,
     });
 
     try {
-      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+      CustomHttpClient customHttpClient =
+          CustomHttpClient(client: http.Client(), context: context, ref: ref);
       var responseData = await customHttpClient.post(
         url: uri,
         addContentTypeInHeader: true,
@@ -75,12 +76,15 @@ class ExpenseRepo {
         Navigator.pop(context);
         // return PurchaseTransaction.fromJson(parsedData);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Expense creation failed: ${parsedData['message']}')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text('Expense creation failed: ${parsedData['message']}')));
         return;
       }
     } catch (error) {
       // Handle unexpected errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred: $error')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('An error occurred: $error')));
       // return null;
     }
   }

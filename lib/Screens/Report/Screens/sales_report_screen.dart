@@ -1,27 +1,18 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../GlobalComponents/glonal_popup.dart';
-import '../../../GlobalComponents/returned_tag_widget.dart';
 import '../../../GlobalComponents/sales_transaction_widget.dart';
-import '../../../PDF Invoice/generate_pdf.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
-import '../../../core/theme/_app_colors.dart';
 import '../../../currency.dart';
-import '../../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
 import '../../../widgets/empty_widget/_empty_widget.dart';
-import '../../invoice_details/sales_invoice_details_screen.dart';
 
 class SalesReportScreen extends StatefulWidget {
   const SalesReportScreen({super.key});
@@ -36,7 +27,7 @@ class SalesReportScreenState extends State<SalesReportScreen> {
   DateTime fromDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
   DateTime toDate = DateTime.now();
 
-  List<String> timeLimit = ['ToDay', 'This Week', 'This Month', 'This Year', 'All Time'];
+  List<String> timeLimit = ['ToDay', 'This Week', 'This Month', 'This Year', 'All Time', 'Custom'];
   String? dropdownValue = 'This Month';
   Map<String, String> getTranslateTime(BuildContext context) {
     return {
@@ -79,17 +70,13 @@ class SalesReportScreenState extends State<SalesReportScreen> {
   @override
   Widget build(BuildContext context) {
     final translateTime = getTranslateTime(context);
-    final _theme = Theme.of(context);
+
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: kWhite,
         appBar: AppBar(
           title: Text(
             lang.S.of(context).salesReport,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,

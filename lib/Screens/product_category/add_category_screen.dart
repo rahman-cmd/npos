@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/constant.dart';
 
@@ -44,10 +43,6 @@ class _AddCategoryState extends State<AddCategory> {
             title: Text(
               lang.S.of(context).addCategory,
               //'Add Category',
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -72,7 +67,7 @@ class _AddCategoryState extends State<AddCategory> {
                   ),
                   TextFormField(
                     controller: categoryNameController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       //hintText: 'Enter category name',
                       hintText: lang.S.of(context).enterCategoryName,
@@ -82,17 +77,17 @@ class _AddCategoryState extends State<AddCategory> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                   Text(lang.S.of(context).selectVariations
-                       //'Select variations : '
-                   ),
+                  Text(lang.S.of(context).selectVariations
+                      //'Select variations : '
+                      ),
                   Row(
                     children: [
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).size,
                             //"Size",
-        
+
                             overflow: TextOverflow.ellipsis,
                           ),
                           value: sizeCheckbox,
@@ -107,7 +102,7 @@ class _AddCategoryState extends State<AddCategory> {
                       ),
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).color,
                             //"Color",
                             overflow: TextOverflow.ellipsis,
@@ -128,7 +123,7 @@ class _AddCategoryState extends State<AddCategory> {
                     children: [
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).weight,
                             //"Weight",
                             overflow: TextOverflow.ellipsis,
@@ -145,7 +140,7 @@ class _AddCategoryState extends State<AddCategory> {
                       ),
                       Expanded(
                         child: CheckboxListTile(
-                          title:  Text(
+                          title: Text(
                             lang.S.of(context).capacity,
                             //"Capacity",
                             overflow: TextOverflow.ellipsis,
@@ -163,7 +158,7 @@ class _AddCategoryState extends State<AddCategory> {
                     ],
                   ),
                   CheckboxListTile(
-                    title:  Text(
+                    title: Text(
                       lang.S.of(context).type,
                       //"Type",
                       overflow: TextOverflow.ellipsis,
@@ -177,10 +172,7 @@ class _AddCategoryState extends State<AddCategory> {
                     },
                     controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
                   ),
-                  ButtonGlobalWithoutIcon(
-                    buttontext:lang.S.of(context).save,
-                    //'Save',
-                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                  ElevatedButton(
                     onPressed: () async {
                       setState(() {
                         showProgress = true;
@@ -200,7 +192,7 @@ class _AddCategoryState extends State<AddCategory> {
                         showProgress = false;
                       });
                     },
-                    buttonTextColor: Colors.white,
+                    child: Text(lang.S.of(context).save),
                   ),
                 ],
               ),

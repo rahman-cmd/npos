@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
 import 'package:mobile_pos/Screens/Loss_Profit/single_loss_profit_screen.dart';
@@ -65,9 +64,6 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
             backgroundColor: Colors.white,
             title: Text(
               (widget.fromReport ?? false) ? 'Loss/Profit Report' : lang.S.of(context).lp,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,

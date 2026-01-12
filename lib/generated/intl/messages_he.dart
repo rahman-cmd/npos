@@ -58,7 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "כל פתרונות העסק",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro היא פתרון עסקי מוחלט עם מלאי, חשבונות, מכירות, הוצאות והפסד/רווח.",
+      "NPOS היא פתרון עסקי מוחלט עם מלאי, חשבונות, מכירות, הוצאות והפסד/רווח.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("כל הזמן"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("כבר נוסף"),
@@ -108,7 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "בחר את התכונות שלך",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "התכונות הן החלק החשוב שהופך את PosPro לשונה מהפתרונות המסורתיים.",
+      "התכונות הן החלק החשוב שהופך את NPOS לשונה מהפתרונות המסורתיים.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("קלרנס"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage("לחץ כדי להתחבר"),
@@ -195,7 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "שימוש קל במכשיר POS נייד",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "אפליקציית PosPro חינמית וקלה לשימוש. למעשה, זו אחת מהמערכות POS הטובות ביותר בעולם.",
+      "אפליקציית NPOS חינמית וקלה לשימוש. למעשה, זו אחת מהמערכות POS הטובות ביותר בעולם.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("לַעֲרוֹך"),
     "editPhone": MessageLookupByLibrary.simpleMessage("לערוך מספר טלפון?"),
@@ -501,8 +501,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "אנא בחר קטגוריית הוצאה",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "מופעל על ידי Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "מופעל על ידי NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "תמיכה באפליקציות Android ו-iOS",

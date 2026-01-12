@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Purchase/Model/purchase_transaction_model.dart';
 import 'package:mobile_pos/Screens/Purchase/purchase_products.dart';
@@ -14,6 +13,7 @@ import '../../Provider/add_to_cart_purchase.dart';
 import '../../Repository/API/future_invoice.dart';
 import '../../constant.dart';
 import '../../currency.dart';
+import '../../widgets/payment_type/_payment_type_dropdown.dart';
 import '../Customers/Model/parties_model.dart' as party;
 import '../Home/home.dart';
 import '../Purchase List/purchase_list_screen.dart';
@@ -33,7 +33,7 @@ class AddAndUpdatePurchaseScreen extends ConsumerStatefulWidget {
 }
 
 class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
-  String? paymentType = 'Cash';
+  int? paymentType;
 
   bool isProcessing = false;
 
@@ -58,6 +58,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
       } else {
         discountType = 'Percent';
       }
+      paymentType = widget.transitionModel?.paymentTypeId;
       addProductsInCartFromEditList();
     }
     super.initState();
@@ -120,9 +121,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).addPurchase,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -301,17 +299,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: providerData.cartItemList.length,
                                 itemBuilder: (context, index) {
-                                  // providerData.controllers[index].text = (providerData.cartItemList[index].quantity.toString());
-                                  // providerData.focus[index].addListener(
-                                  //   () {
-                                  //     if (!providerData.focus[index].hasFocus) {
-                                  //       setState(() {
-                                  //         vatAmount = (vatPercentageEditingController.text.toDouble() / 100) * providerData.getTotalAmount().toDouble();
-                                  //         vatAmountEditingController.text = vatAmount.toStringAsFixed(2);
-                                  //       });
-                                  //     }
-                                  //   },
-                                  // );
                                   return Padding(
                                     padding: const EdgeInsets.only(left: 10, right: 10),
                                     child: ListTile(
@@ -323,7 +310,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                       contentPadding: const EdgeInsets.all(0),
                                       title: Text(providerData.cartItemList[index].productName.toString()),
                                       subtitle: Text(
-                                          '${providerData.cartItemList[index].quantities} X ${providerData.cartItemList[index].productPurchasePrice} = ${((providerData.cartItemList[index].quantities ?? 0) * (providerData.cartItemList[index].productPurchasePrice ?? 0)).toStringAsFixed(2)}'),
+                                          '${providerData.cartItemList[index].quantities} X ${providerData.cartItemList[index].productPurchasePrice} = ${formatPointNumber((providerData.cartItemList[index].quantities ?? 0) * (providerData.cartItemList[index].productPurchasePrice ?? 0))}'),
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -357,10 +344,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                                   child: Center(
                                                     child: Text(
                                                       providerData.cartItemList[index].quantities.toString(),
-                                                      style: GoogleFonts.poppins(
-                                                        color: kGreyTextColor,
-                                                        fontSize: 15.0,
-                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -405,115 +388,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                       ),
                                     ),
                                   );
-                                  // return Padding(
-                                  //   padding: const EdgeInsets.only(left: 10, right: 10),
-                                  //   child: ListTile(
-                                  //     onTap: () => showModalBottomSheet(
-                                  //       context: context,
-                                  //       builder: (context2) {
-                                  //         return Column(
-                                  //           children: [
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                  //               child: Row(
-                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //                 children: [
-                                  //                   Text(
-                                  //                     lang.S.of(context).updateProduct,
-                                  //                   ),
-                                  //                   CloseButton(
-                                  //                     onPressed: () => Navigator.pop(context2),
-                                  //                   )
-                                  //                 ],
-                                  //               ),
-                                  //             ),
-                                  //             const Divider(thickness: 1, color: kBorderColorTextField),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.all(16.0),
-                                  //               child: SalesAddToCartForm(
-                                  //                 batchWiseStockModel: providerData.cartItemList[index],
-                                  //                 previousContext: context2,
-                                  //               ),
-                                  //             ),
-                                  //           ],
-                                  //         );
-                                  //       },
-                                  //     ),
-                                  //     contentPadding: const EdgeInsets.all(0),
-                                  //     title: Text(providerData.cartItemList[index].productName.toString()),
-                                  //     subtitle: Text(
-                                  //         '${providerData.cartItemList[index].quantities} X ${providerData.cartItemList[index].productPurchasePrice} = ${((providerData.cartItemList[index].productPurchasePrice ?? 0) * (providerData.cartItemList[index].quantities ?? 0)).toStringAsFixed(2)}'),
-                                  //     trailing: Row(
-                                  //       mainAxisSize: MainAxisSize.min,
-                                  //       children: [
-                                  //         SizedBox(
-                                  //           width: 80,
-                                  //           child: Row(
-                                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //             children: [
-                                  //               GestureDetector(
-                                  //                 onTap: () => providerData.quantityDecrease(index),
-                                  //                 child: Container(
-                                  //                   height: 20,
-                                  //                   width: 20,
-                                  //                   decoration: const BoxDecoration(
-                                  //                     color: kMainColor,
-                                  //                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  //                   ),
-                                  //                   child: const Center(
-                                  //                     child: Text(
-                                  //                       '-',
-                                  //                       style: TextStyle(fontSize: 14, color: Colors.white),
-                                  //                     ),
-                                  //                   ),
-                                  //                 ),
-                                  //               ),
-                                  //               const SizedBox(width: 5),
-                                  //               SizedBox(
-                                  //                 width: 30,
-                                  //                 child: Center(
-                                  //                     child: Text(
-                                  //                   '${providerData.cartItemList[index].quantities}',
-                                  //                   style: const TextStyle(fontSize: 14),
-                                  //                 )),
-                                  //               ),
-                                  //               const SizedBox(width: 5),
-                                  //               GestureDetector(
-                                  //                 onTap: () => providerData.quantityIncrease(index),
-                                  //                 child: Container(
-                                  //                   height: 20,
-                                  //                   width: 20,
-                                  //                   decoration: const BoxDecoration(
-                                  //                     color: kMainColor,
-                                  //                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  //                   ),
-                                  //                   child: const Center(
-                                  //                       child: Text(
-                                  //                     '+',
-                                  //                     style: TextStyle(fontSize: 14, color: Colors.white),
-                                  //                   )),
-                                  //                 ),
-                                  //               ),
-                                  //             ],
-                                  //           ),
-                                  //         ),
-                                  //         const SizedBox(width: 10),
-                                  //         GestureDetector(
-                                  //           onTap: () => providerData.deleteToCart(index),
-                                  //           child: Container(
-                                  //             padding: const EdgeInsets.all(4),
-                                  //             color: Colors.red.withOpacity(0.1),
-                                  //             child: const Icon(
-                                  //               Icons.delete,
-                                  //               size: 20,
-                                  //               color: Colors.red,
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // );
                                 }),
                           ],
                         ),
@@ -544,7 +418,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                   Container(
                     decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(10)), border: Border.all(color: Colors.grey.shade300, width: 1)),
                     child: Column(
-                      spacing: 7,
                       children: [
                         ///________Total_title_reader_________________________
                         Container(
@@ -558,7 +431,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                providerData.totalAmount.toStringAsFixed(2),
+                                formatPointNumber(providerData.totalAmount),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -728,43 +601,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                       ),
                                     ),
                                   );
-
-                                  //   DropdownButton<VatModel>(
-                                  //   icon: providerData.selectedVat != null
-                                  //       ? GestureDetector(
-                                  //           onTap: () => providerData.changeSelectedVat(data: null),
-                                  //           child: const Icon(
-                                  //             Icons.close,
-                                  //             color: Colors.red,
-                                  //           ),
-                                  //         )
-                                  //       : const Icon(Icons.keyboard_arrow_down),
-                                  //   hint: Text(
-                                  //     'Select one',
-                                  //     maxLines: 1,
-                                  //     overflow: TextOverflow.ellipsis,
-                                  //     style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
-                                  //   ),
-                                  //   isExpanded: true,
-                                  //   isDense: true,
-                                  //   value: providerData.selectedVat,
-                                  //   items: dataList.map((VatModel tax) {
-                                  //     return DropdownMenuItem<VatModel>(
-                                  //       value: tax,
-                                  //       child: Text(
-                                  //         tax.name ?? '',
-                                  //         maxLines: 1,
-                                  //         overflow: TextOverflow.ellipsis,
-                                  //         style: _theme.textTheme.bodyMedium?.copyWith(
-                                  //           color: kGreyTextColor,
-                                  //         ),
-                                  //       ),
-                                  //     );
-                                  //   }).toList(),
-                                  //   onChanged: (VatModel? newValue) {
-                                  //     providerData.changeSelectedVat(data: newValue);
-                                  //   },
-                                  // );
                                 },
                                 error: (error, stackTrace) {
                                   return Text(error.toString());
@@ -793,58 +629,6 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                              // SizedBox(
-                              //   width: context.width() / 4,
-                              //   height: 40,
-                              //   child: TextFormField(
-                              //     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                              //     textAlign: TextAlign.right,
-                              //     readOnly: true,
-                              //     controller: providerData.vatAmountController,
-                              //     cursorColor: const Color(0xff00987F),
-                              //     decoration: const InputDecoration(
-                              //       // contentPadding: const EdgeInsets.only(right: 6.0),
-                              //       hintText: '0',
-                              //       border: UnderlineInputBorder(
-                              //         // gapPadding: 0.0,
-                              //         borderSide: BorderSide(
-                              //           color: Color(0xff00987F),
-                              //         ),
-                              //       ),
-                              //       // enabledBorder: UnderlineInputBorder(
-                              //       //   // gapPadding: 0.0,
-                              //       //   borderSide: BorderSide(
-                              //       //     color: Color(0xff00987F),
-                              //       //   ),
-                              //       // ),
-                              //       // disabledBorder: UnderlineInputBorder(
-                              //       //   // gapPadding: 0.0,
-                              //       //   borderSide: BorderSide(
-                              //       //     color: Color(0xff00987F),
-                              //       //   ),
-                              //       // ),
-                              //       focusedBorder: OutlineInputBorder(gapPadding: 0.0, borderSide: BorderSide(color: Color(0xff00987F))),
-                              //       prefixIconConstraints: BoxConstraints(maxWidth: 30.0, minWidth: 30.0),
-                              //       // prefixIcon: Container(
-                              //       //   alignment: Alignment.center,
-                              //       //   height: 40,
-                              //       //   decoration: const BoxDecoration(
-                              //       //     color: Color(0xff00987F),
-                              //       //     borderRadius: BorderRadius.only(
-                              //       //       topLeft: Radius.circular(4.0),
-                              //       //       bottomLeft: Radius.circular(4.0),
-                              //       //     ),
-                              //       //   ),
-                              //       //   child: const Icon(
-                              //       //     LineIcons.dollar_sign,
-                              //       //     size: 16,
-                              //       //     color: Colors.white,
-                              //       //   ),
-                              //       // ),
-                              //     ),
-                              //     keyboardType: TextInputType.number,
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
@@ -864,7 +648,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                 child: TextFormField(
                                   controller: providerData.shippingChargeController,
                                   keyboardType: TextInputType.number,
-                                  onChanged: (value) => providerData.calculatePrice(shippingCharge: value.isEmpty?'0':value),
+                                  onChanged: (value) => providerData.calculatePrice(shippingCharge: value.isEmpty ? '0' : value),
                                   textAlign: TextAlign.right,
                                   decoration: const InputDecoration(
                                     hintText: '0',
@@ -891,7 +675,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                providerData.totalPayableAmount.toStringAsFixed(2),
+                                formatPointNumber(providerData.totalPayableAmount),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -930,39 +714,45 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                           ),
                         ),
 
-                        ///________Return_Amount_________________________________
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                lang.S.of(context).returnAmount,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              Text(
-                                providerData.changeAmount.toStringAsFixed(2),
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ],
+                        ///________Change Amount_________________________________
+                        Visibility(
+                          visible: providerData.changeAmount > 0,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10, left: 10, top: 13, bottom: 13),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Change Amount',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  formatPointNumber(providerData.changeAmount),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
                         ///_______Due_amount_____________________________________
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10, left: 10, top: 13, bottom: 13),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                lang.S.of(context).dueAmount,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              Text(
-                                providerData.dueAmount.toStringAsFixed(2),
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ],
+                        Visibility(
+                          visible: providerData.dueAmount > 0 || (providerData.changeAmount == 0 && providerData.dueAmount == 0),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10, left: 10, top: 13, bottom: 13),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  lang.S.of(context).dueAmount,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  formatPointNumber(providerData.dueAmount),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -973,38 +763,11 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                   ///_______Payment_Type_______________________________
                   const Divider(height: 0),
                   const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            lang.S.of(context).paymentTypes,
-                            style: const TextStyle(fontSize: 16, color: Colors.black54),
-                          ),
-                          const SizedBox(width: 5),
-                          const Icon(
-                            Icons.wallet,
-                            color: Colors.green,
-                          )
-                        ],
-                      ),
-                      DropdownButton(
-                        value: paymentType,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: paymentsTypeList.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            paymentType = newValue.toString();
-                          });
-                        },
-                      ),
-                    ],
+                  PaymentTypeSelectorDropdown(
+                    value: paymentType,
+                    onChanged: (value) => setState(
+                      () => paymentType = value,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   const Divider(height: 0),
@@ -1052,6 +815,10 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                               EasyLoading.showError('Sales on due are not allowed for walk-in customers.');
                               return;
                             }
+                            if (paymentType == null) {
+                              EasyLoading.showError('Please select a payment type');
+                              return;
+                            }
 
                             ///_______ Prevent multiple clicks________________
                             if (isProcessing) return;
@@ -1074,12 +841,12 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                   products: providerData.cartItemList,
                                   vatAmount: providerData.vatAmount,
                                   vatPercent: providerData.selectedVat?.rate ?? 0,
-                                  paymentType: paymentType ?? 'Cash',
+                                  paymentType: paymentType?.toString() ?? '',
                                   partyId: widget.customerModel?.id ?? 0,
                                   isPaid: providerData.dueAmount <= 0 ? true : false,
                                   dueAmount: providerData.dueAmount <= 0 ? 0 : providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
-                                  paidAmount: providerData.receiveAmount,
+                                  changeAmount: providerData.changeAmount,
                                   shippingCharge: providerData.finalShippingCharge,
                                   discountPercent: providerData.discountPercent,
                                   discountType: discountType.toLowerCase() ?? '',
@@ -1105,33 +872,17 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                                   products: providerData.cartItemList,
                                   vatAmount: providerData.vatAmount,
                                   vatPercent: providerData.selectedVat?.rate ?? 0,
-                                  paymentType: paymentType ?? 'Cash',
+                                  paymentType: paymentType?.toString() ?? '',
+                                  changeAmount: providerData.changeAmount,
                                   partyId: widget.transitionModel?.party?.id ?? 0,
                                   isPaid: providerData.dueAmount <= 0 ? true : false,
                                   dueAmount: providerData.dueAmount <= 0 ? 0 : providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
-                                  paidAmount: providerData.receiveAmount,
                                 );
 
                                 if (purchaseData != null) {
                                   const PurchaseListScreen().launch(context);
                                 }
-                                // await repo.updateSale(
-                                //   id: widget.transitionModel?.id ?? 0,
-                                //   ref: ref,
-                                //   context: context,
-                                //   totalAmount: providerData.totalPayableAmount,
-                                //   purchaseDate: selectedDate.toString(),
-                                //   products: selectedProductList,
-                                //   paymentType: paymentType ?? 'Cash',
-                                //   partyId: widget.transitionModel?.party?.id,
-                                //   vatAmount: providerData.vatAmount,
-                                //   vatPercent: providerData.selectedVat != null ? providerData.selectedVat!.rate! : 0,
-                                //   isPaid: providerData.isFullPaid,
-                                //   dueAmount: providerData.dueAmount,
-                                //   discountAmount: providerData.discountAmount,
-                                //   paidAmount: providerData.receiveAmount,
-                                // );
                               }
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));

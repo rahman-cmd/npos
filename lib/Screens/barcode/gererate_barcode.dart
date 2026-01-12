@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/constant.dart';
@@ -109,6 +108,7 @@ class _BarcodeGeneratorScreenState extends State<BarcodeGeneratorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(
       builder: (context, ref, __) {
         final productData = ref.watch(productProvider);
@@ -120,9 +120,6 @@ class _BarcodeGeneratorScreenState extends State<BarcodeGeneratorScreen> {
                 centerTitle: true,
                 title: Text(
                   lang.S.of(context).barcodeGenerator,
-                  style: GoogleFonts.poppins(
-                    color: Colors.black,
-                  ),
                 ),
                 backgroundColor: Colors.white,
               ),
@@ -252,11 +249,13 @@ class _BarcodeGeneratorScreenState extends State<BarcodeGeneratorScreen> {
                                               children: [
                                                 Text(
                                                   selectedProduct.product.productName ?? 'N/A',
-                                                  style: gTextStyle.copyWith(color: kTitleColor, fontSize: 14),
+                                                  style: theme.textTheme.bodyMedium,
                                                 ),
                                                 Text(
                                                   selectedProduct.product.productCode ?? 'N/A',
-                                                  style: gTextStyle.copyWith(color: kGreyTextColor, fontSize: 12),
+                                                  style: theme.textTheme.bodySmall?.copyWith(
+                                                    color: kGreyTextColor,
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -315,8 +314,7 @@ class _BarcodeGeneratorScreenState extends State<BarcodeGeneratorScreen> {
                                       ),
                                       Text(
                                         lang.S.of(context).noItemSelected,
-                                        style: gTextStyle.copyWith(
-                                          color: Colors.black,
+                                        style: theme.textTheme.titleLarge?.copyWith(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -366,9 +364,8 @@ class _BarcodeGeneratorScreenState extends State<BarcodeGeneratorScreen> {
 
                     label: Text(
                       lang.S.of(context).previewPdf,
-                      style: gTextStyle.copyWith(
+                      style: theme.textTheme.titleLarge?.copyWith(
                         color: Colors.white,
-                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

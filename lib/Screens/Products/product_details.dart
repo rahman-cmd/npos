@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/currency.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 import '../../GlobalComponents/glonal_popup.dart';
+
 class ProductDetails extends StatefulWidget {
   const ProductDetails({
     Key? key,
@@ -18,6 +18,7 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: kWhite,
@@ -25,11 +26,8 @@ class _ProductDetailsState extends State<ProductDetails> {
           backgroundColor: kWhite,
           surfaceTintColor: kWhite,
           title: Text(
-           lang.S.of(context).productDetails,
-           //'Product Details',
-            style: GoogleFonts.poppins(
-              color: kTitleColor,
-            ),
+            lang.S.of(context).productDetails,
+            //'Product Details',
           ),
           actions: [
             Padding(
@@ -47,8 +45,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                       Text(
                         lang.S.of(context).edit,
-                       // 'Edit',
-                        style: gTextStyle.copyWith(fontSize: 13, color: kMainColor),
+                        // 'Edit',
+                        style: theme.textTheme.bodyMedium?.copyWith(color: kMainColor),
                       )
                     ],
                   )),
@@ -72,7 +70,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                     height: 290,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5), color: const Color(0xffFEF0F1), image: const DecorationImage(fit: BoxFit.cover, image: NetworkImage('https://tinyurl.com/3tme92c2'))),
+                        borderRadius: BorderRadius.circular(5),
+                        color: const Color(0xffFEF0F1),
+                        image: const DecorationImage(fit: BoxFit.cover, image: NetworkImage('https://tinyurl.com/3tme92c2'))),
                   ),
                   const SizedBox(
                     height: 20,
@@ -86,19 +86,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Text(
                             lang.S.of(context).smartWatch,
                             //'Smart watch',
-                            style: gTextStyle.copyWith(fontWeight: FontWeight.bold, color: kTitleColor, fontSize: 20),
+                            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                           ),
                           Text(
                             lang.S.of(context).appleWatch,
                             //'Apple Watch',
-                            style: gTextStyle.copyWith(color: kGreyTextColor),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: kGreyTextColor,
+                            ),
                           ),
                         ],
                       ),
                       const Spacer(),
                       Text(
                         '$currency 175.0',
-                        style: gTextStyle.copyWith(fontSize: 20, fontWeight: FontWeight.bold, color: kTitleColor),
+                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                       )
                     ],
                   ),
@@ -106,9 +108,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                     height: 20,
                   ),
                   Text(
-                   lang.S.of(context).details,
-                   // 'Details',
-                    style: gTextStyle.copyWith(fontWeight: FontWeight.bold, color: kTitleColor),
+                    lang.S.of(context).details,
+                    // 'Details',
+                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(
                     height: 10,
@@ -116,7 +118,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Text(
                     lang.S.of(context).loremIpsumDolor,
                     //'Lorem ipsum dolor sit amet, consectetur adi piscing elit. Accumsan vulputate tellus scele risque odio con sectetur tincidunt semper.',
-                    style: gTextStyle.copyWith(color: kGreyTextColor),
+                    style: theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
                   ),
                   const SizedBox(
                     height: 20,
@@ -136,26 +138,23 @@ class _ProductDetailsState extends State<ProductDetails> {
                               Text(
                                 lang.S.of(context).salePrice,
                                 //'Sale Price',
-                                style: gTextStyle.copyWith(
-                                  color: kTitleColor,
-                                  fontSize: 16,
-                                ),
+                                style: theme.textTheme.bodyLarge,
                               ),
                               Text(
                                 '$currency ${180}',
-                                style: gTextStyle.copyWith(color: kGreyTextColor),
+                                style: theme.textTheme.bodyLarge?.copyWith(color: kGreyTextColor),
                               ),
                               const SizedBox(
                                 height: 20,
                               ),
                               Text(
                                 lang.S.of(context).wholeSalePrice,
-                              //  'Wholesale price',
-                                style: gTextStyle.copyWith(color: kTitleColor, fontSize: 16),
+                                //  'Wholesale price',
+                                style: theme.textTheme.bodyLarge,
                               ),
                               Text(
                                 '$currency ${170}',
-                                style: gTextStyle.copyWith(color: kGreyTextColor),
+                                style: theme.textTheme.bodyLarge?.copyWith(color: kGreyTextColor),
                               )
                             ],
                           ),
@@ -173,14 +172,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                               Text(
                                 lang.S.of(context).stock,
                                 //'Stock',
-                                style: gTextStyle.copyWith(
-                                  color: kTitleColor,
-                                  fontSize: 16,
-                                ),
+                                style: theme.textTheme.bodyLarge,
                               ),
                               Text(
                                 '250',
-                                style: gTextStyle.copyWith(color: kGreyTextColor),
+                                style: theme.textTheme.bodyLarge?.copyWith(color: kGreyTextColor),
                               ),
                               const SizedBox(
                                 height: 20,
@@ -188,11 +184,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                               Text(
                                 lang.S.of(context).dealerPrice,
                                 //'Dealer price',
-                                style: gTextStyle.copyWith(color: kTitleColor, fontSize: 16),
+                                style: theme.textTheme.bodyLarge?.copyWith(color: kTitleColor, fontSize: 16),
                               ),
                               Text(
                                 '$currency ${175}',
-                                style: gTextStyle.copyWith(color: kGreyTextColor),
+                                style: theme.textTheme.bodyLarge?.copyWith(color: kGreyTextColor),
                               )
                             ],
                           ),

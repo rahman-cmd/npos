@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Усе бізнес-рашэнні",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "Npos з\'яўляецца поўным бізнес-рашэннем са складам, улікам, продажамі, выдаткамі і прыбыткамі/стратамі.",
+      "NPOS з\'яўляецца поўным бізнес-рашэннем са складам, улікам, продажамі, выдаткамі і прыбыткамі/стратамі.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("За ўвесь час"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Ужо дададзена"),
@@ -611,7 +611,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Калі ласка, выберыце катэгорыю выдаткаў",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage("Працуе на Npos"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Працуе на NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Прэміум-падтрымка кліентаў",
     ),

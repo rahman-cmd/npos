@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 import '../../GlobalComponents/glonal_popup.dart';
@@ -16,15 +15,12 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GlobalPopup(
       child: Scaffold(
         appBar: AppBar(
           title: Text(
             lang.S.of(context).notification,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,
@@ -48,7 +44,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 iconColor: Colors.purple,
                 icons: Icons.notifications_none_outlined,
                 time: 'June 23, 2021',
-                description:lang.S.of(context).lorem,
+                description: lang.S.of(context).lorem,
                 // 'Lorem ipsum dolor sit amet, consectetur adip gravi iscing elit. Ultricies gravida scelerisque arcu facilisis duis in.',
               ),
             ],
@@ -77,6 +73,7 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       elevation: 0.0,
       child: Column(
@@ -104,9 +101,8 @@ class NotificationCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18.0,
-                      color: Colors.black,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontSize: 18,
                     ),
                   ),
                 ],
@@ -114,9 +110,8 @@ class NotificationCard extends StatelessWidget {
               const Spacer(),
               Text(
                 time,
-                style: GoogleFonts.poppins(
+                style: theme.textTheme.bodySmall?.copyWith(
                   color: kGreyTextColor,
-                  fontSize: 12.0,
                 ),
               ),
               const SizedBox(
@@ -128,9 +123,8 @@ class NotificationCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 60.0),
             child: Text(
               description,
-              style: GoogleFonts.poppins(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: kGreyTextColor,
-                fontSize: 14.0,
               ),
               maxLines: 3,
             ),

@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tất cả giải pháp doanh nghiệp",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro là một giải pháp kinh doanh hoàn chỉnh với quản lý kho, tài khoản, bán hàng, chi phí và lợi nhuận/tổn thất.",
+      "NPOS là một giải pháp kinh doanh hoàn chỉnh với quản lý kho, tài khoản, bán hàng, chi phí và lợi nhuận/tổn thất.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Tất cả Thời gian"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Đã thêm"),
@@ -128,7 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Chọn Chức năng của bạn",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Các tính năng quan trọng làm cho PosPro khác biệt so với các giải pháp truyền thống.",
+      "Các tính năng quan trọng làm cho NPOS khác biệt so với các giải pháp truyền thống.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage("Bấm để kết nối"),
@@ -229,7 +229,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Dễ sử dụng điểm bán hàng di động",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Ứng dụng PosPro miễn phí và dễ sử dụng. Trong thực tế, đó là một trong những hệ thống POS tốt nhất trên thế giới.",
+      "Ứng dụng NPOS miễn phí và dễ sử dụng. Trong thực tế, đó là một trong những hệ thống POS tốt nhất trên thế giới.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Biên tập"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -593,8 +593,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Vui lòng chọn danh mục chi phí",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Được cung cấp bởi Acnoo",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Được cung cấp bởi NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Hỗ trợ ứng dụng Android và iOS",

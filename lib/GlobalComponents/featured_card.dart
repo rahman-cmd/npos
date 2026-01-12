@@ -6,9 +6,9 @@ import '../currency.dart';
 
 class FeaturedCard extends StatefulWidget {
   const FeaturedCard({
-    Key? key,
+    super.key,
     required this.product,
-  }) : super(key: key);
+  });
   final Product product;
 
   @override
@@ -17,6 +17,9 @@ class FeaturedCard extends StatefulWidget {
 }
 
 class _FeaturedCardState extends State<FeaturedCard> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Expense/Repo/expanse_category_repo.dart';
 import 'package:mobile_pos/Screens/Income/Repo/income_category_repo.dart';
@@ -42,10 +41,6 @@ class _AddIncomeCategoryState extends State<AddIncomeCategory> {
                 icon: const Icon(Icons.close)),
             title: Text(
               lang.S.of(context).addIncomeCategory,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 20.0,
-              ),
             ),
             iconTheme: const IconThemeData(color: Colors.black),
             centerTitle: true,
@@ -84,9 +79,7 @@ class _AddIncomeCategoryState extends State<AddIncomeCategory> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  ButtonGlobalWithoutIcon(
-                    buttontext: lang.S.of(context).save,
-                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                  ElevatedButton(
                     onPressed: () async {
                       if (key.currentState?.validate() ?? false) {
                         EasyLoading.show();
@@ -98,7 +91,7 @@ class _AddIncomeCategoryState extends State<AddIncomeCategory> {
                         );
                       }
                     },
-                    buttonTextColor: Colors.white,
+                    child: Text(lang.S.of(context).save),
                   ),
                 ],
               ),

@@ -30,14 +30,19 @@ class DueThermalPrinterInvoice {
         ),
         linesAfter: 1);
 
-    bytes += generator.text('Seller :${printDueTransactionModel.dueTransactionModel?.user?.name ?? ''}', styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        'Seller :${printDueTransactionModel.dueTransactionModel?.user?.role == "shop-owner" ? 'Admin' : printDueTransactionModel.dueTransactionModel?.user?.name ?? ''}',
+        styles: const PosStyles(align: PosAlign.center));
 
     if (printDueTransactionModel.personalInformationModel.address != null) {
       bytes += generator.text(printDueTransactionModel.personalInformationModel.address ?? '', styles: const PosStyles(align: PosAlign.center));
     }
+    if (printDueTransactionModel.personalInformationModel.crNo != null) {
+      bytes += generator.text("C.R : ${printDueTransactionModel.personalInformationModel.crNo ?? ''}",
+          styles: const PosStyles(align: PosAlign.center));
+    }
     if (printDueTransactionModel.personalInformationModel.vatNumber != null) {
-      bytes += generator.text(
-          "${printDueTransactionModel.personalInformationModel.vatName ?? 'VAT No :'}${printDueTransactionModel.personalInformationModel.vatNumber ?? ''}",
+      bytes += generator.text("${printDueTransactionModel.personalInformationModel.vatName ?? 'VAT No :'}${printDueTransactionModel.personalInformationModel.vatNumber ?? ''}",
           styles: const PosStyles(align: PosAlign.center));
     }
     bytes += generator.text(printDueTransactionModel.personalInformationModel.phoneNumber ?? '', styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
@@ -78,7 +83,7 @@ class DueThermalPrinterInvoice {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: printDueTransactionModel.dueTransactionModel!.paymentType.toString(),
+          text: printDueTransactionModel.dueTransactionModel!.paymentType?.name ?? 'N/A',
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,

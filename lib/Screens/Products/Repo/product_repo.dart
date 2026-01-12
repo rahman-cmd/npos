@@ -222,6 +222,7 @@ class ProductRepo {
     String? productDealerPrice,
     String? productManufacturer,
     String? productDiscount,
+    String? productStock,
     String? vatId,
     String? vatType,
     String? vatAmount,
@@ -252,7 +253,7 @@ class ProductRepo {
     request.fields['brand_id'] = brandId != null ? brandId.toString() : '';
     request.fields['unit_id'] = unitId != null ? unitId.toString() : '';
     if (categoryId != null) request.fields['category_id'] = categoryId;
-    request.fields['vat_id'] = vatId ?? '';
+    if (vatId != null) request.fields['vat_id'] = vatId;
     if (vatType != null) request.fields['vat_type'] = vatType;
     if (vatAmount != null) request.fields['vat_amount'] = vatAmount;
     if (profitMargin != null) request.fields['profit_percent'] = profitMargin;
@@ -260,6 +261,7 @@ class ProductRepo {
     if (productDealerPrice != null) request.fields['productDealerPrice'] = productDealerPrice;
     if (productManufacturer != null) request.fields['productManufacturer'] = productManufacturer;
     if (productDiscount != null) request.fields['productDiscount'] = productDiscount;
+    if (productStock != null) request.fields['productStock'] = productStock;
     if (image != null) {
       request.files.add(http.MultipartFile.fromBytes('productPicture', image.readAsBytesSync(), filename: image.path));
     }

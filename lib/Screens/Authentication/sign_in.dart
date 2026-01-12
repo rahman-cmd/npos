@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/Phone%20Auth/phone_auth_screen.dart';
 import 'package:mobile_pos/Screens/Authentication/login_form.dart';
@@ -19,6 +18,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -34,42 +34,34 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Center(
                 child: Text(
                   lang.S.of(context).createAcc,
-                  style: GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 20.0),
+                  style: theme.textTheme.titleLarge,
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Center(
-                child: ButtonGlobalWithoutIcon(
-                  buttontext: lang.S.of(context).logIn,
-                  buttonTextColor: Colors.white,
-                  buttonDecoration: kButtonDecoration.copyWith(
-                    color: kMainColor,
-                  ),
+                child: ElevatedButton(
                   onPressed: () {
                     const LoginForm(
                       isEmailLogin: true,
                     ).launch(context);
                     // Navigator.pushNamed(context, '/loginForm');
                   },
+                  child: Text(lang.S.of(context).logIn),
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
               child: Center(
-                child: ButtonGlobalWithoutIcon(
-                  buttontext: lang.S.of(context).register,
-                  buttonTextColor: Colors.white,
-                  buttonDecoration: kButtonDecoration.copyWith(
-                    color: const Color(0xFF19AAF8),
-                  ),
+                child: ElevatedButton(
                   onPressed: () {
                     const PhoneAuth().launch(context);
                     // const RegisterScreen().launch(context);
                     // Navigator.pushNamed(context, '/signup');
                   },
+                  child: Text(lang.S.of(context).register),
                 ),
               ),
             ),

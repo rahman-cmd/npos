@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mobile_pos/Screens/product_category/model/category_model.dart';
 import 'package:mobile_pos/Screens/product_category/provider/product_category_provider/product_unit_provider.dart';
@@ -39,11 +38,6 @@ class CategoryListState extends State<CategoryList> {
         appBar: AppBar(
           title: Text(
             lang.S.of(context).categories,
-            //'Categories',
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,

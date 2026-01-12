@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/User%20Roles/Model/user_role_model.dart' as user;
 import 'package:mobile_pos/Screens/User%20Roles/Repo/user_role_repo.dart';
@@ -95,6 +94,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
       return GlobalPopup(
         child: Scaffold(
@@ -104,9 +104,9 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
             title: Text(
               lang.S.of(context).userRoleDetails,
               // 'User Role Details',
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
+              // style: GoogleFonts.poppins(
+              //   color: Colors.black,
+              // ),
             ),
             actions: [
               IconButton(
@@ -136,21 +136,18 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                                     Row(
                                       children: [
                                         Expanded(
-                                          child: ButtonGlobalWithoutIcon(
+                                          child: ElevatedButton(
                                             //buttontext: 'Cancel',
-                                            buttontext: lang.S.of(context).cancel,
-                                            buttonDecoration: kButtonDecoration.copyWith(color: Colors.green),
                                             onPressed: (() {
                                               Navigator.pop(context1);
                                             }),
-                                            buttonTextColor: Colors.white,
+                                            //buttontext: 'Cancel',
+                                            child: Text(lang.S.of(context).cancel),
                                           ),
                                         ),
                                         Expanded(
-                                          child: ButtonGlobalWithoutIcon(
+                                          child: ElevatedButton(
                                               //buttontext: 'Delete',
-                                              buttontext: lang.S.of(context).delete,
-                                              buttonDecoration: kButtonDecoration.copyWith(color: Colors.red),
                                               onPressed: (() async {
                                                 EasyLoading.show(
                                                   status: lang.S.of(context).loading,
@@ -159,7 +156,8 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                                                 UserRoleRepo repo = UserRoleRepo();
                                                 await repo.deleteUser(id: widget.userRoleModel.id.toString(), context: context, ref: ref);
                                               }),
-                                              buttonTextColor: Colors.white),
+                                              //buttontext: 'Delete',
+                                              child: Text(lang.S.of(context).delete)),
                                         ),
                                       ],
                                     ),
@@ -251,7 +249,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                               ),
                             ],
                           ),
-        
+
                           ///_______Edit Profile_&_sale____________________________________________
                           Row(
                             children: [
@@ -271,7 +269,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                                   ),
                                 ),
                               ),
-        
+
                               ///______sales____________________________
                               Expanded(
                                 child: CheckboxListTile(
@@ -290,7 +288,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                               ),
                             ],
                           ),
-        
+
                           ///_____parties_&_Purchase_________________________________________
                           Row(
                             children: [
@@ -326,7 +324,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                               ),
                             ],
                           ),
-        
+
                           ///_____Product_&_DueList_________________________________________
                           Row(
                             children: [
@@ -362,7 +360,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                               ),
                             ],
                           ),
-        
+
                           ///_____Stock_&_Reports_________________________________________
                           Row(
                             children: [
@@ -398,7 +396,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                               ),
                             ],
                           ),
-        
+
                           ///_____SalesList_&_Purchase List_________________________________________
                           Row(
                             children: [
@@ -438,7 +436,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                               ),
                             ],
                           ),
-        
+
                           ///_____LossProfit_&_Expense_________________________________________
                           Row(
                             children: [
@@ -474,7 +472,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                               ),
                             ],
                           ),
-        
+
                           ///_____LossProfit_&_Expense_________________________________________
                           Row(
                             children: [
@@ -514,7 +512,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                       ),
                     ),
                   ),
-        
+
                   ///___________Text_fields_____________________________________________
                   Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -562,7 +560,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                             textFieldType: TextFieldType.EMAIL,
                           ),
                           const SizedBox(height: 20.0),
-        
+
                           ///__________Title_________________________________________________________
                           TextFormField(
                             validator: (value) {
@@ -594,7 +592,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                             ),
                           ),
                           const SizedBox(height: 20.0),
-        
+
                           ///_____________Update_Password__________________________________
                           AppTextField(
                             validator: (value) {
@@ -631,9 +629,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
           ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: ButtonGlobalWithoutIcon(
-                buttontext: lang.S.of(context).update,
-                buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+            child: ElevatedButton(
                 onPressed: (() async {
                   if (salePermission ||
                       partiesPermission ||
@@ -687,7 +683,7 @@ class _UserRoleDetailsState extends State<UserRoleDetails> {
                         );
                   }
                 }),
-                buttonTextColor: Colors.white),
+                child: Text(lang.S.of(context).update)),
           ),
         ),
       );

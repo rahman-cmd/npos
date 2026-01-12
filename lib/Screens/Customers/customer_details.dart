@@ -1,11 +1,8 @@
-// ignore_for_file: unused_result
-
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Const/api_config.dart';
+import 'package:mobile_pos/GlobalComponents/url_lanuncer.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
 import 'package:mobile_pos/Screens/Customers/edit_customer.dart';
 import 'package:mobile_pos/Screens/Customers/sms_sent_confirmation.dart';
@@ -15,16 +12,14 @@ import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:mobile_pos/widgets/empty_widget/_empty_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../GlobalComponents/sales_transaction_widget.dart';
-import '../../PDF Invoice/generate_pdf.dart';
+import '../../PDF Invoice/purchase_invoice_pdf.dart';
 import '../../Provider/profile_provider.dart';
 import '../../currency.dart';
 import '../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
 import '../invoice_details/purchase_invoice_details.dart';
-import '../invoice_details/sales_invoice_details_screen.dart';
 import 'Model/parties_model.dart';
 import 'Repo/parties_repo.dart';
 
@@ -103,9 +98,6 @@ class _CustomerDetailsState extends State<CustomerDetails> {
             backgroundColor: Colors.white,
             title: Text(
               widget.party.type != 'Supplier' ? lang.S.of(context).CustomerDetails : lang.S.of(context).supplierDetails,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             actions: [
               businessInfo.when(data: (details) {
@@ -365,18 +357,36 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                                           ),
                                                           const SizedBox(width: 8),
                                                           businessData.when(data: (business) {
-                                                            return IconButton(
-                                                              style: IconButton.styleFrom(
-                                                                  padding: EdgeInsets.zero,
-                                                                  visualDensity: const VisualDensity(
-                                                                    horizontal: -4,
-                                                                    vertical: -4,
-                                                                  )),
-                                                              onPressed: () => GeneratePdf().generatePurchaseDocument(currentTransaction, data, context, business),
-                                                              icon: const Icon(
-                                                                Icons.picture_as_pdf,
-                                                                color: Colors.grey,
-                                                              ),
+                                                            return Row(
+                                                              children: [
+                                                                IconButton(
+                                                                  style: IconButton.styleFrom(
+                                                                      padding: EdgeInsets.zero,
+                                                                      visualDensity: const VisualDensity(
+                                                                        horizontal: -4,
+                                                                        vertical: -4,
+                                                                      )),
+                                                                  onPressed: () => PurchaseInvoicePDF.generatePurchaseDocument(currentTransaction, data, context, business),
+                                                                  icon: const Icon(
+                                                                    Icons.picture_as_pdf,
+                                                                    color: Colors.grey,
+                                                                  ),
+                                                                ),
+                                                                IconButton(
+                                                                  style: IconButton.styleFrom(
+                                                                      padding: EdgeInsets.zero,
+                                                                      visualDensity: const VisualDensity(
+                                                                        horizontal: -4,
+                                                                        vertical: -4,
+                                                                      )),
+                                                                  onPressed: () =>
+                                                                      PurchaseInvoicePDF.generatePurchaseDocument(currentTransaction, data, context, business, isShare: true),
+                                                                  icon: const Icon(
+                                                                    Icons.share_outlined,
+                                                                    color: Colors.grey,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             );
                                                           }, error: (e, stack) {
                                                             return Text(e.toString());
@@ -434,7 +444,6 @@ class _CustomerDetailsState extends State<CustomerDetails> {
   }
 }
 
-// Contact Row
 class ContactOptionsRow extends StatefulWidget {
   final Party party;
 
@@ -453,6 +462,7 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
     });
 
     if (index == 0) {
+      // Call functionality
       if (widget.party.phone == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Phone number is not available.')),
@@ -460,10 +470,14 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
         return;
       }
       final Uri url = Uri.parse('tel:${widget.party.phone}');
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
+      bool t = await launchUrl(url);
+      if (!t) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not launch the phone app.')),
+        );
       }
     } else if (index == 1) {
+      // SMS functionality
       if (widget.party.type != 'Supplier') {
         showDialog(
           context: context,
@@ -474,10 +488,11 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
               onCancel: () {
                 Navigator.pop(context1);
               },
-              onSendSms: () async {
-                EasyLoading.show(status: 'SMS Sending..');
-                PartyRepository repo = PartyRepository();
-                await repo.sendCustomerUdeSms(id: widget.party.id!, context: context);
+              onSendSms: () {
+                UrlLauncher.handleLaunchURL(context, 'sms:${widget.party.phone}', false);
+                // EasyLoading.show(status: 'SMS Sending..');
+                // PartyRepository repo = PartyRepository();
+                // await repo.sendCustomerUdeSms(id: widget.party.id!, context: context);
               },
             );
           },
@@ -489,22 +504,21 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
           );
           return;
         }
-        final Uri url = Uri.parse('sms:${widget.party.phone}');
-        if (await canLaunchUrl(url)) {
-          await launchUrl(url);
-        }
+        UrlLauncher.handleLaunchURL(
+          context,
+          'sms:${widget.party.phone}',
+          false,
+        );
       }
     } else if (index == 2) {
+      // Email functionality
       if (widget.party.email == null || !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(widget.party.email!)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid email address.')),
         );
         return;
       }
-      final Uri url = Uri.parse('mailto:${widget.party.email}');
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
-      }
+      UrlLauncher.handleLaunchURL(context, 'mailto:${widget.party.email}', true);
     }
   }
 

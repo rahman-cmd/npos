@@ -74,8 +74,10 @@ class SignUpRepo {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(responseData['error'])));
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Network error: Please try again')));
-    } finally {}
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $error')));
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Server error: Please try again')));
+    }
 
     return false;
   }

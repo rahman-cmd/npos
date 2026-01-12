@@ -78,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Visi biznesa risinājumi",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro ir pilnīgs biznesa risinājums ar krājumu, grāmatvedību, pārdošanu, izdevumiem un peļņu/zaudējumiem.",
+      "NPOS ir pilnīgs biznesa risinājums ar krājumu, grāmatvedību, pārdošanu, izdevumiem un peļņu/zaudējumiem.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Visu laiku"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Jau pievienots"),
@@ -140,7 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Izvēlieties savas funkcijas",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funkcijas ir svarīga daļa, kas atšķir POSpro no tradicionālajiem risinājumiem.",
+      "Funkcijas ir svarīga daļa, kas atšķir NPOS no tradicionālajiem risinājumiem.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -239,7 +239,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Viegli lietojams mobilais POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro lietotne ir bezmaksas un viegli lietojama. Patiesībā tā ir viena no labākajām POS sistēmām pasaulē.",
+      "NPOS lietotne ir bezmaksas un viegli lietojama. Patiesībā tā ir viena no labākajām POS sistēmām pasaulē.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Rediģēt"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -617,7 +617,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Lūdzu, izvēlēties izdevumu kategoriju",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Darbina Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Darbina NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android un iOS lietotnes atbalsts",
     ),

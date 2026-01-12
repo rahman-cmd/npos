@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -15,14 +14,11 @@ class ContactUs extends StatefulWidget {
 class _ContactUsState extends State<ContactUs> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           lang.S.of(context).contactUs,
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 20.0,
-          ),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         centerTitle: true,
@@ -48,9 +44,7 @@ class _ContactUsState extends State<ContactUs> {
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: ButtonGlobalWithoutIcon(
-              buttontext: lang.S.of(context).sendMessage,
-              buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+            child: ElevatedButton(
               onPressed: () {
                 showDialog(
                   context: context,
@@ -95,35 +89,28 @@ class _ContactUsState extends State<ContactUs> {
                           Center(
                             child: Text(
                               lang.S.of(context).sendYourEmail,
-                              style: GoogleFonts.poppins(
-                                color: Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: theme.textTheme.titleLarge,
                             ),
                           ),
                           Center(
                             child: Padding(
-                              padding:  EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Text(
                                 lang.S.of(context).loremIpsumDolorSitAmetConsecteturElitInterdumCons,
                                 //'Lorem ipsum dolor sit amet, consectetur elit. Interdum cons.',
                                 maxLines: 2,
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
+                                style: theme.textTheme.bodyLarge?.copyWith(
                                   color: kGreyTextColor,
-                                  fontSize: 16.0,
                                 ),
                               ),
                             ),
                           ),
-                          ButtonGlobalWithoutIcon(
-                            buttontext: lang.S.of(context).backToHome,
-                            buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            buttonTextColor: Colors.white,
+                            child: Text(lang.S.of(context).backToHome),
                           ),
                         ],
                       ),
@@ -131,7 +118,7 @@ class _ContactUsState extends State<ContactUs> {
                   ),
                 );
               },
-              buttonTextColor: Colors.white,
+              child: Text(lang.S.of(context).sendMessage),
             ),
           ),
         ],

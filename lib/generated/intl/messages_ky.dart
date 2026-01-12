@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Бардык бизнес чечимдери",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro - бул толук кандуу бизнес чечими, анда запастар, эсептер, сатуулар, чыгымдар жана киреше/чыгым камтылган.",
+      "NPOS - бул толук кандуу бизнес чечими, анда запастар, эсептер, сатуулар, чыгымдар жана киреше/чыгым камтылган.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Бардык убакыт"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Мурун кошулган"),
@@ -132,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Өзүңүздүн өзгөчөлүктөрүңүздү тандаңыз",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Өзгөчөлүктөр POSpro\'ну салттуу чечимдерден айырмалап турган маанилүү бөлүгү болуп саналат.",
+      "Өзгөчөлүктөр NPOS\'ну салттуу чечимдерден айырмалап турган маанилүү бөлүгү болуп саналат.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Клэрэнс"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -235,7 +235,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Колдонууга оңой мобилдик POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro колдонмосу акысыз, колдонууга оңой. Чындыгында, ал дүйнө жүзү боюнча эң мыкты POS системаларынын бири болуп саналат.",
+      "NPOS колдонмосу акысыз, колдонууга оңой. Чындыгында, ал дүйнө жүзү боюнча эң мыкты POS системаларынын бири болуп саналат.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Түзөтүү"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -611,8 +611,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Сураныч, чыгым категориясын тандаңыз",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-      "Acnoo тарабынан иштелип чыккан",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "NPOS тарабынан иштелип чыккан",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android & iOS колдонмолорун колдоо",

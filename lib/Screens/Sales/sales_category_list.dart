@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/category_card.dart';
 import 'package:mobile_pos/Screens/Products/product_data.dart';
 import 'package:mobile_pos/Screens/Sales/sales_products_list_screen.dart';
@@ -33,10 +32,6 @@ class _SalesCategoryListState extends State<SalesCategoryList> {
               )),
           title: Text(
             lang.S.of(context).categories,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,

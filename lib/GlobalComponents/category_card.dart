@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Products/product_data.dart';
 
 import '../constant.dart';
@@ -15,6 +14,7 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
       child: Row(
@@ -23,7 +23,7 @@ class CategoryCard extends StatelessWidget {
             flex: 3,
             child: Text(
               product.title,
-              style: GoogleFonts.poppins(
+              style: theme.textTheme.titleLarge?.copyWith(
                 fontSize: 18.0,
                 color: Colors.black,
               ),

@@ -65,7 +65,7 @@ class DueRepo {
       'party_id': partyId,
       'invoiceNumber': invoiceNumber,
       'paymentDate': paymentDate,
-      'paymentType': paymentType,
+      'payment_type_id': paymentType,
       'payDueAmount': payDueAmount,
     });
 
@@ -74,18 +74,21 @@ class DueRepo {
       var responseData = await customHttpClient.post(
           url: uri, headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'}, body: requestBody);
       final parsedData = jsonDecode(responseData.body);
+      print("Print Due data: ${parsedData['data']}");
 
       if (responseData.statusCode == 200) {
         EasyLoading.showSuccess('Collected successful!');
 
-        var refreshParty = ref.refresh(partiesProvider);
-        var purchaseTransactionRefresh = ref.refresh(purchaseTransactionProvider);
-        var salesTransactionRefresh = ref.refresh(salesTransactionProvider);
-        var businessInfoRefresh = ref.refresh(businessInfoProvider);
+        ref.refresh(partiesProvider);
+
+        ref.refresh(purchaseTransactionProvider);
+        ref.refresh(salesTransactionProvider);
+        ref.refresh(businessInfoProvider);
         ref.refresh(getExpireDateProvider(ref));
-        var dueInvoiceListRefresh = ref.refresh(dueInvoiceListProvider(partyId.round()));
-        var dueCollectionListRefresh = ref.refresh(dueCollectionListProvider);
-        var data = ref.refresh(summaryInfoProvider);
+
+        // ref.refresh(dueInvoiceListProvider(partyId.round()));
+        ref.refresh(dueCollectionListProvider);
+        ref.refresh(summaryInfoProvider);
 
         return DueCollection.fromJson(parsedData['data']);
         // Navigator.pop(context);

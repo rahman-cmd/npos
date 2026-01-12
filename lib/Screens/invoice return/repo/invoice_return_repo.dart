@@ -51,9 +51,13 @@ class InvoiceReturnRepo {
       request.fields['discountAmount'] = salesReturn.discountAmount.toString();
 
       // var response = await request.send();
-      var response = await customHttpClient.uploadFile(url: uri,fields: request.fields, );
+      var response = await customHttpClient.uploadFile(
+        url: uri,
+        fields: request.fields,
+      );
       var responseData = await http.Response.fromStream(response);
       final parsedData = jsonDecode(responseData.body);
+      print('response: ${parsedData}');
 
       if (response.statusCode == 200) {
         EasyLoading.showSuccess('Sales Return Added successfully!');
@@ -116,7 +120,10 @@ class InvoiceReturnRepo {
 
       // Send the request and get the response
       // var response = await request.send();
-      var response = await customHttpClient.uploadFile(url: uri,fields: request.fields,);
+      var response = await customHttpClient.uploadFile(
+        url: uri,
+        fields: request.fields,
+      );
       var responseData = await http.Response.fromStream(response);
       final parsedData = jsonDecode(responseData.body);
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/product_brand/product_brand_provider/product_brand_provider.dart';
 import 'package:mobile_pos/constant.dart';
@@ -36,10 +35,6 @@ class _BrandsListState extends State<BrandsList> {
         appBar: AppBar(
           title: Text(
             lang.S.of(context).brands,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,
@@ -112,7 +107,7 @@ class _BrandsListState extends State<BrandsList> {
                                       onSelect: widget.isFromProductList
                                           ? () {}
                                           : () async {
-                                        Navigator.pop(context, data[i]);
+                                              Navigator.pop(context, data[i]);
                                             },
                                       title: data[i].brandName ?? '',
                                       // Delete
@@ -120,7 +115,7 @@ class _BrandsListState extends State<BrandsList> {
                                         bool confirmDelete = await showDeleteAlert(context: context, itemsName: 'brand');
                                         if (confirmDelete) {
                                           EasyLoading.show();
-                                          if (await BrandsRepo().deleteBrand(context: context, brandId: data[i].id ?? 0,ref: ref)) {
+                                          if (await BrandsRepo().deleteBrand(context: context, brandId: data[i].id ?? 0, ref: ref)) {
                                             ref.refresh(brandsProvider);
                                           }
                                           EasyLoading.dismiss();

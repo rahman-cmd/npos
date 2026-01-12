@@ -18,7 +18,7 @@ class AddToCartModel {
   dynamic unitPrice;
   dynamic productPurchasePrice;
   dynamic uniqueCheck;
-  int quantity = 1;
+  num quantity = 1;
   dynamic productDetails;
   int itemCartIndex;
   num? stock;

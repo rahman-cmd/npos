@@ -106,29 +106,27 @@ class _SelectLanguageState extends State<SelectLanguage> {
             ],
           ),
         ),
-        bottomNavigationBar: ButtonGlobalWithoutIcon(
-            buttontext: lang.S.of(context).save,
-            buttonDecoration: kButtonDecoration.copyWith(
-              color: kMainColor,
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            onPressed: () async {
-              // Update locale in the provider
-              if (selectedLanguage != null) {
-                // Save the selected language
-                await saveData(selectedLanguage!);
-
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ElevatedButton(
+              onPressed: () async {
                 // Update locale in the provider
-                context.read<LanguageChangeProvider>().changeLocale(selectedLanguage!);
+                if (selectedLanguage != null) {
+                  // Save the selected language
+                  await saveData(selectedLanguage!);
 
-                // Navigate to Home
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Home()),
-                );
-              }
-            },
-            buttonTextColor: Colors.white),
+                  // Update locale in the provider
+                  context.read<LanguageChangeProvider>().changeLocale(selectedLanguage!);
+
+                  // Navigate to Home
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Home()),
+                  );
+                }
+              },
+              child: Text(lang.S.of(context).save)),
+        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ class Income {
     this.userId,
     this.businessId,
     this.incomeFor,
+    this.paymentTypeId,
     this.paymentType,
     this.referenceNo,
     this.note,
@@ -24,13 +25,15 @@ class Income {
     userId = json['user_id'];
     businessId = json['business_id'];
     incomeFor = json['incomeFor'];
+    paymentTypeId = json["payment_type_id"];
     paymentType = json['paymentType'];
     referenceNo = json['referenceNo'];
     note = json['note'];
     incomeDate = json['incomeDate'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    category = json['category'] != null ? Category.fromJson(json['category']) : null;
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
   }
   num? id;
   num? account;
@@ -39,6 +42,7 @@ class Income {
   num? userId;
   num? businessId;
   String? incomeFor;
+  int? paymentTypeId;
   String? paymentType;
   String? referenceNo;
   String? note;

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -71,6 +70,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return WillPopScope(
       onWillPop: () async => false,
       child: Consumer(builder: (context, ref, __) {
@@ -84,44 +84,46 @@ class _ProfileSetupState extends State<ProfileSetup> {
                 iconTheme: const IconThemeData(color: Colors.black),
                 title: Text(
                   lang.S.of(context).setUpProfile,
-                  style: GoogleFonts.poppins(
-                    color: Colors.black,
-                  ),
                 ),
                 centerTitle: true,
                 backgroundColor: Colors.white,
                 elevation: 0.0,
               ),
-              bottomNavigationBar: ButtonGlobal(
-                iconWidget: Icons.arrow_forward,
-                buttontext: lang.S.of(context).continueButton,
-                iconColor: Colors.white,
-                buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-                onPressed: () async {
-                  if (selectedBusinessCategory != null) {
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        BusinessSetupRepo businessSetupRepo = BusinessSetupRepo();
-                        await businessSetupRepo.businessSetup(
-                          context: context,
-                          name: nameController.text,
-                          phone: phoneController.text,
-                          address: addressController.text.isEmptyOrNull ? null : addressController.text,
-                          categoryId: selectedBusinessCategory!.id.toString(),
-                          image: pickedImage == null ? null : File(pickedImage!.path),
-                          vatGstNumber: vatGstNumberController.text,
-                          vatGstTitle: vatGstTitleController.text,
-                          openingBalance: openingBalanceController.text,
-                        );
-                      } catch (e) {
-                        EasyLoading.dismiss();
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+              bottomNavigationBar: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton.icon(
+                  iconAlignment: IconAlignment.end,
+                  onPressed: () async {
+                    if (selectedBusinessCategory != null) {
+                      if (_formKey.currentState!.validate()) {
+                        try {
+                          BusinessSetupRepo businessSetupRepo = BusinessSetupRepo();
+                          await businessSetupRepo.businessSetup(
+                            context: context,
+                            name: nameController.text,
+                            phone: phoneController.text,
+                            address: addressController.text.isEmptyOrNull ? null : addressController.text,
+                            categoryId: selectedBusinessCategory!.id.toString(),
+                            image: pickedImage == null ? null : File(pickedImage!.path),
+                            vatGstNumber: vatGstNumberController.text,
+                            vatGstTitle: vatGstTitleController.text,
+                            openingBalance: openingBalanceController.text,
+                          );
+                        } catch (e) {
+                          EasyLoading.dismiss();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                        }
                       }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select a Business Category')));
                     }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select a Business Category')));
-                  }
-                },
+                  },
+                  icon: const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                  ),
+                  label: Text(lang.S.of(context).continueButton),
+                ),
               ),
               body: SingleChildScrollView(
                 child: Center(
@@ -163,8 +165,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                                                   ),
                                                   Text(
                                                     lang.S.of(context).gallery,
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: 20.0,
+                                                    style: theme.textTheme.titleMedium?.copyWith(
                                                       color: kMainColor,
                                                     ),
                                                   ),
@@ -188,10 +189,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                                                   ),
                                                   Text(
                                                     lang.S.of(context).camera,
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: 20.0,
-                                                      color: kGreyTextColor,
-                                                    ),
+                                                    style: theme.textTheme.titleMedium?.copyWith(color: kGreyTextColor),
                                                   ),
                                                 ],
                                               ),
@@ -256,10 +254,6 @@ class _ProfileSetupState extends State<ProfileSetup> {
                                   decoration: kInputDecoration.copyWith(
                                       floatingLabelBehavior: FloatingLabelBehavior.always,
                                       labelText: lang.S.of(context).businessCat,
-                                      labelStyle: GoogleFonts.poppins(
-                                        color: Colors.black,
-                                        fontSize: 20.0,
-                                      ),
                                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
                                   child: DropdownButtonHideUnderline(child: getCategory(list: categoryList)),
                                 );

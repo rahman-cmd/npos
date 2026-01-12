@@ -175,7 +175,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 // import 'package:flutter/material.dart';
 // import 'package:influencer/widgets/theme/theme_constants.dart';
 // import '../../../../widgets/buttons widgets/button_widgets.dart';
-// import 'set_new_password.dart';
+// import 'change_password_screen.dart';
 //
 // class ForgotPassword extends StatefulWidget {
 //   const ForgotPassword({super.key});

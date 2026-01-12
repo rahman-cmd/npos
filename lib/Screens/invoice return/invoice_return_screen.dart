@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Screens/Purchase/Model/purchase_transaction_model.dart';
 import 'package:mobile_pos/Screens/invoice%20return/repo/invoice_return_repo.dart';
@@ -31,6 +30,7 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
     required num totalPrice,
     required num quantity,
   }) {
+    print(totalPrice.toString());
     num thisProductDiscount = (totalDiscount * (productPrice * quantity)) / totalPrice;
     // Calculate the total price for this product based on quantity
     num productTotalPrice = productPrice * quantity;
@@ -81,14 +81,14 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
           unitPrice: calculateDiscountForEachProduct(
             productPrice: (element.price ?? 0),
             quantity: (element.quantities ?? 0),
-            totalDiscount: (widget.saleTransactionModel?.discountAmount ?? 0),
+            totalDiscount: (widget.saleTransactionModel?.discountAmount ?? 0) - (widget.saleTransactionModel?.roundingAmount ?? 0),
             totalPrice: ((widget.saleTransactionModel?.totalAmount ?? 0) + (widget.saleTransactionModel?.discountAmount ?? 0)) -
                 ((widget.saleTransactionModel?.vatAmount ?? 0) + (widget.saleTransactionModel?.shippingCharge ?? 0)),
           ),
           productId: element.id ?? 0,
           quantity: 0,
           productCode: element.product?.id,
-          stock: element.quantities?.round() ?? 0,
+          stock: element.quantities ?? 0,
           lossProfit: element.lossProfit,
         );
 
@@ -111,7 +111,7 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
           productId: element.id ?? 0,
           quantity: 0,
           productCode: element.product?.id,
-          stock: element.quantities?.round() ?? 0,
+          stock: element.quantities ?? 0,
         );
 
         returnList.add(cartItem);
@@ -132,7 +132,6 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
             backgroundColor: Colors.white,
             title: Text(
               widget.saleTransactionModel != null ? 'Sales Return' : "Purchase Return",
-              style: GoogleFonts.poppins(),
             ),
             centerTitle: true,
             elevation: 0.0,
@@ -269,7 +268,7 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '${(returnList[index].stock ?? 0) - (returnList[index].quantity)} X ${returnList[index].unitPrice.toStringAsFixed(2)} = ${double.tryParse((double.parse(returnList[index].unitPrice.toString()) * ((returnList[index].stock ?? 0) - currentQuantity)).toStringAsFixed(2)) ?? 0}',
+                                        '${formatPointNumber((returnList[index].stock ?? 0) - (returnList[index].quantity))} X ${formatPointNumber(returnList[index].unitPrice)} = ${double.tryParse((double.parse(returnList[index].unitPrice.toString()) * ((returnList[index].stock ?? 0) - currentQuantity)).toStringAsFixed(2)) ?? 0}',
                                       ),
                                       SizedBox(
                                         width: 100,
@@ -279,7 +278,9 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                             GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  returnList[index].quantity > 0 ? returnList[index].quantity-- : returnList[index].quantity = 0;
+                                                  returnList[index].quantity > 0
+                                                      ? {returnList[index].quantity < 1 ? returnList[index].quantity = 0 : returnList[index].quantity--}
+                                                      : returnList[index].quantity = 0;
                                                   controllers[index].text = returnList[index].quantity.toString();
                                                 });
                                               },
@@ -319,7 +320,7 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                                   } else {
                                                     final newQuantity = num.parse(value);
                                                     if (newQuantity <= stock) {
-                                                      returnList[index].quantity = newQuantity.round();
+                                                      returnList[index].quantity = newQuantity;
                                                     } else {
                                                       controllers[index].text = '1';
                                                       EasyLoading.showError(
@@ -340,7 +341,12 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                               onTap: () {
                                                 if (returnList[index].quantity < (returnList[index].stock ?? 0)) {
                                                   setState(() {
-                                                    returnList[index].quantity += 1;
+                                                    if ((returnList[index].quantity.toInt() == (returnList[index].stock?.toInt() ?? 0)) &&
+                                                        (returnList[index].quantity.toInt() < (returnList[index].stock ?? 0))) {
+                                                      returnList[index].quantity = returnList[index].stock ?? 0;
+                                                    } else {
+                                                      returnList[index].quantity += 1;
+                                                    }
                                                     controllers[index].text = returnList[index].quantity.toString();
                                                   });
                                                 } else {
@@ -475,7 +481,7 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                         ? () async {
                             EasyLoading.show();
                             returnList.removeWhere(
-                              (element) => element.quantity < 1,
+                              (element) => element.quantity < 0.01,
                             );
                             if (returnList.isNotEmpty) {
                               num totalDiscountReturn = 0;
@@ -491,7 +497,7 @@ class _InvoiceReturnScreenState extends State<InvoiceReturnScreen> {
                                     : (widget.saleTransactionModel!.dueAmount ?? 0) - getTotalReturnAmount(),
                                 paidAmount: widget.saleTransactionModel!.paidAmount ?? 0,
                                 totalAmount: (widget.saleTransactionModel!.totalAmount ?? 0) - getTotalReturnAmount(),
-                                discountAmount: widget.saleTransactionModel!.discountAmount ?? 0,
+                                discountAmount: widget.saleTransactionModel?.discountAmount ?? 0,
                               );
                               for (var items in returnList) {
                                 final SalesDetails salesProduct =

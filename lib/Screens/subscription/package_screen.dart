@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/subscription/purchase_premium_plan_screen.dart';
 import 'package:mobile_pos/constant.dart';
@@ -65,9 +64,9 @@ class _PackageScreenState extends State<PackageScreen> {
               backgroundColor: Colors.white,
               title: Text(
                 lang.S.of(context).yourPack,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                ),
+                // style: GoogleFonts.poppins(
+                //   color: Colors.black,
+                // ),
               ),
               centerTitle: true,
               iconTheme: const IconThemeData(color: Colors.black),
@@ -85,7 +84,11 @@ class _PackageScreenState extends State<PackageScreen> {
                       child: Text(
                         lang.S.of(context).unlimitedUsagesOfOurPackage,
                         //'Unlimited Usages of Our Package👇 ',
-                        style: gTextStyle.copyWith(fontWeight: FontWeight.bold, fontSize: 19, color: kTitleColor), textAlign: TextAlign.center, overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Padding(
@@ -140,7 +143,11 @@ class _PackageScreenState extends State<PackageScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      info.enrolledPlan!=null? (info.enrolledPlan?.price ?? 0) > 0 ? lang.S.of(context).premiumPlan : lang.S.of(context).freePlan:'No active plan!',
+                                      info.enrolledPlan != null
+                                          ? (info.enrolledPlan?.price ?? 0) > 0
+                                              ? lang.S.of(context).premiumPlan
+                                              : lang.S.of(context).freePlan
+                                          : 'No active plan!',
                                       style: const TextStyle(fontSize: 18),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,

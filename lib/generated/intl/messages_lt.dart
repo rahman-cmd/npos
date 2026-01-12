@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Visi verslo sprendimai",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro yra išsamus verslo sprendimas, apimantis atsargas, apskaitą, pardavimus, išlaidas ir nuostolius/pelną.",
+      "NPOS yra išsamus verslo sprendimas, apimantis atsargas, apskaitą, pardavimus, išlaidas ir nuostolius/pelną.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Visas laikas"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Jau pridėta"),
@@ -138,7 +138,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pasirinkite savo funkcijas",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funkcijos yra svarbi dalis, dėl kurios POSpro skiriasi nuo tradicinių sprendimų.",
+      "Funkcijos yra svarbi dalis, dėl kurios NPOS skiriasi nuo tradicinių sprendimų.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -249,7 +249,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Lengvai naudojama mobilioji POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "POSpro programa yra nemokama ir lengvai naudojama. Iš tiesų, tai viena geriausių pasaulyje POS sistemų.",
+      "NPOS programa yra nemokama ir lengvai naudojama. Iš tiesų, tai viena geriausių pasaulyje POS sistemų.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Redaguoti"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -623,7 +623,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Prašome pasirinkti išlaidų kategoriją",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Sukūrė Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Sukūrė NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "„Android“ ir „iOS“ programų palaikymas",
     ),

@@ -76,7 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Alle Geschäftslösungen",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "POSpro ist eine komplette Geschäftslösung mit Lagerbestand, Konten, Verkäufen, Ausgaben und Gewinn/Verlust.",
+      "NPOS ist eine komplette Geschäftslösung mit Lagerbestand, Konten, Verkäufen, Ausgaben und Gewinn/Verlust.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Alle Zeit"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Già aggiunto"),
@@ -142,7 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Wählen Sie Ihre Funktionen",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funktionen sind der wichtige Teil, der POSpro von traditionellen Lösungen unterscheidet.",
+      "Funktionen sind der wichtige Teil, der NPOS von traditionellen Lösungen unterscheidet.",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -247,7 +247,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Einfache Nutzung des mobilen POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Die POSpro App ist kostenlos und einfach zu bedienen. Tatsächlich gehört sie zu den besten POS-Systemen weltweit.",
+      "Die NPOS App ist kostenlos und einfach zu bedienen. Tatsächlich gehört sie zu den besten POS-Systemen weltweit.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Modificare"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -635,7 +635,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Per favore seleziona una categoria di spesa",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Powered By NPOS"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Support für Android- und iOS-Apps",
     ),

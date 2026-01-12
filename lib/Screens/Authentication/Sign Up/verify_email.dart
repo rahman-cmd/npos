@@ -11,7 +11,6 @@ import '../forgot password/set_new_password.dart';
 import '../profile_setup_screen.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
-
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({Key? key, required this.email, required this.isFormForgotPass}) : super(key: key);
   final String email;
@@ -91,8 +90,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           titleSpacing: 16,
           title: Text(
             lang.S.of(context).verityEmail,
-           // 'Verity Email',
-            style: textTheme.titleMedium?.copyWith(fontSize: 20),
+            // 'Verity Email',
           ),
         ),
         body: Padding(
@@ -100,8 +98,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(lang.S.of(context).verityEmail,
-               // 'Verification',
+              Text(
+                lang.S.of(context).verityEmail,
+                // 'Verification',
                 style: textTheme.titleMedium?.copyWith(fontSize: 24.0),
               ),
               const SizedBox(height: 8.0),
@@ -175,7 +174,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               }
                             }
                           : null,
-                      child:  Text(
+                      child: Text(
                         lang.S.of(context).resendOTP,
                         //'Resend OTP',
                         style: const TextStyle(color: kMainColor),
@@ -185,8 +184,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 ],
               ),
               const SizedBox(height: 24.0),
-              UpdateButton(
-                onpressed: widget.isFormForgotPass
+              ElevatedButton(
+                onPressed: widget.isFormForgotPass
                     ? () async {
                         if (isClicked) {
                           return;
@@ -231,8 +230,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           }
                         }
                       },
-                text:lang.S.of(context).continueE,
-               // 'Continue',
+                child: Text(lang.S.of(context).continueE),
+                // 'Continue',
               ),
             ],
           ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -24,9 +23,6 @@ class _AddPromoCodeState extends State<AddPromoCode> {
           backgroundColor: Colors.white,
           title: Text(
             lang.S.of(context).promoCode,
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-            ),
           ),
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
@@ -43,19 +39,14 @@ class _AddPromoCodeState extends State<AddPromoCode> {
                   decoration: const InputDecoration(border: OutlineInputBorder(), floatingLabelBehavior: FloatingLabelBehavior.always, labelText: 'Add Promo Code'),
                 ),
               ),
-              ButtonGlobalWithoutIcon(
-                buttontext: lang.S.of(context).submit,
-                buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+              ElevatedButton(
                 onPressed: null,
-                buttonTextColor: Colors.white,
+                child: Text(lang.S.of(context).submit),
               ),
               Center(
                 child: Text(
                   lang.S.of(context).seeAllPromoCode,
-                  style: GoogleFonts.poppins(
-                    color: kGreyTextColor,
-                    fontSize: 15.0,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
             ],

@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "စီးပွားရေးစနစ်အားလုံး",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "PosPro သည် စတော့၊ ငွေစာရင်း၊ အေရာင်းအားကစား၊ အစာရင်းနှင့် အခြေအနေ/အမြဲအစားများဖြစ်သည်။",
+      "NPOS သည် စတော့၊ ငွေစာရင်း၊ အေရာင်းအားကစား၊ အစာရင်းနှင့် အခြေအနေ/အမြဲအစားများဖြစ်သည်။",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("အချိန်အားလုံး"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("ရှိသည့်အတွက်"),
@@ -133,7 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "သင့်ရဲ့အကြောင်းကိုရွေးချယ်ပါ",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "အကြောင်းကိုများသည် တစ်စီးရှင်းတွင် မဟုတ်ပါ။ ယင်းအသုံးများကိုလည်း PosPro ကို အသုံးပြုသော အကြောင်းကြောင်းကိုဖြစ်သည်။",
+      "အကြောင်းကိုများသည် တစ်စီးရှင်းတွင် မဟုတ်ပါ။ ယင်းအသုံးများကိုလည်း NPOS ကို အသုံးပြုသော အကြောင်းကြောင်းကိုဖြစ်သည်။",
     ),
     "clarence": MessageLookupByLibrary.simpleMessage("ကလာအန်"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
@@ -237,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "အစီရင်ခံစားလိုသူများအတွက် အက်မြတ် POS ဖြန့်ဝေသည်",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "PosPro အက်ပလီကေးရှင့် အခမဲ့၊ အသုံးပြုနိုင်သောအကြောင်းကြောင်းကိုအသုံးပြုသည်။ အကြောင်းကို ရယူသည့် POS စနစ်တစ်ခုဖြစ်ပြီးကွောင်းကြောင်းကိုလည်းအတူ အကြောင်းကြောင်းများနှင့် အမြဲတမ်းများကိုပါဝင်သည်။",
+      "NPOS အက်ပလီကေးရှင့် အခမဲ့၊ အသုံးပြုနိုင်သောအကြောင်းကြောင်းကိုအသုံးပြုသည်။ အကြောင်းကို ရယူသည့် POS စနစ်တစ်ခုဖြစ်ပြီးကွောင်းကြောင်းကိုလည်းအတူ အကြောင်းကြောင်းများနှင့် အမြဲတမ်းများကိုပါဝင်သည်။",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("ပြင်ဆင်ပါ"),
     "editPhone": MessageLookupByLibrary.simpleMessage(

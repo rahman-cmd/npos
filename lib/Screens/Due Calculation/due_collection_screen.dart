@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Screens/Due%20Calculation/Model/due_collection_model.dart';
 import 'package:mobile_pos/Screens/Due%20Calculation/Repo/due_repo.dart';
 import 'package:mobile_pos/Screens/invoice_details/due_invoice_details.dart';
@@ -15,6 +14,7 @@ import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart';
 import '../../currency.dart';
+import '../../widgets/payment_type/_payment_type_dropdown.dart';
 import '../Customers/Model/parties_model.dart';
 import 'Model/due_collection_invoice_model.dart';
 import 'Providers/due_provider.dart';
@@ -45,7 +45,7 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
   TextEditingController dateController = TextEditingController(text: DateTime.now().toString());
 
   SalesDuesInvoice? selectedInvoice;
-  String paymentType = 'Cash';
+  int? paymentType;
 
   // List of items in our dropdown menu
 
@@ -69,9 +69,6 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
               backgroundColor: Colors.white,
               title: Text(
                 lang.S.of(context).collectDue,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                ),
               ),
               centerTitle: true,
               iconTheme: const IconThemeData(color: Colors.black),
@@ -96,7 +93,9 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                 }
                               }
                               openingDueAmount = (data.due ?? 0) - totalDueInInvoice;
-                              if (selectedInvoice == null) dueAmount = openingDueAmount;
+                              if (selectedInvoice == null) {
+                                dueAmount = openingDueAmount;
+                              }
 
                               return Expanded(
                                 child: DropdownButtonFormField<SalesDuesInvoice>(
@@ -324,54 +323,23 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                       ],
                     ),
                   ),
-                  const Divider(height: 30),
+
+                  ///__________Payment_Type_______________________________________
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  lang.S.of(context).paymentTypes,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 16, color: Colors.black54),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Icon(
-                                Icons.wallet,
-                                color: Colors.green,
-                              )
-                            ],
+                        const Divider(height: 20),
+                        PaymentTypeSelectorDropdown(
+                          value: paymentType,
+                          onChanged: (value) => setState(
+                            () => paymentType = value,
                           ),
                         ),
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            padding: EdgeInsets.zero,
-                            isDense: true,
-                            value: paymentType,
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            items: paymentsTypeList.map((String item) {
-                              return DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(item, style: _theme.textTheme.bodyMedium),
-                              );
-                            }).toList(),
-                            onChanged: (newValue) {
-                              setState(() {
-                                paymentType = newValue.toString();
-                              });
-                            },
-                          ),
-                        ),
+                        const Divider(height: 20),
                       ],
                     ),
                   ),
-                  const Divider(height: 30),
                 ],
               ),
             ),
@@ -411,26 +379,32 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                       ),
                       onPressed: () async {
                         if (paidAmount > 0 && dueAmount > 0) {
-                          EasyLoading.show();
-                          DueRepo repo = DueRepo();
-                          DueCollection? dueData;
-                          dueData = await repo.dueCollect(
-                            ref: consumerRef,
-                            context: context,
-                            partyId: widget.customerModel.id ?? 0,
-                            invoiceNumber: selectedInvoice?.invoiceNumber,
-                            paymentDate: dateController.text,
-                            paymentType: paymentType,
-                            payDueAmount: paidAmount,
-                          );
+                          if(paymentType==null){
+                            EasyLoading.showError('Please select a payment type');
+                          }else{
+                            EasyLoading.show();
+                            DueRepo repo = DueRepo();
+                            DueCollection? dueData;
+                            dueData = await repo.dueCollect(
+                              ref: consumerRef,
+                              context: context,
+                              partyId: widget.customerModel.id ?? 0,
+                              invoiceNumber: selectedInvoice?.invoiceNumber,
+                              paymentDate: dateController.text,
+                              paymentType: paymentType?.toString() ?? '',
+                              payDueAmount: paidAmount,
+                            );
+                            print('due collection: $dueData');
 
-                          if (dueData != null) {
-                            DueInvoiceDetails(
-                              dueCollection: dueData,
-                              personalInformationModel: data,
-                              isFromDue: true,
-                            ).launch(context);
+                            if (dueData != null) {
+                              DueInvoiceDetails(
+                                dueCollection: dueData,
+                                personalInformationModel: data,
+                                isFromDue: true,
+                              ).launch(context);
+                            }
                           }
+
                         } else {
                           EasyLoading.showError(
                             lang.S.of(context).noDueSelected,

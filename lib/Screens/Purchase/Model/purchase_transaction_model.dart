@@ -10,9 +10,11 @@ class PurchaseTransaction {
     this.shippingCharge,
     this.dueAmount,
     this.paidAmount,
+    this.changeAmount,
     this.totalAmount,
     this.invoiceNumber,
     this.isPaid,
+    this.paymentTypeId,
     this.paymentType,
     this.purchaseDate,
     this.createdAt,
@@ -37,6 +39,7 @@ class PurchaseTransaction {
     shippingCharge = json['shipping_charge'];
     discountType = json['discount_type'];
     dueAmount = json['dueAmount'];
+    changeAmount = json['change_amount'];
     vatAmount = json['vat_amount'];
     vatPercent = json['vat_percent'];
     vatId = json['vat_id'];
@@ -44,11 +47,13 @@ class PurchaseTransaction {
     totalAmount = json['totalAmount'];
     invoiceNumber = json['invoiceNumber'];
     isPaid = json['isPaid'];
-    paymentType = json['paymentType'];
+    paymentTypeId = int.tryParse(json["payment_type_id"].toString());
+
     vat = json['vat'] != null ? PurchaseVat.fromJson(json['vat']) : null;
     purchaseDate = json['purchaseDate'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    paymentType = json['payment_type'] != null ? PaymentType.fromJson(json['payment_type']) : null;
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     party = json['party'] != null ? Party.fromJson(json['party']) : null;
     if (json['details'] != null) {
@@ -74,13 +79,15 @@ class PurchaseTransaction {
   String? discountType;
   num? dueAmount;
   num? paidAmount;
+  num? changeAmount;
   num? vatAmount;
   num? vatPercent;
   num? vatId;
   num? totalAmount;
   String? invoiceNumber;
   bool? isPaid;
-  String? paymentType;
+  int? paymentTypeId;
+  PaymentType? paymentType;
   String? purchaseDate;
   String? createdAt;
   String? updatedAt;
@@ -261,19 +268,23 @@ class User {
   User({
     this.id,
     this.name,
+    this.role,
   });
 
   User.fromJson(dynamic json) {
     id = json['id'];
     name = json['name'];
+    role = json['role'];
   }
   num? id;
-  dynamic name;
+  String? name;
+  String? role;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['name'] = name;
+    map['role'] = role;
     return map;
   }
 }
@@ -383,4 +394,18 @@ class PurchaseVat {
   num? id;
   String? name;
   num? rate;
+}
+
+class PaymentType {
+  PaymentType({
+    this.id,
+    this.name,
+  });
+
+  PaymentType.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+  }
+  num? id;
+  String? name;
 }

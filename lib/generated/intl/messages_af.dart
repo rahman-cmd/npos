@@ -603,8 +603,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Kies asseblief \'n uitgawe kategorie",
     ),
-    "powerdedByNpos": MessageLookupByLibrary.simpleMessage(
-      "Aangedryf deur Npos",
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
+      "Aangedryf deur NPOS",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android & iOS App Ondersteuning",

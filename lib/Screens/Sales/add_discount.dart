@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/GlobalComponents/tab_buttons.dart';
 import 'package:mobile_pos/Provider/add_to_cart.dart';
@@ -31,9 +30,6 @@ class _AddDiscountState extends State<AddDiscount> {
             backgroundColor: Colors.white,
             title: Text(
               lang.S.of(context).discount,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-              ),
             ),
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
@@ -95,14 +91,12 @@ class _AddDiscountState extends State<AddDiscount> {
                     decoration: const InputDecoration(border: OutlineInputBorder(), floatingLabelBehavior: FloatingLabelBehavior.always, labelText: 'Note'),
                   ),
                 ),
-                ButtonGlobalWithoutIcon(
-                  buttontext: lang.S.of(context).save,
-                  buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                ElevatedButton(
                   onPressed: () {
                     // providerData.addDiscount(discountType, amount.toDouble());
                     Navigator.pop(context);
                   },
-                  buttonTextColor: Colors.white,
+                  child: Text(lang.S.of(context).save),
                 ),
               ],
             ),

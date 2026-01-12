@@ -42,6 +42,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final translatedTimes = getTranslatedTimes(context);
     return Consumer(builder: (_, ref, watch) {
       final dashboardInfo = ref.watch(dashboardInfoProvider(selectedTime.toLowerCase()));
@@ -111,7 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Text(
                             lang.S.of(context).salesPurchaseOverview,
                             //'Sales & Purchase Overview',
-                            style: gTextStyle.copyWith(fontWeight: FontWeight.bold, color: kTitleColor),
+                            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: kTitleColor),
                           ),
                           const SizedBox(
                             height: 20,
@@ -197,7 +198,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Text(
                       lang.S.of(context).quickOverview,
                       //'Quick Overview',
-                      style: gTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 18),
+                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -234,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(height: 20),
                     Text(
                       lang.S.of(context).lossProfit,
-                      style: gTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 18),
+                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
                     ),
 
                     ///__________Total_Lass_and_Total_profit_____________________________________

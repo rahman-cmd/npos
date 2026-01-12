@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/DashBoard/dashboard.dart';
 import 'package:mobile_pos/Screens/Home/components/grid_items.dart';
 import 'package:mobile_pos/Screens/Profile%20Screen/profile_details.dart';
+import 'package:mobile_pos/core/theme/_app_colors.dart';
 import 'package:mobile_pos/currency.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ref.refresh(summaryInfoProvider);
       ref.refresh(bannerProvider);
       ref.refresh(businessInfoProvider);
+      ref.refresh(businessSettingProvider);
       ref.refresh(partiesProvider);
       ref.refresh(getExpireDateProvider(ref));
       await Future.delayed(const Duration(seconds: 3));
@@ -51,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer(builder: (_, ref, __) {
       final businessInfo = ref.watch(businessInfoProvider);
       final summaryInfo = ref.watch(summaryInfoProvider);
@@ -90,10 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     details.user?.role == 'staff' ? '${details.companyName ?? ''} [${details.user?.name ?? ''}]' : details.companyName ?? '',
-                    style: GoogleFonts.poppins(
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black,
                     ),
                   ),
                 ],
@@ -124,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Text(
                                         lang.S.of(context).todaySummary,
                                         //'Today’s Summary',
-                                        style: gTextStyle.copyWith(fontWeight: FontWeight.bold, color: kWhite, fontSize: 18),
+                                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: kWhite, fontSize: 18),
                                         maxLines: 1, overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -154,22 +155,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).sales,
                                           //'Sales',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           '$currency${summary.data?.sales?.toStringAsFixed(2) ?? 0.00}',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.titleSmall?.copyWith(color: kWhite),
                                         ),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Text(
                                           summary.data!.income! >= 0 ? 'Profit' : 'Loss',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           '$currency${summary.data?.income?.abs().toStringAsFixed(2) ?? 0.00}',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.w600),
                                         ),
                                       ],
                                     ),
@@ -180,11 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).purchased,
                                           // 'Purchased',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           '$currency${summary.data?.purchase?.toStringAsFixed(2) ?? 0.00}',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.titleSmall?.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -192,11 +193,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           //'Expense',
                                           lang.S.of(context).expense,
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           '$currency${summary.data?.expense?.toStringAsFixed(2) ?? 0.00}',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.w600),
                                         ),
                                       ],
                                     ),
@@ -219,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Text(
                                       lang.S.of(context).todaySummary,
-                                      style: gTextStyle.copyWith(fontWeight: FontWeight.bold, color: kWhite, fontSize: 18),
+                                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: kWhite, fontSize: 18),
                                     ),
                                     const Spacer(),
                                     GestureDetector(
@@ -241,23 +242,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).sales,
                                           //'Sales',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).notFound,
                                           // 'Not Found',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.w600),
                                         ),
                                         const SizedBox(height: 10),
                                         Text(
                                           lang.S.of(context).income,
                                           // 'Income',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).notFound,
                                           //'Not Found',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.w600),
                                         ),
                                       ],
                                     ),
@@ -268,12 +269,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).purchased,
                                           // 'Purchased',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).notFound,
                                           //'Not Found',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.w600),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -281,12 +282,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).expense,
                                           //'Expense',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).notFound,
                                           //'Not Found',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
@@ -310,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(
                                       lang.S.of(context).todaySummary,
                                       // 'Today’s Summary',
-                                      style: gTextStyle.copyWith(fontWeight: FontWeight.bold, color: kWhite, fontSize: 18),
+                                      style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: kWhite, fontSize: 18),
                                     ),
                                     const Spacer(),
                                     GestureDetector(
@@ -335,12 +336,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).sales,
                                           // 'Sales',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).loading,
                                           // 'Loading',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -348,12 +349,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).income,
                                           //'Income',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).loading,
                                           //'Loading',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.w600),
                                         ),
                                       ],
                                     ),
@@ -364,12 +365,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).purchased,
                                           //'Purchased',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).loading,
                                           //'Loading',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.w600),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -377,12 +378,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           lang.S.of(context).expense,
                                           //'Expense',
-                                          style: gTextStyle.copyWith(color: kWhite),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite),
                                         ),
                                         Text(
                                           lang.S.of(context).loading,
                                           //'Loading',
-                                          style: gTextStyle.copyWith(color: kWhite, fontWeight: FontWeight.bold),
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: kWhite, fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
@@ -423,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             title: RichText(
                               text: TextSpan(
                                 text: '${details.enrolledPlan?.plan?.subscriptionName ?? 'No Active'} ${lang.S.of(context).package} ',
-                                style: gTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 16),
+                                style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                               ),
                             ),
                             subtitle: Text(getDayLeftInExpiring(expireDate: details.willExpire, shortMSG: false)),
@@ -477,10 +478,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Text(
                                   lang.S.of(context).whatNew,
                                   textAlign: TextAlign.start,
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Row(
@@ -611,6 +610,8 @@ class _HomeGridCardsState extends State<HomeGridCards> {
       return true;
     } else if (item == 'tax') {
       return true;
+    } else if (item == 'customPrint') {
+      return true;
     }
     return false;
   }
@@ -647,7 +648,7 @@ class _HomeGridCardsState extends State<HomeGridCards> {
               Flexible(
                   child: Text(
                 widget.gridItems.title.toString(),
-                style: gTextStyle.copyWith(fontSize: 16, color: const Color(0xff4D4D4D)),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: DAppColors.kNeutral700),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ))

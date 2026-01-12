@@ -591,7 +591,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "براہ کرم ایک خرچ کا زمرہ منتخب کریں",
     ),
-    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
       "آکنو کی طرف سے طاقت دی گئی",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
