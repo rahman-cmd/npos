@@ -12,6 +12,7 @@ class PaymentCredentialModel {
     merchantPassword = json['MERCHANT_PASSWORD'];
     merchantkeyPrefix = json['MERCHANT_KEY_PREFIX'];
   }
+
   late String shurjopayserverUrl;
   late String merchantuserName;
   late String merchantPassword;

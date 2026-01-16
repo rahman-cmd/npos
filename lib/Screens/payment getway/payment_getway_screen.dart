@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
-import '../../Const/api_config.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
+
+import '../../Const/api_config.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key, required this.planId, required this.businessId});
@@ -17,7 +18,7 @@ class PaymentScreen extends StatefulWidget {
   PaymentScreenState createState() => PaymentScreenState();
 }
 
-String paymentUrl = 'https://npos.vip/payments-gateways/plan_id/business_id?platform=app';
+String paymentUrl = '${APIConfig.domain}payments-gateways/plan_id/business_id?platform=app';
 const String successUrl = 'order-status?status=success';
 const String failureUrl = 'order-status?status=failed';
 
@@ -29,7 +30,7 @@ class PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    paymentUrl = paymentUrl.replaceAll('https://npos.vip/', APIConfig.domain).replaceAll('plan_id', widget.planId).replaceAll('business_id', widget.businessId);
+    paymentUrl = paymentUrl.replaceAll(APIConfig.domain, APIConfig.domain).replaceAll('plan_id', widget.planId).replaceAll('business_id', widget.businessId);
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -87,6 +88,7 @@ class PaymentScreenState extends State<PaymentScreen> {
 
 class SuccessScreen extends StatelessWidget {
   const SuccessScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

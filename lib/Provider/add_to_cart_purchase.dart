@@ -80,10 +80,8 @@ class CartNotifierPurchase extends ChangeNotifier {
     calculatePrice();
   }
 
-  void updateProduct({required num productId, required num price, required String qty}) {
-    int index = cartItemList.indexWhere((element) => element.productId == productId);
-    cartItemList[index].productPurchasePrice = price;
-    cartItemList[index].quantities = qty.toInt();
+  void updateProduct({required int index, required CartProductModelPurchase newProduct}) {
+    cartItemList[index] = newProduct;
     calculatePrice();
   }
 
@@ -108,14 +106,12 @@ class CartNotifierPurchase extends ChangeNotifier {
     }
 
     totalPayableAmount += vatAmount;
-    if (shippingCharge != null && shippingCharge.isNotEmpty) {
+    if (shippingCharge != null) {
       finalShippingCharge = num.tryParse(shippingCharge) ?? 0;
     }
     totalPayableAmount += finalShippingCharge;
-    if (receivedAmount != null && receivedAmount.isNotEmpty) {
+    if (receivedAmount != null) {
       receiveAmount = num.tryParse(receivedAmount) ?? 0;
-    } else {
-      receiveAmount = 0;
     }
     changeAmount = totalPayableAmount < receiveAmount ? receiveAmount - totalPayableAmount : 0;
     dueAmount = totalPayableAmount < receiveAmount ? 0 : totalPayableAmount - receiveAmount;
@@ -133,31 +129,32 @@ class CartNotifierPurchase extends ChangeNotifier {
     return totalAmountOfCart;
   }
 
-  quantityIncrease(int index) {
+  void quantityIncrease(int index) {
     cartItemList[index].quantities = (cartItemList[index].quantities ?? 0) + 1;
     calculatePrice();
   }
 
-  quantityDecrease(int index) {
+  void quantityDecrease(int index) {
     if ((cartItemList[index].quantities ?? 0) > 1) {
       cartItemList[index].quantities = (cartItemList[index].quantities ?? 0) - 1;
     }
     calculatePrice();
   }
 
-  addToCartRiverPod({required CartProductModelPurchase cartItem, bool? fromEditSales}) {
-    if (!cartItemList.any((element) => element.productId == cartItem.productId)) {
+  void addToCartRiverPod({required CartProductModelPurchase cartItem, bool? fromEditSales, required bool isVariation}) {
+    if (!cartItemList
+        .any((element) => isVariation ? (element.productId == cartItem.productId && element.batchNumber == cartItem.batchNumber) : element.productId == cartItem.productId)) {
       cartItemList.add(cartItem);
     } else {
       int index = cartItemList.indexWhere(
-        (element) => element.productId == cartItem.productId,
+        (element) => isVariation ? (element.productId == cartItem.productId && element.batchNumber == cartItem.batchNumber) : element.productId == cartItem.productId,
       );
       cartItemList[index] = cartItem;
     }
     (fromEditSales ?? false) ? null : calculatePrice();
   }
 
-  deleteToCart(int index) {
+  void deleteToCart(int index) {
     cartItemList.removeAt(index);
     calculatePrice();
   }

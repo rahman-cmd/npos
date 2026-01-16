@@ -7,18 +7,21 @@ import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../GlobalComponents/button_global.dart';
-import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
-import '../product_category/category_list_screen.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../widgets/empty_widget/_empty_widget.dart';
+import '../../service/check_user_role_permission_provider.dart';
+import '../hrm/widgets/deleteing_alart_dialog.dart';
+import '../product_category/product_category_list_screen.dart';
 import 'add_brans.dart';
 import 'brand repo/brand_repo.dart';
-import '../Products/Widgets/widgets.dart';
 
 // ignore: must_be_immutable
 class BrandsList extends StatefulWidget {
   const BrandsList({super.key, required this.isFromProductList});
+
   final bool isFromProductList;
+
   @override
   // ignore: library_private_types_in_public_api
   _BrandsListState createState() => _BrandsListState();
@@ -45,7 +48,11 @@ class _BrandsListState extends State<BrandsList> {
           child: Consumer(builder: (context, ref, __) {
             final brandData = ref.watch(brandsProvider);
             final businessInfo = ref.watch(businessInfoProvider);
+            final permissionService = PermissionService(ref);
             return businessInfo.when(data: (details) {
+              // if (!permissionService.hasPermission(Permit.categoriesRead.value)) {
+              //   return Center(child: PermitDenyWidget());
+              // }
               return Column(
                 children: [
                   Padding(
@@ -112,7 +119,16 @@ class _BrandsListState extends State<BrandsList> {
                                       title: data[i].brandName ?? '',
                                       // Delete
                                       onDelete: () async {
-                                        bool confirmDelete = await showDeleteAlert(context: context, itemsName: 'brand');
+                                        if (!permissionService.hasPermission(Permit.salesCreate.value)) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text('You do not have permission to delete brands.'),
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        bool confirmDelete = await showDeleteConfirmationDialog(context: context, itemName: 'brand');
                                         if (confirmDelete) {
                                           EasyLoading.show();
                                           if (await BrandsRepo().deleteBrand(context: context, brandId: data[i].id ?? 0, ref: ref)) {

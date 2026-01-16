@@ -6,35 +6,86 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_pos/Provider/product_provider.dart';
-
+import 'package:mobile_pos/constant.dart';
 import '../../../Const/api_config.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../Provider/transactions_provider.dart';
 import '../../../Repository/constant_functions.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
+import '../../../model/balance_sheet_model.dart' as bs;
+import '../../../model/bill_wise_loss_profit_report_model.dart' as bwlprm;
+import '../../../model/cashflow_model.dart' as cf;
+import '../../../model/loss_profit_model.dart' as lpmodel;
+import '../../../model/product_history_model.dart' as phlm;
 import '../../../model/sale_transaction_model.dart';
+import '../../../model/subscription_report_model.dart' as srm;
+import '../../../model/tax_report_model.dart' as trm;
 import '../../Customers/Provider/customer_provider.dart';
 
 class SaleRepo {
-  Future<List<SalesTransactionModel>> fetchSalesList({bool? salesReturn}) async {
-    final uri = Uri.parse('${APIConfig.url}/sales${(salesReturn ?? false) ? "?returned-sales=true" : ''}');
+  Future<List<SalesTransactionModel>> fetchSalesList({
+    bool? salesReturn,
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    final client = CustomHttpClientGet(client: http.Client());
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    // Manually build query string to preserve order
+    final List<String> queryList = [];
+
+    if (salesReturn != null && salesReturn) {
+      queryList.add('returned-sales=true');
+    }
+
+    if (type != null && type.isNotEmpty) {
+      queryList.add('duration=$type');
+    }
+
+    if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+      queryList.add('from_date=$fromDate');
+      queryList.add('to_date=$toDate');
+    }
+
+    final String queryString = queryList.join('&');
+    final Uri uri = Uri.parse('${APIConfig.url}/sales${queryString.isNotEmpty ? '?$queryString' : ''}');
+
+    print(uri);
+
+    final response = await client.get(url: uri);
 
     if (response.statusCode == 200) {
-      final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
-
-      final partyList = parsedData['data'] as List<dynamic>;
-      return partyList.map((category) => SalesTransactionModel.fromJson(category)).toList();
-      // Parse into Party objects
+      final parsed = jsonDecode(response.body) as Map<String, dynamic>;
+      final list = parsed['data'] as List<dynamic>;
+      return list.map((json) => SalesTransactionModel.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch Sales List');
+      throw Exception('Failed to fetch Sales List. Status code: ${response.statusCode}');
     }
   }
 
+  Future<SalesTransactionModel?> getSingleSale(int id) async {
+    final uri = Uri.parse('${APIConfig.url}/sales/$id');
+
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final response = await clientGet.get(url: uri);
+
+      print("Fetch Single Single Status: ${response.statusCode}");
+      print("Fetch Single Single Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return SalesTransactionModel.fromJson(parsed['data']);
+      } else {
+        throw Exception("Failed to fetch sale details");
+      }
+    } catch (e) {
+      throw Exception("Error fetching sale: $e");
+    }
+  }
+
+  /// Create Sale
   Future<SalesTransactionModel?> createSale({
     required WidgetRef ref,
     required BuildContext context,
@@ -60,97 +111,54 @@ class SaleRepo {
     String? note,
     File? image,
   }) async {
-    final uri = Uri.parse('${APIConfig.url}/sales');
+    // 1. Prepare Fields
+    final fields = _buildCommonFields(
+      purchaseDate: purchaseDate,
+      discountAmount: discountAmount,
+      discountPercent: discountPercent,
+      totalAmount: totalAmount,
+      dueAmount: dueAmount,
+      vatAmount: vatAmount,
+      vatPercent: vatPercent,
+      changeAmount: changeAmount,
+      isPaid: isPaid,
+      paymentType: paymentType,
+      discountType: discountType,
+      shippingCharge: shippingCharge,
+      roundedOption: roundedOption,
+      roundingAmount: roundingAmount,
+      unRoundedTotalAmount: unRoundedTotalAmount,
+      products: products,
+      note: note,
+      partyId: partyId,
+      vatId: vatId,
+    );
 
-    try {
-      var request = http.MultipartRequest("POST", uri);
+    if (customerPhone != null) fields['customer_phone'] = customerPhone;
 
-      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), ref: ref, context: context);
-      request.headers.addAll({
-        "Accept": 'application/json',
-        'Authorization': await getAuthToken(),
-        'Content-Type': 'multipart/form-data',
-      });
+    // 2. Submit Request
+    final response = await _submitRequest(
+      ref: ref,
+      context: context,
+      url: '${APIConfig.url}/sales',
+      method: 'POST',
+      fields: fields,
+      image: image,
+    );
+    print('Sales Response Data: ${response?.body}');
 
-      // JSON data fields
-      request.fields.addAll({
-        'party_id': partyId?.toString() ?? '',
-        'customer_phone': customerPhone ?? '',
-        'saleDate': purchaseDate,
-        'discountAmount': discountAmount.toString(),
-        'discount_percent': discountPercent.toString(),
-        'totalAmount': totalAmount.toString(),
-        'dueAmount': dueAmount.toString(),
-        'paidAmount': (totalAmount - dueAmount).toString(),
-        'change_amount': changeAmount.toString(),
-        'vat_amount': vatAmount.toString(),
-        'vat_percent': vatPercent.toString(),
-        'isPaid': isPaid.toString(),
-        'payment_type_id': paymentType,
-        'discount_type': discountType,
-        'shipping_charge': shippingCharge.toString(),
-        'rounding_option': roundedOption,
-        'rounding_amount': roundingAmount.toStringAsFixed(2),
-        'actual_total_amount': unRoundedTotalAmount.toString(),
-        'note': note ?? '',
-        'products': jsonEncode(
-          products.map((product) => product.toJson()).toList(),
-        ),
-      });
-      if (vatId != null) {
-        request.fields.addAll({
-          'vat_id': vatId.toString(),
-        });
-      }
-      // If an image is provided, attach it to the request
-      if (image != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('image', image.path),
-        );
-      }
-
-      var streamedResponse = await customHttpClient.uploadFile(url: uri, file: image, fileFieldName: 'image', fields: request.fields, countentType: 'multipart/form-data');
-      var response = await http.Response.fromStream(streamedResponse);
+    // 3. Handle Success
+    if (response != null && response.statusCode == 200) {
       final parsedData = jsonDecode(response.body);
-      print('Sales Post: ${response.statusCode}');
-      print('Sales Post: ${response.body}');
-
-      if (response.statusCode == 200) {
-        ref.refresh(productProvider);
-        ref.refresh(partiesProvider);
-        ref.refresh(salesTransactionProvider);
-        ref.refresh(businessInfoProvider);
-        ref.refresh(getExpireDateProvider(ref));
-        ref.refresh(summaryInfoProvider);
-        print('${parsedData['data']}');
-        final data = SalesTransactionModel.fromJson(parsedData['data']);
-        return data;
-      } else {
-        EasyLoading.dismiss().then(
-          (value) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Sales creation failed: ${parsedData['message']}',
-                ),
-              ),
-            );
-          },
-        );
-        return null;
-      }
-    } catch (error) {
-      EasyLoading.dismiss().then(
-        (value) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('An error occurred: $error')),
-          );
-        },
-      );
-      return null;
+      _refreshProviders(ref);
+      return SalesTransactionModel.fromJson(parsedData['data']);
+    } else if (response != null) {
+      _handleError(context, response);
     }
+    return null;
   }
 
+  /// Update Sale
   Future<void> updateSale({
     required WidgetRef ref,
     required BuildContext context,
@@ -176,87 +184,521 @@ class SaleRepo {
     String? note,
     File? image,
   }) async {
-    final uri = Uri.parse('${APIConfig.url}/sales/$id');
-    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), ref: ref, context: context);
-    var request = http.MultipartRequest('POST', uri)
-      ..headers['Authorization'] = await getAuthToken()
-      ..headers['Content-Type'] = 'application/json'
-      ..fields['_method'] = 'put'
-      ..fields['party_id'] = partyId.toString()
-      ..fields['saleDate'] = purchaseDate
-      ..fields['discountAmount'] = discountAmount.toString()
-      ..fields['discount_percent'] = discountPercent.toString()
-      ..fields['totalAmount'] = totalAmount.toString()
-      ..fields['dueAmount'] = dueAmount.toString()
-      ..fields['paidAmount'] = (totalAmount - dueAmount).toString()
-      ..fields['change_amount'] = changeAmount.toString()
-      ..fields['vat_amount'] = vatAmount.toString()
-      ..fields['vat_percent'] = vatPercent.toString()
-      ..fields['isPaid'] = isPaid.toString()
-      ..fields['payment_type_id'] = paymentType
-      ..fields['discount_type'] = discountType
-      ..fields['shipping_charge'] = shippingCharge.toString()
-      ..fields['note'] = note ?? ''
-      ..fields['rounding_option'] = roundedOption ?? ''
-      ..fields['rounding_amount'] = roundingAmount.toStringAsFixed(2)
-      ..fields['actual_total_amount'] = unRoundedTotalAmount.toString() ?? '';
+    // 1. Prepare Fields
+    final fields = _buildCommonFields(
+      purchaseDate: purchaseDate,
+      discountAmount: discountAmount,
+      discountPercent: discountPercent,
+      totalAmount: totalAmount,
+      dueAmount: dueAmount,
+      vatAmount: vatAmount,
+      vatPercent: vatPercent,
+      changeAmount: changeAmount,
+      isPaid: isPaid,
+      paymentType: paymentType,
+      discountType: discountType,
+      shippingCharge: shippingCharge,
+      roundedOption: roundedOption,
+      roundingAmount: roundingAmount,
+      unRoundedTotalAmount: unRoundedTotalAmount,
+      products: products,
+      note: note,
+      partyId: partyId,
+      vatId: vatId,
+    );
 
-    // Convert the list of products to a JSON string
-    String productJson = jsonEncode(products.map((product) => product.toJson()).toList());
-    request.fields['products'] = productJson;
+    // Add Method Override for Update
+    fields['_method'] = 'put';
 
-    if (vatId != null) {
-      request.fields.addAll({'vat_id': vatId.toString()});
+    // 2. Submit Request
+    final response = await _submitRequest(
+      ref: ref,
+      context: context,
+      url: '${APIConfig.url}/sales/$id',
+      method: 'POST', // Multipart uses POST with _method field for PUT behavior usually
+      fields: fields,
+      image: image,
+    );
+
+    // 3. Handle Success
+    if (response != null && response.statusCode == 200) {
+      EasyLoading.showSuccess('Updated successful!');
+      _refreshProviders(ref);
+      Navigator.pop(context);
+    } else if (response != null) {
+      _handleError(context, response);
     }
+  }
 
-    // Add image if it exists
-    if (image != null) {
-      var imageFile = await http.MultipartFile.fromPath('image', image.path);
-      request.files.add(imageFile);
-    }
+  // ------------------------------------------
+  // Private Helper Methods (The Simplification)
+  // ------------------------------------------
 
+  Map<String, String> _buildCommonFields({
+    required String purchaseDate,
+    required num discountAmount,
+    required num discountPercent,
+    required num totalAmount,
+    required num dueAmount,
+    required num vatAmount,
+    required num vatPercent,
+    required num changeAmount,
+    required bool isPaid,
+    required String paymentType,
+    required String discountType,
+    required num shippingCharge,
+    required String roundedOption,
+    required num roundingAmount,
+    required num unRoundedTotalAmount,
+    required List<CartSaleProducts> products,
+    String? note,
+    num? partyId,
+    num? vatId,
+  }) {
+    final Map<String, String> fields = {
+      'saleDate': purchaseDate,
+      'discountAmount': discountAmount.toString(),
+      'discount_percent': discountPercent.toString(),
+      'totalAmount': totalAmount.toString(),
+      'dueAmount': dueAmount.toString(),
+      'paidAmount': (totalAmount - dueAmount).toString(),
+      'change_amount': changeAmount.toString(),
+      'vat_amount': vatAmount.toString(),
+      'vat_percent': vatPercent.toString(),
+      'isPaid': isPaid.toString(),
+      'payments': paymentType,
+      'discount_type': discountType,
+      'shipping_charge': shippingCharge.toString(),
+      'rounding_option': roundedOption,
+      'rounding_amount': roundingAmount.toStringAsFixed(2),
+      'actual_total_amount': unRoundedTotalAmount.toString(),
+      'note': note ?? '',
+      'products': jsonEncode(products.map((e) => e.toJson()).toList()),
+    };
+
+    if (partyId != null) fields['party_id'] = partyId.toString();
+    if (vatId != null) fields['vat_id'] = vatId.toString();
+
+    return fields;
+  }
+
+  Future<http.Response?> _submitRequest({
+    required WidgetRef ref,
+    required BuildContext context,
+    required String url,
+    required String method,
+    required Map<String, String> fields,
+    File? image,
+  }) async {
+    final uri = Uri.parse(url);
     try {
-      var response = await customHttpClient.uploadFile(url: uri, fields: request.fields, fileFieldName: 'image', file: image);
+      var request = http.MultipartRequest(method, uri);
+
+      // Add Headers
+      request.headers.addAll({
+        'Accept': 'application/json',
+        'Authorization': await getAuthToken(),
+        'Content-Type': 'multipart/form-data',
+      });
+
+      // Add Fields
+      request.fields.addAll(fields);
+
+      // Add Image
+      if (image != null) {
+        request.files.add(await http.MultipartFile.fromPath('image', image.path));
+      }
+
+      CustomHttpClient customHttpClient = CustomHttpClient(
+        client: http.Client(),
+        ref: ref,
+        context: context,
+      );
+
+      var streamedResponse = await customHttpClient.uploadFile(
+        url: uri,
+        file: image,
+        fileFieldName: 'image',
+        fields: request.fields,
+        contentType: 'multipart/form-data',
+      );
+      print('POST Sales Data ------------------->\n${request.fields}');
+
+      return await http.Response.fromStream(streamedResponse);
+    } catch (error) {
+      EasyLoading.dismiss();
+      final errorMessage = error.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: kMainColor),
+      );
+      return null;
+    }
+  }
+
+  void _refreshProviders(WidgetRef ref) {
+    ref.refresh(productProvider);
+    ref.refresh(partiesProvider);
+    ref.refresh(salesTransactionProvider);
+    ref.refresh(businessInfoProvider);
+    ref.refresh(getExpireDateProvider(ref));
+    ref.refresh(summaryInfoProvider);
+  }
+
+  void _handleError(BuildContext context, http.Response response) {
+    EasyLoading.dismiss();
+    try {
+      final parsedData = jsonDecode(response.body);
+      print('reponse :${parsedData}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Operation failed: ${parsedData['message'] ?? response.reasonPhrase}')),
+      );
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Operation failed: ${response.statusCode}')),
+      );
+    }
+  }
+
+  Future<lpmodel.LossProfitModel> getLossProfit({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri = Uri.parse('${APIConfig.url}/reports/loss-profit${queryString.isNotEmpty ? '?$queryString' : ''}');
+
+      final response = await clientGet.get(url: uri);
+
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        EasyLoading.showSuccess('Added successful!').then((value) {
-          ref.refresh(productProvider);
-          ref.refresh(partiesProvider);
-          ref.refresh(salesTransactionProvider);
-          ref.refresh(businessInfoProvider);
-          ref.refresh(getExpireDateProvider(ref));
-          Navigator.pop(context);
-        });
+        final parsed = jsonDecode(response.body);
+        if (parsed == null) {
+          throw Exception("Response is null");
+        }
+        if (parsed['data'] == null) {
+          return lpmodel.LossProfitModel.fromJson(parsed);
+        }
+
+        return lpmodel.LossProfitModel.fromJson(parsed['data']);
       } else {
-        var responseData = await http.Response.fromStream(response);
-        final parsedData = jsonDecode(responseData.body);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sales creation failed: ${parsedData['message']}')));
+        throw Exception("Failed to fetch loss profit: ${response.statusCode} - ${response.body}");
       }
-    } catch (error) {
-      EasyLoading.dismiss().then((value) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred: $error')));
-      });
+    } catch (e, stack) {
+      throw Exception("Error fetching loss profit: $e");
+    }
+  }
+
+  Future<cf.CashflowModel> getCashflow({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri = Uri.parse('${APIConfig.url}/reports/cashflow${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return cf.CashflowModel.fromJson(parsed);
+      } else {
+        throw Exception("Failed to fetch sale details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching sale: $e");
+    }
+  }
+
+  Future<bs.BalanceSheetModel> getBalanceSheet({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri =
+          Uri.parse('${APIConfig.url}/reports/balance-sheet${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return bs.BalanceSheetModel.fromJson(parsed);
+      } else {
+        throw Exception("Failed to fetch balance sheet details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching balance sheet: $e");
+    }
+  }
+
+  Future<List<srm.SubscriptionReportModel>> getSubscriptionReport({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri =
+          Uri.parse('${APIConfig.url}/reports/subscription${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return [...?parsed?["data"].map<srm.SubscriptionReportModel>((x) => srm.SubscriptionReportModel.fromJson(x))];
+      } else {
+        throw Exception("Failed to fetch subscription report details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching subscription report: $e");
+    }
+  }
+
+  Future<trm.TaxReportModel> getTaxReport({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri = Uri.parse('${APIConfig.url}/reports/tax${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return trm.TaxReportModel.fromJson(parsed);
+      } else {
+        throw Exception("Failed to fetch tax report details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching tax report: $e");
+    }
+  }
+
+  Future<bwlprm.BillWiseLossProfitReportModel> getBillWiseLossProfitReport({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri =
+          Uri.parse('${APIConfig.url}/reports/bill-wise-profit${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return bwlprm.BillWiseLossProfitReportModel.fromJson(parsed);
+      } else {
+        throw Exception("Failed to fetch tax report details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching tax report: $e");
+    }
+  }
+
+  Future<phlm.ProductHistoryListModel> getProductSaleHistoryReport({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri =
+          Uri.parse('${APIConfig.url}/reports/product-sale-history${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return phlm.ProductHistoryListModel.fromJson(parsed);
+      } else {
+        throw Exception("Failed to fetch tax report details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching tax report: $e");
+    }
+  }
+
+  Future<phlm.ProductHistoryDetailsModel> getProductSaleHistoryReportDetails({
+    required int productId,
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri = Uri.parse(
+          '${APIConfig.url}/reports/product-sale-history/$productId${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return phlm.ProductHistoryDetailsModel.fromJson(parsed);
+      } else {
+        throw Exception("Failed to fetch tax report details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching tax report: $e");
+    }
+  }
+
+  Future<phlm.ProductHistoryDetailsModel> getProductPurchaseHistoryReportDetails({
+    required int productId,
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final List<String> queryList = [];
+
+      if (type != null && type.isNotEmpty) {
+        queryList.add('duration=$type');
+      }
+
+      if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+        queryList.add('from_date=$fromDate');
+        queryList.add('to_date=$toDate');
+      }
+
+      final String queryString = queryList.join('&');
+      final Uri uri = Uri.parse(
+          '${APIConfig.url}/reports/product-purchase-history/$productId${queryString.isNotEmpty ? '?$queryString' : ''}');
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return phlm.ProductHistoryDetailsModel.fromJson(parsed);
+      } else {
+        throw Exception("Failed to fetch tax report details: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching tax report: $e");
     }
   }
 }
 
 class CartSaleProducts {
-  final int productId;
+  final num stockId;
+  final num productId;
   final num? price;
-  final num? lossProfit;
+  final num? discount;
+  final String productName;
   final num? quantities;
 
   CartSaleProducts({
+    required this.productName,
+    required this.stockId,
+    this.discount,
     required this.productId,
     required this.price,
     required this.quantities,
-    required this.lossProfit,
   });
 
   Map<String, dynamic> toJson() => {
+        'stock_id': stockId,
         'product_id': productId,
+        'product_name': productName,
         'price': price,
-        'lossProfit': lossProfit,
         'quantities': quantities,
+        'discount': discount,
       };
 }

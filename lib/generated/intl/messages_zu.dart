@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addCustomer": MessageLookupByLibrary.simpleMessage(
       "Sicela Uengeze Ikhasimende",
     ),
+    "addCustomers": MessageLookupByLibrary.simpleMessage("Engeza Ikhasimende"),
     "addDelivery": MessageLookupByLibrary.simpleMessage("Engeza Ukulethwa"),
     "addExpense": MessageLookupByLibrary.simpleMessage("Engeza Isindleko"),
     "addExpenseCat": MessageLookupByLibrary.simpleMessage(
@@ -55,20 +56,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sicela Uengeze Ukuthengwa Okusha",
     ),
     "addNote": MessageLookupByLibrary.simpleMessage("Engeza Umhlahlandlela"),
+    "addParty": MessageLookupByLibrary.simpleMessage("Engeza Amaqembu"),
     "addProduct": MessageLookupByLibrary.simpleMessage(
       "Sicela Uengeze Umkhiqizo",
     ),
     "addProductFirst": MessageLookupByLibrary.simpleMessage(
       "Engeza umkhiqizo kuqala",
     ),
+    "addProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Umkhiqizo udalwe ngempumelelo!",
+    ),
+    "addProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokudala umkhiqizo.",
+    ),
     "addPurchase": MessageLookupByLibrary.simpleMessage("Engeza Ukuthenga"),
     "addSale": MessageLookupByLibrary.simpleMessage(
       "Sicela Uengeze Ukuthengisa",
     ),
     "addSales": MessageLookupByLibrary.simpleMessage("Engeza Ukuthengisa"),
+    "addStock": MessageLookupByLibrary.simpleMessage("Engeza Isitokwe"),
     "addUnit": MessageLookupByLibrary.simpleMessage("Engeza Isihluzo"),
     "addUserRole": MessageLookupByLibrary.simpleMessage(
       "Engeza Indima Yomsebenzisi",
+    ),
+    "addVariant": MessageLookupByLibrary.simpleMessage("Engeza I-Variant"),
+    "addVariantDetails": MessageLookupByLibrary.simpleMessage(
+      "Engeza Imininingwane Ye-Variant",
     ),
     "addedToCart": MessageLookupByLibrary.simpleMessage(
       "Engezwe Engqongweni Yokuthengela",
@@ -80,7 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Zonke izixazululo zebhizinisi",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "I-NPOS iyisixazululo esiphelele se-business esinezitoko, ama-akhawunti, ukuthengisa, izindleko kanye noklahleka/nenzuzo.",
+      "I-Npos iyisixazululo esiphelele se-business esinezitoko, ama-akhawunti, ukuthengisa, izindleko kanye noklahleka/nenzuzo.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Sonke Isikhathi"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Sesivele Sengezwe"),
@@ -106,13 +119,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "backToHome": MessageLookupByLibrary.simpleMessage("Buyela Ekhaya"),
     "balance": MessageLookupByLibrary.simpleMessage("Isibili"),
     "bangladesh": MessageLookupByLibrary.simpleMessage("IBhangladeshi"),
+    "barcodeGen": MessageLookupByLibrary.simpleMessage("Umakhi We-Bar Code"),
     "barcodeGenerator": MessageLookupByLibrary.simpleMessage(
       "Umthengisi weBarcode",
     ),
+    "batch": MessageLookupByLibrary.simpleMessage("Iqoqo"),
+    "batchNo": MessageLookupByLibrary.simpleMessage("Inombolo Yeqoqo"),
     "billTO": MessageLookupByLibrary.simpleMessage("Ibhili Ku-"),
+    "billingAddress": MessageLookupByLibrary.simpleMessage("Ikheli Lokukhokha"),
     "brand": MessageLookupByLibrary.simpleMessage("Ibhendi"),
     "brandName": MessageLookupByLibrary.simpleMessage("Igama Lebhendi"),
     "brands": MessageLookupByLibrary.simpleMessage("Amabhendi"),
+    "bulk": MessageLookupByLibrary.simpleMessage("Layisha Ngobuningi"),
     "businessCat": MessageLookupByLibrary.simpleMessage("Igatsha Lebhizinisi"),
     "businessName": MessageLookupByLibrary.simpleMessage(
       "Ibhizinisi & Igama Lebhizinisi",
@@ -132,6 +150,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Shintsha Iphasiwedi",
     ),
     "checkEmail": MessageLookupByLibrary.simpleMessage("Hlola I-imeyili"),
+    "choose": MessageLookupByLibrary.simpleMessage("Khetha"),
+    "chooseCountry": MessageLookupByLibrary.simpleMessage("Khetha Izwe"),
     "chooseCustomer": MessageLookupByLibrary.simpleMessage(
       "Khetha Ikhasimende",
     ),
@@ -140,9 +160,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Khetha Izici Zakho",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Izici ziyingxenye ebalulekile eyenza i-NPOS ihluke kwezinye izixazululo zesiko.",
+      "Izici ziyingxenye ebalulekile eyenza i-Npos ihluke kwezinye izixazululo zesiko.",
     ),
+    "city": MessageLookupByLibrary.simpleMessage("Idolobha"),
+    "cityName": MessageLookupByLibrary.simpleMessage("Igama Ledolobha"),
     "clarence": MessageLookupByLibrary.simpleMessage("Ukucaphuna"),
+    "clear": MessageLookupByLibrary.simpleMessage("Sula"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
       "Chofoza ukuze uxhumane",
     ),
@@ -195,11 +218,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "createNewPassword": MessageLookupByLibrary.simpleMessage(
       "Dala Iphasiwedi Elisha",
     ),
+    "createPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokudala i-PDF.",
+    ),
+    "createSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokudala ukuthengiswa.",
+    ),
+    "creditLimit": MessageLookupByLibrary.simpleMessage(
+      "Umkhawulo Wekredithi Weqembu",
+    ),
     "currency": MessageLookupByLibrary.simpleMessage("Imali"),
     "custom": MessageLookupByLibrary.simpleMessage("Ngokwesiko"),
     "customInvoiceBranding": MessageLookupByLibrary.simpleMessage(
       "Ukubhendiwe Kwe-Invoice Engokwezifiso",
     ),
+    "customer": MessageLookupByLibrary.simpleMessage("Ikhasimende"),
     "customerDue": MessageLookupByLibrary.simpleMessage(
       "Ikhasimende Elifanele",
     ),
@@ -216,11 +249,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "Idatha iLondolozwe ngempumelelo.",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Usuku"),
+    "dateFilterWarn": MessageLookupByLibrary.simpleMessage(
+      "Usuku lokuphela alukwazi ukuba ngaphambi kosuku lokuqala.",
+    ),
     "dates": MessageLookupByLibrary.simpleMessage("Usuku:"),
     "days": MessageLookupByLibrary.simpleMessage("izinsuku"),
     "dealer": MessageLookupByLibrary.simpleMessage("Umthengisi"),
     "dealerPrice": MessageLookupByLibrary.simpleMessage("Intengo Yomthengisi"),
     "delete": MessageLookupByLibrary.simpleMessage("Susa"),
+    "deleteAcc": MessageLookupByLibrary.simpleMessage("Susa i-akhawunti"),
+    "deleteBatchWarn": MessageLookupByLibrary.simpleMessage(
+      "Uqinisekile ukuthi ufuna ukususa leli qoqo?",
+    ),
+    "deletePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokususa iqembu.",
+    ),
     "deleting": MessageLookupByLibrary.simpleMessage("Ukucisha..."),
     "deliveryAddress": MessageLookupByLibrary.simpleMessage(
       "Ikheli Lokulethwa",
@@ -249,11 +292,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dueList": MessageLookupByLibrary.simpleMessage("Uhlu Lokufanele"),
     "dueReport": MessageLookupByLibrary.simpleMessage("Umbiko Wokufanele"),
+    "dueSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Ukuthengiswa okunezikweletu akuvunyelwe kumakhasimende angabhaliswanga.",
+    ),
     "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
       "Kulula ukusebenzisa i-POS yeselula",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Uhlelo lokusebenza lwe-NPOS lumahhala, kulula ukusebenzisa. Eqinisweni, ingenye yezinhlelo ze-POS ezinhle kakhulu emhlabeni jikelele.",
+      "Uhlelo lokusebenza lwe-Npos lumahhala, kulula ukusebenzisa. Eqinisweni, ingenye yezinhlelo ze-POS ezinhle kakhulu emhlabeni jikelele.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Hlela"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -273,10 +319,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "I-imeyili ayikwazi ukuba yize",
     ),
     "emailText": MessageLookupByLibrary.simpleMessage("I-imeyili"),
+    "enLowStock": MessageLookupByLibrary.simpleMessage(
+      "Faka isitokwe esiphansi",
+    ),
     "endDate": MessageLookupByLibrary.simpleMessage("Usuku Lokuphela"),
     "endYourFreePlan": MessageLookupByLibrary.simpleMessage(
       "Qeda uhlelo lwakho lwamahhala",
     ),
+    "entBatchNo": MessageLookupByLibrary.simpleMessage("Faka Inombolo Yeqoqo"),
     "enterABrandName": MessageLookupByLibrary.simpleMessage(
       "Faka igama lebhendi",
     ),
@@ -289,6 +339,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterAValidStock": MessageLookupByLibrary.simpleMessage(
       "Faka isitoko esivumelekile",
     ),
+    "enterAddress": MessageLookupByLibrary.simpleMessage("Faka Ikheli"),
     "enterAmount": MessageLookupByLibrary.simpleMessage("Faka Inani"),
     "enterBusiness": MessageLookupByLibrary.simpleMessage(
       "Faka Ibhizinisi/Igama Lesitolo",
@@ -365,17 +416,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Faka inombolo yakho yocingo",
     ),
+    "expDate": MessageLookupByLibrary.simpleMessage("Usuku Lokuphelelwa"),
     "expense": MessageLookupByLibrary.simpleMessage("Isindleko"),
     "expenseCat": MessageLookupByLibrary.simpleMessage("Izigaba Zezindleko"),
     "expenseDate": MessageLookupByLibrary.simpleMessage("Usuku Lwesindleko"),
     "expenseFor": MessageLookupByLibrary.simpleMessage("Isindleko Sokuthi"),
     "expenseReport": MessageLookupByLibrary.simpleMessage("Umbiko Wezindleko"),
+    "expirationStatus": MessageLookupByLibrary.simpleMessage(
+      "Isimo Sokuphelelwa Isikhathi",
+    ),
     "facebook": MessageLookupByLibrary.simpleMessage("I-Facebook"),
     "failedToGetPlatformVersion": MessageLookupByLibrary.simpleMessage(
       "Ukwehluleka ukuthola inguqulo yeplatifomu.",
     ),
     "fashions": MessageLookupByLibrary.simpleMessage("Imitshi"),
     "field": MessageLookupByLibrary.simpleMessage("Insimu"),
+    "filter": MessageLookupByLibrary.simpleMessage("Hlunga"),
     "firstName": MessageLookupByLibrary.simpleMessage("Igama Lokuthoma"),
     "folder": MessageLookupByLibrary.simpleMessage(
       "Kungaba ukuthi i-imeyili iphethe ifolda yakho ye-spam.",
@@ -397,6 +453,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sekukhokhelwe Ngokuphelele",
     ),
     "gallery": MessageLookupByLibrary.simpleMessage("Igeleri"),
+    "genPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Alukho ulwazi olutholakalayo lokwenza i-PDF",
+    ),
     "gotEmail": MessageLookupByLibrary.simpleMessage("Uthole I-imeyili"),
     "gotIt": MessageLookupByLibrary.simpleMessage("Ngikutholile"),
     "guest": MessageLookupByLibrary.simpleMessage("Isihambi"),
@@ -416,9 +475,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "incomeReport": MessageLookupByLibrary.simpleMessage(
       "Umbiko Wemali Engenayo",
     ),
+    "incomeReportPermission": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokubuka umbiko wemali engenayo.",
+    ),
     "instagram": MessageLookupByLibrary.simpleMessage("I-Instagram"),
     "instrucation": MessageLookupByLibrary.simpleMessage("Imiyalelo"),
     "inv": MessageLookupByLibrary.simpleMessage("Inombolo Ye-Inv."),
+    "inventoryPermission": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokuphatha isitokwe",
+    ),
     "invoice": MessageLookupByLibrary.simpleMessage("I-Invoice"),
     "invoiceViewr": MessageLookupByLibrary.simpleMessage("Umbuki We-invoice"),
     "item": MessageLookupByLibrary.simpleMessage("Into"),
@@ -451,15 +516,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "lossProfitReport": MessageLookupByLibrary.simpleMessage(
       "Umbiko Wokulahleka/Inzuzo",
     ),
+    "lowStock": MessageLookupByLibrary.simpleMessage("Isitokwe Esiphansi"),
+    "lowStockReport": MessageLookupByLibrary.simpleMessage(
+      "Umbiko Wesitokwe Esiphansi",
+    ),
     "lp": MessageLookupByLibrary.simpleMessage("Ukulahleka/Inzuzo"),
     "lpDetails": MessageLookupByLibrary.simpleMessage(
       "Imininingwane Yokulahleka/Inzuzo",
+    ),
+    "manuDate": MessageLookupByLibrary.simpleMessage("Usuku Lokukhiqiza"),
+    "manufactureDate": MessageLookupByLibrary.simpleMessage(
+      "Usuku Lokukhiqiza",
     ),
     "manufacturer": MessageLookupByLibrary.simpleMessage("Umkhiqizi"),
     "masterCard": MessageLookupByLibrary.simpleMessage("IKhadi Le-MasterCard"),
     "messege": MessageLookupByLibrary.simpleMessage("Umlaye"),
     "mobile": MessageLookupByLibrary.simpleMessage("Isiloliswe:"),
     "mobiles": MessageLookupByLibrary.simpleMessage("Iselula"),
+    "model": MessageLookupByLibrary.simpleMessage("Imodeli"),
     "moneyReceipt": MessageLookupByLibrary.simpleMessage("Irisidi Yemali"),
     "monthly": MessageLookupByLibrary.simpleMessage("Ngenyanga"),
     "moreInfo": MessageLookupByLibrary.simpleMessage("Ulwazi Olwengeziwe"),
@@ -481,11 +555,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "noDataFound": MessageLookupByLibrary.simpleMessage(
       "Akunakho idatha etholakalayo",
     ),
+    "noDue": MessageLookupByLibrary.simpleMessage("Akukho Sikweletu"),
     "noDueSelected": MessageLookupByLibrary.simpleMessage(
       "Akunakho Okufanele Okukhethiwe",
     ),
     "noItemSelected": MessageLookupByLibrary.simpleMessage(
       "Akukho Ithulu Elikhethiwe",
+    ),
+    "noMatched": MessageLookupByLibrary.simpleMessage(
+      "Azikho imikhiqizo ezihambelana nalokho okuceliwe.",
+    ),
+    "noParty": MessageLookupByLibrary.simpleMessage(
+      "Awekho Amaqembu Atholakele",
     ),
     "noProductFound": MessageLookupByLibrary.simpleMessage(
       "Akunakho Umkhiqizo Otholekayo",
@@ -503,11 +584,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "Akunakho Ukuthengiselana",
     ),
     "notFound": MessageLookupByLibrary.simpleMessage("Akitholakalanga"),
+    "notLaunch": MessageLookupByLibrary.simpleMessage(
+      "Ayikwazanga ukuqala uhlelo locingo.",
+    ),
     "note": MessageLookupByLibrary.simpleMessage("Umhlahlandlela"),
     "notification": MessageLookupByLibrary.simpleMessage("Isaziso"),
     "off": MessageLookupByLibrary.simpleMessage("Ku-Off"),
     "on": MessageLookupByLibrary.simpleMessage("Ku-On"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Vula Ikhamera"),
     "openingBalance": MessageLookupByLibrary.simpleMessage("Isibili Sokuvula"),
+    "opinion": MessageLookupByLibrary.simpleMessage("Faka Umbono Wakho"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Sekuphelile Isitoko"),
     "packFeatures": MessageLookupByLibrary.simpleMessage("Izici Zephakheji"),
     "package": MessageLookupByLibrary.simpleMessage("Iphakheji"),
@@ -515,6 +601,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paidAmount": MessageLookupByLibrary.simpleMessage("Inani Elikhokhelwe"),
     "paidVia": MessageLookupByLibrary.simpleMessage("Ikhokhwe nge"),
     "parties": MessageLookupByLibrary.simpleMessage("Amaqembu"),
+    "partyCreateWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokudala iqembu.",
+    ),
     "partyList": MessageLookupByLibrary.simpleMessage("Uhlu Lwabahlanganyeli"),
     "password": MessageLookupByLibrary.simpleMessage("Iphasiwedi"),
     "passwordCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
@@ -548,6 +637,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentSuccess": MessageLookupByLibrary.simpleMessage(
       "Ukukhokha Kuphumelele",
     ),
+    "paymentTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Sicela ukhethe uhlobo lokukhokha",
+    ),
     "paymentTypes": MessageLookupByLibrary.simpleMessage("Uhlobo Lokukhokha"),
     "paymentWasSuccessful": MessageLookupByLibrary.simpleMessage(
       "Ukukhokha kuphumelele!",
@@ -558,6 +650,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Imvumo ayikabhalelwanga!",
     ),
     "phone": MessageLookupByLibrary.simpleMessage("Inombolo Yocingo"),
+    "phoneNotAvail": MessageLookupByLibrary.simpleMessage(
+      "Inombolo yocingo ayitholakali.",
+    ),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Inombolo Yocingo"),
     "phoneVerification": MessageLookupByLibrary.simpleMessage(
       "Ukuqinisekiswa Kwefoni",
@@ -641,8 +736,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Sicela ukhethe igatsha lesindleko",
     ),
-    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
-      "Kusebenza Ngokusebenzisa i-NPOS",
+    "posSale": MessageLookupByLibrary.simpleMessage("Ukuthengisa kwe-POS"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Kusebenza Ngokusebenzisa i-Acnoo",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Ukusekelwa Kwamakhasimende Okukhokhelwayo",
@@ -654,6 +750,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Inani Lokukhokha Langaphambili",
     ),
     "price": MessageLookupByLibrary.simpleMessage("Intengo"),
+    "priceWarn": MessageLookupByLibrary.simpleMessage(
+      "Intengo ayinakuba ingenalutho",
+    ),
     "print": MessageLookupByLibrary.simpleMessage("Printa"),
     "printing": MessageLookupByLibrary.simpleMessage("Inketho Yokuprinta"),
     "product": MessageLookupByLibrary.simpleMessage("Umkhiqizo"),
@@ -670,11 +769,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "productList": MessageLookupByLibrary.simpleMessage("Uhlu Lomkhiqizo"),
     "productName": MessageLookupByLibrary.simpleMessage("Igama Lomkhiqizo"),
+    "productNotFound": MessageLookupByLibrary.simpleMessage(
+      "Umkhiqizo Awutholakali",
+    ),
+    "productSetting": MessageLookupByLibrary.simpleMessage(
+      "Izilungiselelo zomkhiqizo",
+    ),
     "productUnit": MessageLookupByLibrary.simpleMessage("Isihluzo Somkhiqizo"),
     "products": MessageLookupByLibrary.simpleMessage("Imikhiqizo"),
     "profile": MessageLookupByLibrary.simpleMessage("Iphrofayela"),
     "profileEdit": MessageLookupByLibrary.simpleMessage("Hlela Iphrofayela"),
     "profit": MessageLookupByLibrary.simpleMessage("Inzuzo"),
+    "profitLoss": MessageLookupByLibrary.simpleMessage("Inzuzo Nokulahlekelwa"),
+    "profitMargin": MessageLookupByLibrary.simpleMessage(
+      "Umkhawulo Wenzuzo (%)",
+    ),
     "promo": MessageLookupByLibrary.simpleMessage("Ikhuphulo"),
     "promoCode": MessageLookupByLibrary.simpleMessage("Ikhodi Yokukhushulwa"),
     "purchase": MessageLookupByLibrary.simpleMessage("Ukuthenga"),
@@ -687,6 +796,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "purchaseDetails": MessageLookupByLibrary.simpleMessage(
       "Imininingwane Yokuthengwa",
+    ),
+    "purchaseEx": MessageLookupByLibrary.simpleMessage(
+      "Intengo Yokuthenga Engafakiwe Intela",
+    ),
+    "purchaseExReq": MessageLookupByLibrary.simpleMessage(
+      "Intengo yokuthenga engafakiwe intela iyadingeka",
+    ),
+    "purchaseIn": MessageLookupByLibrary.simpleMessage(
+      "Intengo Yokuthenga Ehlanganisiwe",
+    ),
+    "purchaseInReq": MessageLookupByLibrary.simpleMessage(
+      "Intengo yokuthenga ehlanganisiwe iyadingeka",
     ),
     "purchaseList": MessageLookupByLibrary.simpleMessage("Uhlu Lokuthengwa"),
     "purchaseNow": MessageLookupByLibrary.simpleMessage("Thenga Manje"),
@@ -702,10 +823,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchaseReturnReport": MessageLookupByLibrary.simpleMessage(
       "Umbiko Wokubuyisa Ukuthenga",
     ),
+    "purchaseUpdateWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokuvuselela ukuthengwa.",
+    ),
+    "purchaseWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokudala ukuthengwa.",
+    ),
     "purchased": MessageLookupByLibrary.simpleMessage("Kuthengwe"),
     "purchasedBy": MessageLookupByLibrary.simpleMessage("Kuthengwe Ngu"),
     "qty": MessageLookupByLibrary.simpleMessage("Inani"),
     "quantity": MessageLookupByLibrary.simpleMessage("Inani"),
+    "quickOver": MessageLookupByLibrary.simpleMessage(
+      "Uhlolojikelele Olusheshayo",
+    ),
     "quickOverview": MessageLookupByLibrary.simpleMessage(
       "Ukubukeza Okusheshayo",
     ),
@@ -746,10 +876,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "returned": MessageLookupByLibrary.simpleMessage("Kubuyisiwe"),
     "returnedDate": MessageLookupByLibrary.simpleMessage("Usuku Lokubuyisa"),
     "returnedItem": MessageLookupByLibrary.simpleMessage("Into Ebuyisiwe"),
+    "roundingTotal": MessageLookupByLibrary.simpleMessage(
+      "Isamba Esizungeziwe",
+    ),
+    "roundings": MessageLookupByLibrary.simpleMessage("Ukuzungeza (+/-)"),
     "sale": MessageLookupByLibrary.simpleMessage("Ukuthengisa"),
     "saleBy": MessageLookupByLibrary.simpleMessage("Kuthengiswe Ngu"),
     "saleList": MessageLookupByLibrary.simpleMessage("Uhlu Lokuthengisa"),
     "salePrice": MessageLookupByLibrary.simpleMessage("Intengo Yokuthengisa"),
+    "saleReq": MessageLookupByLibrary.simpleMessage(
+      "Intengo yokuthengisa iyadingeka",
+    ),
     "sales": MessageLookupByLibrary.simpleMessage("Ukuthengisa"),
     "salesBy": MessageLookupByLibrary.simpleMessage("Kuthengiswe Ngu-"),
     "salesDetails": MessageLookupByLibrary.simpleMessage(
@@ -767,9 +904,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveNPublish": MessageLookupByLibrary.simpleMessage(
       "Londoloza bese Uthumela",
     ),
+    "saveSetting": MessageLookupByLibrary.simpleMessage(
+      "Londoloza Izilungiselelo",
+    ),
+    "saveVariant": MessageLookupByLibrary.simpleMessage("Londoloza I-Variant"),
+    "scanCode": MessageLookupByLibrary.simpleMessage(
+      "Skena ikhodi ye-QR yomkhiqizo",
+    ),
     "search": MessageLookupByLibrary.simpleMessage("Sesha"),
     "searchH": MessageLookupByLibrary.simpleMessage("Sesha Lapha...."),
     "searchProduct": MessageLookupByLibrary.simpleMessage("Sesha Umkhiqizo"),
+    "searchWith": MessageLookupByLibrary.simpleMessage("Sesha..."),
     "seeAllPromoCode": MessageLookupByLibrary.simpleMessage(
       "Bona zonke izikhangiso",
     ),
@@ -780,12 +925,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Khetha Igatsha Lebhizinisi",
     ),
     "selectCategory": MessageLookupByLibrary.simpleMessage("Khetha Igatsha"),
+    "selectCustomer": MessageLookupByLibrary.simpleMessage(
+      "Khetha Ikhasimende",
+    ),
+    "selectDate": MessageLookupByLibrary.simpleMessage("Khetha Usuku"),
+    "selectFDate": MessageLookupByLibrary.simpleMessage(
+      "Khetha usuku lokuqala",
+    ),
     "selectLang": MessageLookupByLibrary.simpleMessage("Khetha Ulimi Lwakho"),
+    "selectModel": MessageLookupByLibrary.simpleMessage("Khetha Imodeli"),
+    "selectOne": MessageLookupByLibrary.simpleMessage("Khetha Okunye"),
     "selectProductCategory": MessageLookupByLibrary.simpleMessage(
       "Khetha Igatsha Lomkhiqizo",
     ),
     "selectProductUnit": MessageLookupByLibrary.simpleMessage(
       "Khetha Isihluzo Somkhiqizo",
+    ),
+    "selectTax": MessageLookupByLibrary.simpleMessage("Khetha Intela"),
+    "selectToDate": MessageLookupByLibrary.simpleMessage(
+      "Khetha usuku lokugcina",
     ),
     "selectVariations": MessageLookupByLibrary.simpleMessage(
       "Khetha ukuguquguquka : ",
@@ -816,6 +974,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "setting": MessageLookupByLibrary.simpleMessage("Ukusetha"),
     "share": MessageLookupByLibrary.simpleMessage("Yabelana"),
+    "shippingAddress": MessageLookupByLibrary.simpleMessage(
+      "Ikheli Lokuthumela",
+    ),
     "shopOpeningBalance": MessageLookupByLibrary.simpleMessage(
       "Isibili Sokuvula Isitolo",
     ),
@@ -827,11 +988,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "showPrice": MessageLookupByLibrary.simpleMessage("Khombisa Intengo"),
     "signIn": MessageLookupByLibrary.simpleMessage("Ngena"),
     "signUp": MessageLookupByLibrary.simpleMessage("Bhalisa"),
+    "single": MessageLookupByLibrary.simpleMessage("Omunye"),
     "size": MessageLookupByLibrary.simpleMessage("Usayizi"),
     "skip": MessageLookupByLibrary.simpleMessage("Skhipha"),
     "skipTheUpdate": MessageLookupByLibrary.simpleMessage(
       "Skhipha isibuyekezo",
     ),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU / Ikhodi"),
     "sl": MessageLookupByLibrary.simpleMessage("Inombolo ye-SL"),
     "smartWatch": MessageLookupByLibrary.simpleMessage("I-Smart watch"),
     "socialMarketing": MessageLookupByLibrary.simpleMessage(
@@ -845,6 +1008,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "startNewSale": MessageLookupByLibrary.simpleMessage(
       "Qala Ukuthengisa Okusha",
     ),
+    "state": MessageLookupByLibrary.simpleMessage("Isifundazwe"),
+    "stateName": MessageLookupByLibrary.simpleMessage("Igama Lesifundazwe"),
     "stillUnpaid": MessageLookupByLibrary.simpleMessage(
       "Kusalela Okungakhokhelwanga",
     ),
@@ -852,6 +1017,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "stockList": MessageLookupByLibrary.simpleMessage("Uhlu Sesitoko"),
     "stockReport": MessageLookupByLibrary.simpleMessage("Umbiko Wesitoko"),
     "stockValue": MessageLookupByLibrary.simpleMessage("Inani Lesitoko"),
+    "stockWarn": MessageLookupByLibrary.simpleMessage(
+      "Isitokwe kufanele sibe okungenani 1",
+    ),
     "stocks": MessageLookupByLibrary.simpleMessage("Isitoko: "),
     "subTotal": MessageLookupByLibrary.simpleMessage("Inani Eliphelele"),
     "submit": MessageLookupByLibrary.simpleMessage("Thumela"),
@@ -866,6 +1034,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Imininingwane Yomhlinzeki",
     ),
     "supplierName": MessageLookupByLibrary.simpleMessage("Igama Lomhlinzeki"),
+    "taxType": MessageLookupByLibrary.simpleMessage("Uhlobo Lwentela"),
     "thakYouForYourPurchase": MessageLookupByLibrary.simpleMessage(
       "Siyabonga ngokuthenga kwakho",
     ),
@@ -915,10 +1084,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "totalVat": MessageLookupByLibrary.simpleMessage("I-VAT Ephelele"),
     "totall": MessageLookupByLibrary.simpleMessage("Inani Eliphelele:"),
+    "tranSacOver": MessageLookupByLibrary.simpleMessage(
+      "Uhlolojikelele Lwenkokhelo",
+    ),
     "transactions": MessageLookupByLibrary.simpleMessage("Ukuthengiselana"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Zama Futhi"),
     "twitter": MessageLookupByLibrary.simpleMessage("I-Twitter"),
     "type": MessageLookupByLibrary.simpleMessage("Uhlobo"),
+    "typeSelect": MessageLookupByLibrary.simpleMessage("Khetha Uhlobo"),
     "unPaid": MessageLookupByLibrary.simpleMessage("Engakhokhelwanga"),
     "unitName": MessageLookupByLibrary.simpleMessage("Igama Lesihluzo"),
     "unitPirce": MessageLookupByLibrary.simpleMessage("Intengo Yesihluzo"),
@@ -933,10 +1106,28 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "update": MessageLookupByLibrary.simpleMessage("Buyekeza"),
     "updateContact": MessageLookupByLibrary.simpleMessage("Buyekeza Xhumano"),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "Ukuvuselelwa kwesitokwe kwehlulekile",
+    ),
     "updateNow": MessageLookupByLibrary.simpleMessage("Buyekeza Manje"),
+    "updatePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokuvuselela iqembu.",
+    ),
     "updateProduct": MessageLookupByLibrary.simpleMessage("Buyekeza Umkhiqizo"),
+    "updateProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Umkhiqizo uvuselelwe ngempumelelo!",
+    ),
+    "updateProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokuvuselela umkhiqizo.",
+    ),
     "updateProfile": MessageLookupByLibrary.simpleMessage(
       "Buyekeza Iphrofayela Yakho",
+    ),
+    "updateSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Awunalo ilungelo lokuvuselela ukuthengiswa.",
+    ),
+    "updateSuccess": MessageLookupByLibrary.simpleMessage(
+      "Kuvuselelwe ngempumelelo",
     ),
     "updateYourProfile": MessageLookupByLibrary.simpleMessage(
       "Buyekeza iphrofayela yakho ukuze uxhumane nekhasimende lakho ngomthwalo omuhle",
@@ -946,6 +1137,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updating": MessageLookupByLibrary.simpleMessage("Ukubuyekeza..."),
     "upgradeNow": MessageLookupByLibrary.simpleMessage("Buyekeza Manje"),
+    "upload": MessageLookupByLibrary.simpleMessage("Layisha"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Layisha Isithombe"),
+    "useGallery": MessageLookupByLibrary.simpleMessage("Sebenzisa iGalari"),
     "useTitleCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Isihloko somsebenzisi alinakuba yize",
     ),
@@ -954,6 +1148,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Imininingwane Yendíma Yomsebenzisi",
     ),
     "userTitle": MessageLookupByLibrary.simpleMessage("Isihloko Somsebenzisi"),
+    "variantAdded": MessageLookupByLibrary.simpleMessage(
+      "I-variant ingeziwe ngempumelelo!",
+    ),
+    "variantDelete": MessageLookupByLibrary.simpleMessage(
+      "I-variant isusiwe ngempumelelo!",
+    ),
     "vat": MessageLookupByLibrary.simpleMessage("I-VAT"),
     "verification": MessageLookupByLibrary.simpleMessage("Ukuqinisekiswa"),
     "verify": MessageLookupByLibrary.simpleMessage("Qinisekisa"),
@@ -961,6 +1161,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Qinisekisa I-imeyili Yakho",
     ),
     "verityEmail": MessageLookupByLibrary.simpleMessage("Qinisekisa I-imeyili"),
+    "view": MessageLookupByLibrary.simpleMessage("Buka Imininingwane"),
     "viewAll": MessageLookupByLibrary.simpleMessage("Bona Konke"),
     "walkInCustomer": MessageLookupByLibrary.simpleMessage(
       "Ikhasimende Elifikayo",
@@ -1007,5 +1208,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "yourPackageExpiredToday": MessageLookupByLibrary.simpleMessage(
       "Iphakheji Yakho Izophela Namuhla\n\nSicela Uthenge Futhi",
     ),
+    "zip": MessageLookupByLibrary.simpleMessage("Ikhodi Ye-Zip"),
+    "zipCode": MessageLookupByLibrary.simpleMessage("Faka Ikhodi Ye-Zip"),
   };
 }

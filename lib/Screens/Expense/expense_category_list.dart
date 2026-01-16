@@ -4,9 +4,11 @@ import 'package:mobile_pos/Screens/Expense/add_expense_category.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../GlobalComponents/button_global.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../widgets/empty_widget/_empty_widget.dart';
+import '../../service/check_user_role_permission_provider.dart';
 import 'Providers/expense_category_proivder.dart';
 
 class ExpenseCategoryList extends StatefulWidget {
@@ -25,17 +27,11 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
     final theme = Theme.of(context);
     return Consumer(builder: (context, ref, _) {
       final data = ref.watch(expanseCategoryProvider);
+      final permissionService = PermissionService(ref);
       return GlobalPopup(
         child: Scaffold(
           backgroundColor: kWhite,
           appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Image(
-                  image: AssetImage('images/x.png'),
-                )),
             title: Text(
               lang.S.of(context).expenseCat,
             ),
@@ -88,15 +84,15 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 data.when(data: (data) {
+                  if (!permissionService.hasPermission(Permit.incomeCategoriesRead.value)) {
+                    return Center(child: PermitDenyWidget());
+                  }
                   return ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -105,9 +101,9 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                       return Padding(
                         padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              flex: 4,
+                            Flexible(
                               child: Text(
                                 data[index].categoryName ?? '',
                                 style: theme.textTheme.titleLarge?.copyWith(
@@ -115,24 +111,26 @@ class _ExpenseCategoryListState extends State<ExpenseCategoryList> {
                                 ),
                               ),
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: kDarkWhite,
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: kBackgroundColor,
+                                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+                                minimumSize: Size(
+                                  50,
+                                  25,
                                 ),
-                                // buttonDecoration: kButtonDecoration.copyWith(color: kDarkWhite),
-                                onPressed: () {
-                                  // const AddExpense().launch(context);
-                                  Navigator.pop(
-                                    context,
-                                    data[index],
-                                  );
-                                },
-                                child: Text(
-                                  lang.S.of(context).select,
-                                  style: theme.textTheme.titleMedium,
-                                ),
+                              ),
+                              // buttonDecoration: kButtonDecoration.copyWith(color: kDarkWhite),
+                              onPressed: () {
+                                // const AddExpense().launch(context);
+                                Navigator.pop(
+                                  context,
+                                  data[index],
+                                );
+                              },
+                              child: Text(
+                                lang.S.of(context).select,
+                                style: theme.textTheme.titleSmall?.copyWith(color: Colors.black, fontWeight: FontWeight.w600),
                               ),
                             ),
                           ],

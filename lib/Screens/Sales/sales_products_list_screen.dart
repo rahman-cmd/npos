@@ -10,9 +10,13 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../Const/api_config.dart';
 import '../../GlobalComponents/bar_code_scaner_widget.dart';
 import '../../GlobalComponents/glonal_popup.dart';
-import '../../Provider/add_to_cart.dart';
+import 'provider/sales_cart_provider.dart';
 import '../../currency.dart';
 import '../../model/add_to_cart_model.dart';
+import '../Products/add product/add_product.dart';
+import '../../service/check_user_role_permission_provider.dart';
+import '../Products/add product/modle/create_product_model.dart';
+import 'batch_select_popup_sales.dart';
 
 class SaleProductsList extends StatefulWidget {
   const SaleProductsList({super.key, this.customerModel});
@@ -25,17 +29,8 @@ class SaleProductsList extends StatefulWidget {
 }
 
 class _SaleProductsListState extends State<SaleProductsList> {
-  // String dropdownValue = '';
   String productCode = '0000';
   TextEditingController codeController = TextEditingController();
-  num productPrice = 0;
-  String sentProductPrice = '';
-
-  @override
-  void initState() {
-    // widget.catName == null ? dropdownValue = 'Fashion' : dropdownValue = widget.catName;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +66,15 @@ class _SaleProductsListState extends State<SaleProductsList> {
                             textFieldType: TextFieldType.NAME,
                             onChanged: (value) {
                               setState(() {
-                                productCode = value;
+                                productCode = value.trim();
                               });
                             },
                             decoration: InputDecoration(
                               floatingLabelBehavior: FloatingLabelBehavior.always,
                               labelText: lang.S.of(context).productCode,
-                              hintText: productCode == '0000' || productCode == '-1' ? 'Scan product QR code' : productCode,
+                              hintText: (productCode == '0000' || productCode == '-1' || productCode.isEmpty)
+                                  ? lang.S.of(context).scanCode
+                                  : productCode,
                               border: const OutlineInputBorder(),
                             ),
                           ),
@@ -104,77 +101,129 @@ class _SaleProductsListState extends State<SaleProductsList> {
                       ),
                     ],
                   ),
-                  productList.when(data: (products) {
-                    return ListView.builder(
+                  productList.when(
+                    data: (products) {
+                      final filteredProducts = products.where((product) {
+                        final codeMatch = product.productCode == productCode ||
+                            productCode == '0000' ||
+                            productCode == '-1' ||
+                            productCode.isEmpty;
+                        final nameMatch =
+                            (product.productName?.toLowerCase() ?? '').contains(productCode.toLowerCase());
+
+                        // --- Logic Update Starts Here ---
+                        bool isCombo = product.productType?.toLowerCase().contains('combo') ?? false;
+                        bool hasStock = (product.stocksSumProductStock ?? 0) > 0;
+
+                        // If it is NOT a combo, it MUST have stock to be shown.
+                        // If it IS a combo, we show it regardless of the specific 'stocksSumProductStock' field
+                        // (unless you specifically want to hide empty combos too).
+                        if (!isCombo && !hasStock) {
+                          return false;
+                        }
+                        // --- Logic Update Ends Here ---
+
+                        return codeMatch || nameMatch;
+                      }).toList();
+
+                      if (filteredProducts.isEmpty) {
+                        return Center(
+                          child: Text(lang.S.of(context).noProductFound),
+                        );
+                      }
+
+                      return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: products.length,
+                        itemCount: filteredProducts.length,
                         itemBuilder: (_, i) {
-                          if (widget.customerModel != null && widget.customerModel!.type != null) {
-                            if (widget.customerModel!.type!.contains('Retailer')) {
-                              productPrice = products[i].productSalePrice ?? 0;
-                            } else if (widget.customerModel!.type!.contains('Dealer')) {
-                              productPrice = products[i].productDealerPrice ?? 0;
-                            } else if (widget.customerModel!.type!.contains('Wholesaler')) {
-                              productPrice = products[i].productWholeSalePrice ?? 0;
-                            } else if (widget.customerModel!.type!.contains('Supplier')) {
-                              productPrice = products[i].productPurchasePrice ?? 0;
-                            } else if (widget.customerModel!.type!.contains('Guest')) {
-                              productPrice = products[i].productSalePrice ?? 0;
-                            }
+                          final product = filteredProducts[i];
+                          final isCombo = product.productType?.toLowerCase().contains('combo') ?? false;
+                          num sentProductPrice = 0;
+                          final stock =
+                              (product.stocks != null && product.stocks!.isNotEmpty) ? product.stocks!.first : null;
+
+                          // Determine display text for stock
+                          String stockDisplayText;
+                          if (isCombo) {
+                            stockDisplayText = "Combo";
+                            sentProductPrice = product.productSalePrice ?? 0;
                           } else {
-                            productPrice = products[i].productSalePrice ?? 0;
+                            stockDisplayText = '${lang.S.of(context).stocks}${product.stocksSumProductStock ?? 0}';
+                            if (widget.customerModel?.type != null) {
+                              final type = widget.customerModel!.type!;
+                              if (type.contains('Dealer')) {
+                                sentProductPrice = stock?.productDealerPrice ?? 0;
+                              } else if (type.contains('Wholesaler')) {
+                                sentProductPrice = stock?.productWholeSalePrice ?? 0;
+                              } else if (type.contains('Supplier')) {
+                                sentProductPrice = stock?.productPurchasePrice ?? 0;
+                              } else {
+                                sentProductPrice = stock?.productSalePrice ?? 0;
+                              }
+                            } else {
+                              sentProductPrice = stock?.productSalePrice ?? 0;
+                            }
                           }
 
                           return GestureDetector(
-                            onTap: () async {
-                              if ((products[i].productStock ?? 0) <= 0) {
-                                EasyLoading.showError('Out of stock');
-                              } else {
-                                String sentProductPrice;
-                                if (widget.customerModel != null && widget.customerModel!.type != null) {
-                                  if (widget.customerModel!.type!.contains('Retailer')) {
-                                    sentProductPrice = products[i].productSalePrice.toString();
-                                  } else if (widget.customerModel!.type!.contains('Dealer')) {
-                                    sentProductPrice = products[i].productDealerPrice.toString();
-                                  } else if (widget.customerModel!.type!.contains('Wholesaler')) {
-                                    sentProductPrice = products[i].productWholeSalePrice.toString();
-                                  } else if (widget.customerModel!.type!.contains('Supplier')) {
-                                    sentProductPrice = products[i].productPurchasePrice.toString();
-                                  } else {
-                                    sentProductPrice = products[i].productSalePrice.toString();
+                            onTap: product.productType == ProductType.variant.name
+                                ? () async {
+                                    if ((product.stocksSumProductStock ?? 0) <= 0) {
+                                      EasyLoading.showError(lang.S.of(context).outOfStock);
+                                      return;
+                                    }
+                                    await showAddItemPopup(
+                                      mainContext: context,
+                                      productModel: product,
+                                      ref: ref,
+                                      customerType: widget.customerModel?.type,
+                                      fromPOSSales: false,
+                                    );
                                   }
-                                } else {
-                                  sentProductPrice = products[i].productSalePrice.toString();
-                                }
-
-                                AddToCartModel cartItem = AddToCartModel(
-                                  productName: products[i].productName,
-                                  unitPrice: sentProductPrice,
-                                  productCode: products[i].productCode,
-                                  productPurchasePrice: products[i].productPurchasePrice,
-                                  stock: (products[i].productStock ?? 0).round(),
-                                  productId: products[i].id ?? 0,
-                                );
-                                providerData.addToCartRiverPod(cartItem: cartItem, fromEditSales: false);
-                                Navigator.pop(context);
-                              }
-                            },
+                                : () async {
+                                    // For Single Products, check stock.
+                                    // For Combo, we skip strict stock check here or assume it's allowed.
+                                    if (!isCombo && (product.stocksSumProductStock ?? 0) <= 0) {
+                                      EasyLoading.showError(lang.S.of(context).outOfStock);
+                                    } else {
+                                      SaleCartModel cartItem = SaleCartModel(
+                                        productName: product.productName,
+                                        batchName: '',
+                                        stockId: stock?.id ?? 0,
+                                        unitPrice: sentProductPrice,
+                                        productCode: product.productCode,
+                                        productPurchasePrice: stock?.productPurchasePrice,
+                                        stock: stock?.productStock,
+                                        productType: product.productType,
+                                        productId: product.id ?? 0,
+                                        quantity: (stock?.productStock ?? 0) < 1
+                                            ? (isCombo
+                                                ? 1
+                                                : (stock?.productStock ?? 10)) // Ensure combo adds at least 1
+                                            : 1,
+                                      );
+                                      providerData.addToCartRiverPod(cartItem: cartItem, fromEditSales: false);
+                                      Navigator.pop(context);
+                                    }
+                                  },
                             child: ProductCard(
-                              productTitle: products[i].productName.toString(),
-                              productDescription: products[i].brand?.brandName ?? '',
-                              productPrice: productPrice,
-                              productImage: products[i].productPicture,
-                              stock: products[i].productStock ?? 0,
-                            ).visible((products[i].productCode == productCode || productCode == '0000' || productCode == '-1') && productPrice != '0' ||
-                                products[i].productName!.toLowerCase().contains(productCode.toLowerCase())),
+                              productTitle: product.productName.toString(),
+                              productPrice: sentProductPrice,
+                              productImage: product.productPicture,
+                              stockInfo: stockDisplayText, // Passing String instead of num
+                            ),
                           );
-                        });
-                  }, error: (e, stack) {
-                    return Text(e.toString());
-                  }, loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  }),
+                        },
+                      );
+                    },
+                    error: (e, stack) {
+                      return Text('Error: ${e.toString()}');
+                    },
+                    loading: () {
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  ),
                 ],
               ),
             ),
@@ -187,30 +236,32 @@ class _SaleProductsListState extends State<SaleProductsList> {
 
 // ignore: must_be_immutable
 class ProductCard extends StatefulWidget {
-  ProductCard({Key? key, required this.productTitle, required this.productDescription, required this.productPrice, required this.productImage, required this.stock})
-      : super(key: key);
+  ProductCard({
+    super.key,
+    required this.productTitle,
+    required this.productPrice,
+    required this.productImage,
+    required this.stockInfo, // Changed from 'num stock' to 'String stockInfo'
+  });
 
-  // final Product product;
-  String productTitle, productDescription;
-  num productPrice, stock;
+  String productTitle;
+  num productPrice;
+  String stockInfo; // Type changed
   String? productImage;
+
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
-  num quantity = 0;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
-      final providerData = ref.watch(cartNotifier);
-      for (var element in providerData.cartItemList) {
-        if (element.productName == widget.productTitle) {
-          quantity = element.quantity;
-        }
-      }
+      // Removed the quantity calculation loop here as it wasn't being used in the UI directly
+      // If you need to show current cart quantity on the card, let me know.
+
+      // final permissionService = PermissionService(ref); // Uncomment if permission needed
 
       return Padding(
         padding: const EdgeInsets.all(5.0),
@@ -231,7 +282,8 @@ class _ProductCardState extends State<ProductCard> {
                               borderRadius: BorderRadius.circular(90.0),
                             )
                           : BoxDecoration(
-                              image: DecorationImage(image: NetworkImage("${APIConfig.domain}${widget.productImage}"), fit: BoxFit.cover),
+                              image: DecorationImage(
+                                  image: NetworkImage("${APIConfig.domain}${widget.productImage}"), fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(90.0),
                             ),
                     ),
@@ -243,33 +295,16 @@ class _ProductCardState extends State<ProductCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                widget.productTitle,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.titleLarge,
-                              ),
-                              Text(
-                                //'Stock: ${widget.stock}',
-                                '${lang.S.of(context).stocks}${widget.stock}',
-                              ),
-                              // const SizedBox(width: 5),
-                              // Text(
-                              //   ' X $quantity',
-                              //   style: GoogleFonts.jost(
-                              //     fontSize: 14.0,
-                              //     color: Colors.grey.shade500,
-                              //   ),
-                              // ).visible(quantity != 0),
-                            ],
-                          ),
                           Text(
-                            widget.productDescription,
-                            style: theme.textTheme.bodyLarge,
+                            widget.productTitle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleMedium!.copyWith(fontSize: 18),
+                          ),
+                          // Display the stockInfo string (Either "Combo" or "Stock: 50")
+                          Text(
+                            widget.stockInfo,
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -278,9 +313,10 @@ class _ProductCardState extends State<ProductCard> {
                 ],
               ),
             ),
+            // if (permissionService.hasPermission(Permit.salesPriceView.value))
             Text(
               '$currency${widget.productPrice}',
-              style: theme.textTheme.titleLarge,
+              style: theme.textTheme.titleMedium!.copyWith(fontSize: 18),
             ),
           ],
         ),

@@ -12,26 +12,48 @@ import '../../../Provider/profile_provider.dart';
 import '../../../Provider/transactions_provider.dart';
 import '../../../Repository/constant_functions.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
 import '../../Customers/Provider/customer_provider.dart';
+import '../../../service/check_user_role_permission_provider.dart';
 import '../Model/purchase_transaction_model.dart';
 
 class PurchaseRepo {
-  Future<List<PurchaseTransaction>> fetchPurchaseList({bool? purchaseReturn}) async {
-    final uri = Uri.parse('${APIConfig.url}/purchase${(purchaseReturn ?? false) ? "?returned-purchase=true" : ''}');
+  Future<List<PurchaseTransaction>> fetchPurchaseList({
+    bool? salesReturn,
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    final client = CustomHttpClientGet(client: http.Client());
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    final List<String> queryList = [];
+
+    if (salesReturn != null && salesReturn) {
+      queryList.add('returned-purchase=true');
+    }
+
+    if (type != null && type.isNotEmpty) {
+      queryList.add('duration=$type');
+    }
+
+    if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+      queryList.add('from_date=$fromDate');
+      queryList.add('to_date=$toDate');
+    }
+
+    final String queryString = queryList.join('&');
+    final Uri uri = Uri.parse('${APIConfig.url}/purchase${queryString.isNotEmpty ? '?$queryString' : ''}');
+
+    print(uri);
+
+    final response = await client.get(url: uri);
 
     if (response.statusCode == 200) {
-      final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
-
-      final partyList = parsedData['data'] as List<dynamic>;
-      return partyList.map((category) => PurchaseTransaction.fromJson(category)).toList();
-      // Parse into Party objects
+      final parsed = jsonDecode(response.body) as Map<String, dynamic>;
+      final list = parsed['data'] as List<dynamic>;
+      return list.map((json) => PurchaseTransaction.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch Purchase List');
+      throw Exception('Failed to fetch Sales List. Status code: ${response.statusCode}');
     }
   }
 
@@ -49,13 +71,14 @@ class PurchaseRepo {
     required num dueAmount,
     required num changeAmount,
     required bool isPaid,
-    required String paymentType,
+    required List<Map<String, dynamic>> paymentType,
     required List<CartProductModelPurchase> products,
     required String discountType,
     required num shippingCharge,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/purchase');
-    final requestBody = jsonEncode({
+
+    final body = {
       'party_id': partyId,
       'vat_id': vatId,
       'purchaseDate': purchaseDate,
@@ -68,43 +91,58 @@ class PurchaseRepo {
       'paidAmount': totalAmount - dueAmount,
       'change_amount': changeAmount,
       'isPaid': isPaid,
-      'payment_type_id': paymentType,
-      'products': products.map((product) => product.toJson()).toList(),
+      'payments': paymentType,
       'discount_type': discountType,
       'shipping_charge': shippingCharge,
-    });
+      'products': products.map((e) => e.toJson()).toList(),
+    };
+
+    print('Purchase Posted data : ${jsonEncode(body)}');
 
     try {
-      var responseData = await http.post(
+      final response = await http.post(
         uri,
-        headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'},
-        body: requestBody,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': await getAuthToken(),
+        },
+        body: jsonEncode(body),
       );
 
-      final parsedData = jsonDecode(responseData.body);
+      final parsed = jsonDecode(response.body);
 
-      if (responseData.statusCode == 200) {
+      print('Purchase Response : ${response.statusCode}');
+      print('Purchase Response : $parsed');
+
+      if (response.statusCode == 200) {
         EasyLoading.showSuccess('Added successful!');
-        var data1 = ref.refresh(productProvider);
-        var data2 = ref.refresh(partiesProvider);
-        var data3 = ref.refresh(purchaseTransactionProvider);
-        var data4 = ref.refresh(businessInfoProvider);
-        ref.refresh(getExpireDateProvider(ref));
-        ref.refresh(summaryInfoProvider);
-        // Navigator.pop(context);
-        print('Purchase Response: ${parsedData['data']}');
-        return PurchaseTransaction.fromJson(parsedData['data']);
+
+        // Refresh providers
+        ref
+          ..refresh(productProvider)
+          ..refresh(partiesProvider)
+          ..refresh(purchaseTransactionProvider)
+          ..refresh(businessInfoProvider)
+          ..refresh(getExpireDateProvider(ref))
+          ..refresh(summaryInfoProvider);
+
+        print('Purchase Response: ${parsed['data']}');
+        return PurchaseTransaction.fromJson(parsed['data']);
       } else {
         EasyLoading.dismiss();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Purchase creation failed: ${parsedData['message']}')));
-        return null;
+        _showError(context, 'Purchase creation failed: ${parsed['message']}');
       }
-    } catch (error) {
+    } catch (e) {
       EasyLoading.dismiss();
-      // Handle unexpected errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred: $error')));
-      return null;
+      _showError(context, 'An error occurred: $e');
     }
+
+    return null;
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<PurchaseTransaction?> updatePurchase({
@@ -121,7 +159,7 @@ class PurchaseRepo {
     required num dueAmount,
     required num changeAmount,
     required bool isPaid,
-    required String paymentType,
+    required List<Map<String, dynamic>> paymentType,
     required List<CartProductModelPurchase> products,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/purchase/$id');
@@ -138,7 +176,7 @@ class PurchaseRepo {
       'paidAmount': totalAmount - dueAmount,
       'change_amount': changeAmount,
       'isPaid': isPaid,
-      'payment_type_id': paymentType,
+      'payments': paymentType,
       'products': products.map((product) => product.toJson()).toList(),
     });
 
@@ -148,6 +186,7 @@ class PurchaseRepo {
         url: uri,
         addContentTypeInHeader: true,
         body: requestBody,
+        // permission: Permit.purchasesUpdate.value,
       );
 
       final parsedData = jsonDecode(responseData.body);
@@ -208,37 +247,84 @@ class PurchaseRepo {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
+
+  Future<PurchaseTransaction?> getSinglePurchase(int id) async {
+    final uri = Uri.parse('${APIConfig.url}/purchase/$id');
+
+    try {
+      CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+      final response = await clientGet.get(url: uri);
+
+      print("Fetch Single Purchase Status: ${response.statusCode}");
+      print("Fetch Single Purchase Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(response.body);
+        return PurchaseTransaction.fromJson(parsed['data']);
+      } else {
+        throw Exception("Failed to fetch purchase details");
+      }
+    } catch (e) {
+      throw Exception("Error fetching purchase: $e");
+    }
+  }
 }
 
 class CartProductModelPurchase {
   num productId;
+  String? variantName;
+  num? warehouseId;
   String productName;
+  String productType;
+  String vatType;
+  num vatRate;
+  num vatAmount;
   String? brandName;
+  String? batchNumber;
   num? productDealerPrice;
   num? productPurchasePrice;
+  String? expireDate;
+  String? mfgDate;
   num? productSalePrice;
+  num? profitPercent;
   num? productWholeSalePrice;
   num? quantities;
   num? stock;
 
   CartProductModelPurchase({
     required this.productId,
+    this.variantName,
+    this.warehouseId, // Change 1: Added to constructor
     required this.productName,
+    required this.productType,
+    required this.vatRate,
+    required this.vatAmount,
+    required this.vatType,
     this.brandName,
     this.stock,
+    this.profitPercent,
     required this.productDealerPrice,
     required this.productPurchasePrice,
     required this.productSalePrice,
     required this.productWholeSalePrice,
     required this.quantities,
+    this.batchNumber,
+    this.mfgDate,
+    this.expireDate,
   });
 
   Map<String, dynamic> toJson() => {
         'product_id': productId,
+        'variant_name': variantName,
+        'warehouse_id': warehouseId,
         'productDealerPrice': productDealerPrice,
         'productPurchasePrice': productPurchasePrice,
         'productSalePrice': productSalePrice,
         'productWholeSalePrice': productWholeSalePrice,
         'quantities': quantities,
+        'batch_no': batchNumber,
+        'profit_percent': profitPercent,
+        'expire_date': expireDate,
+        'mfg_date': mfgDate,
       };
 }

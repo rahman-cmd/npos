@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:mobile_pos/constant.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
+import 'package:nb_utils/nb_utils.dart';
 
-import '../../PDF Invoice/pdf_common_functions.dart';
 import '../../currency.dart';
 
 class CustomerAllTransactionScreen extends StatefulWidget {
@@ -16,8 +14,9 @@ class CustomerAllTransactionScreen extends StatefulWidget {
 }
 
 class _CustomerAllTransactionScreenState extends State<CustomerAllTransactionScreen> {
-  int currentIndex=0;
-  bool isSearch=false;
+  int currentIndex = 0;
+  bool isSearch = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,28 +24,33 @@ class _CustomerAllTransactionScreenState extends State<CustomerAllTransactionScr
       appBar: AppBar(
         elevation: 2.0,
         surfaceTintColor: kWhite,
-        automaticallyImplyLeading: isSearch?false:true,
+        automaticallyImplyLeading: isSearch ? false : true,
         backgroundColor: kWhite,
-        title: isSearch?TextFormField(
-          decoration: kInputDecoration.copyWith(
-            contentPadding: const EdgeInsets.only(left: 12,right: 5),
-            //hintText: 'Search Here.....',
-           hintText: lang.S.of(context).searchH,
-          ),
-        ):  Text(
-          lang.S.of(context).transactions,
-          //  'Transactions'
-        ),
-        actions:  [
+        title: isSearch
+            ? TextFormField(
+                decoration: kInputDecoration.copyWith(
+                  contentPadding: const EdgeInsets.only(left: 12, right: 5),
+                  //hintText: 'Search Here.....',
+                  hintText: lang.S.of(context).searchH,
+                ),
+              )
+            : Text(
+                lang.S.of(context).transactions,
+                //  'Transactions'
+              ),
+        actions: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
-                isSearch=true;
+                isSearch = true;
               });
             },
             child: const Padding(
               padding: EdgeInsets.all(15.0),
-              child: Icon(FeatherIcons.search,color: kGreyTextColor,),
+              child: Icon(
+                FeatherIcons.search,
+                color: kGreyTextColor,
+              ),
             ),
           )
         ],
@@ -77,7 +81,7 @@ class _CustomerAllTransactionScreenState extends State<CustomerAllTransactionScr
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                               Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
@@ -94,9 +98,7 @@ class _CustomerAllTransactionScreenState extends State<CustomerAllTransactionScr
                                 children: [
                                   Container(
                                     // padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xff0dbf7d).withOpacity(0.1) ,
-                                        borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                    decoration: BoxDecoration(color: const Color(0xff0dbf7d).withOpacity(0.1), borderRadius: const BorderRadius.all(Radius.circular(10))),
                                     child: Text(
                                       lang.S.of(context).paid,
                                       style: const TextStyle(color: Color(0xff0dbf7d)),
@@ -123,13 +125,13 @@ class _CustomerAllTransactionScreenState extends State<CustomerAllTransactionScr
                                   Row(
                                     children: [
                                       IconButton(
-                                          onPressed: (){},
+                                          onPressed: () {},
                                           icon: const Icon(
                                             FeatherIcons.printer,
                                             color: Colors.grey,
                                           )),
                                       IconButton(
-                                          onPressed: (){},
+                                          onPressed: () {},
                                           icon: const Icon(
                                             Icons.picture_as_pdf,
                                             color: Colors.grey,

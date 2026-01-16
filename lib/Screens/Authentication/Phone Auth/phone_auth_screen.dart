@@ -66,7 +66,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   labelText: lang.S.of(context).phoneNumber,
                   border: const OutlineInputBorder(borderSide: BorderSide(), borderRadius: BorderRadius.all(Radius.circular(15))),
                 ),
-                initialCountryCode: 'OM',
+                initialCountryCode: 'BD',
                 onChanged: (phone) {
                   phoneNumber = phone.completeNumber;
                 },

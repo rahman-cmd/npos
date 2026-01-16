@@ -8,13 +8,14 @@ import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../Const/api_config.dart';
-import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
-import '../../constant.dart';
 import '../../constant.dart' as DAppColors;
+import '../../constant.dart';
 import '../../currency.dart';
+import '../../http_client/custome_http_client.dart';
 import '../../widgets/empty_widget/_empty_widget.dart';
 import '../Customers/Provider/customer_provider.dart';
+import '../../service/check_user_role_permission_provider.dart';
 
 class DueCalculationContactScreen extends StatefulWidget {
   const DueCalculationContactScreen({super.key});
@@ -25,6 +26,7 @@ class DueCalculationContactScreen extends StatefulWidget {
 
 class _DueCalculationContactScreenState extends State<DueCalculationContactScreen> {
   late Color color;
+
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
@@ -45,7 +47,7 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
           child: Consumer(builder: (context, ref, __) {
             final providerData = ref.watch(partiesProvider);
             final businessInfo = ref.watch(businessInfoProvider);
-
+            final permissionService = PermissionService(ref);
             return providerData.when(data: (parties) {
               List<Party> dueCustomerList = [];
 
@@ -56,6 +58,9 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
               }
               return dueCustomerList.isNotEmpty
                   ? businessInfo.when(data: (details) {
+                      if (!permissionService.hasPermission(Permit.duesRead.value)) {
+                        return Center(child: PermitDenyWidget());
+                      }
                       return ListView.builder(
                           shrinkWrap: true,
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -63,9 +68,28 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
                           itemCount: dueCustomerList.length,
                           itemBuilder: (_, index) {
                             dueCustomerList[index].type == 'Retailer' ? color = const Color(0xFF56da87) : Colors.white;
-                            dueCustomerList[index].type == 'Wholesaler' ? color = const Color(0xFF25a9e0) : Colors.white;
+                            dueCustomerList[index].type == 'Wholesaler'
+                                ? color = const Color(0xFF25a9e0)
+                                : Colors.white;
                             dueCustomerList[index].type == 'Dealer' ? color = const Color(0xFFff5f00) : Colors.white;
                             dueCustomerList[index].type == 'Supplier' ? color = const Color(0xFFA569BD) : Colors.white;
+
+                            final item = dueCustomerList[index];
+                            final normalizedType = (item.type ?? '').toLowerCase();
+
+                            String effectiveDisplayType;
+
+                            if (normalizedType == 'retailer') {
+                              effectiveDisplayType = lang.S.of(context).customer;
+                            } else if (normalizedType == 'wholesaler') {
+                              effectiveDisplayType = lang.S.of(context).wholesaler;
+                            } else if (normalizedType == 'dealer') {
+                              effectiveDisplayType = lang.S.of(context).dealer;
+                            } else if (normalizedType == 'supplier') {
+                              effectiveDisplayType = lang.S.of(context).supplier;
+                            } else {
+                              effectiveDisplayType = item.type ?? '';
+                            }
 
                             return ListTile(
                               visualDensity: const VisualDensity(vertical: -2),
@@ -119,7 +143,8 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      dueCustomerList[index].type ?? '',
+                                      // dueCustomerList[index].type ?? '',
+                                      effectiveDisplayType,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: _theme.textTheme.bodyMedium?.copyWith(
@@ -130,9 +155,13 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    dueCustomerList[index].due != null && dueCustomerList[index].due != 0 ? lang.S.of(context).due : 'No Due',
+                                    dueCustomerList[index].due != null && dueCustomerList[index].due != 0
+                                        ? lang.S.of(context).due
+                                        : 'No Due',
                                     style: _theme.textTheme.bodyMedium?.copyWith(
-                                      color: dueCustomerList[index].due != null && dueCustomerList[index].due != 0 ? const Color(0xFFff5f00) : const Color(0xff808191),
+                                      color: dueCustomerList[index].due != null && dueCustomerList[index].due != 0
+                                          ? const Color(0xFFff5f00)
+                                          : const Color(0xff808191),
                                       fontSize: 14.0,
                                     ),
                                   ),

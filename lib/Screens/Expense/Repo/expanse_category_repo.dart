@@ -11,16 +11,15 @@ import 'package:mobile_pos/Screens/Expense/Providers/expense_category_proivder.d
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
 
 class ExpanseCategoryRepo {
   Future<List<ExpenseCategory>> fetchAllExpanseCategory() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/expense-categories');
 
     try {
-      final response = await http.get(uri, headers: {
-        'Accept': 'application/json',
-        'Authorization': await getAuthToken(),
-      });
+      final response = await clientGet.get(url: uri);
 
       if (response.statusCode == 200) {
         final parsedData = jsonDecode(response.body) as Map<String, dynamic>;

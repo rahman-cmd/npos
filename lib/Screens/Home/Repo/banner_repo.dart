@@ -4,16 +4,15 @@ import 'package:http/http.dart' as http;
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/customer_http_client_get.dart';
 import '../Model/banner_model.dart';
 
 class BannerRepo {
   Future<List<Banner>> fetchAllIBanners() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/banners');
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    final response = await clientGet.get(url: uri);
     if (response.statusCode == 200) {
       final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
 

@@ -1,27 +1,28 @@
 import '../../../model/sale_transaction_model.dart';
+import '../../../widgets/multipal payment mathods/model/payment_transaction_model.dart';
 import '../../Customers/Model/parties_model.dart';
-import '../../payment_type/model/payment_type_model.dart';
 
 class DueCollection {
-  DueCollection({
-    this.id,
-    this.businessId,
-    this.partyId,
-    this.userId,
-    this.saleId,
-    this.purchaseId,
-    this.totalDue,
-    this.dueAmountAfterPay,
-    this.payDueAmount,
-    this.paymentTypeId,
-    this.paymentType,
-    this.paymentDate,
-    this.invoiceNumber,
-    this.createdAt,
-    this.updatedAt,
-    this.user,
-    this.party,
-  });
+  DueCollection(
+      {this.id,
+      this.businessId,
+      this.partyId,
+      this.userId,
+      this.saleId,
+      this.purchaseId,
+      this.totalDue,
+      this.dueAmountAfterPay,
+      this.payDueAmount,
+      this.paymentTypeId,
+      this.paymentType,
+      this.paymentDate,
+      this.invoiceNumber,
+      this.createdAt,
+      this.updatedAt,
+      this.user,
+      this.party,
+      this.transactions,
+      this.branch});
 
   DueCollection.fromJson(dynamic json) {
     id = json['id'];
@@ -42,7 +43,16 @@ class DueCollection {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     party = json['party'] != null ? Party.fromJson(json['party']) : null;
     paymentType = json['payment_type'] != null ? PaymentType.fromJson(json['payment_type']) : null;
+    branch = json['branch'] != null ? Branch.fromJson(json['branch']) : null;
+    // NEW: Parsing the transactions list
+    if (json['transactions'] != null) {
+      transactions = [];
+      json['transactions'].forEach((v) {
+        transactions?.add(PaymentsTransaction.fromJson(v));
+      });
+    }
   }
+
   num? id;
   num? businessId;
   num? partyId;
@@ -60,6 +70,8 @@ class DueCollection {
   String? updatedAt;
   User? user;
   Party? party;
+  Branch? branch;
+  List<PaymentsTransaction>? transactions; // NEW Variable
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -82,6 +94,7 @@ class DueCollection {
     if (party != null) {
       map['party'] = party?.toJson();
     }
+    map['branch'] = branch;
     return map;
   }
 }
@@ -107,4 +120,25 @@ class PaymentType {
       'name': name,
     };
   }
+}
+
+class Branch {
+  Branch({
+    this.id,
+    this.name,
+    this.phone,
+    this.address,
+  });
+
+  Branch.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+    phone = json['phone'];
+    address = json['address'];
+  }
+
+  num? id;
+  String? name;
+  String? phone;
+  String? address;
 }

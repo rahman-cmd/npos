@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile_pos/Screens/Expense/add_expense_category.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../GlobalComponents/button_global.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../widgets/empty_widget/_empty_widget.dart';
+import '../../service/check_user_role_permission_provider.dart';
 import 'Providers/income_category_provider.dart';
 import 'add_income_category.dart';
 
@@ -26,17 +27,11 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
     final theme = Theme.of(context);
     return Consumer(builder: (context, ref, _) {
       final data = ref.watch(incomeCategoryProvider);
+      final permissionService = PermissionService(ref);
       return GlobalPopup(
         child: Scaffold(
           backgroundColor: kWhite,
           appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Image(
-                  image: AssetImage('images/x.png'),
-                )),
             title: Text(
               lang.S.of(context).incomeCategories,
             ),
@@ -88,40 +83,46 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 data.when(data: (data) {
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                data[index].categoryName ?? '',
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  color: kGreyTextColor,
+                  if (!permissionService.hasPermission(Permit.incomeCategoriesRead.value)) {
+                    return Center(child: PermitDenyWidget());
+                  }
+                  return Expanded(
+                    child: ListView.builder(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  data[index].categoryName ?? '',
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    color: kGreyTextColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: ElevatedButton(
+                              ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: kDarkWhite,
+                                  backgroundColor: kBackgroundColor,
+                                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+                                  minimumSize: Size(
+                                    50,
+                                    25,
+                                  ),
                                 ),
                                 child: Text(
                                   lang.S.of(context).select,
-                                  style: theme.textTheme.titleMedium,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                                 //'Select',
                                 onPressed: () {
@@ -132,11 +133,11 @@ class _IncomeCategoryListState extends State<IncomeCategoryList> {
                                   );
                                 },
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   );
                 }, error: (error, stackTrace) {
                   return Text(error.toString());

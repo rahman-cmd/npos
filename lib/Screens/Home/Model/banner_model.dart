@@ -4,7 +4,8 @@ class Banner {
     this.imageUrl,
     this.status,
     this.createdAt,
-    this.updatedAt,});
+    this.updatedAt,
+  });
 
   Banner.fromJson(dynamic json) {
     id = json['id'];
@@ -13,6 +14,7 @@ class Banner {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
   num? id;
   String? imageUrl;
   num? status;
@@ -28,5 +30,4 @@ class Banner {
     map['updated_at'] = updatedAt;
     return map;
   }
-
 }

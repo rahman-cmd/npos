@@ -7,7 +7,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_pos/Const/api_config.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
@@ -22,7 +21,7 @@ import '../../model/business_info_model.dart';
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key, required this.profile, required this.ref});
 
-  final BusinessInformation profile;
+  final BusinessInformationModel profile;
   final WidgetRef ref;
 
   @override
@@ -40,11 +39,11 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    nameController.text = widget.profile.companyName ?? '';
-    phoneController.text = widget.profile.phoneNumber ?? '';
-    addressController.text = widget.profile.address ?? '';
-    vatGstTitleController.text = widget.profile.vatName ?? '';
-    vatGstNumberController.text = widget.profile.vatNumber ?? '';
+    nameController.text = widget.profile.data?.companyName ?? '';
+    phoneController.text = widget.profile.data?.phoneNumber ?? '';
+    addressController.text = widget.profile.data?.address ?? '';
+    vatGstTitleController.text = widget.profile.data?.vatName ?? '';
+    vatGstNumberController.text = widget.profile.data?.vatNo ?? '';
   }
 
   int counter = 0;
@@ -77,6 +76,7 @@ class _EditProfileState extends State<EditProfile> {
       dropDownItems.add(item);
     }
     return DropdownButton(
+      isExpanded: true,
       hint: Text(
         lang.S.of(context).selectBusinessCategory,
         //'Select Business Category'
@@ -109,40 +109,6 @@ class _EditProfileState extends State<EditProfile> {
           backgroundColor: Colors.white,
           elevation: 0.0,
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ElevatedButton.icon(
-            icon: const Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            ),
-            label: Text(lang.S.of(context).continueButton),
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                final businessRepository = BusinessUpdateRepository();
-                final isProfileUpdated = await businessRepository.updateProfile(
-                  id: widget.profile.id.toString(),
-                  name: nameController.text,
-                  categoryId: selectedBusinessCategory!.id.toString(),
-                  address: addressController.text,
-                  image: pickedImage != null ? File(pickedImage!.path) : null,
-                  phone: phoneController.text,
-                  vatNumber: vatGstNumberController.text,
-                  vatTitle: vatGstTitleController.text,
-                  ref: widget.ref,
-                  context: context,
-                  fromInvoiceLogo: false,
-                );
-
-                if (isProfileUpdated) {
-                  widget.ref.refresh(businessInfoProvider);
-                  widget.ref.refresh(getExpireDateProvider(widget.ref));
-                  Navigator.pop(context);
-                }
-              }
-            },
-          ),
-        ),
         body: SingleChildScrollView(
           child: Consumer(builder: (context, ref, child) {
             final categoryList = ref.watch(businessCategoryProvider);
@@ -150,7 +116,7 @@ class _EditProfileState extends State<EditProfile> {
             return categoryList.when(data: (categoryList) {
               if (counter == 1) {
                 for (var element in categoryList) {
-                  if (element.id == widget.profile.category!.id) {
+                  if (element.id == widget.profile.data?.category?.id) {
                     selectedBusinessCategory = element;
                   }
                 }
@@ -159,19 +125,20 @@ class _EditProfileState extends State<EditProfile> {
               return Center(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        lang.S.of(context).updateYourProfile,
-                        // "Update your profile to connect your customer with better impression",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: kGreyTextColor,
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(10.0),
+                    //   child: Text(
+                    //     lang.S.of(context).updateYourProfile,
+                    //     // "Update your profile to connect your customer with better impression",
+                    //     maxLines: 2,
+                    //     overflow: TextOverflow.ellipsis,
+                    //     textAlign: TextAlign.center,
+                    //     style: theme.textTheme.bodyLarge?.copyWith(
+                    //       color: kGreyTextColor,
+                    //     ),
+                    //   ),
+                    // ),
+                    SizedBox(height: 20),
 
                     ///__________Image_section________________________________________
                     GestureDetector(
@@ -268,13 +235,13 @@ class _EditProfileState extends State<EditProfile> {
                               border: Border.all(color: Colors.black54, width: 1),
                               borderRadius: const BorderRadius.all(Radius.circular(120)),
                               image: pickedImage == null
-                                  ? widget.profile.pictureUrl == null
+                                  ? widget.profile.data?.pictureUrl == null
                                       ? const DecorationImage(
                                           image: AssetImage('images/no_shop_image.png'),
                                           fit: BoxFit.cover,
                                         )
                                       : DecorationImage(
-                                          image: NetworkImage(APIConfig.domain + widget.profile.pictureUrl.toString()),
+                                          image: NetworkImage(APIConfig.domain + (widget.profile.data?.pictureUrl.toString() ?? '')),
                                           fit: BoxFit.cover,
                                         )
                                   : DecorationImage(
@@ -351,12 +318,12 @@ class _EditProfileState extends State<EditProfile> {
                             padding: const EdgeInsets.all(10.0),
                             child: SizedBox(
                               height: 60.0,
-                              child: AppTextField(
+                              child: TextFormField(
                                 controller: phoneController,
-                                validator: (value) {
-                                  return null;
-                                },
-                                textFieldType: TextFieldType.PHONE,
+                                // validator: (value) {
+                                //   return null;
+                                // },
+                                keyboardType: TextInputType.phone,
                                 decoration: kInputDecoration.copyWith(
                                   labelText: lang.S.of(context).phone,
                                   border: const OutlineInputBorder(),
@@ -393,8 +360,8 @@ class _EditProfileState extends State<EditProfile> {
                                     controller: vatGstTitleController,
                                     textFieldType: TextFieldType.NAME,
                                     decoration: kInputDecoration.copyWith(
-                                      hintText: "Enter VAT/GST Title",
-                                      labelText: "VAT/GST Title",
+                                      hintText: lang.S.of(context).enterVatGstTitle,
+                                      labelText: lang.S.of(context).vatGstTitle,
                                       border: const OutlineInputBorder(),
                                     ),
                                   ),
@@ -412,8 +379,8 @@ class _EditProfileState extends State<EditProfile> {
                                     controller: vatGstNumberController, // Optional
                                     textFieldType: TextFieldType.NAME,
                                     decoration: kInputDecoration.copyWith(
-                                      hintText: 'Enter shop VAT/GST number',
-                                      labelText: 'VAT/GST Number',
+                                      hintText: lang.S.of(context).enterVatGstNumber,
+                                      labelText: lang.S.of(context).vatGstNumber,
                                       border: const OutlineInputBorder(),
                                     ),
                                   ),
@@ -437,6 +404,42 @@ class _EditProfileState extends State<EditProfile> {
               );
             });
           }),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ElevatedButton.icon(
+            icon: const Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+            ),
+            label: Text(lang.S.of(context).continueButton),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                EasyLoading.show();
+                final businessRepository = BusinessUpdateRepository();
+                final isProfileUpdated = await businessRepository.updateProfile(
+                  id: widget.profile.data?.id.toString() ?? '',
+                  name: nameController.text,
+                  categoryId: selectedBusinessCategory!.id.toString(),
+                  address: addressController.text,
+                  image: pickedImage != null ? File(pickedImage!.path) : null,
+                  phone: phoneController.text,
+                  vatNumber: vatGstNumberController.text,
+                  vatTitle: vatGstTitleController.text,
+                  ref: widget.ref,
+                  context: context,
+                  // fromInvoiceLogo: false,
+                );
+                EasyLoading.dismiss();
+
+                if (isProfileUpdated) {
+                  widget.ref.refresh(businessInfoProvider);
+                  widget.ref.refresh(getExpireDateProvider(widget.ref));
+                  Navigator.pop(context);
+                }
+              }
+            },
+          ),
         ),
       ),
     );

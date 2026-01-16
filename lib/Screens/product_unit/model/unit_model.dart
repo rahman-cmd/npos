@@ -5,7 +5,8 @@ class Unit {
     this.businessId,
     this.status,
     this.createdAt,
-    this.updatedAt,});
+    this.updatedAt,
+  });
 
   Unit.fromJson(dynamic json) {
     id = json['id'];
@@ -15,6 +16,7 @@ class Unit {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
   num? id;
   String? unitName;
   num? businessId;
@@ -32,5 +34,4 @@ class Unit {
     map['updated_at'] = updatedAt;
     return map;
   }
-
 }

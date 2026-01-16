@@ -12,6 +12,7 @@ class TabButton extends StatelessWidget {
   final Color background;
   final Color text;
   final String title;
+
   // ignore: prefer_typing_uninitialized_variables
   var press;
 
@@ -51,6 +52,7 @@ class TabButtonSmall extends StatelessWidget {
   final Color background;
   final Color text;
   final String title;
+
   // ignore: prefer_typing_uninitialized_variables
   var press;
 
@@ -91,6 +93,7 @@ class TabButtonBig extends StatelessWidget {
   final Color background;
   final Color text;
   final String title;
+
   // ignore: prefer_typing_uninitialized_variables
   var press;
 

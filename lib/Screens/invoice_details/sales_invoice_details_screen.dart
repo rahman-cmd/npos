@@ -1,37 +1,57 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_long_screenshot/flutter_long_screenshot.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile_pos/PDF%20Invoice/universal_image_widget.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
+import 'package:mobile_pos/Screens/invoice_details/components/common_image_builder.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart' as pro;
+import 'package:screenshot/screenshot.dart';
+
 import '../../Const/api_config.dart';
 import '../../GlobalComponents/glonal_popup.dart';
-import '../../PDF Invoice/sales_invoice_pdf.dart';
 import '../../constant.dart' as mainConstant;
+import '../../constant.dart';
 import '../../currency.dart';
-import '../../invoice_constant.dart';
 import '../../model/business_info_model.dart' as binfo;
 import '../../model/sale_transaction_model.dart';
 import '../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
+import '../../widgets/dotted_border/global_dotted_border.dart';
+import '../../widgets/universal_image.dart';
+import '../Products/add product/modle/create_product_model.dart';
+import '../language/language_provider.dart';
 
 class SalesInvoiceDetails extends StatefulWidget {
-  const SalesInvoiceDetails({super.key, required this.saleTransaction, required this.businessInfo, this.fromSale});
+  const SalesInvoiceDetails({
+    super.key,
+    required this.saleTransaction,
+    required this.businessInfo,
+    this.fromSale,
+    this.saleId,
+  });
 
   final SalesTransactionModel saleTransaction;
-  final binfo.BusinessInformation businessInfo;
+  final binfo.BusinessInformationModel businessInfo;
   final bool? fromSale;
-
-
+  final int? saleId;
 
   @override
   State<SalesInvoiceDetails> createState() => _SalesInvoiceDetailsState();
 }
 
 class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
+  ScreenshotController controller = ScreenshotController();
+  final GlobalKey _screenshotKey = GlobalKey();
+
   String productName({required num detailsId}) {
-    return widget.saleTransaction.salesDetails!.where((element) => element.id == detailsId).first.product?.productName ?? '';
+    final details = widget.saleTransaction
+        .salesDetails?[widget.saleTransaction.salesDetails!.indexWhere((element) => element.id == detailsId)];
+    return "${details?.product?.productName}${details?.product?.productType == ProductType.variant.name ? ' [${details?.stock?.batchNo ?? ""}]' : ''}";
   }
 
   num productPrice({required num detailsId}) {
@@ -60,7 +80,8 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
       for (var returns in widget.saleTransaction.salesReturns!) {
         if (returns.salesReturnDetails?.isNotEmpty ?? false) {
           for (var details in returns.salesReturnDetails!) {
-            totalReturnDiscount += ((productPrice(detailsId: details.saleDetailId ?? 0) * (details.returnQty ?? 0)) - ((details.returnAmount ?? 0)));
+            totalReturnDiscount += ((productPrice(detailsId: details.saleDetailId ?? 0) * (details.returnQty ?? 0)) -
+                ((details.returnAmount ?? 0)));
           }
         }
       }
@@ -71,14 +92,26 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
   num getTotalForOldInvoice() {
     num total = 0;
     for (var element in widget.saleTransaction.salesDetails!) {
-      total += (element.price ?? 0) * getProductQuantity(detailsId: element.id ?? 0);
+      total += ((element.price ?? 0) * getProductQuantity(detailsId: element.id ?? 0) -
+          (element.discount ?? 0) * getProductQuantity(detailsId: element.id ?? 0));
     }
 
     return total;
   }
 
+  //--------total per item discount-------------------------
+  num getTotalItemDiscount() {
+    num totalDiscount = 0;
+    for (var element in widget.saleTransaction.salesDetails!) {
+      totalDiscount += (element.discount ?? 0) * getProductQuantity(detailsId: element.id ?? 0);
+    }
+
+    return totalDiscount;
+  }
+
   num getProductQuantity({required num detailsId}) {
-    num totalQuantity = widget.saleTransaction.salesDetails?.where((element) => element.id == detailsId).first.quantities ?? 0;
+    num totalQuantity =
+        widget.saleTransaction.salesDetails?.where((element) => element.id == detailsId).first.quantities ?? 0;
     if (widget.saleTransaction.salesReturns?.isNotEmpty ?? false) {
       for (var returns in widget.saleTransaction.salesReturns!) {
         if (returns.salesReturnDetails?.isNotEmpty ?? false) {
@@ -98,361 +131,583 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
   Widget build(BuildContext context) {
     final _lang = lang.S.of(context);
     final _theme = Theme.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
     return Consumer(builder: (context, ref, __) {
       final printerData = ref.watch(thermalPrinterProvider);
-      final businessSettingData = ref.watch(businessSettingProvider);
+      final businessSettingData = ref.watch(businessInfoProvider);
+      final hasWarranty = widget.saleTransaction.salesDetails!.any((e) => e.warrantyInfo?.warrantyDuration != null);
+      final hasGuarantee = widget.saleTransaction.salesDetails!.any((e) => e.warrantyInfo?.guaranteeDuration != null);
+
       return SafeArea(
         child: GlobalPopup(
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body: SingleChildScrollView(
-                    child: Padding(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: SingleChildScrollView(
+                child: RepaintBoundary(
+              key: _screenshotKey,
+              child: SizedBox(
+                width: 374,
+                child: Container(
+                  width: 374,
+                  color: Colors.white,
                   padding: const EdgeInsets.all(10.0),
-                  child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    //header
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: businessSettingData.when(
-                        data: (business) {
-                          final isSvg = business.pictureUrl?.endsWith('.svg');
-                          final imageUrl = '${APIConfig.domain}${business.pictureUrl}';
-                          const placeholder = AssetImage(mainConstant.logo);
-                          return business.pictureUrl.isEmptyOrNull
-                              ? _buildInvoiceLogo(image: placeholder)
-                              : (isSvg ?? false)
-                                  ? SvgPicture.network(imageUrl, height: 54.12, width: 52, fit: BoxFit.cover)
-                                  : _buildInvoiceLogo(
-                                      image: NetworkImage(imageUrl),
-                                    );
-                        },
-                        error: (e, stack) => Text(e.toString()),
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      title: Text(
-                        '${widget.businessInfo.companyName}',
-                        style: _theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      subtitle: Text.rich(
-                        TextSpan(
-                          text: '${lang.S.of(context).mobiles} : ',
-                          children: [
-                            TextSpan(
-                              text: widget.businessInfo.phoneNumber.toString(),
-                            )
-                          ],
-                        ),
-                      ),
-                      trailing: Container(
-                        alignment: Alignment.center,
-                        // height: 52,
-                        width: 110,
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            bottomLeft: Radius.circular(25),
-                          ),
-                        ),
-                        child: Text(
-                          lang.S.of(context).invoice,
-                          style: _theme.textTheme.titleLarge?.copyWith(
-                            color: white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 33.88),
-                    //header data
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child:
+                      Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    ///------------header -------------------
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              //bill to
-                              Text.rich(
+                        //----------Invoice Logo------------------------
+                        if (widget.businessInfo.data?.showThermalInvoiceLogo == 1)
+                          businessSettingData.when(
+                            data: (business) {
+                              final isSvg = business.data?.thermalInvoiceLogo?.endsWith('.svg');
+                              final imageUrl = '${APIConfig.domain}${business.data?.thermalInvoiceLogo}';
+                              const placeholder = AssetImage(mainConstant.logo);
+                              return (business.data?.thermalInvoiceLogo?.isEmptyOrNull ?? true)
+                                  ? buildInvoiceLogo(image: placeholder)
+                                  : (isSvg ?? false)
+                                      ? SvgPicture.network(
+                                          imageUrl,
+                                          height: 46,
+                                          width: 44,
+                                          fit: BoxFit.cover,
+                                          colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                                        )
+                                      : buildInvoiceLogo(
+                                          image: NetworkImage(imageUrl),
+                                        );
+                            },
+                            error: (e, stack) => Text(e.toString()),
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        //----------company name---------------------------
+                        if (widget.businessInfo.data?.meta?.showCompanyName == 1)
+                          Text(
+                            '${widget.businessInfo.data?.companyName}',
+                            style: _theme.textTheme.titleLarge?.copyWith(
+                              fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        //-------------company Branch---------------------------------
+                        if (widget.saleTransaction.branch?.name?.isNotEmpty ?? false)
+                          Text.rich(
+                            TextSpan(
+                              text: '${_lang.branch} : ',
+                              children: [
                                 TextSpan(
-                                  text: '${lang.S.of(context).billTO} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.saleTransaction.party?.name ?? '',
-                                    )
-                                  ],
+                                  text: widget.saleTransaction.branch?.name.toString() ?? 'n/a',
+                                  style: _theme.textTheme.bodyLarge?.copyWith(
+                                    fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                    color: mainConstant.kTextColor,
+                                  ),
                                 ),
+                              ],
+                              style: _theme.textTheme.bodyLarge?.copyWith(
+                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                color: mainConstant.kTextColor,
                               ),
-                              //header mobile data
-                              Text.rich(
-                                TextSpan(
-                                  text: '${lang.S.of(context).mobiles} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.saleTransaction.party?.phone ?? (widget.saleTransaction.meta?.customerPhone ?? 'Guest'),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
+                          ),
+                        //----------------Address----------------------------------
+                        if (widget.businessInfo.data?.meta?.showCompanyName == 1)
+                          Text(
+                            '${_lang.address}: ${widget.businessInfo.data?.address ?? ''}',
+                            style: _theme.textTheme.bodyLarge?.copyWith(
+                              fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              color: mainConstant.kTextColor,
+                            ),
+                          ),
+                        //---------------Phone-------------------------------------------
+                        if (widget.businessInfo.data?.meta?.showPhoneNumber == 1)
+                          Text(
+                            '${_lang.mobile} ${(widget.saleTransaction.branch?.phone?.isNotEmpty ?? false) ? widget.saleTransaction.branch?.phone ?? 'n/a' : widget.businessInfo.data?.phoneNumber?.toString() ?? 'n/a'}',
+                            style: _theme.textTheme.bodyLarge?.copyWith(
+                              fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              color: mainConstant.kTextColor,
+                            ),
+                          ),
+                        //-----------------email----------------------------
+                        if (widget.businessInfo.data?.meta?.showEmail == 1)
+                          Text(
+                            '${_lang.email}: ${widget.businessInfo.data?.user?.email ?? ''}',
+                            style: _theme.textTheme.bodyLarge?.copyWith(
+                              fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              color: mainConstant.kTextColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        SizedBox(height: 8),
+                        //-----------------Invoice-------------------
+                        Text(
+                          _lang.invoice.toUpperCase(),
+                          style: _theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text.rich(
-                                TextSpan(
-                                  text: '${lang.S.of(context).salesBy} ',
-                                  children: [
+                        SizedBox(height: 32),
+
+                        ///--------header data-----------------
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //Invoice
+                                  Text.rich(
                                     TextSpan(
-                                      text: widget.saleTransaction.user?.role == "shop-owner" ? 'Admin' : widget.saleTransaction.user?.name ?? '',
-                                    )
+                                        text: '${lang.S.of(context).invoice} : ',
+                                        children: [
+                                          TextSpan(
+                                              text: widget.saleTransaction.invoiceNumber ?? '',
+                                              style: _theme.textTheme.bodyMedium?.copyWith(
+                                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                                fontWeight: FontWeight.w500,
+                                              ))
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        )),
+                                  ),
+                                  //name
+                                  Text.rich(
+                                    TextSpan(
+                                      text: '${lang.S.of(context).name} : ',
+                                      children: [
+                                        TextSpan(
+                                          text: widget.saleTransaction.party?.name ?? '',
+                                        )
+                                      ],
+                                      style: _theme.textTheme.bodyMedium?.copyWith(
+                                        fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                        color: mainConstant.kTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                  //mobile
+                                  Text.rich(
+                                    TextSpan(
+                                      text: '${lang.S.of(context).mobile} ',
+                                      children: [
+                                        TextSpan(
+                                          text: widget.saleTransaction.party?.phone ??
+                                              (widget.saleTransaction.meta?.customerPhone ?? lang.S.of(context).guest),
+                                        ),
+                                      ],
+                                      style: _theme.textTheme.bodyMedium?.copyWith(
+                                        fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                        color: mainConstant.kTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.businessInfo.data?.invoiceSize != "3_inch_80mm") ...[
+                                    //date----------------
+                                    Text.rich(
+                                      TextSpan(
+                                        text: '${lang.S.of(context).date} : ',
+                                        children: [
+                                          TextSpan(
+                                            text: DateFormat.yMMMd().format(DateTime.parse(
+                                                widget.saleTransaction.saleDate ?? DateTime.now().toString())),
+                                          ),
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    //Time
+                                    Text.rich(
+                                      textAlign: TextAlign.end,
+                                      TextSpan(
+                                        text: '${locale == "en" ? 'Time' : lang.S.of(context).allTime}: ',
+                                        children: [
+                                          TextSpan(
+                                            text: DateFormat.jm().format(DateTime.parse(
+                                                widget.saleTransaction.saleDate ?? DateTime.now().toString())),
+                                          )
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    //Sales by
+                                    Text.rich(
+                                      TextSpan(
+                                        text: '${lang.S.of(context).salesBy} ',
+                                        children: [
+                                          TextSpan(
+                                            text: widget.saleTransaction.user?.name ?? '',
+                                          )
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    //Vat Number
+                                    Visibility(
+                                      visible: widget.businessInfo.data?.vatNo != null &&
+                                          widget.businessInfo.data?.meta?.showVat == 1,
+                                      child: Text.rich(
+                                        TextSpan(
+                                          text: '${widget.businessInfo.data?.vatName ?? _lang.vatNumber} : ',
+                                          children: [
+                                            TextSpan(
+                                              text: widget.businessInfo.data?.vatNo ?? '',
+                                            )
+                                          ],
+                                          style: _theme.textTheme.bodyLarge?.copyWith(
+                                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                            color: mainConstant.kTextColor,
+                                          ),
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
                                   ],
-                                ),
-                                textAlign: TextAlign.end,
+                                ],
                               ),
-                              Text.rich(
-                                TextSpan(
-                                  text: '${_lang.inv} : ',
+                            ),
+                            if (widget.businessInfo.data?.invoiceSize == "3_inch_80mm") ...[
+                              SizedBox(width: 8),
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    TextSpan(
-                                      text: '#${widget.saleTransaction.invoiceNumber}',
-                                    )
-                                  ],
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  text: '${lang.S.of(context).date} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: DateFormat.yMMMd().format(DateTime.parse(widget.saleTransaction.saleDate ?? DateTime.now().toString())),
+                                    //date----------------
+                                    Text.rich(
+                                      TextSpan(
+                                        text: '${lang.S.of(context).date} : ',
+                                        children: [
+                                          TextSpan(
+                                            text: DateFormat.yMMMd().format(DateTime.parse(
+                                                widget.saleTransaction.saleDate ?? DateTime.now().toString())),
+                                          ),
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    //Time
+                                    Text.rich(
+                                      textAlign: TextAlign.end,
+                                      TextSpan(
+                                        text: '${locale == "en" ? 'Time' : lang.S.of(context).allTime}: ',
+                                        children: [
+                                          TextSpan(
+                                            text: DateFormat.jm().format(DateTime.parse(
+                                                widget.saleTransaction.saleDate ?? DateTime.now().toString())),
+                                          )
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    //Sales by
+                                    Text.rich(
+                                      TextSpan(
+                                        text: '${lang.S.of(context).salesBy} ',
+                                        children: [
+                                          TextSpan(
+                                            text: widget.saleTransaction.user?.name ?? '',
+                                          )
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    //Vat Number
+                                    Visibility(
+                                      visible: widget.businessInfo.data?.vatNo != null &&
+                                          widget.businessInfo.data?.meta?.showVat == 1,
+                                      child: Text.rich(
+                                        TextSpan(
+                                          text: '${widget.businessInfo.data?.vatName ?? _lang.vatNumber} : ',
+                                          children: [
+                                            TextSpan(
+                                              text: widget.businessInfo.data?.vatNo ?? '',
+                                            )
+                                          ],
+                                          style: _theme.textTheme.bodyLarge?.copyWith(
+                                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                            color: mainConstant.kTextColor,
+                                          ),
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
                                     ),
                                   ],
                                 ),
-                                textAlign: TextAlign.end,
-                              ),
-                              // C.R Number
-                              Visibility(
-                                  visible: widget.businessInfo.address != null,
-                                  child: Text.rich(
-                                TextSpan(
-                                  text: 'Address: ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.businessInfo.address ?? ''
-                                    )
-                                  ],
-                                ),
-                                    textAlign: TextAlign.end,
-                              ),
-                              ),
-                              Visibility(
-                                visible: widget.businessInfo.crNo != null,
-                                child: Text.rich(
-                                  TextSpan(
-                                    text: 'C.R: ',
-                                    children: [
-                                      TextSpan(
-                                          text: widget.businessInfo.crNo ?? ''
-                                      )
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                              Visibility(
-                                visible: widget.businessInfo.vatNumber != null,
-                                child: Text.rich(
-                                  TextSpan(
-                                    text: '${widget.businessInfo.vatName ?? 'VAT Number'} : ',
-                                    children: [
-                                      TextSpan(
-                                        text: widget.businessInfo.vatNumber ?? '',
-                                      )
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.end,
-                                ),
                               ),
                             ],
-                          ),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Table(
-                        defaultColumnWidth: const FixedColumnWidth(100), // Set a default fixed width for all columns
-                        border: const TableBorder(
-                          verticalInside: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                          left: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                          right: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                          bottom: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                        ),
-                        children: [
-                          // Table header row
-                          TableRow(
-                            children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Color(0xffC52127),
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _lang.sl,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Container(
-                                color: const Color(0xffC52127),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _lang.item,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Container(
-                                color: const Color(0xff000000),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  lang.S.of(context).quantity,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Container(
-                                color: const Color(0xff000000),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _lang.unitPrice,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                              Container(
-                                color: const Color(0xff000000),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  lang.S.of(context).totalPrice,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Data rows from ListView.builder
-                          ...widget.saleTransaction.salesDetails!.asMap().entries.map(
-                            (entry) {
-                              final i = entry.key; // This is the index
-                              final saleDetail = entry.value; // This is the saleDetail object
+                    SizedBox(height: 12),
 
-                              final quantity = getProductQuantity(detailsId: saleDetail.id ?? 0);
-                              final totalPrice = (saleDetail.price ?? 0) * quantity;
-                              return TableRow(
-                                decoration: i % 2 == 0
-                                    ? const BoxDecoration(
-                                        color: Colors.white,
-                                      ) // Odd row color
-                                    : BoxDecoration(
-                                        color: const Color(0xffC52127).withValues(alpha: 0.07),
-                                      ),
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      (widget.saleTransaction.salesDetails!.indexOf(saleDetail) + 1).toString(),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      saleDetail.product?.productName ?? '',
-                                      maxLines: 2,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      mainConstant.formatPointNumber(quantity),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      '$currency${mainConstant.formatPointNumber(saleDetail.price ?? 0)}',
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      '$currency${mainConstant.formatPointNumber(totalPrice)}',
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
+                    ///-------------------Product list data------------------------
+                    globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        children: [
+                          //SL
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              _lang.sl,
+                              textAlign: TextAlign.start,
+                              style: _theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              ),
+                            ),
+                          ),
+                          //Product
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              _lang.product,
+                              textAlign: TextAlign.start,
+                              style: _theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              ),
+                            ),
+                          ),
+                          //Quantity
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              lang.S.of(context).qty,
+                              textAlign: TextAlign.center,
+                              style: _theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              ),
+                            ),
+                          ),
+                          if (widget.businessInfo.data?.invoiceSize == "3_inch_80mm") ...[
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                lang.S.of(context).discount,
+                                textAlign: TextAlign.center,
+                                style: _theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                              ),
+                            ),
+                          ],
+                          //Unit Price
+                          // Expanded(
+                          //   flex: 2,
+                          //   child: Text(
+                          //     locale == "en" ? "U.Price" : _lang.unitPrice,
+                          //     textAlign: TextAlign.center,
+                          //     style: _theme.textTheme.titleLarge?.copyWith(
+                          //       fontWeight: FontWeight.w500,
+                          //       fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          //     ),
+                          //   ),
+                          // ),
+                          //Amount
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              lang.S.of(context).amount,
+                              textAlign: TextAlign.end,
+                              style: _theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    //sub total
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        //paid by
-                        Text(
-                          "${_lang.paidVia}: ${widget.saleTransaction.paymentType?.name ?? 'N/A'}",
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text.rich(
-                            TextSpan(
-                              text: '${lang.S.of(context).subTotal} : ',
-                              children: [
-                                TextSpan(
-                                  text: '$currency${mainConstant.formatPointNumber(getTotalForOldInvoice())}',
+                    globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                    ...widget.saleTransaction.salesDetails!.asMap().entries.map((entry) {
+                      final i = entry.key; // This is the index
+                      final saleDetail = entry.value; // This is the saleDetail object
+
+                      final quantity = getProductQuantity(detailsId: saleDetail.id ?? 0);
+                      final totalPrice = ((saleDetail.price ?? 0) * quantity) - ((saleDetail.discount ?? 0) * quantity);
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 7),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                (widget.saleTransaction.salesDetails!.indexOf(saleDetail) + 1).toString(),
+                                style: _theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
                                 ),
-                              ],
+                                textAlign: TextAlign.start,
+                              ),
                             ),
-                            style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
-                          ),
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    saleDetail.product?.productName ?? '',
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  if (saleDetail.warrantyInfo?.warrantyDuration != null &&
+                                      saleDetail.warrantyInfo?.warrantyUnit != null)
+                                    Text(
+                                      '${_lang.warranty} : ${saleDetail.warrantyInfo?.warrantyDuration} ${saleDetail.warrantyInfo?.warrantyUnit}',
+                                      style: _theme.textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize) - 6,
+                                      ),
+                                    ),
+                                  if (saleDetail.warrantyInfo?.guaranteeDuration != null &&
+                                      saleDetail.warrantyInfo?.guaranteeUnit != null)
+                                    Text(
+                                      '${_lang.guarantee} : ${saleDetail.warrantyInfo?.guaranteeDuration} ${saleDetail.warrantyInfo?.guaranteeUnit}',
+                                      style: _theme.textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize) - 6,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            // Expanded(
+                            //   flex: 3,
+                            //   child: Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     mainAxisAlignment: MainAxisAlignment.start,
+                            //     children: [
+                            //       Text(
+                            //         saleDetail.product?.productName ?? '',
+                            //         textAlign: TextAlign.start,
+                            //       ),
+                            //       if (hasWarranty)
+                            //         Text(
+                            //           'Warranty : ${saleDetail.warrantyInfo?.warrantyDuration ?? ''} ${saleDetail.warrantyInfo?.warrantyUnit ?? ''}',
+                            //           style: _theme.textTheme.bodySmall?.copyWith(
+                            //             fontSize: 10,
+                            //           ),
+                            //         ),
+                            //       if (hasGuarantee)
+                            //         Text(
+                            //           'Guaranty : ${saleDetail.warrantyInfo?.guaranteeDuration ?? ''} ${saleDetail.warrantyInfo?.guaranteeUnit ?? ''}',
+                            //           style: _theme.textTheme.bodySmall?.copyWith(
+                            //             fontSize: 10,
+                            //           ),
+                            //         ),
+                            //     ],
+                            //   ),
+                            // ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                quantity.toString(),
+                                style: _theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            if (widget.businessInfo.data?.invoiceSize == "3_inch_80mm") ...[
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  '$currency${mainConstant.formatPointNumber(saleDetail.discount ?? 0, addComma: true)}',
+                                  textAlign: TextAlign.center,
+                                  style: _theme.textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            // Expanded(
+                            //   flex: 2,
+                            //   child: Text(
+                            //     '$currency${mainConstant.formatPointNumber(saleDetail.price ?? 0, addComma: true)}',
+                            //     style: _theme.textTheme.bodyLarge?.copyWith(
+                            //       fontWeight: FontWeight.w600,
+                            //       fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                            //     ),
+                            //     // '$currency${formatPointNumber(saleDetail.price)}',
+                            //     textAlign: TextAlign.center,
+                            //   ),
+                            // ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                '$currency${mainConstant.formatPointNumber(totalPrice, addComma: true)}',
+                                style: _theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      );
+                    }),
+                    SizedBox(height: 7),
+                    globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                    SizedBox(height: 12),
+
+                    ///-----------sub total----------------------------
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text.rich(
+                        TextSpan(
+                          text: '${lang.S.of(context).subTotal} : ',
+                          children: [
+                            TextSpan(
+                              text: '$currency${mainConstant.formatPointNumber(getTotalForOldInvoice())}',
+                            ),
+                          ],
+                        ),
+                        style: _theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                        ),
+                      ),
                     ),
 
                     ///__________discount______________________
@@ -462,14 +717,24 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                       child: Text.rich(
                         TextSpan(
                           text: '${lang.S.of(context).discount} : ',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: _theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
                           children: [
                             TextSpan(
-                              text: '$currency${mainConstant.formatPointNumber((widget.saleTransaction.discountAmount ?? 0) + getReturndDiscountAmount())}',
+                              text: '$currency${mainConstant.formatPointNumber(
+                                (widget.saleTransaction.discountAmount ?? 0) +
+                                    getReturndDiscountAmount() +
+                                    getTotalItemDiscount(),
+                              )}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                        ),
                       ),
                     ),
 
@@ -480,14 +745,20 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                       child: Text.rich(
                         TextSpan(
                           text: '${widget.saleTransaction.vat?.name ?? lang.S.of(context).vat} : ',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: _theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
                           children: [
                             TextSpan(
                               text: '$currency${mainConstant.formatPointNumber(widget.saleTransaction.vatAmount ?? 0)}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -497,15 +768,22 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                       alignment: Alignment.centerRight,
                       child: Text.rich(
                         TextSpan(
-                          text: 'Shipping charge : ',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          text: '${lang.S.of(context).shippingCharge} : ',
+                          style: _theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
                           children: [
                             TextSpan(
-                              text: '$currency${mainConstant.formatPointNumber(widget.saleTransaction.shippingCharge ?? 0)}',
+                              text:
+                                  '$currency${mainConstant.formatPointNumber(widget.saleTransaction.shippingCharge ?? 0)}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -520,15 +798,22 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                             alignment: Alignment.centerRight,
                             child: Text.rich(
                               TextSpan(
-                                text: 'Total :',
-                                style: const TextStyle(fontWeight: FontWeight.w600),
+                                text: '${_lang.total} :',
+                                style: _theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
                                 children: [
                                   TextSpan(
-                                    text: '$currency${mainConstant.formatPointNumber(widget.saleTransaction.actualTotalAmount ?? 0)}',
+                                    text:
+                                        '$currency${mainConstant.formatPointNumber(widget.saleTransaction.actualTotalAmount ?? 0)}',
                                   ),
                                 ],
                               ),
-                              style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                              style: _theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -538,8 +823,11 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                             alignment: Alignment.centerRight,
                             child: Text.rich(
                               TextSpan(
-                                text: 'Rounding : ',
-                                style: const TextStyle(fontWeight: FontWeight.w600),
+                                text: '${_lang.rounding} : ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
                                 children: [
                                   TextSpan(
                                     text:
@@ -547,7 +835,10 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                                   ),
                                 ],
                               ),
-                              style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                              style: _theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -561,145 +852,189 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                       child: Text.rich(
                         TextSpan(
                           text: '${lang.S.of(context).totalAmount} : ',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
                           children: [
                             TextSpan(
-                              text: '$currency${mainConstant.formatPointNumber(getTotalReturndAmount() + (widget.saleTransaction.totalAmount ?? 0))}',
+                              text:
+                                  '$currency${mainConstant.formatPointNumber(getTotalReturndAmount() + (widget.saleTransaction.totalAmount ?? 0))}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 20),
 
                     ///______________Returned_Product_______________________________
-                    if (widget.saleTransaction.salesReturns!.isNotEmpty)
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Table(
-                          defaultColumnWidth: const FixedColumnWidth(120),
-                          border: const TableBorder(
-                            verticalInside: BorderSide(color: Color(0xffD9D9D9)),
-                            left: BorderSide(color: Color(0xffD9D9D9)),
-                            right: BorderSide(color: Color(0xffD9D9D9)),
-                            bottom: BorderSide(color: Color(0xffD9D9D9)),
-                          ),
+                    if (widget.saleTransaction.salesReturns!.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
                           children: [
-                            // Table header row
-                            TableRow(
+                            //SL
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                _lang.sl,
+                                textAlign: TextAlign.start,
+                                style: _theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                              ),
+                            ),
+                            //Quantity
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                locale == 'en' ? 'R.Item' : _lang.returnedItem,
+                                textAlign: TextAlign.start,
+                                style: _theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                              ),
+                            ),
+                            //Product
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                _lang.returnedDate,
+                                textAlign: TextAlign.start,
+                                style: _theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                              ),
+                            ),
+                            //Unit Price
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                _lang.qty,
+                                textAlign: TextAlign.center,
+                                style: _theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                              ),
+                            ),
+                            //Amount
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                lang.S.of(context).totalPrice,
+                                textAlign: TextAlign.end,
+                                style: _theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                      for (var i = 0; i < (widget.saleTransaction.salesReturns?.length ?? 0); i++)
+                        for (var detailIndex = 0;
+                            detailIndex < (widget.saleTransaction.salesReturns?[i].salesReturnDetails?.length ?? 0);
+                            detailIndex++)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  decoration: const BoxDecoration(color: Color(0xffC52127)),
-                                  padding: const EdgeInsets.all(8.0),
+                                Expanded(
+                                  flex: 1,
                                   child: Text(
-                                    _lang.sl,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    (serialNumber++).toString(),
+                                    textAlign: TextAlign.start,
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    productName(
+                                        detailsId: widget.saleTransaction.salesReturns?[i]
+                                                .salesReturnDetails?[detailIndex].saleDetailId ??
+                                            0),
+                                    textAlign: TextAlign.start,
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        DateFormat.yMMMd().format(DateTime.parse(
+                                            widget.saleTransaction.salesReturns?[i].returnDate ??
+                                                DateTime.now().toString())),
+                                        textAlign: TextAlign.start,
+                                        style: _theme.textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                        ),
+                                      ),
+                                      // if (hasWarranty)
+                                      //   Text(
+                                      //     'Warranty : ${saleDetail.warrantyInfo?.warrantyDuration ?? ''} ${saleDetail.warrantyInfo?.warrantyUnit ?? ''}',
+                                      //     style: _theme.textTheme.bodySmall?.copyWith(
+                                      //       fontSize: 10,
+                                      //     ),
+                                      //   ),
+                                      // if (hasWarranty)
+                                      //   Text(
+                                      //     'Guaranty : ${saleDetail.warrantyInfo?.warrantyDuration ?? ''} ${saleDetail.warrantyInfo?.warrantyUnit ?? ''}',
+                                      //     style: _theme.textTheme.bodySmall?.copyWith(
+                                      //       fontSize: 10,
+                                      //     ),
+                                      //   ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    mainConstant.formatPointNumber(widget.saleTransaction.salesReturns?[i]
+                                            .salesReturnDetails?[detailIndex].returnQty ??
+                                        0),
+                                    // '$currency${formatPointNumber(saleDetail.price)}',
                                     textAlign: TextAlign.center,
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                    ),
                                   ),
                                 ),
-                                Container(
-                                  decoration: const BoxDecoration(color: Color(0xffC52127)),
-                                  padding: const EdgeInsets.all(8.0),
+                                Expanded(
+                                  flex: 2,
                                   child: Text(
-                                    _lang.returnedDate,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.right,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: const BoxDecoration(color: Color(0xff000000)),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    _lang.returnedItem,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: const BoxDecoration(color: Color(0xff000000)),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    _lang.quantity,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: const BoxDecoration(color: Color(0xff000000)),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    _lang.totalPrice,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.right,
+                                    '$currency${(widget.saleTransaction.salesReturns?[i].salesReturnDetails?[detailIndex].returnAmount ?? 0)}',
+                                    textAlign: TextAlign.end,
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                            // Data rows
-                            for (var i = 0; i < (widget.saleTransaction.salesReturns?.length ?? 0); i++)
-                              for (var detailIndex = 0; detailIndex < (widget.saleTransaction.salesReturns?[i].salesReturnDetails?.length ?? 0); detailIndex++)
-                                TableRow(
-                                  decoration: serialNumber.isOdd
-                                      ? const BoxDecoration(
-                                          color: Colors.white,
-                                        ) // Odd row color
-                                      : BoxDecoration(
-                                          color: const Color(0xffC52127).withValues(alpha: 0.07),
-                                        ),
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        (serialNumber++).toString(),
-                                        style: _theme.textTheme.bodyMedium?.copyWith(
-                                          color: kGreyTextColor,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        DateFormat.yMMMd().format(DateTime.parse(widget.saleTransaction.salesReturns?[i].returnDate ?? DateTime.now().toString())),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        productName(detailsId: widget.saleTransaction.salesReturns?[i].salesReturnDetails?[detailIndex].saleDetailId ?? 0),
-                                        maxLines: 2,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        mainConstant.formatPointNumber(widget.saleTransaction.salesReturns?[i].salesReturnDetails?[detailIndex].returnQty ?? 0),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        '$currency${(widget.saleTransaction.salesReturns?[i].salesReturnDetails?[detailIndex].returnAmount ?? 0)}',
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                          ],
-                        ),
-                      ),
-                    const SizedBox(height: 10),
+                          ),
+                      SizedBox(height: 7),
+                      globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                      SizedBox(height: 12),
+                    ],
 
                     ///__________Total Return amount______________________
                     if (widget.saleTransaction.salesReturns!.isNotEmpty)
@@ -708,14 +1043,16 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                         child: Text.rich(
                           TextSpan(
                             text: '${lang.S.of(context).totalReturnAmount} : ',
-                            style: const TextStyle(fontWeight: FontWeight.w600),
                             children: [
                               TextSpan(
                                 text: '$currency${mainConstant.formatPointNumber(getTotalReturndAmount())}',
                               ),
                             ],
                           ),
-                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                          style: _theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
                         ),
                       ),
                     const SizedBox(height: 5),
@@ -729,11 +1066,15 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                           style: const TextStyle(fontWeight: FontWeight.w600),
                           children: [
                             TextSpan(
-                              text: '$currency${mainConstant.formatPointNumber(widget.saleTransaction.totalAmount ?? 0)}',
+                              text:
+                                  '$currency${mainConstant.formatPointNumber(widget.saleTransaction.totalAmount ?? 0)}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5.0),
@@ -744,7 +1085,6 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                       child: Text.rich(
                         TextSpan(
                           text: '${lang.S.of(context).receivedAmount} : ',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
                           children: [
                             TextSpan(
                               text:
@@ -752,7 +1092,10 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5.0),
@@ -765,14 +1108,17 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                         child: Text.rich(
                           TextSpan(
                             text: '${lang.S.of(context).due} : ',
-                            style: const TextStyle(fontWeight: FontWeight.w600),
                             children: [
                               TextSpan(
-                                text: '$currency${mainConstant.formatPointNumber(widget.saleTransaction.dueAmount ?? 0)}',
+                                text:
+                                    '$currency${mainConstant.formatPointNumber(widget.saleTransaction.dueAmount ?? 0)}',
                               ),
                             ],
                           ),
-                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                          style: _theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
                         ),
                       ),
                     ),
@@ -784,26 +1130,79 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                         alignment: Alignment.centerRight,
                         child: Text.rich(
                           TextSpan(
-                            text: 'Change Amount : ',
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            text: '${_lang.changeAmount} : ',
                             children: [
                               TextSpan(
-                                text: '$currency${mainConstant.formatPointNumber(widget.saleTransaction.changeAmount ?? 0)}',
+                                text:
+                                    '$currency${mainConstant.formatPointNumber(widget.saleTransaction.changeAmount ?? 0)}',
                               ),
                             ],
                           ),
-                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                          style: _theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
                         ),
                       ),
                     ),
+                    SizedBox(height: 6),
+                    globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                    SizedBox(height: 6),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children: [
+                        Text(
+                          '${_lang.paidVia} :',
+                          style: _theme.textTheme.titleLarge?.copyWith(
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        ...?(widget.saleTransaction.transactions?.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final item = entry.value;
+
+                          String label;
+                          switch (item.transactionType) {
+                            case 'cash_payment':
+                              label = 'Cash';
+                              break;
+
+                            case 'cheque_payment':
+                              label = 'Cheque';
+                              break;
+
+                            case 'wallet_payment':
+                              label = 'Wallet';
+                              break;
+
+                            default:
+                              label = item.paymentType?.name ?? 'n/a';
+                          }
+
+                          final isLast = index == widget.saleTransaction.transactions!.length - 1;
+                          final text = isLast ? label : '$label,';
+
+                          return Text(
+                            text,
+                            style: _theme.textTheme.titleLarge?.copyWith(
+                              fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        }).toList()),
+                      ],
+                    ),
+                    const SizedBox(height: 16.0),
                     Visibility(
                       visible: widget.saleTransaction.image?.isNotEmpty ?? false,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Attachment',
-                            style: _theme.textTheme.titleSmall?.copyWith(
+                            _lang.attachment,
+                            style: _theme.textTheme.titleLarge?.copyWith(
+                              fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -824,151 +1223,143 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                         ],
                       ),
                     ),
-                    Visibility(
-                      visible: widget.saleTransaction.meta?.note?.isNotEmpty ?? false,
-                      child: Text(
-                        'Note: ${widget.saleTransaction.meta?.note.toString() ?? ''}',
-                        maxLines: 1,
-                        style: _theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
+                    if (widget.businessInfo.data?.showNote == 1) ...[
+                      Text(
+                        '${widget.businessInfo.data?.invoiceNoteLevel ?? ''}: ${widget.businessInfo.data?.invoiceNote ?? ''}',
+                        style: _theme.textTheme.bodyMedium?.copyWith(
+                          fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    Center(
-                      child: Text(
-                        lang.S.of(context).thakYouForYourPurchase,
-                        maxLines: 1,
-                        style: _theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
+                      SizedBox(height: 8),
+                    ],
+                    if (widget.businessInfo.data?.gratitudeMessage != null &&
+                        widget.businessInfo.data?.showGratitudeMsg == 1)
+                      Center(
+                        child: Text(
+                          widget.businessInfo.data?.gratitudeMessage ?? '',
+                          maxLines: 3,
+                          style: _theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                    ),
+                    if (widget.businessInfo.data?.showInvoiceScannerLogo == 1)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Center(
+                          child: UniversalImage(
+                            imagePath: '${APIConfig.domain}${widget.businessInfo.data?.invoiceScannerLogo}',
+                            height: 120,
+                            width: 120,
+                          ),
+                        ),
+                      ),
+
+                    if (widget.businessInfo.data?.developByLevel != null || widget.businessInfo.data?.developBy != null)
+                      Center(
+                        child: Text(
+                          '${widget.businessInfo.data?.developByLevel ?? ''} ${widget.businessInfo.data?.developBy ?? ''}',
+                          style: _theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: fontSizeForPrinter(widget.businessInfo.data?.invoiceSize),
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 40),
                   ]),
-                )),
-                bottomNavigationBar: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-                  child: Row(
-                    children: [
-                      // Cancel
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (widget.fromSale ?? false) {
-                              int count = 0;
-                              Navigator.popUntil(context, (route) => count++ == 2);
-                            } else {
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Container(
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.all(Radius.circular(30)),
-                            ),
-                            child: Center(
-                              child: Text(
-                                lang.S.of(context).cancel,
-                                style: const TextStyle(fontSize: 18, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-
-                      // Print
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            PrintTransactionModel model = PrintTransactionModel(
-                              transitionModel: widget.saleTransaction,
-                              personalInformationModel: widget.businessInfo,
-                            );
-                            await printerData.printSalesThermalInvoiceNow(
-                              transaction: model,
-                              productList: model.transitionModel!.salesDetails,
-                              context: context,
-                            );
-                          },
-                          child: Container(
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              color: mainConstant.kMainColor,
-                              borderRadius: BorderRadius.all(Radius.circular(30)),
-                            ),
-                            child: Center(
-                              child: Text(
-                                lang.S.of(context).print,
-                                style: const TextStyle(fontSize: 18, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-
-                      // Share
-                      Expanded(
-                        child: businessSettingData.when(
-                          data: (business) {
-                            return GestureDetector(
-                              onTap: () {
-                                SalesInvoicePdf.generateSaleDocument(
-                                  widget.saleTransaction,
-                                  widget.businessInfo,
-                                  context,
-                                  business,
-                                  share: true,
-                                );
-                              },
-                              child: Container(
-                                height: 60,
-                                decoration: const BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    lang.S.of(context).share,
-                                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          error: (e, stack) => Text(e.toString()),
-                          loading: () => const Center(child: CircularProgressIndicator()),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
+              ),
+            )),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                height: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          if (widget.fromSale ?? false) {
+                            int count = 0;
+                            bool popped = false;
 
+                            Navigator.popUntil(context, (route) {
+                              count++;
+                              if (count == 2 && !popped) {
+                                popped = true;
+                                Navigator.pop(context, true);
+                              }
+                              return count == 2;
+                            });
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Text(
+                          lang.S.of(context).cancel,
+                          //'Cancel',
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    pro.Consumer<LanguageChangeProvider>(
+                      builder: (BuildContext context, LanguageChangeProvider value, Widget? child) {
+                        return Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              PrintSalesTransactionModel model = PrintSalesTransactionModel(
+                                  transitionModel: widget.saleTransaction,
+                                  personalInformationModel: widget.businessInfo);
+                              await printerData.printSalesThermalInvoiceNow(
+                                transaction: model,
+                                productList: model.transitionModel!.salesDetails,
+                                context: context,
+                              );
+                              // final defould = true;
 
-              );
-            },
+                              // if (defould) {
+
+                              // } else {
+                              //   BluetoothPrinterManager printerManager =
+                              //       BluetoothPrinterManager();
+
+                              //   //var capturedImage = await controller.captureFromLongWidget(SaleReceiptWidget(paperSize: "58 mm", model: model), pixelRatio: 2);
+                              //   // convert Uint8list to Image
+                              //   var capturedImage = await FlutterLongScreenshot
+                              //       .captureLongScreenshot(
+                              //     key: _screenshotKey,
+                              //     pixelRatio: 2.5,
+                              //     quality: 3.0,
+                              //   );
+
+                              //   final image =
+                              //       await decodeImageFromList(capturedImage!);
+
+                              //   //Show an Overlay
+
+                              //   printerManager.printReceipt(
+                              //       context: context,
+                              //       receiptWidget: image,
+                              //       paperSizeInvoice:
+                              //           widget.businessInfo.data?.invoiceSize);
+                              // }
+                            },
+                            child: Text(
+                              lang.S.of(context).print,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       );
     });
-  }
-
-  Widget _buildInvoiceLogo({required ImageProvider image}) {
-    return Container(
-      height: 54.12,
-      width: 52,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: image,
-        ),
-      ),
-    );
   }
 }

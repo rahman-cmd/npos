@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addCustomer": MessageLookupByLibrary.simpleMessage(
       "Зинһар, клиент өстәгез",
     ),
+    "addCustomers": MessageLookupByLibrary.simpleMessage("Клиент өстәү"),
     "addDelivery": MessageLookupByLibrary.simpleMessage("Тәэмин итү өстә"),
     "addExpense": MessageLookupByLibrary.simpleMessage("Чыгым өстә"),
     "addExpenseCat": MessageLookupByLibrary.simpleMessage(
@@ -51,16 +52,28 @@ class MessageLookup extends MessageLookupByLibrary {
       "Зинһар, сатып алу өстәгез",
     ),
     "addNote": MessageLookupByLibrary.simpleMessage("Искәрмә өстә"),
+    "addParty": MessageLookupByLibrary.simpleMessage("Фирма өстәү"),
     "addProduct": MessageLookupByLibrary.simpleMessage(
       "Зинһар, продукт өстәгез",
     ),
     "addProductFirst": MessageLookupByLibrary.simpleMessage(
       "Беренче чиратта продукт өстәгез",
     ),
+    "addProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Продукт уңышлы өстәлде!",
+    ),
+    "addProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Продуктны өстәүгә рөхсәт юк.",
+    ),
     "addPurchase": MessageLookupByLibrary.simpleMessage("Сатып алулар өстә"),
     "addSale": MessageLookupByLibrary.simpleMessage("Зинһар, сату өстәгез"),
     "addSales": MessageLookupByLibrary.simpleMessage("Сатулар өстә"),
+    "addStock": MessageLookupByLibrary.simpleMessage("Запас өстәү"),
     "addUnit": MessageLookupByLibrary.simpleMessage("Берәмлек өстә"),
+    "addVariant": MessageLookupByLibrary.simpleMessage("Вариант өстәү"),
+    "addVariantDetails": MessageLookupByLibrary.simpleMessage(
+      "Вариант детальләрен өстәү",
+    ),
     "addedToCart": MessageLookupByLibrary.simpleMessage("Себеткә өстәлде"),
     "adding": MessageLookupByLibrary.simpleMessage("Өстәү.."),
     "address": MessageLookupByLibrary.simpleMessage("Адрес"),
@@ -69,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Барлык бизнес чишемнәре",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "NPOS - запас, хисап, сату, чыгым һәм югалту/файда белән тулы бизнес чишеме.",
+      "Npos - запас, хисап, сату, чыгым һәм югалту/файда белән тулы бизнес чишеме.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Барлык вакыт"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Алдан өстәлгән"),
@@ -95,13 +108,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "backToHome": MessageLookupByLibrary.simpleMessage("Өйгә кайту"),
     "balance": MessageLookupByLibrary.simpleMessage("Баланс"),
     "bangladesh": MessageLookupByLibrary.simpleMessage("Бангладеш"),
+    "barcodeGen": MessageLookupByLibrary.simpleMessage("Штрих‑код генераторы"),
     "barcodeGenerator": MessageLookupByLibrary.simpleMessage(
       "Штрих-код генераторы",
     ),
+    "batch": MessageLookupByLibrary.simpleMessage("Партия"),
+    "batchNo": MessageLookupByLibrary.simpleMessage("Партия №"),
     "billTO": MessageLookupByLibrary.simpleMessage("Счетка"),
+    "billingAddress": MessageLookupByLibrary.simpleMessage("Түләү адресы"),
     "brand": MessageLookupByLibrary.simpleMessage("Бренд"),
     "brandName": MessageLookupByLibrary.simpleMessage("Бренд исеме"),
     "brands": MessageLookupByLibrary.simpleMessage("Брендлар"),
+    "bulk": MessageLookupByLibrary.simpleMessage("Күпләп йөкләү"),
     "businessCat": MessageLookupByLibrary.simpleMessage("Бизнес категориясе"),
     "businessName": MessageLookupByLibrary.simpleMessage(
       "Компания һәм бизнес исеме",
@@ -123,6 +141,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "checkEmail": MessageLookupByLibrary.simpleMessage(
       "Электрон почтаны тикшерегез",
     ),
+    "choose": MessageLookupByLibrary.simpleMessage("Сайлагыз"),
+    "chooseCountry": MessageLookupByLibrary.simpleMessage("Илне сайлагыз"),
     "chooseCustomer": MessageLookupByLibrary.simpleMessage("Клиентны сайлагыз"),
     "chooseSupplier": MessageLookupByLibrary.simpleMessage(
       "Тәэмин итүчегә сайлагыз",
@@ -131,9 +151,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Үз функцияләрегезне сайлагыз",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Функцияләр - NPOSны традицион чишемнәрдән аерып торучы мөһим өлеш.",
+      "Функцияләр - POSproны традицион чишемнәрдән аерып торучы мөһим өлеш.",
     ),
+    "city": MessageLookupByLibrary.simpleMessage("Шәһәр"),
+    "cityName": MessageLookupByLibrary.simpleMessage("Шәһәр исеме"),
     "clarence": MessageLookupByLibrary.simpleMessage("Кларенс"),
+    "clear": MessageLookupByLibrary.simpleMessage("Чистарту"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
       "Тоташтыру өчен басыгыз",
     ),
@@ -186,11 +209,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "createNewPassword": MessageLookupByLibrary.simpleMessage(
       "Яңа пароль булдырырга",
     ),
+    "createPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "PDF төзергә рөхсәт юк.",
+    ),
+    "createSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Сатуга рөхсәтегез юк.",
+    ),
+    "creditLimit": MessageLookupByLibrary.simpleMessage("Фирма кредит чиге"),
     "currency": MessageLookupByLibrary.simpleMessage("Валюта"),
     "custom": MessageLookupByLibrary.simpleMessage("Кулланучының"),
     "customInvoiceBranding": MessageLookupByLibrary.simpleMessage(
       "Индивидуаль счет брендингы",
     ),
+    "customer": MessageLookupByLibrary.simpleMessage("Клиент"),
     "customerDue": MessageLookupByLibrary.simpleMessage("Клиент бурычы"),
     "customerName": MessageLookupByLibrary.simpleMessage("Клиент исеме"),
     "customerPay": MessageLookupByLibrary.simpleMessage("Клиент түләве"),
@@ -205,11 +236,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "Мәгълүмат уңышлы сакланды.",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Дата"),
+    "dateFilterWarn": MessageLookupByLibrary.simpleMessage(
+      "Ахыргы дата башлангыч датадан алда булмаска тиеш.",
+    ),
     "dates": MessageLookupByLibrary.simpleMessage("Дата:"),
     "days": MessageLookupByLibrary.simpleMessage("көн"),
     "dealer": MessageLookupByLibrary.simpleMessage("Дилер"),
     "dealerPrice": MessageLookupByLibrary.simpleMessage("Дилер бәясе"),
     "delete": MessageLookupByLibrary.simpleMessage("Юкка чыгарырга"),
+    "deleteAcc": MessageLookupByLibrary.simpleMessage("Хисапны бетерү"),
+    "deleteBatchWarn": MessageLookupByLibrary.simpleMessage(
+      "Бу партияне бетерергә телисезме?",
+    ),
+    "deletePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Партияне бетерүгә рөхсәт юк.",
+    ),
     "deleting": MessageLookupByLibrary.simpleMessage("Юкка чыгару...."),
     "deliveryAddress": MessageLookupByLibrary.simpleMessage(
       "Тәэмин итү адресы",
@@ -233,11 +274,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "dueCollection": MessageLookupByLibrary.simpleMessage("Бурыч җыю"),
     "dueList": MessageLookupByLibrary.simpleMessage("Бурычлар исемлеге"),
     "dueReport": MessageLookupByLibrary.simpleMessage("Бурычлар отчеты"),
+    "dueSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Килеп керүче клиентлар өчен алып баручыларга сату рөхсәт ителми.",
+    ),
     "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
       "Мобиль POSны куллану җиңел",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS кушымтасы бушлай, куллану җиңел. Чыннан да, ул дөньяда иң яхшы POS системаларының берсе.",
+      "Npos кушымтасы бушлай, куллану җиңел. Чыннан да, ул дөньяда иң яхшы POS системаларының берсе.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Үзгәртергә"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -257,9 +301,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Электрон почта буш була алмый",
     ),
     "emailText": MessageLookupByLibrary.simpleMessage("Электрон почта"),
+    "enLowStock": MessageLookupByLibrary.simpleMessage("Запасны кертегез"),
     "endDate": MessageLookupByLibrary.simpleMessage("Ахыр дата"),
     "endYourFreePlan": MessageLookupByLibrary.simpleMessage(
       "Бушлай планны тәмамлагыз",
+    ),
+    "entBatchNo": MessageLookupByLibrary.simpleMessage(
+      "Партия номерын кертегез",
     ),
     "enterABrandName": MessageLookupByLibrary.simpleMessage(
       "Бренд исемен кертегез",
@@ -273,6 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterAValidStock": MessageLookupByLibrary.simpleMessage(
       "Дөрес запас кертегез",
     ),
+    "enterAddress": MessageLookupByLibrary.simpleMessage("Адрес кертегез"),
     "enterAmount": MessageLookupByLibrary.simpleMessage("Сумманы кертегез"),
     "enterBusiness": MessageLookupByLibrary.simpleMessage(
       "Бизнес/Кибет исемен кертегез",
@@ -350,17 +399,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Телефон номерын кертегез",
     ),
+    "expDate": MessageLookupByLibrary.simpleMessage("Гамәл чыгу вакыты"),
     "expense": MessageLookupByLibrary.simpleMessage("Чыгым"),
     "expenseCat": MessageLookupByLibrary.simpleMessage("Чыгым категорияләре"),
     "expenseDate": MessageLookupByLibrary.simpleMessage("Чыгым датасы"),
     "expenseFor": MessageLookupByLibrary.simpleMessage("Чыгым өчен"),
     "expenseReport": MessageLookupByLibrary.simpleMessage("Чыгымнар отчеты"),
+    "expirationStatus": MessageLookupByLibrary.simpleMessage("Соңлану статусы"),
     "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
     "failedToGetPlatformVersion": MessageLookupByLibrary.simpleMessage(
       "Платформа версиясен алу уңышсыз булды.",
     ),
     "fashions": MessageLookupByLibrary.simpleMessage("Мода"),
     "field": MessageLookupByLibrary.simpleMessage("Майдан"),
+    "filter": MessageLookupByLibrary.simpleMessage("Сүзгеләү"),
     "firstName": MessageLookupByLibrary.simpleMessage("Исем"),
     "folder": MessageLookupByLibrary.simpleMessage(
       "Мөмкин, почта спам папкасына эләккән булырга мөмкин.",
@@ -378,6 +430,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "fullName": MessageLookupByLibrary.simpleMessage("Тулы исем"),
     "fullyPaid": MessageLookupByLibrary.simpleMessage("Тулысынча түләнгән"),
     "gallery": MessageLookupByLibrary.simpleMessage("Галерея"),
+    "genPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "PDF генерацияләү өчен мәгълүмат юк",
+    ),
     "gotEmail": MessageLookupByLibrary.simpleMessage(
       "Сезгә электрон почта килде",
     ),
@@ -397,9 +452,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "incomeDate": MessageLookupByLibrary.simpleMessage("Керем датасы"),
     "incomeFor": MessageLookupByLibrary.simpleMessage("Керем өчен"),
     "incomeReport": MessageLookupByLibrary.simpleMessage("Керем отчеты"),
+    "incomeReportPermission": MessageLookupByLibrary.simpleMessage(
+      "Керем хисабын карарга рөхсәт юк.",
+    ),
     "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
     "instrucation": MessageLookupByLibrary.simpleMessage("Күрсәтмә"),
     "inv": MessageLookupByLibrary.simpleMessage("Счет №"),
+    "inventoryPermission": MessageLookupByLibrary.simpleMessage(
+      "Инвентаризациягә рөхсәт юк",
+    ),
     "invoice": MessageLookupByLibrary.simpleMessage("Счет"),
     "invoiceViewr": MessageLookupByLibrary.simpleMessage("Счетка карау"),
     "itemAdded": MessageLookupByLibrary.simpleMessage("Элемент өстәлде"),
@@ -435,14 +496,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "lossProfitReport": MessageLookupByLibrary.simpleMessage(
       "Югалту/Файда отчеты",
     ),
+    "lowStock": MessageLookupByLibrary.simpleMessage("Запас аз"),
+    "lowStockReport": MessageLookupByLibrary.simpleMessage("Аз запас хисабы"),
     "lp": MessageLookupByLibrary.simpleMessage("Югалту/Файда"),
     "lpDetails": MessageLookupByLibrary.simpleMessage(
       "Югалту/Файда мәгълүматлары",
     ),
+    "manuDate": MessageLookupByLibrary.simpleMessage("Ясау датасы"),
+    "manufactureDate": MessageLookupByLibrary.simpleMessage("Ясау датасы"),
     "manufacturer": MessageLookupByLibrary.simpleMessage("Производитель"),
     "masterCard": MessageLookupByLibrary.simpleMessage("Мастер-карта"),
     "messege": MessageLookupByLibrary.simpleMessage("Хәбәр"),
     "mobile": MessageLookupByLibrary.simpleMessage("Мобиль:"),
+    "model": MessageLookupByLibrary.simpleMessage("Модель"),
     "monthly": MessageLookupByLibrary.simpleMessage("Айлык"),
     "moreInfo": MessageLookupByLibrary.simpleMessage("Күбрәк мәгълүмат"),
     "mrp": MessageLookupByLibrary.simpleMessage("MRP"),
@@ -457,10 +523,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "noData": MessageLookupByLibrary.simpleMessage("Мәгълүмат юк"),
     "noDataAvailabe": MessageLookupByLibrary.simpleMessage("Мәгълүматлар юк"),
     "noDataFound": MessageLookupByLibrary.simpleMessage("Мәгълүмат табылмады"),
+    "noDue": MessageLookupByLibrary.simpleMessage("Бурык юк"),
     "noDueSelected": MessageLookupByLibrary.simpleMessage("Бурыч сайланмаган"),
     "noItemSelected": MessageLookupByLibrary.simpleMessage(
       "Сайланган әйбер юк",
     ),
+    "noMatched": MessageLookupByLibrary.simpleMessage(
+      "Туры килә торган продуктлар юк.",
+    ),
+    "noParty": MessageLookupByLibrary.simpleMessage("Фирма табылмады"),
     "noProductFound": MessageLookupByLibrary.simpleMessage("Продукт табылмады"),
     "noProductSelected": MessageLookupByLibrary.simpleMessage(
       "Сайланган продукт юк",
@@ -471,17 +542,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "noSupplier": MessageLookupByLibrary.simpleMessage("Тәэмин итүче юк"),
     "noTransaction": MessageLookupByLibrary.simpleMessage("Транзакция юк"),
     "notFound": MessageLookupByLibrary.simpleMessage("Тапмады"),
+    "notLaunch": MessageLookupByLibrary.simpleMessage(
+      "Телефон кушымтасы ачылмады.",
+    ),
     "note": MessageLookupByLibrary.simpleMessage("Искәрмә"),
     "notification": MessageLookupByLibrary.simpleMessage("Хәбәр"),
     "off": MessageLookupByLibrary.simpleMessage("Юк"),
     "on": MessageLookupByLibrary.simpleMessage("Кирәк"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Камераны ачу"),
     "openingBalance": MessageLookupByLibrary.simpleMessage("Башлангыч баланс"),
+    "opinion": MessageLookupByLibrary.simpleMessage("Фикерегезне кертегез"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Запаста юк"),
     "packFeatures": MessageLookupByLibrary.simpleMessage("Пакет функцияләре"),
     "package": MessageLookupByLibrary.simpleMessage("Пакет"),
     "paid": MessageLookupByLibrary.simpleMessage("Түләнгән"),
     "paidAmount": MessageLookupByLibrary.simpleMessage("Түләнгән сумма"),
     "parties": MessageLookupByLibrary.simpleMessage("Партияләр"),
+    "partyCreateWarn": MessageLookupByLibrary.simpleMessage(
+      "Сезгә фирма төзү рөхсәте юк.",
+    ),
     "partyList": MessageLookupByLibrary.simpleMessage("Партияләр исемлеге"),
     "password": MessageLookupByLibrary.simpleMessage("Пароль"),
     "passwordCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
@@ -507,6 +586,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentGateway": MessageLookupByLibrary.simpleMessage("Түләү шлюзы"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("Түләү ысуллары"),
     "paymentSuccess": MessageLookupByLibrary.simpleMessage("Түләү уңышлы"),
+    "paymentTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Зинһар, түләү төрен сайлагыз",
+    ),
     "paymentTypes": MessageLookupByLibrary.simpleMessage("Түләү төре"),
     "paymentWasSuccessful": MessageLookupByLibrary.simpleMessage(
       "Түләү уңышлы булды!",
@@ -517,6 +599,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Рөхсәт бирелмәгән!",
     ),
     "phone": MessageLookupByLibrary.simpleMessage("Телефон номеры"),
+    "phoneNotAvail": MessageLookupByLibrary.simpleMessage("Телефон номеры юк."),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Телефон номеры"),
     "phoneVerification": MessageLookupByLibrary.simpleMessage(
       "Телефонны раслау",
@@ -598,8 +681,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Зинһар, чыгым категориясен сайлагыз",
     ),
-    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
-      "NPOS тарафыннан эшләнгән",
+    "posSale": MessageLookupByLibrary.simpleMessage("POS сату"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Acnoo тарафыннан эшләнгән",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android & iOS кушымта ярдәме",
@@ -611,6 +695,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Алдагы түләү суммасы",
     ),
     "price": MessageLookupByLibrary.simpleMessage("Бәя"),
+    "priceWarn": MessageLookupByLibrary.simpleMessage("Бәя буш булмаска тиеш"),
     "print": MessageLookupByLibrary.simpleMessage("Басма"),
     "printing": MessageLookupByLibrary.simpleMessage("Басу варианты"),
     "product": MessageLookupByLibrary.simpleMessage("Продукт"),
@@ -627,6 +712,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "productList": MessageLookupByLibrary.simpleMessage("Продуктлар исемлеге"),
     "productName": MessageLookupByLibrary.simpleMessage("Продукт исеме"),
+    "productNotFound": MessageLookupByLibrary.simpleMessage(
+      "Продукт табылмады",
+    ),
+    "productSetting": MessageLookupByLibrary.simpleMessage(
+      "Продукт көйләүләре",
+    ),
     "productUnit": MessageLookupByLibrary.simpleMessage("Продукт берәмлеге"),
     "products": MessageLookupByLibrary.simpleMessage("Продуктлар"),
     "profile": MessageLookupByLibrary.simpleMessage("Профиль"),
@@ -634,6 +725,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Профильне редактировать итү",
     ),
     "profit": MessageLookupByLibrary.simpleMessage("Файда"),
+    "profitLoss": MessageLookupByLibrary.simpleMessage("Табыш һәм зыян"),
+    "profitMargin": MessageLookupByLibrary.simpleMessage("Профит маржасы (%)"),
     "promo": MessageLookupByLibrary.simpleMessage("Промо"),
     "promoCode": MessageLookupByLibrary.simpleMessage("Промо-код"),
     "purchase": MessageLookupByLibrary.simpleMessage("Сатып алу"),
@@ -645,6 +738,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchaseDetails": MessageLookupByLibrary.simpleMessage(
       "Сатып алу мәгълүматлары",
     ),
+    "purchaseEx": MessageLookupByLibrary.simpleMessage(
+      "Сатып алу бәясе (салымсыз)",
+    ),
+    "purchaseExReq": MessageLookupByLibrary.simpleMessage(
+      "Салымсыз сатып алу бәясе кирәк",
+    ),
+    "purchaseIn": MessageLookupByLibrary.simpleMessage(
+      "Сатып алу бәясе (салым белән)",
+    ),
+    "purchaseInReq": MessageLookupByLibrary.simpleMessage(
+      "Салым белән сатып алу бәясе кирәк",
+    ),
     "purchaseList": MessageLookupByLibrary.simpleMessage("Сатып алу исемлеге"),
     "purchaseNow": MessageLookupByLibrary.simpleMessage("Хәзер сатып алырга"),
     "purchasePremium": MessageLookupByLibrary.simpleMessage(
@@ -655,10 +760,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchaseReturnReport": MessageLookupByLibrary.simpleMessage(
       "Сатып алуларны кире кайтару отчеты",
     ),
+    "purchaseUpdateWarn": MessageLookupByLibrary.simpleMessage(
+      "Сатып алу яңартуга рөхсәт юк.",
+    ),
+    "purchaseWarn": MessageLookupByLibrary.simpleMessage(
+      "Сатып алу төзүгә рөхсәт юк.",
+    ),
     "purchased": MessageLookupByLibrary.simpleMessage("Сатып алынган"),
     "purchasedBy": MessageLookupByLibrary.simpleMessage("Сатып алучы"),
     "qty": MessageLookupByLibrary.simpleMessage("Сан"),
     "quantity": MessageLookupByLibrary.simpleMessage("Сан"),
+    "quickOver": MessageLookupByLibrary.simpleMessage("Тиз күзәтү"),
     "quickOverview": MessageLookupByLibrary.simpleMessage("Кыскача күзәтү"),
     "receivedAmount": MessageLookupByLibrary.simpleMessage(
       "Кабул ителгән сумма",
@@ -696,10 +808,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "returned": MessageLookupByLibrary.simpleMessage("Кире кайтарылган"),
     "returnedDate": MessageLookupByLibrary.simpleMessage("Кайтару датасы"),
     "returnedItem": MessageLookupByLibrary.simpleMessage("Кайтарылган әйбер"),
+    "roundingTotal": MessageLookupByLibrary.simpleMessage(
+      "Яртылашланган гомуми",
+    ),
+    "roundings": MessageLookupByLibrary.simpleMessage("Яртылаш (+/-)"),
     "sale": MessageLookupByLibrary.simpleMessage("Сату"),
     "saleBy": MessageLookupByLibrary.simpleMessage("Сатучы"),
     "saleList": MessageLookupByLibrary.simpleMessage("Сатулар исемлеге"),
     "salePrice": MessageLookupByLibrary.simpleMessage("Сату бәясе"),
+    "saleReq": MessageLookupByLibrary.simpleMessage("Сату бәясе кирәк"),
     "sales": MessageLookupByLibrary.simpleMessage("Сатулар"),
     "salesBy": MessageLookupByLibrary.simpleMessage("Сатучы:"),
     "salesDetails": MessageLookupByLibrary.simpleMessage(
@@ -717,9 +834,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveNPublish": MessageLookupByLibrary.simpleMessage(
       "Сакларга һәм бастырырга",
     ),
+    "saveSetting": MessageLookupByLibrary.simpleMessage("Көйләүләрне саклау"),
+    "saveVariant": MessageLookupByLibrary.simpleMessage("Вариантны саклау"),
+    "scanCode": MessageLookupByLibrary.simpleMessage("Продуктның QR кодын уку"),
     "search": MessageLookupByLibrary.simpleMessage("Эзләү"),
     "searchH": MessageLookupByLibrary.simpleMessage("Монда эзлә...."),
     "searchProduct": MessageLookupByLibrary.simpleMessage("Продуктны эзләү"),
+    "searchWith": MessageLookupByLibrary.simpleMessage("Эзләү..."),
     "seeAllPromoCode": MessageLookupByLibrary.simpleMessage(
       "Барлык промо-кодларны карагыз",
     ),
@@ -732,12 +853,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectCategory": MessageLookupByLibrary.simpleMessage(
       "Категорияне сайлагыз",
     ),
+    "selectCustomer": MessageLookupByLibrary.simpleMessage("Клиентны сайлагыз"),
+    "selectDate": MessageLookupByLibrary.simpleMessage("Датаны сайлагыз"),
+    "selectFDate": MessageLookupByLibrary.simpleMessage(
+      "Башлангыч датаны сайлагыз",
+    ),
     "selectLang": MessageLookupByLibrary.simpleMessage("Телегезне сайлагыз"),
+    "selectModel": MessageLookupByLibrary.simpleMessage("Модельне сайлагыз"),
+    "selectOne": MessageLookupByLibrary.simpleMessage("Берсен сайлагыз"),
     "selectProductCategory": MessageLookupByLibrary.simpleMessage(
       "Продукт категориясен сайлагыз",
     ),
     "selectProductUnit": MessageLookupByLibrary.simpleMessage(
       "Продукт берәмлеген сайлагыз",
+    ),
+    "selectTax": MessageLookupByLibrary.simpleMessage("Салымны сайлагыз"),
+    "selectToDate": MessageLookupByLibrary.simpleMessage(
+      "Ахыргы датаны сайлагыз",
     ),
     "selectVariations": MessageLookupByLibrary.simpleMessage(
       "Вариацияләрне сайлагыз: ",
@@ -768,6 +900,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "setting": MessageLookupByLibrary.simpleMessage("Көйләү"),
     "share": MessageLookupByLibrary.simpleMessage("Уртаклашырга"),
+    "shippingAddress": MessageLookupByLibrary.simpleMessage("Җибәрү адресы"),
     "shopOpeningBalance": MessageLookupByLibrary.simpleMessage(
       "Кибетнең башлангыч балансы",
     ),
@@ -779,11 +912,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "showPrice": MessageLookupByLibrary.simpleMessage("Бәяне күрсәт"),
     "signIn": MessageLookupByLibrary.simpleMessage("Керергә"),
     "signUp": MessageLookupByLibrary.simpleMessage("Теркәлергә"),
+    "single": MessageLookupByLibrary.simpleMessage("Бәрәкәт"),
     "size": MessageLookupByLibrary.simpleMessage("Размер"),
     "skip": MessageLookupByLibrary.simpleMessage("Узып китәргә"),
     "skipTheUpdate": MessageLookupByLibrary.simpleMessage(
       "Яңартманы узып китәргә",
     ),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU / Код"),
     "smartWatch": MessageLookupByLibrary.simpleMessage("Умный сәгать"),
     "socialMarketing": MessageLookupByLibrary.simpleMessage(
       "Социаль маркетинг",
@@ -796,11 +931,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "startNewSale": MessageLookupByLibrary.simpleMessage(
       "Яңа сатып алуны башларга",
     ),
+    "state": MessageLookupByLibrary.simpleMessage("Регион"),
+    "stateName": MessageLookupByLibrary.simpleMessage("Регион исеме"),
     "stillUnpaid": MessageLookupByLibrary.simpleMessage("Тагын түләнмәгән"),
     "stock": MessageLookupByLibrary.simpleMessage("Запас"),
     "stockList": MessageLookupByLibrary.simpleMessage("Запас исемлеге"),
     "stockReport": MessageLookupByLibrary.simpleMessage("Запас отчеты"),
     "stockValue": MessageLookupByLibrary.simpleMessage("Запас бәясе"),
+    "stockWarn": MessageLookupByLibrary.simpleMessage(
+      "Запас ким дигәндә 1 булырга тиеш",
+    ),
     "stocks": MessageLookupByLibrary.simpleMessage("Запас: "),
     "subTotal": MessageLookupByLibrary.simpleMessage("Промежуточный сумма"),
     "submit": MessageLookupByLibrary.simpleMessage("Тапшырырга"),
@@ -813,6 +953,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Тәэмин итүче мәгълүматлары",
     ),
     "supplierName": MessageLookupByLibrary.simpleMessage("Тәэмин итүче исеме"),
+    "taxType": MessageLookupByLibrary.simpleMessage("Салым төре"),
     "thakYouForYourPurchase": MessageLookupByLibrary.simpleMessage(
       "Сезнең сатып алуыгыз өчен рәхмәт",
     ),
@@ -854,10 +995,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "totalSales": MessageLookupByLibrary.simpleMessage("Гомуми сату"),
     "totalVat": MessageLookupByLibrary.simpleMessage("Гомуми ВАТ"),
     "totall": MessageLookupByLibrary.simpleMessage("Гомуми:"),
+    "tranSacOver": MessageLookupByLibrary.simpleMessage("Транзакция күзәтүе"),
     "transactions": MessageLookupByLibrary.simpleMessage("Транзакцияләр"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Тагын бер кат тырышыгыз"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "type": MessageLookupByLibrary.simpleMessage("Төр"),
+    "typeSelect": MessageLookupByLibrary.simpleMessage("Төрен сайлау"),
     "unPaid": MessageLookupByLibrary.simpleMessage("Түләнмәгән"),
     "unitName": MessageLookupByLibrary.simpleMessage("Берәмлек исеме"),
     "unitPirce": MessageLookupByLibrary.simpleMessage("Берәмлек бәясе"),
@@ -870,13 +1013,29 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "update": MessageLookupByLibrary.simpleMessage("Яңарту"),
     "updateContact": MessageLookupByLibrary.simpleMessage("Элемтәне яңартырга"),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "Запасны яңарту уңышсыз булды",
+    ),
     "updateNow": MessageLookupByLibrary.simpleMessage("Хәзер яңартырга"),
+    "updatePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Партияне яңартуга рөхсәт юк.",
+    ),
     "updateProduct": MessageLookupByLibrary.simpleMessage(
       "Продуктны яңартырга",
+    ),
+    "updateProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Продукт уңышлы яңартылды!",
+    ),
+    "updateProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Продуктны яңартуга рөхсәт юк.",
     ),
     "updateProfile": MessageLookupByLibrary.simpleMessage(
       "Профилегезне яңартыгыз",
     ),
+    "updateSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Сатуларны яңартырга рөхсәт юк.",
+    ),
+    "updateSuccess": MessageLookupByLibrary.simpleMessage("Уңышлы яңартылды"),
     "updateYourProfile": MessageLookupByLibrary.simpleMessage(
       "Профилегезне яңартыгыз, клиентларыгыз белән яхшырак тәэсир өчен",
     ),
@@ -885,6 +1044,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updating": MessageLookupByLibrary.simpleMessage("Яңарту..."),
     "upgradeNow": MessageLookupByLibrary.simpleMessage("Хәзер яңартыгыз"),
+    "upload": MessageLookupByLibrary.simpleMessage("Йөкләү"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Рәсем йөкләү"),
+    "useGallery": MessageLookupByLibrary.simpleMessage("Галереядан куллану"),
     "useTitleCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Кулланучы исеме буш була алмый",
     ),
@@ -893,6 +1055,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Кулланучы роле мәгълүматлары",
     ),
     "userTitle": MessageLookupByLibrary.simpleMessage("Кулланучы исеме"),
+    "variantAdded": MessageLookupByLibrary.simpleMessage(
+      "Вариант уңышлы өстәлде!",
+    ),
+    "variantDelete": MessageLookupByLibrary.simpleMessage(
+      "Вариант уңышлы бетерелде!",
+    ),
     "vat": MessageLookupByLibrary.simpleMessage("НДС"),
     "verification": MessageLookupByLibrary.simpleMessage("Раслау"),
     "verify": MessageLookupByLibrary.simpleMessage("Раслагыз"),
@@ -902,6 +1070,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verityEmail": MessageLookupByLibrary.simpleMessage(
       "Электрон почтаны раслагыз",
     ),
+    "view": MessageLookupByLibrary.simpleMessage("Тулырак карау"),
     "viewAll": MessageLookupByLibrary.simpleMessage("Барын карау"),
     "walkInCustomer": MessageLookupByLibrary.simpleMessage("Керүче клиент"),
     "weHaveSentAConfirmationEmailTo": MessageLookupByLibrary.simpleMessage(
@@ -942,5 +1111,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "yourPackageExpiredToday": MessageLookupByLibrary.simpleMessage(
       "Сезнең пакет бүген тәмамлана\n\nЗинһар, яңадан сатып алыгыз",
     ),
+    "zip": MessageLookupByLibrary.simpleMessage("Почта индексы"),
+    "zipCode": MessageLookupByLibrary.simpleMessage("Почта индексын кертегез"),
   };
 }

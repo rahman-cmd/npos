@@ -1,21 +1,40 @@
+import 'package:bijoy_helper/bijoy_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pdf/widgets.dart' as pw;
 
-const kMainColor = Color(0xFF1B5E20);
+import 'generated/l10n.dart' as lang;
+
+const kMainColor = Color(0xffC52127);
+const kMainColor100 = Color(0xffFDE7F2);
+const kMainColor50 = Color(0xffFEF0F1);
+const kMainColor2 = Color(0xffFEF0F1);
 const kGreyTextColor = Color(0xFF828282);
+const kGrey6 = Color(0xff666666);
 const kBackgroundColor = Color(0xffF5F3F3);
 const kBorderColorTextField = Color(0xFFC2C2C2);
 const kDarkWhite = Color(0xFFF1F7F7);
 const kWhite = Color(0xFFffffff);
+const kBottomBorder = Color(0xffE6E6E6);
 const kBorderColor = Color(0xffD8D8D8);
+const kPeraColor = Color(0xff4B5563);
+const kPeragrapColor = Color(0xff656565);
+const kTextColor = Color(0xff121535);
+const kLineColor = Color(0xffE6E6E9);
+const kSubPeraColor = Color(0xff999999);
 const kSuccessColor = Colors.green;
 const kPremiumPlanColor = Color(0xFF8752EE);
 const kPremiumPlanColor2 = Color(0xFFFF5F00);
+const kSecondayColor = Color(0xffF68A3D);
 const kTitleColor = Color(0xFF000000);
+const kStoreColor = Color(0xffFF5D32);
+const kNeutral800 = Color(0xff4B5563);
 const kNeutralColor = Color(0xFF4D4D4D);
+const kDueColor = Color(0xffFF5F00);
+const kAdvanceColor = Color(0xff29CE00);
 const kBorder = Color(0xFF999999);
 const updateBorderColor = Color(0xffD8D8D8);
 bool isPrintEnable = false;
-const String appVersion = '4.9';
 String noProductImageUrl = 'images/no_product_image.png';
 
 ///_______Purchase_Code________________________________________
@@ -31,6 +50,7 @@ const String logo = 'images/logo.png';
 const String appsName = 'NPOS';
 const String companyWebsite = 'https://npos.vip';
 const String companyName = 'Npos';
+
 bool connected = false;
 
 const kButtonDecoration = BoxDecoration(
@@ -51,11 +71,6 @@ const kInputDecoration = InputDecoration(
     borderSide: BorderSide(color: kBorderColor, width: 1),
   ),
 );
-
-// final gTextStyle = GoogleFonts.poppins(
-//   color: Colors.white,
-// );
-
 OutlineInputBorder outlineInputBorder() {
   return OutlineInputBorder(
     borderRadius: BorderRadius.circular(1.0),
@@ -70,11 +85,48 @@ final otpInputDecoration = InputDecoration(
   enabledBorder: outlineInputBorder(),
 );
 
+//----------Days List--------
+List<String> durationList = [
+  'Days',
+  'Month',
+  'Year',
+];
+
+List<String> guaranteeList = [
+  'Days',
+  'Month',
+  'Year',
+];
+
+//----------------Class Party-------------
+
+class PartyType {
+  static const customer = 'customer';
+  static const supplier = 'supplier';
+  static const dealer = 'dealer';
+  static const wholesaler = 'wholesaler';
+}
+
+String getPartyTypeLabel(BuildContext context, String value) {
+  switch (value) {
+    case PartyType.customer:
+      return lang.S.of(context).customer;
+    case PartyType.supplier:
+      return lang.S.of(context).supplier;
+    case PartyType.dealer:
+      return lang.S.of(context).dealer;
+    case PartyType.wholesaler:
+      return lang.S.of(context).wholesaler;
+    default:
+      return '';
+  }
+}
+
 ///__________Language________________________________
 Map<String, String> languageMap = {
   'English': 'en',
   'Afrikaans': 'af',
-  'Amharic': 'am',
+  'Amharic': 'am', //not suppored pdf
   'Arabic': 'ar',
   'Assamese': 'as',
   'Azerbaijani': 'az',
@@ -97,76 +149,177 @@ Map<String, String> languageMap = {
   'French': 'fr',
   'Galician': 'gl',
   'Swiss German Alemannic Alsatian': 'gsw',
-  'Gujarati': 'gu',
-  'Hebrew': 'he',
+  'Gujarati': 'gu', //not supported pdf
+  'Hebrew': 'he', //not supported pdf
   'Hindi': 'hi',
   'Croatian': 'hr',
   'Hungarian': 'hu',
-  'Armenian': 'hy',
+  'Armenian': 'hy', //not supported pdf
   'Indonesian': 'id',
   'Icelandic': 'is',
   'Italian': 'it',
   'Japanese': 'ja',
-  'Georgian': 'ka',
+  'Georgian': 'ka', //not supported pdf
   'Kazakh': 'kk',
-  'Khmer Central Khmer': 'km',
-  'Kannada': 'kn',
-  'Korean': 'ko',
+  'Khmer Central Khmer': 'km', //not supported pdf
+  'Kannada': 'kn', // not supported pdf
+  'Korean': 'ko', // not supported pdf
   'Kirghiz Kyrgyz': 'ky',
-  'Lao': 'lo',
+  'Lao': 'lo', //not supported pdf
   'Lithuanian': 'lt',
   'Latvian': 'lv',
   'Macedonian': 'mk',
-  'Malayalam': 'ml',
+  'Malayalam': 'ml', //not supported pdf
   'Mongolian': 'mn',
   'Marathi': 'mr',
   'Malay': 'ms',
-  'Burmese': 'my',
+  'Burmese': 'my', //not supported pdf
   'Norwegian Bokmål': 'nb',
   'Nepali': 'ne',
   'Dutch Flemish': 'nl',
   'Norwegian': 'no',
-  'Oriya': 'or',
-  'Panjabi Punjabi': 'pa',
+  'Oriya': 'or', //not supported pdf
+  'Panjabi Punjabi': 'pa', //not supported pdf
   'Polish': 'pl',
   'Pushto Pashto': 'ps',
   'Portuguese': 'pt',
   'Romanian Moldavian Moldovan': 'ro',
   'Russian': 'ru',
-  'Sinhala Sinhalese': 'si',
+  'Sinhala Sinhalese': 'si', //not supported pdf
   'Slovak': 'sk',
   'Slovenian': 'sl',
   'Albanian': 'sq',
   'Serbian': 'sr',
   'Swedish': 'sv',
   'Swahili': 'sw',
-  'Tamil': 'ta',
-  'Telugu': 'te',
-  'Thai': 'th',
-  'Tagalog': 'tl',
+  'Tamil': 'ta', //not supported pdf
+  'Telugu': 'te', //not supported pdf
+  'Thai': 'th', //not supported pdf
   'Turkish': 'tr',
   'Ukrainian': 'uk',
   'Urdu': 'ur',
-  'Uzbek': 'uz',
   'Vietnamese': 'vi',
   'Chinese': 'zh',
-  'Hausa': 'ha',
-  'Tatar': 'tt',
-  'Zulu': 'zu',
 };
-String formatPointNumber(num value) {
+
+String formatPointNumber(num value, {bool addComma = false}) {
+  String formatted;
+
   if (value % 1 == 0) {
-    return value.toInt().toString();
+    formatted = value.toInt().toString();
   } else {
-    return value.toStringAsFixed(2);
+    formatted = value.toStringAsFixed(2);
   }
+
+  if (addComma) {
+    // NumberFormat from intl package is used here
+    final formatter = NumberFormat.decimalPattern();
+    formatted = formatter.format(num.parse(formatted));
+  }
+
+  return formatted;
 }
+// String formatPointNumber(num value) {
+//   if (value % 1 == 0) {
+//     return value.toInt().toString();
+//   } else {
+//     return value.toStringAsFixed(2);
+//   }
+// }
 
 String? selectedLanguage = languageMap['English'];
 
-//withValues extension on color with a required value alpha
 extension ColorExt on Color {
   Color withValues({required double alpha}) {
     return Color.fromARGB((alpha * 255).toInt(), red, green, blue);
   }
+}
+
+pw.Widget getLocalizedPdfText(String text, pw.TextStyle textStyle, {pw.TextAlign? textAlignment}) {
+  print('Current Language: $selectedLanguage, Text: $text');
+  return pw.Text(
+    selectedLanguage == "bn" ? unicodeToBijoy(text) : text,
+    textAlign: textAlignment,
+    style: textStyle,
+  );
+}
+
+pw.Widget getLocalizedPdfTextWithLanguage(String text, pw.TextStyle textStyle, {pw.TextAlign? textAlignment}) {
+  print('Current Language: $selectedLanguage, Text: $text');
+  String detectedLanguage = detectLanguageEnhanced(text);
+  return pw.Text(
+    detectedLanguage == "bn" ? unicodeToBijoy(text) : text,
+    textAlign: textAlignment,
+    style: textStyle,
+  );
+}
+
+String detectLanguageEnhanced(String text, {double threshold = 0.7}) {
+  final cleanedText = text.replaceAll(RegExp(r'[^\p{L}]', unicode: true), '');
+  if (cleanedText.isEmpty) return 'en';
+
+  // Count matches for each script
+  final Map<String, int> counts = {
+    'bn': RegExp(r'[\u0980-\u09FF]').allMatches(cleanedText).length,
+    'hi': RegExp(r'[\u0900-\u097F]').allMatches(cleanedText).length,
+    'ar': RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]').allMatches(cleanedText).length,
+    'fr': RegExp(r'[a-zA-Zéèêëàâîïôùûç]').allMatches(cleanedText).length,
+  };
+
+  // Calculate ratios
+  final total = cleanedText.length;
+  final ratios = counts.map((lang, count) => MapEntry(lang, count / total));
+
+  // Determine dominant language
+  for (final entry in ratios.entries) {
+    if (entry.value >= threshold) return entry.key;
+  }
+
+  return 'en';
+}
+
+String formatAmount(String value, {bool isCurrency = false, String currencySymbol = ''}) {
+  final number = double.tryParse(value) ?? 0;
+  return formatNumber(number, isCurrency: isCurrency, currencySymbol: currencySymbol);
+}
+
+String formatNumber(double number, {int decimals = 2, bool isCurrency = false, String currencySymbol = '\$'}) {
+  String removeTrailingZeros(double num, int dec) {
+    String fixed = num.toStringAsFixed(dec);
+    return fixed.contains('.') ? fixed.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '') : fixed;
+  }
+
+  String formatted;
+  if (number >= 1e9) {
+    formatted = '${removeTrailingZeros(number / 1e9, decimals)}B';
+  } else if (number >= 1e6) {
+    formatted = '${removeTrailingZeros(number / 1e6, decimals)}M';
+  } else if (number >= 1e3) {
+    formatted = '${removeTrailingZeros(number / 1e3, decimals)}K';
+  } else {
+    formatted = removeTrailingZeros(number, decimals);
+  }
+
+  return isCurrency ? '$currencySymbol$formatted' : formatted;
+}
+
+Widget getFieldLabelText({required String label, required BuildContext context}) {
+  final theme = Theme.of(context);
+  return label.contains('*')
+      ? RichText(
+          text: TextSpan(text: label.replaceAll('*', ''), style: theme.textTheme.bodyLarge, children: [
+          TextSpan(
+              text: '*',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: Color(0xffF68A3D),
+              ))
+        ]))
+      : Text(label);
+}
+
+double fontSizeForPrinter(String? printerSize) {
+  if (printerSize == null) return 17;
+  if (printerSize == "3_inch_80mm") return 16;
+  if (printerSize != "3_inch_80mm") return 17;
+  return 17;
 }

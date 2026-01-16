@@ -3,22 +3,29 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile_pos/Screens/Products/Model/product_total_stock_model.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
+import 'package:mobile_pos/model/business_info_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
-import '../../Screens/Purchase/Model/purchase_transaction_model.dart';
+
+import '../../Screens/Products/Model/product_model.dart';
+import '../../Screens/Purchase/Model/purchase_transaction_model.dart' hide Product;
 import '../../constant.dart';
 import '../../model/sale_transaction_model.dart';
 import '../model/print_transaction_model.dart';
 import '../thermal_invoice_due.dart';
 import '../thermal_invoice_purchase.dart';
 import '../thermal_invoice_sales.dart';
+import '../thermal_invoice_stock.dart';
+import '../thermal_lebels_printing.dart';
 
 final thermalPrinterProvider = ChangeNotifierProvider((ref) => ThermalPrinter());
 
 class ThermalPrinter extends ChangeNotifier {
   List<BluetoothInfo> availableBluetoothDevices = [];
   bool isBluetoothConnected = false;
+
   Future<void> getBluetooth() async {
     availableBluetoothDevices = await PrintBluetoothThermal.pairedBluetooths;
     isBluetoothConnected = await PrintBluetoothThermal.connectionStatus;
@@ -122,21 +129,38 @@ class ThermalPrinter extends ChangeNotifier {
     );
   }
 
-  Future<void> printSalesThermalInvoiceNow({required PrintTransactionModel transaction, required List<SalesDetails>? productList, required BuildContext context}) async {
-    await getBluetooth();
-    isBluetoothConnected ? SalesThermalPrinterInvoice().printSalesTicket(printTransactionModel: transaction, productList: productList) : listOfBluDialog(context: context);
-  }
-
-  Future<void> printPurchaseThermalInvoiceNow(
-      {required PrintPurchaseTransactionModel transaction, required List<PurchaseDetails>? productList, required BuildContext context}) async {
+  Future<void> printSalesThermalInvoiceNow({required PrintSalesTransactionModel transaction, required List<SalesDetails>? productList, required BuildContext context}) async {
     await getBluetooth();
     isBluetoothConnected
-        ? PurchaseThermalPrinterInvoice().printPurchaseThermalInvoice(printTransactionModel: transaction, productList: productList)
+        ? SalesThermalPrinterInvoice().printSalesTicket(printTransactionModel: transaction, productList: productList, context: context)
         : listOfBluDialog(context: context);
   }
 
-  Future<void> printDueThermalInvoiceNow({required PrintDueTransactionModel transaction, required BuildContext context}) async {
+  Future<void> printPurchaseThermalInvoiceNow(
+      {required PrintPurchaseTransactionModel transaction, required List<PurchaseDetails>? productList, required BuildContext context, required String? invoiceSize}) async {
     await getBluetooth();
-    isBluetoothConnected ? DueThermalPrinterInvoice().printDueTicket(printDueTransactionModel: transaction) : listOfBluDialog(context: context);
+    isBluetoothConnected
+        ? PurchaseThermalPrinterInvoice().printPurchaseThermalInvoice(printTransactionModel: transaction, productList: productList, context: context)
+        : listOfBluDialog(context: context);
+  }
+
+  Future<void> printDueThermalInvoiceNow({required PrintDueTransactionModel transaction, required String? invoiceSize, required BuildContext context}) async {
+    await getBluetooth();
+    isBluetoothConnected
+        ? DueThermalPrinterInvoice().printDueTicket(printDueTransactionModel: transaction, invoiceSize: invoiceSize, context: context)
+        : listOfBluDialog(context: context);
+  }
+
+  Future<void> printStockInvoiceNow(
+      {required List<Product> products, required BusinessInformationModel businessInformationModel, required BuildContext context, required ProductListResponse totalStock}) async {
+    await getBluetooth();
+    isBluetoothConnected
+        ? StockThermalPrinterInvoice().printStockTicket(businessInformationModel: businessInformationModel, productList: products, stock: totalStock)
+        : listOfBluDialog(context: context);
+  }
+
+  Future<void> printLabelsNow({required List<Product> products, required BuildContext context}) async {
+    await getBluetooth();
+    isBluetoothConnected ? SalesThermalLabels().printLabels(productList: products) : listOfBluDialog(context: context);
   }
 }

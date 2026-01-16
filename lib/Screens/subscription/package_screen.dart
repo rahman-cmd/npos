@@ -1,3 +1,4 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
@@ -6,7 +7,12 @@ import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../http_client/custome_http_client.dart';
+import '../../http_client/subscription_expire_provider.dart';
 import '../Home/home_screen.dart';
+import '../../service/check_user_role_permission_provider.dart';
+import 'Model/subscription_plan_model.dart';
+import 'Provider/subacription_plan_provider.dart';
 
 class PackageScreen extends StatefulWidget {
   const PackageScreen({super.key});
@@ -32,17 +38,49 @@ class _PackageScreenState extends State<PackageScreen> {
     super.initState();
   }
 
-  bool _isRefreshing = false; // Prevents multiple refresh calls
+  bool _isRefreshing = false;
 
   Future<void> refreshData(WidgetRef ref) async {
-    if (_isRefreshing) return; // Prevent duplicate refresh calls
+    if (_isRefreshing) return;
     _isRefreshing = true;
 
     ref.refresh(businessInfoProvider);
     ref.refresh(getExpireDateProvider(ref));
 
-    await Future.delayed(const Duration(seconds: 1)); // Optional delay
+    await Future.delayed(const Duration(seconds: 1));
     _isRefreshing = false;
+  }
+
+  Widget _buildFeatureItem(String featureKey, dynamic featureValue) {
+    final isActive = featureValue is List && featureValue.length > 1 && featureValue[1] == "1";
+    final featureText = featureValue is List ? featureValue[0].toString() : featureKey;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+      margin: EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(color: Color(0xff473232).withValues(alpha: 0.05), blurRadius: 8, offset: Offset(0, 3), spreadRadius: -1),
+          BoxShadow(color: Color(0xff0C1A4B).withValues(alpha: 0.024), blurRadius: 1, offset: Offset(0, 0), spreadRadius: 0)
+        ],
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+        leading: Icon(
+          isActive ? Icons.check_circle : CommunityMaterialIcons.close_circle,
+          color: isActive ? Colors.green : Colors.red,
+        ),
+        title: Text(
+          featureText,
+          style: TextStyle(
+            color: kGreyTextColor,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -54,8 +92,10 @@ class _PackageScreenState extends State<PackageScreen> {
       lang.S.of(context).parties,
       lang.S.of(context).products,
     ];
+    final theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
       final profileInfo = ref.watch(businessInfoProvider);
+      final permissionService = PermissionService(ref);
       return profileInfo.when(
         data: (info) {
           return Scaffold(
@@ -73,9 +113,9 @@ class _PackageScreenState extends State<PackageScreen> {
               elevation: 0.0,
             ),
             bottomNavigationBar: Visibility(
-              visible: info.user?.role != 'staff',
+              // visible: permissionService.hasPermission(Permit.subscriptionsRead.value),
               child: SizedBox(
-                height: 112,
+                height: 115,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -95,10 +135,11 @@ class _PackageScreenState extends State<PackageScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: GestureDetector(
                         onTap: () {
+                          final subscriptionState = ref.read(subscriptionProvider);
                           PurchasePremiumPlanScreen(
                             isCameBack: true,
-                            enrolledPlan: info.enrolledPlan,
-                            willExpire: info.willExpire,
+                            enrolledPlan: subscriptionState.isExpired ? null : info.data?.enrolledPlan,
+                            willExpire: info.data?.willExpire,
                           ).launch(context);
                         },
                         child: Container(
@@ -143,8 +184,8 @@ class _PackageScreenState extends State<PackageScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      info.enrolledPlan != null
-                                          ? (info.enrolledPlan?.price ?? 0) > 0
+                                      info.data?.enrolledPlan != null
+                                          ? (info.data?.enrolledPlan?.price ?? 0) > 0
                                               ? lang.S.of(context).premiumPlan
                                               : lang.S.of(context).freePlan
                                           : 'No active plan!',
@@ -154,10 +195,10 @@ class _PackageScreenState extends State<PackageScreen> {
                                     ),
                                     const SizedBox(height: 8),
                                     Flexible(
-                                      child: info.enrolledPlan?.plan != null
+                                      child: info.data?.enrolledPlan?.plan != null
                                           ? Text.rich(TextSpan(text: lang.S.of(context).youRUsing, children: [
                                               TextSpan(
-                                                  text: '${info.enrolledPlan?.plan?.subscriptionName} Package',
+                                                  text: '${info.data?.enrolledPlan?.plan?.subscriptionName} Package',
                                                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                                         color: kMainColor,
                                                         fontWeight: FontWeight.w600,
@@ -181,7 +222,7 @@ class _PackageScreenState extends State<PackageScreen> {
                                     child: Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: Text(
-                                    getDayLeftInExpiring(expireDate: info.willExpire, shortMSG: true),
+                                    getSubscriptionExpiring(expireDate: info.data?.willExpire, shortMSG: true),
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(fontSize: 12, color: Colors.white),
                                   ),
@@ -196,50 +237,81 @@ class _PackageScreenState extends State<PackageScreen> {
                         lang.S.of(context).packFeatures,
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
+                      // const SizedBox(height: 20),
+                      // ListView.builder(
+                      //     itemCount: nameList.length,
+                      //     shrinkWrap: true,
+                      //     physics: const NeverScrollableScrollPhysics(),
+                      //     itemBuilder: (_, i) {
+                      //       return Padding(
+                      //         padding: const EdgeInsets.only(bottom: 16),
+                      //         child: GestureDetector(
+                      //           onTap: () {},
+                      //           child: Container(
+                      //             decoration: BoxDecoration(
+                      //               borderRadius: BorderRadius.circular(6),
+                      //               color: kWhite,
+                      //               boxShadow: [
+                      //                 BoxShadow(color: const Color(0xff0C1A4B).withOpacity(0.24), blurRadius: 1),
+                      //                 BoxShadow(color: const Color(0xff473232).withOpacity(0.05), offset: const Offset(0, 3), spreadRadius: -1, blurRadius: 8)
+                      //               ],
+                      //             ),
+                      //             child: ListTile(
+                      //               visualDensity: const VisualDensity(vertical: -4),
+                      //               horizontalTitleGap: 10,
+                      //               contentPadding: const EdgeInsets.only(left: 6, top: 6, bottom: 6, right: 12),
+                      //               leading: SizedBox(
+                      //                 height: 40,
+                      //                 width: 40,
+                      //                 child: Image(
+                      //                   image: AssetImage(imageList[i]),
+                      //                 ),
+                      //               ),
+                      //               title: Text(
+                      //                 nameList[i],
+                      //                 style: const TextStyle(fontSize: 16),
+                      //               ),
+                      //               trailing: Text(
+                      //                 lang.S.of(context).unlimited,
+                      //                 style: const TextStyle(color: Colors.grey),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       );
+                      //     }),
                       const SizedBox(height: 20),
-                      ListView.builder(
-                          itemCount: nameList.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (_, i) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: kWhite,
-                                    boxShadow: [
-                                      BoxShadow(color: const Color(0xff0C1A4B).withOpacity(0.24), blurRadius: 1),
-                                      BoxShadow(color: const Color(0xff473232).withOpacity(0.05), offset: const Offset(0, 3), spreadRadius: -1, blurRadius: 8)
-                                    ],
-                                  ),
-                                  child: ListTile(
-                                    visualDensity: const VisualDensity(vertical: -4),
-                                    horizontalTitleGap: 10,
-                                    contentPadding: const EdgeInsets.only(left: 6, top: 6, bottom: 6, right: 12),
-                                    leading: SizedBox(
-                                      height: 40,
-                                      width: 40,
-                                      child: Image(
-                                        image: AssetImage(imageList[i]),
-                                      ),
-                                    ),
-                                    title: Text(
-                                      nameList[i],
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    trailing: Text(
-                                      lang.S.of(context).unlimited,
-                                      style: const TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
+                      FutureBuilder<List<SubscriptionPlanModelNew>>(
+                        future: subscriptionRepo.fetchAllPlans(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(child: Text('Error: ${snapshot.error}'));
+                          }
+
+                          if (!snapshot.hasData) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+
+                          final plans = snapshot.data!;
+                          final currentPlanId = info.data?.enrolledPlan?.planId;
+                          final currentPlan = plans.firstWhere(
+                            (plan) => plan.id == currentPlanId,
+                          );
+
+                          if (currentPlan.id == null) {
+                            return const Center(child: Text("Current plan not found."));
+                          }
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...currentPlan.features.entries.map(
+                                (entry) => _buildFeatureItem(entry.key, entry.value),
                               ),
-                            );
-                          }),
-                      const SizedBox(height: 20),
+                            ],
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),

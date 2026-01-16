@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mobile_pos/Screens/SplashScreen/on_board.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:mobile_pos/model/business_info_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:nb_utils/nb_utils.dart' as SystemNavigator;
 import 'package:permission_handler/permission_handler.dart';
@@ -13,19 +13,21 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Repository/API/business_info_repo.dart';
+import '../../core/constant_variables/local_data_saving_keys.dart';
 import '../../currency.dart';
 import '../Authentication/Repo/licnese_repo.dart';
+import '../Authentication/Sign In/sign_in_screen.dart';
 import '../Home/home.dart';
 import '../language/language_provider.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SplashScreen extends ConsumerStatefulWidget {
+  const SplashScreen({super.key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends ConsumerState<SplashScreen> {
   void getPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.bluetoothScan,
@@ -35,18 +37,17 @@ class SplashScreenState extends State<SplashScreen> {
 
   int retryCount = 0;
 
-  checkUserValidity() async {
+  Future<void> checkUserValidity() async {
     final bool isConnected = await InternetConnection().hasInternetAccess;
     if (isConnected) {
-      await PurchaseModel().isActiveBuyer().then((value) {
-        // nextPage();
+      await PurchaseModel().isActiveBuyer(purchaseCode).then((value) {
         if (!value) {
-          if(mounted){
+          if (mounted) {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text("Not Active User"),
-                content: const Text("Please use the valid purchase code to use the app."),
+                title: Text(lang.S.of(context).noActiveUser),
+                content: Text(lang.S.of(context).pleaseUseValidPurchaseCodeUseTheApp),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -57,7 +58,7 @@ class SplashScreenState extends State<SplashScreen> {
                         exit(0);
                       }
                     },
-                    child: const Text("OK"),
+                    child: Text(lang.S.of(context).ok),
                   ),
                 ],
               ),
@@ -75,15 +76,15 @@ class SplashScreenState extends State<SplashScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text("No Internet Connection"),
-            content: const Text("Please check your internet connection and try again."),
+            title: Text(lang.S.of(context).notInternetConnection),
+            content: Text(lang.S.of(context).pleaseCheckYourInternetConnection),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                   checkUserValidity();
                 },
-                child: const Text("OK"),
+                child: Text(lang.S.of(context).ok),
               ),
             ],
           ),
@@ -113,18 +114,21 @@ class SplashScreenState extends State<SplashScreen> {
   Future<void> nextPage() async {
     final prefs = await SharedPreferences.getInstance();
     await Future.delayed(const Duration(seconds: 1));
-    if (prefs.getString('token') != null) {
-      BusinessInformation? data;
-      data = await BusinessRepository().checkBusinessData();
-      if (data == null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoard()));
-      } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Home()));
-      }
-    } else {
+
+    final token = prefs.getString(LocalDataBaseSavingKey.tokenKey);
+    final skipOnBoard = prefs.getBool(LocalDataBaseSavingKey.skipOnBodingKey) ?? false;
+
+    if (token == null) {
       CurrencyMethods().removeCurrencyFromLocalDatabase();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoard()));
+      return _goTo(skipOnBoard ? const SignIn() : const OnBoard());
     }
+
+    final data = await BusinessRepository().checkBusinessData();
+    _goTo(data == null ? (skipOnBoard ? const SignIn() : const OnBoard()) : const Home());
+  }
+
+  void _goTo(Widget page) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => page));
   }
 
   @override
@@ -144,27 +148,24 @@ class SplashScreenState extends State<SplashScreen> {
               decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(splashLogo))),
             ),
             const Spacer(),
-            Column(
-              children: [
-                Center(
-                  child: Text(
-                    lang.S.of(context).powerdedByNPOS,
-                    style: theme.textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    'V $appVersion',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
+            Center(
+              child: Text(
+                '${lang.S.of(context).poweredBy} $companyName',
+                style: theme.textTheme.titleLarge
+                    ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
+              ),
             ),
+            // Center(
+            //   child: Text(
+            //     'V $appVersion',
+            //     style: theme.textTheme.titleLarge?.copyWith(
+            //       color: Colors.white,
+            //       fontWeight: FontWeight.w500,
+            //       fontSize: 18,
+            //     ),
+            //   ),
+            // ),
+            const SizedBox(height: 16),
           ],
         ),
       ),

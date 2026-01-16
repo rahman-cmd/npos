@@ -2,6 +2,7 @@ class BusinessCategory {
   final int id;
   final String name;
   final String description;
+
   // Add other fields as needed
 
   BusinessCategory({

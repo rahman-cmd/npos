@@ -1,18 +1,16 @@
-// ignore_for_file: file_names, unused_element, unused_local_variable
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_pos/Provider/product_provider.dart';
 import 'package:mobile_pos/Screens/Customers/Provider/customer_provider.dart';
-
 import '../../../Const/api_config.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../Provider/transactions_provider.dart';
-import '../../../Repository/constant_functions.dart';
+import '../../../constant.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../service/check_user_role_permission_provider.dart';
 
 class InvoiceReturnRepo {
   ///__________Sales_return___________________________________________
@@ -21,72 +19,17 @@ class InvoiceReturnRepo {
     required BuildContext context,
     required ReturnDataModel salesReturn,
   }) async {
-    final uri = Uri.parse('${APIConfig.url}/sales-return');
-
-    try {
-      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
-      // Create a multipart request
-      var request = http.MultipartRequest('POST', uri)
-        ..headers.addAll({
-          "Accept": 'application/json',
-          'Authorization': await getAuthToken(),
-        });
-
-      // Add the fields
-      request.fields['sale_id'] = salesReturn.saleId.toString();
-      request.fields['return_date'] = salesReturn.returnDate;
-
-      // Assuming these are lists, add them with index suffixes to maintain array structure.
-      for (int i = 0; i < salesReturn.saleDetailId.length; i++) {
-        request.fields['sale_detail_id[$i]'] = salesReturn.saleDetailId[i].toString();
-        request.fields['return_amount[$i]'] = salesReturn.returnAmount[i].toString();
-        request.fields['return_qty[$i]'] = salesReturn.returnQty[i].toString();
-        request.fields['lossProfit[$i]'] = salesReturn.lossProfit[i].toString();
-      }
-
-      // Add the remaining fields directly if they are single values
-      request.fields['dueAmount'] = salesReturn.dueAmount.toString();
-      request.fields['paidAmount'] = salesReturn.paidAmount.toString();
-      request.fields['totalAmount'] = salesReturn.totalAmount.toString();
-      request.fields['discountAmount'] = salesReturn.discountAmount.toString();
-
-      // var response = await request.send();
-      var response = await customHttpClient.uploadFile(
-        url: uri,
-        fields: request.fields,
-      );
-      var responseData = await http.Response.fromStream(response);
-      final parsedData = jsonDecode(responseData.body);
-      print('response: ${parsedData}');
-
-      if (response.statusCode == 200) {
-        EasyLoading.showSuccess('Sales Return Added successfully!');
+    return _submitReturnRequest(
+      ref: ref,
+      context: context,
+      urlPath: '/sales-return',
+      body: salesReturn.toJson(),
+      permission: Permit.saleReturnsCreate.value,
+      successMessage: 'Sales Return Added successfully!',
+      onSuccessRefresh: () {
         ref.refresh(salesTransactionProvider);
-        ref.refresh(summaryInfoProvider);
-        ref.refresh(partiesProvider);
-        ref.refresh(productProvider);
-
-        return true;
-      } else {
-        EasyLoading.dismiss().then(
-          (value) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Sales Return failed: ${parsedData['message']}')),
-            );
-          },
-        );
-        return null;
-      }
-    } catch (error) {
-      EasyLoading.dismiss().then(
-        (value) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('An error occurred: $error')),
-          );
-        },
-      );
-      return null;
-    }
+      },
+    );
   }
 
   ///_________Purchase_return__________________________________
@@ -95,104 +38,94 @@ class InvoiceReturnRepo {
     required BuildContext context,
     required ReturnDataModel returnData,
   }) async {
-    final uri = Uri.parse('${APIConfig.url}/purchases-return');
+    return _submitReturnRequest(
+      ref: ref,
+      context: context,
+      urlPath: '/purchases-return',
+      body: returnData.toJson(purchase: true),
+      permission: Permit.purchaseReturnsCreate.value,
+      successMessage: 'Purchase Return Added successfully!',
+      onSuccessRefresh: () {
+        ref.refresh(purchaseTransactionProvider);
+      },
+    );
+  }
+
+  ///_________Common_Private_Method_to_Avoid_Duplication_______
+  Future<bool?> _submitReturnRequest({
+    required WidgetRef ref,
+    required BuildContext context,
+    required String urlPath,
+    required Map<String, dynamic> body,
+    required String permission,
+    required String successMessage,
+    required VoidCallback onSuccessRefresh,
+  }) async {
+    final uri = Uri.parse('${APIConfig.url}$urlPath');
 
     try {
       CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
-      var request = http.MultipartRequest('POST', uri)
-        ..headers.addAll({
-          "Accept": 'application/json',
-          'Authorization': await getAuthToken(),
-        });
 
-      request.fields['purchase_id'] = returnData.saleId.toString();
-      request.fields['return_date'] = returnData.returnDate;
-
-      for (int i = 0; i < returnData.saleDetailId.length; i++) {
-        request.fields['purchase_detail_id[$i]'] = returnData.saleDetailId[i].toString();
-        request.fields['return_amount[$i]'] = returnData.returnAmount[i].toString();
-        request.fields['return_qty[$i]'] = returnData.returnQty[i].toString();
-      }
-      request.fields['dueAmount'] = returnData.dueAmount.toString();
-      request.fields['paidAmount'] = returnData.paidAmount.toString();
-      request.fields['totalAmount'] = returnData.totalAmount.toString();
-      request.fields['discountAmount'] = returnData.discountAmount.toString();
-
-      // Send the request and get the response
-      // var response = await request.send();
-      var response = await customHttpClient.uploadFile(
+      var response = await customHttpClient.post(
         url: uri,
-        fields: request.fields,
+        addContentTypeInHeader: true,
+        body: jsonEncode(body),
+        permission: permission,
       );
-      var responseData = await http.Response.fromStream(response);
-      final parsedData = jsonDecode(responseData.body);
+
+      final parsedData = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        EasyLoading.showSuccess('Purchase Return Added successfully!');
-        ref.refresh(purchaseTransactionProvider);
+        EasyLoading.showSuccess(successMessage);
+
+        // Refresh Common Providers
         ref.refresh(summaryInfoProvider);
         ref.refresh(partiesProvider);
         ref.refresh(productProvider);
+
+        // Refresh Specific Provider
+        onSuccessRefresh();
+
         return true;
       } else {
-        EasyLoading.dismiss().then(
-          (value) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Purchase Return failed: ${parsedData['message']}')),
-            );
-          },
-        );
+        _showError(context, parsedData['message'] ?? 'Something went wrong');
         return null;
       }
     } catch (error) {
-      EasyLoading.dismiss().then(
-        (value) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('An error occurred: $error')),
-          );
-        },
-      );
+      final errorMessage = error.toString().replaceFirst('Exception: ', '');
+      _showError(context, errorMessage);
       return null;
     }
+  }
+
+  // Helper to show error snackbar
+  void _showError(BuildContext context, String message) {
+    EasyLoading.dismiss();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: kMainColor,
+      ),
+    );
   }
 }
 
 class ReturnDataModel {
-  final num saleId;
-  final String returnDate;
-  final List<num> saleDetailId;
-  final List<num> returnAmount;
+  final String? saleId;
   final List<num> returnQty;
-  final List<num> lossProfit;
-  final num dueAmount;
-  final num paidAmount;
-  final num totalAmount;
-  num discountAmount;
+  List<Map<String, dynamic>> payments;
 
   ReturnDataModel({
     required this.saleId,
-    required this.returnDate,
-    required this.saleDetailId,
-    required this.returnAmount,
     required this.returnQty,
-    required this.lossProfit,
-    required this.dueAmount,
-    required this.paidAmount,
-    required this.totalAmount,
-    required this.discountAmount,
+    required this.payments,
   });
-  Map<String, dynamic> toJson() {
+
+  Map<String, dynamic> toJson({bool purchase = false}) {
     return {
-      'saleId': saleId,
-      'returnDate': returnDate,
-      'saleDetailId': saleDetailId,
-      'returnAmount': returnAmount,
-      'returnQty': returnQty,
-      'lossProfit': lossProfit,
-      'dueAmount': dueAmount,
-      'paidAmount': paidAmount,
-      'totalAmount': totalAmount,
-      'discountAmount': discountAmount,
+      purchase ? "purchase_id" : 'sale_id': saleId,
+      'return_qty': returnQty.map((e) => e.toString()).toList(),
+      'payments': payments,
     };
   }
 }

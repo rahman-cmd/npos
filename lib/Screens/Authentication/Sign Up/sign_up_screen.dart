@@ -3,12 +3,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:mobile_pos/Screens/Authentication/Sign%20Up/repo/sign_up_repo.dart';
 import 'package:mobile_pos/Screens/Authentication/Sign%20Up/verify_email.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
+
 import '../../../GlobalComponents/button_global.dart';
 import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../constant.dart';
-import '../Sign In/sign_in_screen.dart';
 import '../Wedgets/check_email_for_otp_popup.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
+import '../profile_setup_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -178,18 +179,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         isClicked = true;
                         EasyLoading.show();
                         SignUpRepo repo = SignUpRepo();
-                        if (await repo.signUp(name: nameTextController.text, email: emailTextController.text, password: passwordTextController.text, context: context)) {
-                          if (await checkEmailForCodePupUp(email: emailTextController.text, context: context, textTheme: textTheme)) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VerifyEmail(
-                                  email: emailTextController.text,
-                                  isFormForgotPass: false,
+                        final result = await repo.signUp(name: nameTextController.text, email: emailTextController.text, password: passwordTextController.text, context: context);
+                        if (result is bool && result) {
+                          if (result) {
+                            if (await checkEmailForCodePupUp(email: emailTextController.text, context: context, textTheme: textTheme)) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VerifyEmail(
+                                    email: emailTextController.text,
+                                    isFormForgotPass: false,
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            }
+                          } else {
+                            isClicked = false;
                           }
+                        } else if (result is String) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ProfileSetup(),
+                            ),
+                          );
                         } else {
                           isClicked = false;
                         }

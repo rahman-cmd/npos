@@ -1,37 +1,51 @@
-//ignore_for_file: file_names, unused_element, unused_local_variable
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:mobile_pos/Provider/profile_provider.dart';
-import 'package:mobile_pos/Screens/Expense/Providers/all_expanse_provider.dart';
-import 'package:mobile_pos/Screens/Income/Providers/all_income_provider.dart';
-import 'package:mobile_pos/Screens/Income/Providers/income_category_provider.dart';
-
 import '../../../Const/api_config.dart';
-import '../../../Repository/constant_functions.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
+import '../../../widgets/multipal payment mathods/multi_payment_widget.dart';
 import '../Model/income_modle.dart';
 
 class IncomeRepo {
-  Future<List<Income>> fetchIncome() async {
-    final uri = Uri.parse('${APIConfig.url}/incomes');
+  Future<List<Income>> fetchAllIncome({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    final client = CustomHttpClientGet(client: http.Client());
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    final Map<String, String> queryParams = {};
+
+    if (type != null && type.isNotEmpty) {
+      queryParams['duration'] = type;
+    }
+
+    if (type == 'custom_date') {
+      if (fromDate != null && fromDate.isNotEmpty) {
+        queryParams['from_date'] = fromDate;
+      }
+      if (toDate != null && toDate.isNotEmpty) {
+        queryParams['to_date'] = toDate;
+      }
+    }
+
+    final Uri uri = Uri.parse('${APIConfig.url}/incomes').replace(
+      queryParameters: queryParams.isNotEmpty ? queryParams : null,
+    );
+
+    print('Request URI: $uri');
+
+    final response = await client.get(url: uri);
 
     if (response.statusCode == 200) {
-      final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
-
-      final partyList = parsedData['data'] as List<dynamic>;
-      return partyList.map((category) => Income.fromJson(category)).toList();
-      // Parse into Party objects
+      final parsed = jsonDecode(response.body) as Map<String, dynamic>;
+      final list = parsed['data'] as List<dynamic>;
+      return list.map((json) => Income.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch incomes list');
+      throw Exception('Failed to fetch Due List. Status code: ${response.statusCode}');
     }
   }
 
@@ -39,53 +53,68 @@ class IncomeRepo {
     required WidgetRef ref,
     required BuildContext context,
     required num amount,
-    required num expenseCategoryId,
-    required String expanseFor,
-    required String paymentType,
+    required num incomeCategoryId,
+    required String incomeFor, // Renamed from expanseFor
     required String referenceNo,
-    required String expenseDate,
+    required String incomeDate, // Renamed from expenseDate
     required String note,
+    required List<PaymentEntry> payments, // <<< Updated parameter
   }) async {
     final uri = Uri.parse('${APIConfig.url}/incomes');
-    CustomHttpClient customHttpClient =
-        CustomHttpClient(client: http.Client(), context: context, ref: ref);
-    final requestBody = jsonEncode({
-      'amount': amount,
-      'income_category_id': expenseCategoryId,
-      'incomeFor': expanseFor,
+
+    // Build the request body as a Map<String, String> for form-data
+    Map<String, String> requestBody = {
+      'amount': amount.toString(),
+      'income_category_id': incomeCategoryId.toString(),
+      'incomeFor': incomeFor,
       'referenceNo': referenceNo,
-      'incomeDate': expenseDate,
+      'incomeDate': incomeDate,
       'note': note,
-      'payment_type_id': paymentType,
-    });
+    };
+
+    // Add payments in the format: payments[index][key]
+    for (int i = 0; i < payments.length; i++) {
+      final payment = payments[i];
+      final paymentAmount = num.tryParse(payment.amountController.text) ?? 0;
+
+      if (payment.type != null && paymentAmount > 0) {
+        requestBody['payments[$i][type]'] = payment.type!;
+        requestBody['payments[$i][amount]'] = paymentAmount.toString();
+
+        if (payment.type == 'cheque' && payment.chequeNumberController.text.isNotEmpty) {
+          requestBody['payments[$i][cheque_number]'] = payment.chequeNumberController.text;
+        }
+      }
+    }
 
     try {
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+
       var responseData = await customHttpClient.post(
         url: uri,
-        addContentTypeInHeader: true,
-        body: requestBody,
+        body: requestBody, // Send the Map directly
+        // Set to false to send as x-www-form-urlencoded
+        addContentTypeInHeader: false,
       );
 
       final parsedData = jsonDecode(responseData.body);
 
       EasyLoading.dismiss();
 
-      if (responseData.statusCode == 200) {
-        var data1 = ref.refresh(incomeProvider);
-        var data2 = ref.refresh(businessInfoProvider);
-        ref.refresh(summaryInfoProvider);
-        Navigator.pop(context);
-        // return PurchaseTransaction.fromJson(parsedData);
+      if (responseData.statusCode == 200 || responseData.statusCode == 201) {
+        // Refresh income-related providers
+
+        Navigator.pop(context, true);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(parsedData['message'] ?? 'Income created successfully')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Income creation failed: ${parsedData['message']}')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Income creation failed: ${parsedData['message']}')));
         return;
       }
     } catch (error) {
-      // Handle unexpected errors gracefully
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('An error occurred: $error')));
-      // return null;
+      EasyLoading.dismiss();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred: $error')));
     }
   }
 }

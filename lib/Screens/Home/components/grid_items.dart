@@ -7,12 +7,17 @@ class GridItems {
   GridItems({required this.title, required this.icon, required this.route});
 }
 
-List<GridItems> getFreeIcons({required BuildContext context}) {
+List<GridItems> getFreeIcons({required BuildContext context, bool? brunchPermission, bool? hrmPermission}) {
   List<GridItems> freeIcons = [
     GridItems(
       title: lang.S.of(context).sale,
       icon: 'assets/sales.svg',
       route: 'Sales',
+    ),
+    GridItems(
+      title: lang.S.of(context).posSale,
+      icon: 'images/dash_pos.svg',
+      route: 'Pos Sale',
     ),
     GridItems(
       title: lang.S.of(context).parties,
@@ -36,7 +41,7 @@ List<GridItems> getFreeIcons({required BuildContext context}) {
     ),
     GridItems(
       title: lang.S.of(context).stockList,
-      icon: 'assets/stock.svg',
+      icon: 'assets/h_stock.svg',
       route: 'Stock',
     ),
     GridItems(
@@ -55,13 +60,19 @@ List<GridItems> getFreeIcons({required BuildContext context}) {
       route: 'Purchase List',
     ),
     GridItems(
-      title: lang.S.of(context).lossOrProfit,
-      icon: 'assets/lossprofit.svg',
+      // TODO: Shakil change this to `Profit & Loss`
+      title: lang.S.of(context).profitAndLoss,
+      icon: 'assets/h_lossProfit.svg',
       route: 'Loss/Profit',
     ),
     GridItems(
+      title: lang.S.of(context).ledger,
+      icon: 'assets/ledger.svg',
+      route: 'ledger',
+    ),
+    GridItems(
       title: lang.S.of(context).income,
-      icon: 'assets/incomeReport.svg',
+      icon: 'assets/h_income.svg',
       route: 'Income',
     ),
     GridItems(
@@ -70,136 +81,33 @@ List<GridItems> getFreeIcons({required BuildContext context}) {
       route: 'Expense',
     ),
     GridItems(
-      title: 'Vat & Tax',
+      title: lang.S.of(context).vatAndTax,
       icon: 'assets/tax.svg',
       route: 'tax',
     ),
+    // GridItems(
+    //   title: 'Warehouse',
+    //   icon: 'assets/tax.svg',
+    //   route: 'warehouse',
+    // ),
     GridItems(
-      title: "Custom Print",
+      title: lang.S.of(context).customPrint,
       icon: 'assets/printer.svg',
       route: 'customPrint',
     ),
+    if (brunchPermission == true)
+      GridItems(
+        title: lang.S.of(context).branch,
+        icon: 'assets/branch.svg',
+        route: 'branch',
+      ),
+    if (hrmPermission ?? false)
+      GridItems(
+        title: lang.S.of(context).hrm,
+        icon: 'assets/hrm/hrm.svg',
+        route: 'hrm',
+      ),
   ];
+
   return freeIcons;
 }
-
-List<GridItems> businessIcons = [
-  GridItems(
-    title: 'Warehouse',
-    icon: 'images/warehouse.png',
-    route: 'Warehouse',
-  ),
-  GridItems(
-    title: 'SalesReturn',
-    icon: 'images/salesreturn.png',
-    route: 'SalesReturn',
-  ),
-  GridItems(
-    title: 'SalesList',
-    icon: 'images/salelist.png',
-    route: 'SalesList',
-  ),
-  GridItems(
-    title: 'Quotation',
-    icon: 'images/quotation.png',
-    route: 'Quotation',
-  ),
-  GridItems(
-    title: 'OnlineStore',
-    icon: 'images/onlinestore.png',
-    route: 'OnlineStore',
-  ),
-  GridItems(
-    title: 'Supplier',
-    icon: 'images/supplier.png',
-    route: 'Supplier',
-  ),
-  GridItems(
-    title: 'Invoice',
-    icon: 'images/invoice.png',
-    route: 'Invoice',
-  ),
-  GridItems(
-    title: 'Stock',
-    icon: 'images/stock.png',
-    route: 'Stock',
-  ),
-  GridItems(
-    title: 'Ledger',
-    icon: 'images/ledger.png',
-    route: 'Ledger',
-  ),
-  GridItems(
-    title: 'Dashboard',
-    icon: 'images/dashboard.png',
-    route: 'Dashboard',
-  ),
-  GridItems(
-    title: 'Bank',
-    icon: 'images/bank.png',
-    route: 'Bank',
-  ),
-  GridItems(
-    title: 'Barcode',
-    icon: 'images/barcodescan.png',
-    route: 'Barcode',
-  )
-];
-
-List<GridItems> enterpriseIcons = [
-  GridItems(
-    title: 'Branch',
-    icon: 'images/branch.png',
-    route: 'Branch',
-  ),
-  GridItems(
-    title: 'Damage',
-    icon: 'images/damage.png',
-    route: 'Damage',
-  ),
-  GridItems(
-    title: 'Adjustment',
-    icon: 'images/adjustment.png',
-    route: 'Adjustment',
-  ),
-  GridItems(
-    title: 'Transaction',
-    icon: 'images/transaction.png',
-    route: 'Transaction',
-  ),
-  GridItems(
-    title: 'Gift',
-    icon: 'images/gift.png',
-    route: 'Gift',
-  ),
-  GridItems(
-    title: 'Loss&Profit',
-    icon: 'images/lossProfit.png',
-    route: 'Loss&Profit',
-  ),
-  GridItems(
-    title: 'Income',
-    icon: 'images/income.png',
-    route: 'Income',
-  ),
-  GridItems(
-    title: 'OnlineOrder',
-    icon: 'images/onlineorder.png',
-    route: 'OnlineOrder',
-  ),
-  GridItems(
-    title: 'UserRole',
-    icon: 'images/userrole.png',
-    route: 'UserRole',
-  ),
-  GridItems(
-    title: 'Backup',
-    icon: 'images/backup.png',
-    route: 'Backup',
-  ),
-  GridItems(
-    title: 'Return',
-    icon: 'images/return.png',
-    route: 'Return',
-  )
-];

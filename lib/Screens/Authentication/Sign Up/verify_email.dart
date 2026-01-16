@@ -1,36 +1,67 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/Sign%20Up/repo/sign_up_repo.dart';
 import 'package:mobile_pos/constant.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:pinput/pinput.dart' as p;
 import '../../../GlobalComponents/glonal_popup.dart';
+import '../Repo/otp_settings_repo.dart';
 import '../forgot password/repo/forgot_pass_repo.dart';
 import '../forgot password/set_new_password.dart';
 import '../profile_setup_screen.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 class VerifyEmail extends StatefulWidget {
-  const VerifyEmail({Key? key, required this.email, required this.isFormForgotPass}) : super(key: key);
+  const VerifyEmail({super.key, required this.email, required this.isFormForgotPass});
   final String email;
   final bool isFormForgotPass;
 
   @override
-  State<VerifyEmail> createState() => _VerifyEmailState();
+  State<VerifyEmail> createState() => _VerifyEmailNewState();
 }
 
-class _VerifyEmailState extends State<VerifyEmail> {
-  ///__________variables_____________
+class _VerifyEmailNewState extends State<VerifyEmail> {
   bool isClicked = false;
 
-  ///________countdown_Timer___________________
   Timer? _timer;
-  int _start = 180; // 3 minutes = 180 seconds
+  int _start = 180; // default fallback
   bool _isButtonEnabled = false;
+
+  final pinController = TextEditingController();
+  final focusNode = FocusNode();
+  final _pinputKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOtpSettings();
+  }
+
+  Future<void> _loadOtpSettings() async {
+    EasyLoading.show(status: lang.S.of(context).loadingOtpSetting);
+    final settings = await OtpSettingsRepo().fetchOtpSettings();
+    print(settings?.otpExpirationTime);
+    EasyLoading.dismiss();
+
+    if (settings != null) {
+      int durationInSec = int.parse(settings.otpExpirationTime);
+
+      if (settings.otpDurationType.toLowerCase().contains("minute")) {
+        durationInSec *= 60;
+      } else if (settings.otpDurationType.toLowerCase().contains("hour")) {
+        durationInSec *= 3600;
+      }
+
+      setState(() {
+        _start = durationInSec;
+      });
+    }
+    startTimer();
+  }
+
   void startTimer() {
     _isButtonEnabled = false;
-    _start = 180; // Reset to 3 minutes
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_start > 0) {
@@ -43,22 +74,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
     });
   }
 
-  final pinController = TextEditingController();
-  final focusNode = FocusNode();
-  final _pinputKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    startTimer();
-  }
-
   @override
   void dispose() {
     pinController.dispose();
     focusNode.dispose();
-
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -88,10 +108,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           surfaceTintColor: kWhite,
           centerTitle: true,
           titleSpacing: 16,
-          title: Text(
-            lang.S.of(context).verityEmail,
-            // 'Verity Email',
-          ),
+          title: Text(lang.S.of(context).verityEmail),
         ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 0.0),
@@ -100,18 +117,22 @@ class _VerifyEmailState extends State<VerifyEmail> {
             children: [
               Text(
                 lang.S.of(context).verityEmail,
-                // 'Verification',
                 style: textTheme.titleMedium?.copyWith(fontSize: 24.0),
               ),
               const SizedBox(height: 8.0),
               RichText(
                 textAlign: TextAlign.center,
-                text: TextSpan(text: lang.S.of(context).digits, style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor, fontSize: 16), children: [
-                  TextSpan(
-                    text: widget.email,
-                    style: textTheme.bodyMedium?.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 16),
-                  )
-                ]),
+                text: TextSpan(
+                  text: lang.S.of(context).digits,
+                  style: textTheme.bodyMedium?.copyWith(color: kGreyTextColor, fontSize: 16),
+                  children: [
+                    TextSpan(
+                      text: widget.email,
+                      style:
+                          textTheme.bodyMedium?.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 16),
+                    )
+                  ],
+                ),
               ),
               const SizedBox(height: 24.0),
               Form(
@@ -120,28 +141,23 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   length: 6,
                   controller: pinController,
                   focusNode: focusNode,
-                  // listenForMultipleSmsOnAndroid: true,
                   defaultPinTheme: defaultPinTheme,
                   separatorBuilder: (index) => const SizedBox(width: 11),
                   validator: (value) {
                     if ((value?.length ?? 0) < 6) {
-                      //return 'Enter valid OTP';
                       return lang.S.of(context).enterValidOTP;
-                    } else {
-                      return null;
                     }
+                    return null;
                   },
                   focusedPinTheme: defaultPinTheme.copyWith(
                     decoration: defaultPinTheme.decoration!.copyWith(
                       color: kMainColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: focusedBorderColor),
                     ),
                   ),
                   submittedPinTheme: defaultPinTheme.copyWith(
                     decoration: defaultPinTheme.decoration!.copyWith(
                       color: fillColor,
-                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: kTitleColor),
                     ),
                   ),
@@ -150,18 +166,18 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   ),
                 ),
               ),
-              // const SizedBox(height: 24.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+                children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 11, bottom: 11),
                     child: Text(
-                      _isButtonEnabled ? 'You can now resend the OTP.' : 'Resend OTP in $_start seconds',
-                      // style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      _isButtonEnabled
+                          ? lang.S.of(context).youCanNowResendYourOtp
+                          : lang.S.of(context).resendOtpSeconds(_start),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(width: 20),
                   Visibility(
                     visible: _isButtonEnabled,
                     child: TextButton(
@@ -170,14 +186,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               EasyLoading.show();
                               SignUpRepo repo = SignUpRepo();
                               if (await repo.resendOTP(email: widget.email, context: context)) {
-                                startTimer();
+                                _loadOtpSettings();
                               }
                             }
                           : null,
                       child: Text(
                         lang.S.of(context).resendOTP,
-                        //'Resend OTP',
-                        style: const TextStyle(color: kMainColor),
+                        style: TextStyle(color: kMainColor),
                       ),
                     ),
                   ),
@@ -187,21 +202,18 @@ class _VerifyEmailState extends State<VerifyEmail> {
               ElevatedButton(
                 onPressed: widget.isFormForgotPass
                     ? () async {
-                        if (isClicked) {
-                          return;
-                        }
+                        if (isClicked) return;
                         focusNode.unfocus();
                         if (_pinputKey.currentState?.validate() ?? false) {
                           isClicked = true;
                           EasyLoading.show();
                           ForgotPassRepo repo = ForgotPassRepo();
-                          if (await repo.verifyOTPForgotPass(email: widget.email, otp: pinController.text, context: context)) {
+                          if (await repo.verifyOTPForgotPass(
+                              email: widget.email, otp: pinController.text, context: context)) {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SetNewPassword(
-                                  email: widget.email,
-                                ),
+                                builder: (context) => SetNewPassword(email: widget.email),
                               ),
                             );
                           } else {
@@ -210,9 +222,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         }
                       }
                     : () async {
-                        if (isClicked) {
-                          return;
-                        }
+                        if (isClicked) return;
                         focusNode.unfocus();
                         if (_pinputKey.currentState?.validate() ?? false) {
                           isClicked = true;
@@ -231,7 +241,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         }
                       },
                 child: Text(lang.S.of(context).continueE),
-                // 'Continue',
               ),
             ],
           ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/forgot%20password/repo/forgot_pass_repo.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
+
 import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../constant.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 class SetNewPassword extends StatefulWidget {
   const SetNewPassword({super.key, required this.email});

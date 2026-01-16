@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
 import '../../../currency.dart';
@@ -18,7 +19,7 @@ class LogOutRepo {
     Restart.restartApp();
   }
 
-  Future<void> signOutApi({required BuildContext context, required WidgetRef ref}) async {
+  Future<void> signOutApi() async {
     final uri = Uri.parse('${APIConfig.url}/sign-out');
 
     await http.get(uri, headers: {

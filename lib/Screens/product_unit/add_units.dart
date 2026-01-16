@@ -2,17 +2,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
-import 'package:mobile_pos/Screens/product_unit/model/unit_model.dart';
 import 'package:mobile_pos/Screens/Products/Repo/unit_repo.dart';
+import 'package:mobile_pos/Screens/product_unit/model/unit_model.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 import '../../GlobalComponents/glonal_popup.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../service/check_user_role_permission_provider.dart';
 
 class AddUnits extends StatefulWidget {
   const AddUnits({super.key, this.unit});
+
   final Unit? unit;
+
   @override
   // ignore: library_private_types_in_public_api
   _AddUnitsState createState() => _AddUnitsState();
@@ -36,6 +39,7 @@ class _AddUnitsState extends State<AddUnits> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, __) {
+      final permissionService = PermissionService(ref);
       return GlobalPopup(
         child: Scaffold(
           backgroundColor: kWhite,
@@ -82,6 +86,27 @@ class _AddUnitsState extends State<AddUnits> {
                 const SizedBox(height: 15),
                 ElevatedButton(
                   onPressed: () async {
+                    if (widget.unit == null) {
+                      if (!permissionService.hasPermission(Permit.unitsCreate.value)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('You do not have permission to create unit'),
+                          ),
+                        );
+                        return;
+                      }
+                    } else {
+                      if (!permissionService.hasPermission(Permit.unitsUpdate.value)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('You do not have permission to update unit'),
+                          ),
+                        );
+                        return;
+                      }
+                    }
                     if (_key.currentState!.validate()) {
                       UnitsRepo unit = UnitsRepo();
 

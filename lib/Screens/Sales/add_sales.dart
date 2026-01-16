@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -8,10 +9,11 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobile_pos/Provider/add_to_cart.dart';
+import 'package:intl/intl.dart';
+import 'package:mobile_pos/Screens/Sales/provider/sales_cart_provider.dart';
 import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Sales/Repo/sales_repo.dart';
-import 'package:mobile_pos/Screens/Sales/sales_add_to_cart_sales_widget.dart';
+import 'package:mobile_pos/Screens/Sales/sales_cart_widget.dart';
 import 'package:mobile_pos/Screens/Sales/sales_products_list_screen.dart';
 import 'package:mobile_pos/Screens/Settings/sales%20settings/model/amount_rounding_dropdown_model.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
@@ -24,9 +26,11 @@ import '../../constant.dart';
 import '../../currency.dart';
 import '../../model/add_to_cart_model.dart';
 import '../../model/sale_transaction_model.dart';
-import '../../widgets/payment_type/_payment_type_dropdown.dart';
+import '../../widgets/multipal payment mathods/multi_payment_widget.dart';
 import '../Customers/Model/parties_model.dart';
 import '../Home/home.dart';
+import '../../service/check_user_role_permission_provider.dart';
+import '../Products/add product/modle/create_product_model.dart';
 import '../invoice_details/sales_invoice_details_screen.dart';
 import '../vat_&_tax/model/vat_model.dart';
 import '../vat_&_tax/provider/text_repo.dart';
@@ -36,17 +40,20 @@ class AddSalesScreen extends ConsumerStatefulWidget {
     super.key,
     required this.customerModel,
     this.transitionModel,
+    this.isFromPos,
   });
 
   Party? customerModel;
   final SalesTransactionModel? transitionModel;
+  bool? isFromPos;
 
   @override
   AddSalesScreenState createState() => AddSalesScreenState();
 }
 
 class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
-  int? paymentType;
+  // Key to access MultiPaymentWidget State
+  final GlobalKey<MultiPaymentWidgetState> paymentWidgetKey = GlobalKey();
 
   bool isProcessing = false;
 
@@ -57,9 +64,18 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
   TextEditingController recevedAmountController = TextEditingController();
 
   TextEditingController noteController = TextEditingController();
+  bool _initialingFirstTime = false;
 
   @override
   void initState() {
+    super.initState();
+
+    // Listener for Received Amount Controller to calculate prices
+    recevedAmountController.addListener(() {
+      final cart = ref.read(cartNotifier);
+      cart.calculatePrice(receivedAmount: recevedAmountController.text, stopRebuild: !_initialingFirstTime);
+    });
+
     if (widget.transitionModel != null) {
       final editedSales = widget.transitionModel;
       dateController.text = editedSales?.saleDate?.substring(0, 10) ?? '';
@@ -73,10 +89,10 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
       } else {
         discountType = 'Percent';
       }
-      paymentType = widget.transitionModel?.paymentTypeId;
+      // Note: Pre-populating multi-payment from edit model would require parsing editedSales.paymentType or similar
       addProductsInCartFromEditList();
     }
-    super.initState();
+    _initialingFirstTime = true;
   }
 
   @override
@@ -93,16 +109,23 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
 
     if (widget.transitionModel?.salesDetails?.isNotEmpty ?? false) {
       for (var detail in widget.transitionModel!.salesDetails!) {
-        AddToCartModel cartItem = AddToCartModel(
-          productName: detail.product?.productName,
-          unitPrice: detail.price.toString(),
-          quantity: detail.quantities ?? 0,
-          productCode: detail.product?.productCode,
-          productPurchasePrice: detail.product?.productPurchasePrice,
-          stock: detail.product?.productStock,
-          productId: detail.productId!,
-        );
-        cart.addToCartRiverPod(cartItem: cartItem, fromEditSales: true);
+        SaleCartModel cartItem = SaleCartModel(
+            productType: detail.product?.productType,
+            productName: detail.product?.productName,
+            discountAmount: detail.discount,
+            unitPrice: detail.price,
+            batchName: detail.stock?.batchNo ?? '',
+            lossProfit: detail.lossProfit,
+            quantity: detail.quantities ?? 0,
+            productCode: detail.product?.productCode,
+            productPurchasePrice: detail.product?.productPurchasePrice,
+            stock: detail.stock?.productCurrentStock,
+            productId: detail.productId!,
+            stockId: detail.stock?.id ?? 0);
+        cart.addToCartRiverPod(
+            cartItem: cartItem,
+            fromEditSales: true,
+            isVariant: detail.product?.productType == ProductType.variant.name);
       }
     }
 
@@ -122,6 +145,9 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
   }
 
   bool hasPreselected = false; // Flag to ensure preselection happens only once
+
+  String flatValue = 'Flat';
+  String percentValue = 'Percent';
 
   String discountType = 'Flat';
 
@@ -145,6 +171,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
     final providerData = ref.watch(cartNotifier);
     final personalData = ref.watch(businessInfoProvider);
     final taxesData = ref.watch(taxProvider);
+    final permissionService = PermissionService(ref);
     return personalData.when(data: (data) {
       return GlobalPopup(
         child: Scaffold(
@@ -172,10 +199,12 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               future: FutureInvoice().getFutureInvoice(tag: 'sales'),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
+                                  final invoiceValue =
+                                      (snapshot.data != null) ? snapshot.data.toString().replaceAll('"', '') : '';
                                   return Expanded(
                                     child: AppTextField(
                                       textFieldType: TextFieldType.NAME,
-                                      initialValue: snapshot.data.toString(),
+                                      initialValue: invoiceValue ?? '',
                                       readOnly: true,
                                       decoration: InputDecoration(
                                         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -210,7 +239,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 ),
                               ),
                             ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: TextFormField(
                           readOnly: true,
@@ -218,7 +247,13 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: lang.S.of(context).date,
+                            suffixIconConstraints: const BoxConstraints(
+                              minWidth: 20,
+                              minHeight: 20,
+                            ),
                             suffixIcon: IconButton(
+                              // padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                               onPressed: () async {
                                 final DateTime? picked = await showDatePicker(
                                   initialDate: selectedDate,
@@ -228,12 +263,19 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 );
                                 if (picked != null && picked != selectedDate) {
                                   setState(() {
-                                    selectedDate = picked;
+                                    selectedDate = selectedDate.copyWith(
+                                      year: picked.year,
+                                      month: picked.month,
+                                      day: picked.day,
+                                    );
                                     dateController.text = selectedDate.toString().substring(0, 10);
                                   });
                                 }
                               },
-                              icon: const Icon(FeatherIcons.calendar),
+                              icon: Icon(
+                                IconlyLight.calendar,
+                                color: kPeraColor,
+                              ),
                             ),
                           ),
                         ),
@@ -278,9 +320,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                             textFieldType: TextFieldType.PHONE,
                             decoration: kInputDecoration.copyWith(
                               floatingLabelBehavior: FloatingLabelBehavior.always,
-                              //labelText: 'Customer Phone Number',
                               labelText: lang.S.of(context).customerPhoneNumber,
-                              //hintText: 'Enter customer phone number',
                               hintText: lang.S.of(context).enterCustomerPhoneNumber,
                             ),
                           ),
@@ -288,223 +328,64 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-
-                  ///_______Added_Items_List_________________________________________________
-                  Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                          border: Border.all(width: 1, color: const Color(0xffEAEFFA)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                width: double.infinity,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xffEAEFFA),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: SizedBox(
-                                    width: context.width() / 1.35,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          lang.S.of(context).itemAdded,
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                        Text(
-                                          lang.S.of(context).quantity,
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                            ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: providerData.cartItemList.length,
-                                itemBuilder: (context, index) {
-                                  // providerData.controllers[index].text = (providerData.cartItemList[index].quantity.toString());
-                                  // providerData.focus[index].addListener(
-                                  //   () {
-                                  //     if (!providerData.focus[index].hasFocus) {
-                                  //       setState(() {
-                                  //         vatAmount = (vatPercentageEditingController.text.toDouble() / 100) * providerData.getTotalAmount().toDouble();
-                                  //         vatAmountEditingController.text = vatAmount.toStringAsFixed(2);
-                                  //       });
-                                  //     }
-                                  //   },
-                                  // );
-                                  return Padding(
-                                    padding: const EdgeInsets.only(left: 10, right: 10),
-                                    child: ListTile(
-                                      onTap: () => showModalBottomSheet(
-                                        context: context,
-                                        builder: (context2) {
-                                          return Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      lang.S.of(context).updateProduct,
-                                                    ),
-                                                    CloseButton(
-                                                      onPressed: () => Navigator.pop(context2),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              const Divider(thickness: 1, color: kBorderColorTextField),
-                                              Padding(
-                                                padding: const EdgeInsets.all(16.0),
-                                                child: SalesAddToCartForm(
-                                                  batchWiseStockModel: providerData.cartItemList[index],
-                                                  previousContext: context2,
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                      contentPadding: const EdgeInsets.all(0),
-                                      title: Text(providerData.cartItemList[index].productName.toString()),
-                                      subtitle: Text(
-                                          '${formatPointNumber(providerData.cartItemList[index].quantity)} X ${providerData.cartItemList[index].unitPrice} = ${formatPointNumber((double.parse(providerData.cartItemList[index].unitPrice) * providerData.cartItemList[index].quantity))}'),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SizedBox(
-                                            width: 90,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () => providerData.quantityDecrease(index),
-                                                  child: Container(
-                                                    height: 20,
-                                                    width: 20,
-                                                    decoration: const BoxDecoration(
-                                                      color: kMainColor,
-                                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    ),
-                                                    child: const Center(
-                                                      child: Text(
-                                                        '-',
-                                                        style: TextStyle(fontSize: 14, color: Colors.white),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 5),
-                                                SizedBox(
-                                                  width: 40,
-                                                  child: Center(
-                                                    child: Text(
-                                                      formatPointNumber(providerData.cartItemList[index].quantity),
-                                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                                            color: kGreyTextColor,
-                                                          ),
-                                                      maxLines: 1,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 5),
-                                                GestureDetector(
-                                                  onTap: () => providerData.quantityIncrease(index),
-                                                  child: Container(
-                                                    height: 20,
-                                                    width: 20,
-                                                    decoration: const BoxDecoration(
-                                                      color: kMainColor,
-                                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    ),
-                                                    child: const Center(
-                                                        child: Text(
-                                                      '+',
-                                                      style: TextStyle(fontSize: 14, color: Colors.white),
-                                                    )),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          GestureDetector(
-                                            onTap: () => providerData.deleteToCart(index),
-                                            child: Container(
-                                              padding: const EdgeInsets.all(4),
-                                              color: Colors.red.withOpacity(0.1),
-                                              child: const Icon(
-                                                Icons.delete,
-                                                size: 20,
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }),
-                          ],
-                        ),
-                      )).visible(providerData.cartItemList.isNotEmpty),
+                  SizedBox(height: 12),
 
                   ///_______Add_Button__________________________________________________
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SaleProductsList(
-                            customerModel: widget.customerModel,
+                  if (widget.isFromPos != true)
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SaleProductsList(
+                              customerModel: widget.customerModel,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(color: kMainColor.withOpacity(0.1), borderRadius: const BorderRadius.all(Radius.circular(10))),
-                      child: Center(
-                        child: Text(
-                          lang.S.of(context).addItems,
-                          style: const TextStyle(color: kMainColor, fontSize: 20),
-                        ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0.0,
+                        backgroundColor: kMainColor2,
+                        minimumSize: Size.fromHeight(40),
                       ),
+                      child: Text(lang.S.of(context).addItems,
+                          style: _theme.textTheme.titleMedium?.copyWith(
+                            color: kMainColor,
+                          )),
                     ),
-                  ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
+
+                  ///_______Added_Items_List_________________________________________________
+                  SalesCartListWidget(),
 
                   ///_____Total_Section_____________________________
                   Container(
-                    decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(10)), border: Border.all(color: Colors.grey.shade300, width: 1)),
+                    decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.grey.shade300, width: 1)),
                     child: Column(
                       children: [
                         ///________Total_title_reader_________________________
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(color: Color(0xffFEF0F1), borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+                          decoration: BoxDecoration(
+                              color: kMainColor2,
+                              borderRadius:
+                                  BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 lang.S.of(context).subTotal,
-                                style: const TextStyle(fontSize: 16),
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               Text(
-                                formatPointNumber(providerData.totalAmount),
-                                style: const TextStyle(fontSize: 16),
+                                '$currency${formatPointNumber(providerData.totalAmount)}',
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
@@ -520,7 +401,10 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               // Text for "Discount"
                               Text(
                                 lang.S.of(context).discount,
-                                style: const TextStyle(fontSize: 16),
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: kPeraColor,
+                                ),
                               ),
 
                               Spacer(),
@@ -532,30 +416,32 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                     border: Border(bottom: BorderSide(color: kBorder, width: 1)),
                                   ),
                                   child: DropdownButton<String?>(
-                                    icon: const Icon(Icons.keyboard_arrow_down, color: kGreyTextColor),
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: kPeraColor,
+                                      size: 18,
+                                    ),
                                     dropdownColor: Colors.white,
                                     isExpanded: true,
                                     isDense: true,
                                     padding: EdgeInsets.zero,
                                     hint: Text(
-                                      'Select',
+                                      lang.S.of(context).select,
                                       style: _theme.textTheme.bodyMedium?.copyWith(
                                         color: kGreyTextColor,
                                       ),
                                     ),
                                     value: discountType,
                                     items: [
-                                      "Flat",
-                                      "Percent",
-                                    ]
-                                        .map((type) => DropdownMenuItem<String?>(
-                                              value: type,
-                                              child: Text(
-                                                type,
-                                                style: _theme.textTheme.bodyMedium?.copyWith(color: kNeutralColor),
-                                              ),
-                                            ))
-                                        .toList(),
+                                      DropdownMenuItem<String>(
+                                        value: flatValue,
+                                        child: Text(lang.S.of(context).flat),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: percentValue,
+                                        child: Text(lang.S.of(context).percent),
+                                      ),
+                                    ],
                                     onChanged: (value) {
                                       setState(() {
                                         discountType = value!;
@@ -563,20 +449,17 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                           value: providerData.discountTextControllerFlat.text,
                                           selectedTaxType: discountType,
                                         );
-                                        print(providerData.discountPercent);
-                                        print(providerData.discountAmount);
                                       });
                                     },
                                   ),
                                 ),
                               ),
-
                               const SizedBox(width: 10),
-
                               SizedBox(
                                 width: context.width() / 4,
                                 height: 30,
                                 child: TextFormField(
+                                  style: _theme.textTheme.titleSmall,
                                   controller: providerData.discountTextControllerFlat,
                                   onChanged: (value) {
                                     setState(() {
@@ -587,9 +470,11 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                     });
                                   },
                                   textAlign: TextAlign.right,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     hintText: '0',
-                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    hintStyle: _theme.textTheme.titleMedium?.copyWith(
+                                      color: kPeraColor,
+                                    ),
                                     border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
                                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
                                     focusedBorder: UnderlineInputBorder(),
@@ -609,9 +494,11 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text(
-                                'Vat',
-                                style: TextStyle(fontSize: 16),
+                              Text(
+                                lang.S.of(context).vat,
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  color: kPeraColor,
+                                ),
                               ),
                               const SizedBox(width: 10),
 
@@ -619,7 +506,9 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               taxesData.when(
                                 data: (data) {
                                   List<VatModel> dataList = data.where((tax) => tax.status == true).toList();
-                                  if (widget.transitionModel != null && widget.transitionModel?.vatId != null && !hasPreselected) {
+                                  if (widget.transitionModel != null &&
+                                      widget.transitionModel?.vatId != null &&
+                                      !hasPreselected) {
                                     VatModel matched = dataList.firstWhere(
                                       (element) => element.id == widget.transitionModel?.vatId,
                                       orElse: () => VatModel(),
@@ -634,7 +523,9 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                     height: 30,
                                     child: Container(
                                       decoration: const BoxDecoration(
-                                        border: Border(bottom: BorderSide(color: kBorder, width: 1)),
+                                        border: Border(
+                                          bottom: BorderSide(color: kBorder, width: 1),
+                                        ),
                                       ),
                                       child: DropdownButton<VatModel?>(
                                         icon: providerData.selectedVat != null
@@ -646,14 +537,20 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                                   size: 16,
                                                 ),
                                               )
-                                            : const Icon(Icons.keyboard_arrow_down, color: kGreyTextColor),
+                                            : const Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: kPeraColor,
+                                                size: 18,
+                                              ),
                                         dropdownColor: Colors.white,
                                         isExpanded: true,
                                         isDense: true,
                                         padding: EdgeInsets.zero,
                                         hint: Text(
-                                          'Select one',
-                                          style: _theme.textTheme.bodyMedium?.copyWith(color: kGreyTextColor),
+                                          lang.S.of(context).selectOne,
+                                          style: _theme.textTheme.bodyMedium?.copyWith(
+                                            color: kPeraColor,
+                                          ),
                                         ),
                                         value: providerData.selectedVat,
                                         items: dataList.map((VatModel tax) {
@@ -662,11 +559,14 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                             child: Text(
                                               tax.name ?? '',
                                               maxLines: 1,
-                                              style: _theme.textTheme.bodyMedium?.copyWith(color: kNeutralColor),
+                                              style: _theme.textTheme.bodyMedium?.copyWith(
+                                                color: kPeraColor,
+                                              ),
                                             ),
                                           );
                                         }).toList(),
-                                        onChanged: (VatModel? newValue) => providerData.changeSelectedVat(data: newValue),
+                                        onChanged: (VatModel? newValue) =>
+                                            providerData.changeSelectedVat(data: newValue),
                                       ),
                                     ),
                                   );
@@ -687,16 +587,22 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 width: 100,
                                 child: TextFormField(
                                   controller: providerData.vatAmountController,
+                                  style: _theme.textTheme.titleSmall,
                                   readOnly: true,
-                                  onChanged: (value) => providerData.calculateDiscount(value: value, selectedTaxType: discountType.toString()),
+                                  onChanged: (value) => providerData.calculateDiscount(
+                                    value: value,
+                                    selectedTaxType: discountType.toString(),
+                                  ),
                                   textAlign: TextAlign.right,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     hintText: '0',
-                                    hintStyle: TextStyle(color: kNeutralColor),
-                                    border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
-                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
-                                    focusedBorder: UnderlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                    hintStyle: _theme.textTheme.titleSmall?.copyWith(
+                                      color: kPeraColor,
+                                    ),
+                                    border: const UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
+                                    focusedBorder: const UnderlineInputBorder(),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
                                   ),
                                   keyboardType: TextInputType.number,
                                 ),
@@ -709,9 +615,11 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Shipping Charge',
-                                style: TextStyle(fontSize: 16),
+                              Text(
+                                lang.S.of(context).shippingCharge,
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  color: kPeraColor,
+                                ),
                               ),
                               SizedBox(
                                 width: context.width() / 4,
@@ -719,11 +627,15 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 child: TextFormField(
                                   controller: providerData.shippingChargeController,
                                   keyboardType: TextInputType.number,
-                                  onChanged: (value) => providerData.calculatePrice(shippingCharge: value, stopRebuild: false),
+                                  onChanged: (value) =>
+                                      providerData.calculatePrice(shippingCharge: value, stopRebuild: false),
                                   textAlign: TextAlign.right,
-                                  decoration: const InputDecoration(
+                                  style: _theme.textTheme.titleSmall,
+                                  decoration: InputDecoration(
                                     hintText: '0',
-                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    hintStyle: _theme.textTheme.titleSmall?.copyWith(
+                                      color: kPeraColor,
+                                    ),
                                     border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
                                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
                                     focusedBorder: UnderlineInputBorder(),
@@ -743,11 +655,15 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                             children: [
                               Text(
                                 lang.S.of(context).total,
-                                style: const TextStyle(fontSize: 16),
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               Text(
                                 formatPointNumber(providerData.actualTotalAmount),
-                                style: const TextStyle(fontSize: 16),
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),
@@ -755,7 +671,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
 
                         ///________Rounded Total_______________________________________
                         Visibility(
-                          visible: providerData.roundingAmount != 0,
+                          // visible: providerData.roundingAmount != 0,
                           child: Column(
                             children: [
                               ///________Rounded Amount_______________________________________
@@ -765,12 +681,16 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Rounding (+/-)',
-                                      style: const TextStyle(fontSize: 16),
+                                      lang.S.of(context).roundings,
+                                      style: _theme.textTheme.titleSmall?.copyWith(
+                                        color: kPeraColor,
+                                      ),
                                     ),
                                     Text(
                                       formatPointNumber(providerData.roundingAmount),
-                                      style: const TextStyle(fontSize: 16),
+                                      style: _theme.textTheme.titleSmall?.copyWith(
+                                        color: kPeraColor,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -781,12 +701,16 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Rounded Total',
-                                      style: const TextStyle(fontSize: 16),
+                                      lang.S.of(context).roundingTotal,
+                                      style: _theme.textTheme.titleSmall?.copyWith(
+                                        color: kPeraColor,
+                                      ),
                                     ),
                                     Text(
                                       formatPointNumber(providerData.totalPayableAmount),
-                                      style: const TextStyle(fontSize: 16),
+                                      style: _theme.textTheme.titleSmall?.copyWith(
+                                        color: kPeraColor,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -803,19 +727,24 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                             children: [
                               Text(
                                 lang.S.of(context).receivedAmount,
-                                style: const TextStyle(fontSize: 16),
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  color: kPeraColor,
+                                ),
                               ),
                               SizedBox(
                                 width: context.width() / 4,
                                 height: 30,
                                 child: TextFormField(
                                   controller: recevedAmountController,
+                                  readOnly: (paymentWidgetKey.currentState?.getPaymentEntries().length ?? 1) > 1,
                                   keyboardType: TextInputType.number,
-                                  onChanged: (value) => providerData.calculatePrice(receivedAmount: value),
                                   textAlign: TextAlign.right,
-                                  decoration: const InputDecoration(
+                                  style: _theme.textTheme.titleSmall,
+                                  decoration: InputDecoration(
                                     hintText: '0',
-                                    hintStyle: TextStyle(color: kNeutralColor),
+                                    hintStyle: _theme.textTheme.titleSmall?.copyWith(
+                                      color: kPeraColor,
+                                    ),
                                     border: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
                                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kBorder)),
                                     focusedBorder: UnderlineInputBorder(),
@@ -836,12 +765,16 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Change Amount',
-                                  style: const TextStyle(fontSize: 16),
+                                  lang.S.of(context).changeAmount,
+                                  style: _theme.textTheme.titleSmall?.copyWith(
+                                    color: kPeraColor,
+                                  ),
                                 ),
                                 Text(
                                   formatPointNumber(providerData.changeAmount),
-                                  style: const TextStyle(fontSize: 16),
+                                  style: _theme.textTheme.titleSmall?.copyWith(
+                                    color: kPeraColor,
+                                  ),
                                 ),
                               ],
                             ),
@@ -850,7 +783,8 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
 
                         ///_______Due_amount_____________________________________
                         Visibility(
-                          visible: providerData.dueAmount > 0 || (providerData.changeAmount == 0 && providerData.dueAmount == 0),
+                          visible: providerData.dueAmount > 0 ||
+                              (providerData.changeAmount == 0 && providerData.dueAmount == 0),
                           child: Padding(
                             padding: const EdgeInsets.only(right: 10, left: 10, top: 13, bottom: 13),
                             child: Row(
@@ -858,11 +792,15 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                               children: [
                                 Text(
                                   lang.S.of(context).dueAmount,
-                                  style: const TextStyle(fontSize: 16),
+                                  style: _theme.textTheme.titleSmall?.copyWith(
+                                    color: kPeraColor,
+                                  ),
                                 ),
                                 Text(
                                   formatPointNumber(providerData.dueAmount),
-                                  style: const TextStyle(fontSize: 16),
+                                  style: _theme.textTheme.titleSmall?.copyWith(
+                                    color: kPeraColor,
+                                  ),
                                 ),
                               ],
                             ),
@@ -874,18 +812,19 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                   const SizedBox(height: 20),
 
                   ///_______Payment_Type_______________________________
-                  const Divider(height: 0),
-                  const SizedBox(height: 5),
-                  PaymentTypeSelectorDropdown(
-                    value: paymentType,
-                    onChanged: (value) => setState(
-                      () => paymentType = value,
-                    ),
+                  // REPLACED: PaymentTypeSelectorDropdown
+                  MultiPaymentWidget(
+                    key: paymentWidgetKey,
+                    showWalletOption: true,
+                    totalAmountController: recevedAmountController,
+                    showChequeOption: true,
+                    initialTransactions: widget.transitionModel?.transactions,
+                    onPaymentListChanged: () {
+                      providerData.calculatePrice(receivedAmount: recevedAmountController.text);
+                    },
                   ),
-                  const SizedBox(height: 5),
-                  const Divider(height: 0),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   SizedBox(
                     height: 56, // Set a fixed height for the Row
                     child: Row(
@@ -900,8 +839,8 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                             child: TextFormField(
                               controller: noteController,
                               maxLines: null,
-                              decoration: const InputDecoration(
-                                hintText: 'Enter your opinion',
+                              decoration: InputDecoration(
+                                hintText: lang.S.of(context).opinion,
                               ),
                               onChanged: (text) {
                                 setState(() {
@@ -950,13 +889,13 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                         borderRadius: BorderRadius.circular(5),
                                         color: const Color(0xffF5F3F3),
                                       ),
-                                      child: const Row(
+                                      child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Icon(IconlyLight.camera),
                                           SizedBox(width: 4.0),
-                                          Text('Image'),
+                                          Text(lang.S.of(context).image),
                                         ],
                                       ),
                                     ),
@@ -1013,71 +952,117 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                       const SizedBox(width: 20),
                       Expanded(
                         child: ElevatedButton(
-                          style: OutlinedButton.styleFrom(
+                          style: ElevatedButton.styleFrom(
                             maximumSize: const Size(double.infinity, 48),
                             minimumSize: const Size(double.infinity, 48),
-                            disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
+                            backgroundColor: isProcessing
+                                ? _theme.colorScheme.primary.withOpacity(0.15)
+                                : _theme.colorScheme.primary,
                           ),
                           onPressed: () async {
                             if (providerData.cartItemList.isEmpty) {
                               EasyLoading.showError(lang.S.of(context).addProductFirst);
                               return;
                             }
+
                             if (widget.customerModel == null && providerData.dueAmount > 0) {
-                              EasyLoading.showError('Sales on due are not allowed for walk-in customers.');
-                              return;
-                            }
-                            if (paymentType == null) {
-                              EasyLoading.showError('Please select a payment type');
+                              EasyLoading.showError(
+                                lang.S.of(context).dueSaleWarn,
+                              );
                               return;
                             }
 
-                            ///_______ Prevent multiple clicks________________
+                            // Validate Payments from the Widget
+                            List<PaymentEntry> payments = paymentWidgetKey.currentState?.getPaymentEntries() ?? [];
+                            if (payments.isEmpty) {
+                              EasyLoading.showError('Please select at least one payment method');
+                              return;
+                            }
+
+                            // Basic validation for each entry
+                            // for (var p in payments) {
+                            //   if (p.type == null) {
+                            //     EasyLoading.showError('Please select payment type for all entries');
+                            //     return;
+                            //   }
+                            //   if (p.amountController.text.isEmpty || (double.tryParse(p.amountController.text) ?? 0) < 0) {
+                            //     EasyLoading.showError('Invalid amount in payment entries');
+                            //     return;
+                            //   }
+                            // }
+
                             if (isProcessing) return;
 
                             setState(() {
-                              isProcessing = true; // Disable button while processing
+                              isProcessing = true;
                             });
 
                             try {
-                              EasyLoading.show(status: lang.S.of(context).loading, dismissOnTap: false);
+                              EasyLoading.show(
+                                status: lang.S.of(context).loading,
+                                dismissOnTap: false,
+                              );
 
                               // Prepare the list of selected products
                               List<CartSaleProducts> selectedProductList = providerData.cartItemList.map((element) {
                                 return CartSaleProducts(
-                                  productId: element.productId.toInt(),
+                                  productName: element.productName ?? '',
+                                  stockId: element.stockId,
                                   quantities: element.quantity,
                                   price: num.tryParse(element.unitPrice.toString()) ?? 0,
-                                  lossProfit: (element.quantity * (num.tryParse(element.unitPrice.toString()) ?? 0)) -
-                                      (element.quantity * (num.tryParse(element.productPurchasePrice.toString()) ?? 0)),
+                                  productId: element.productId,
+                                  discount: element.discountAmount,
                                 );
                               }).toList();
 
-                              // image
+                              // Prepare image file
                               File? imageFile;
                               if (_imageFile != null) {
-                                imageFile = File(_imageFile!.path);
+                                final file = File(_imageFile!.path);
+                                if (await file.exists()) {
+                                  imageFile = file;
+                                }
                               }
-                              // Create the sale
+
                               SaleRepo repo = SaleRepo();
+
+                              // Serialize Payment List for API (Assuming Repo expects a JSON string in paymentType or similar)
+                              // If Repo is not updated to handle this, this is how we pass the data for now.
+                              List<Map<String, dynamic>> paymentData = payments.map((e) => e.toJson()).toList();
+
+                              String paymentTypeData = jsonEncode(paymentData);
+
                               if (widget.transitionModel == null) {
+                                // Create Sale
+                                if (!permissionService.hasPermission(Permit.salesCreate.value)) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text(
+                                        lang.S.of(context).createSaleWarn,
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
+
                                 SalesTransactionModel? saleData = await repo.createSale(
                                   ref: ref,
                                   context: context,
                                   totalAmount: providerData.totalPayableAmount,
-                                  purchaseDate: selectedDate.toString(),
+                                  purchaseDate: selectedDate.toIso8601String(),
                                   products: selectedProductList,
-                                  paymentType: paymentType?.toString() ?? '',
+                                  paymentType: paymentTypeData, // Passing serialized payment data
                                   partyId: widget.customerModel?.id,
                                   customerPhone: widget.customerModel == null ? phoneController.text : null,
                                   vatAmount: providerData.vatAmount,
-                                  vatPercent: providerData.selectedVat != null ? providerData.selectedVat!.rate! : 0,
+                                  vatPercent: providerData.selectedVat?.rate ?? 0,
                                   vatId: providerData.selectedVat?.id,
                                   isPaid: providerData.isFullPaid,
                                   dueAmount: providerData.dueAmount,
                                   discountAmount: providerData.discountAmount,
                                   changeAmount: providerData.changeAmount,
-                                  discountType: discountType.toLowerCase(),
+                                  discountType: discountType.toLowerCase() ?? '',
                                   roundedOption: providerData.roundedOption,
                                   roundingAmount: providerData.roundingAmount,
                                   unRoundedTotalAmount: providerData.actualTotalAmount,
@@ -1087,27 +1072,60 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                   discountPercent: providerData.discountPercent,
                                 );
 
-                                if (saleData != null) {
+                                if (saleData != null && personalData.value != null) {
+                                  final refreshed = await repo.getSingleSale((saleData.id ?? 0).toInt());
+
+                                  if (refreshed == null) {
+                                    SalesInvoiceDetails(
+                                      businessInfo: personalData.value!,
+                                      saleTransaction: refreshed!,
+                                      fromSale: true,
+                                    ).launch(context);
+                                    return;
+                                  }
+
                                   SalesInvoiceDetails(
                                     businessInfo: personalData.value!,
-                                    saleTransaction: saleData,
+                                    saleTransaction: refreshed,
                                     fromSale: true,
                                   ).launch(context);
                                 }
+                                // if (saleData != null && personalData.value != null) {
+                                //   SalesInvoiceDetails(
+                                //     businessInfo: personalData.value!,
+                                //     saleTransaction: saleData,
+                                //     fromSale: true,
+                                //   ).launch(context);
+                                // }
                               } else {
+                                // Update Sale
+                                if (!permissionService.hasPermission(Permit.salesUpdate.value)) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text(lang.S.of(context).updateSaleWarn),
+                                    ),
+                                  );
+                                  return;
+                                }
+
                                 await repo.updateSale(
                                   id: widget.transitionModel?.id ?? 0,
                                   ref: ref,
                                   context: context,
                                   roundingAmount: providerData.roundingAmount,
                                   totalAmount: providerData.totalPayableAmount,
-                                  purchaseDate: selectedDate.toString(),
+                                  purchaseDate: DateFormat('yyyy-MM-dd HH:mm:ss').format(
+                                    DateTime.parse(
+                                      selectedDate.toString(),
+                                    ),
+                                  ),
                                   products: selectedProductList,
-                                  paymentType: paymentType?.toString() ?? '',
+                                  paymentType: paymentTypeData, // Passing serialized payment data
                                   partyId: widget.transitionModel?.party?.id,
                                   roundedOption: providerData.roundedOption,
                                   vatAmount: providerData.vatAmount,
-                                  vatPercent: providerData.selectedVat != null ? providerData.selectedVat!.rate! : 0,
+                                  vatPercent: providerData.selectedVat?.rate ?? 0,
                                   vatId: providerData.selectedVat?.id,
                                   isPaid: providerData.isFullPaid,
                                   dueAmount: providerData.dueAmount,
@@ -1122,24 +1140,35 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                                 );
                               }
                             } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
                             } finally {
                               EasyLoading.dismiss();
                               setState(() {
-                                isProcessing = false; // Re-enable button after processing
+                                isProcessing = false;
                               });
                             }
                           },
-                          child: Text(
-                            lang.S.of(context).save,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: _theme.textTheme.bodyMedium?.copyWith(
-                              color: _theme.colorScheme.primaryContainer,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
+                          child: isProcessing
+                              ? SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: _theme.colorScheme.primaryContainer,
+                                  ),
+                                )
+                              : Text(
+                                  lang.S.of(context).save,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: _theme.textTheme.bodyMedium?.copyWith(
+                                    color: _theme.colorScheme.primaryContainer,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
                         ),
                       ),
                     ],
@@ -1167,18 +1196,17 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
         child: CupertinoAlertDialog(
           insetAnimationCurve: Curves.bounceInOut,
           title: Text(
-            'Upload Image',
+            lang.S.of(context).uploadImage,
             textAlign: TextAlign.center,
             style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
-          // content: const Text('Are you sure you want to delete this account? This will permanently erase this account.'),
           actions: <Widget>[
             CupertinoDialogAction(
               child: Column(
                 children: [
                   const Icon(IconlyLight.image, size: 30.0),
                   Text(
-                    'Use gallery',
+                    lang.S.of(context).useGallery,
                     textAlign: TextAlign.center,
                     style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
                   )
@@ -1196,7 +1224,7 @@ class AddSalesScreenState extends ConsumerState<AddSalesScreen> {
                 children: [
                   const Icon(IconlyLight.camera, size: 30.0),
                   Text(
-                    'Open Camera',
+                    lang.S.of(context).openCamera,
                     textAlign: TextAlign.center,
                     style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
                   )

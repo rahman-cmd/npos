@@ -2,26 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile_pos/PDF%20Invoice/pdf_common_functions.dart';
-import 'package:mobile_pos/Screens/Purchase/add_and_edit_purchase.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
+import 'package:mobile_pos/Screens/Purchase/add_and_edit_purchase.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
-import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../PDF Invoice/purchase_invoice_pdf.dart';
 import '../../Provider/add_to_cart_purchase.dart';
 import '../../core/theme/_app_colors.dart';
 import '../../currency.dart';
-import '../../thermal priting invoices/model/print_transaction_model.dart';
+import '../../service/check_actions_when_no_branch.dart';
+import '../../service/check_user_role_permission_provider.dart';
 import '../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
 import '../../widgets/empty_widget/_empty_widget.dart';
 import '../Home/home.dart';
-import '../invoice_details/purchase_invoice_details.dart';
 import '../invoice return/invoice_return_screen.dart';
+import '../invoice_details/purchase_invoice_details.dart';
 
 class PurchaseListScreen extends StatefulWidget {
   const PurchaseListScreen({super.key});
@@ -65,8 +64,8 @@ class PurchaseReportState extends State<PurchaseListScreen> {
           body: Consumer(builder: (context, ref, __) {
             final providerData = ref.watch(purchaseTransactionProvider);
             final printerData = ref.watch(thermalPrinterProvider);
-            final businessSetting = ref.watch(businessSettingProvider);
             final businessInfoData = ref.watch(businessInfoProvider);
+            final permissionService = PermissionService(ref);
             return RefreshIndicator.adaptive(
               onRefresh: () => refreshData(ref),
               child: SingleChildScrollView(
@@ -74,6 +73,9 @@ class PurchaseReportState extends State<PurchaseListScreen> {
                 child: providerData.when(data: (purchaseTransactions) {
                   return purchaseTransactions.isNotEmpty
                       ? businessInfoData.when(data: (details) {
+                          if (!permissionService.hasPermission(Permit.purchasesRead.value)) {
+                            return Center(child: PermitDenyWidget());
+                          }
                           return ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
@@ -129,14 +131,20 @@ class PurchaseReportState extends State<PurchaseListScreen> {
                                                             : const Color(0xFFED1A3B).withOpacity(0.1),
                                                         borderRadius: const BorderRadius.all(Radius.circular(2))),
                                                     child: Text(
-                                                      purchaseTransactions[index].dueAmount! <= 0 ? lang.S.of(context).paid : lang.S.of(context).unPaid,
-                                                      style: TextStyle(color: purchaseTransactions[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
+                                                      purchaseTransactions[index].dueAmount! <= 0
+                                                          ? lang.S.of(context).paid
+                                                          : lang.S.of(context).unPaid,
+                                                      style: TextStyle(
+                                                          color: purchaseTransactions[index].dueAmount! <= 0
+                                                              ? const Color(0xff0dbf7d)
+                                                              : const Color(0xFFED1A3B)),
                                                     ),
                                                   ),
 
                                                   ///________Return_tag_________________________________________
                                                   Visibility(
-                                                    visible: purchaseTransactions[index].purchaseReturns?.isNotEmpty ?? false,
+                                                    visible: purchaseTransactions[index].purchaseReturns?.isNotEmpty ??
+                                                        false,
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(left: 8, right: 8),
                                                       child: Container(
@@ -157,7 +165,8 @@ class PurchaseReportState extends State<PurchaseListScreen> {
                                                 ],
                                               ),
                                               Text(
-                                                DateFormat.yMMMd().format(DateTime.parse(purchaseTransactions[index].purchaseDate ?? '')),
+                                                DateFormat.yMMMd().format(
+                                                    DateTime.parse(purchaseTransactions[index].purchaseDate ?? '')),
                                                 style: const TextStyle(color: DAppColors.kSecondary),
                                               ),
                                             ],
@@ -169,13 +178,15 @@ class PurchaseReportState extends State<PurchaseListScreen> {
                                             children: [
                                               Text(
                                                 '${lang.S.of(context).total} : $currency ${purchaseTransactions[index].totalAmount.toString()}',
-                                                style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 14, color: DAppColors.kSecondary),
+                                                style: _theme.textTheme.bodyMedium
+                                                    ?.copyWith(fontSize: 14, color: DAppColors.kSecondary),
                                               ),
                                               const SizedBox(width: 4),
                                               if (purchaseTransactions[index].dueAmount!.toInt() != 0)
                                                 Text(
                                                   '${lang.S.of(context).paid} : $currency ${purchaseTransactions[index].totalAmount!.toDouble() - purchaseTransactions[index].dueAmount!.toDouble()}',
-                                                  style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 14, color: DAppColors.kSecondary),
+                                                  style: _theme.textTheme.bodyMedium
+                                                      ?.copyWith(fontSize: 14, color: DAppColors.kSecondary),
                                                 ),
                                             ],
                                           ),
@@ -185,84 +196,92 @@ class PurchaseReportState extends State<PurchaseListScreen> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               if (purchaseTransactions[index].dueAmount!.toInt() == 0)
-                                                Text(
-                                                  '${lang.S.of(context).paid} : $currency ${purchaseTransactions[index].totalAmount!.toDouble() - purchaseTransactions[index].dueAmount!.toDouble()}',
-                                                  style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                Flexible(
+                                                  child: Text(
+                                                    '${lang.S.of(context).paid} : $currency ${purchaseTransactions[index].totalAmount!.toDouble() - purchaseTransactions[index].dueAmount!.toDouble()}',
+                                                    style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                    maxLines: 2,
+                                                  ),
                                                 ),
                                               if (purchaseTransactions[index].dueAmount!.toInt() != 0)
-                                                Text(
-                                                  '${lang.S.of(context).due}: $currency ${purchaseTransactions[index].dueAmount.toString()}',
-                                                  style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                Flexible(
+                                                  child: Text(
+                                                    '${lang.S.of(context).due}: $currency ${purchaseTransactions[index].dueAmount.toString()}',
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                  ),
                                                 ),
                                               businessInfoData.when(data: (data) {
                                                 return Row(
                                                   children: [
-                                                    IconButton(
-                                                        padding: EdgeInsets.zero,
-                                                        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                                        onPressed: () async {
-                                                          ///________Print_______________________________________________________
-
-                                                          PrintPurchaseTransactionModel model =
-                                                              PrintPurchaseTransactionModel(purchaseTransitionModel: purchaseTransactions[index], personalInformationModel: data);
-
-                                                          await printerData.printPurchaseThermalInvoiceNow(
-                                                            transaction: model,
-                                                            productList: model.purchaseTransitionModel!.details,
-                                                            context: context,
-                                                          );
-                                                        },
-                                                        icon: const Icon(
-                                                          FeatherIcons.printer,
-                                                          color: Colors.grey,
-                                                        )),
-                                                    const SizedBox(
-                                                      width: 10,
+                                                    const Icon(
+                                                      FeatherIcons.printer,
+                                                      color: Colors.grey,
+                                                      size: 22,
                                                     ),
-                                                    businessSetting.when(data: (bussiness) {
-                                                      return Row(
-                                                        children: [
-                                                          IconButton(
-                                                              padding: EdgeInsets.zero,
-                                                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                                              onPressed: () => PurchaseInvoicePDF.generatePurchaseDocument(purchaseTransactions[index], data, context, bussiness),
-                                                              icon: const Icon(
-                                                                Icons.picture_as_pdf,
-                                                                color: Colors.grey,
-                                                              )),
-                                                          IconButton(
-                                                            style: IconButton.styleFrom(
-                                                                padding: EdgeInsets.zero,
-                                                                visualDensity: const VisualDensity(
-                                                                  horizontal: -4,
-                                                                  vertical: -4,
-                                                                )),
+                                                    const SizedBox(
+                                                      width: 6,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        IconButton(
+                                                            padding: EdgeInsets.zero,
+                                                            visualDensity:
+                                                                const VisualDensity(horizontal: -4, vertical: -4),
                                                             onPressed: () =>
-                                                                PurchaseInvoicePDF.generatePurchaseDocument(purchaseTransactions[index], data, context, bussiness, isShare: true),
+                                                                PurchaseInvoicePDF.generatePurchaseDocument(
+                                                                    purchaseTransactions[index], data, context,
+                                                                    showPreview: true),
                                                             icon: const Icon(
-                                                              Icons.share_outlined,
+                                                              Icons.picture_as_pdf,
                                                               color: Colors.grey,
-                                                            ),
+                                                              size: 22,
+                                                            )),
+                                                        IconButton(
+                                                            padding: EdgeInsets.zero,
+                                                            visualDensity:
+                                                                const VisualDensity(horizontal: -4, vertical: -4),
+                                                            onPressed: () =>
+                                                                PurchaseInvoicePDF.generatePurchaseDocument(
+                                                                    purchaseTransactions[index], data, context,
+                                                                    download: true),
+                                                            icon: const Icon(
+                                                              FeatherIcons.download,
+                                                              color: Colors.grey,
+                                                              size: 22,
+                                                            )),
+                                                        IconButton(
+                                                          style: IconButton.styleFrom(
+                                                              padding: EdgeInsets.zero,
+                                                              visualDensity: const VisualDensity(
+                                                                horizontal: -4,
+                                                                vertical: -4,
+                                                              )),
+                                                          onPressed: () => PurchaseInvoicePDF.generatePurchaseDocument(
+                                                              purchaseTransactions[index], data, context,
+                                                              isShare: true),
+                                                          icon: const Icon(
+                                                            Icons.share_outlined,
+                                                            color: Colors.grey,
+                                                            size: 22,
                                                           ),
-                                                        ],
-                                                      );
-                                                    }, error: (e, statck) {
-                                                      return Text(e.toString());
-                                                    }, loading: () {
-                                                      return const Center(
-                                                        child: CircularProgressIndicator(),
-                                                      );
-                                                    }),
+                                                        ),
+                                                      ],
+                                                    ),
                                                     const SizedBox(
                                                       width: 10,
                                                     ),
 
                                                     ///_________Edit_purchase______________________________
                                                     Visibility(
-                                                      visible: !(purchaseTransactions[index].purchaseReturns?.isNotEmpty ?? false),
+                                                      visible:
+                                                          !(purchaseTransactions[index].purchaseReturns?.isNotEmpty ??
+                                                              false),
                                                       child: IconButton(
                                                           padding: EdgeInsets.zero,
-                                                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                                          visualDensity:
+                                                              const VisualDensity(horizontal: -4, vertical: -4),
                                                           onPressed: () async {
                                                             ref.refresh(cartNotifierPurchaseNew);
                                                             AddAndUpdatePurchaseScreen(
@@ -314,10 +333,16 @@ class PurchaseReportState extends State<PurchaseListScreen> {
                                                         PopupMenuItem(
                                                           child: GestureDetector(
                                                             onTap: () async {
+                                                              bool result = await checkActionWhenNoBranch(
+                                                                  ref: ref, context: context);
+                                                              if (!result) {
+                                                                return;
+                                                              }
                                                               await Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                  builder: (context) => InvoiceReturnScreen(purchaseTransaction: purchaseTransactions[index]),
+                                                                  builder: (context) => InvoiceReturnScreen(
+                                                                      purchaseTransaction: purchaseTransactions[index]),
                                                                 ),
                                                               );
                                                               Navigator.pop(bc);

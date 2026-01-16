@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Authentication/change%20password/repo/change_pass_repo.dart';
-import 'package:mobile_pos/Screens/Authentication/forgot%20password/repo/forgot_pass_repo.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
 import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../constant.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -36,6 +34,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    final _lang = lang.S.of(context);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -77,7 +76,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     decoration: kInputDecoration.copyWith(
                       // border: const OutlineInputBorder(),
                       hintText: '********',
-                      labelText: 'Old Password',
+                      labelText: _lang.oldPassword,
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -92,7 +91,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Old Password can\'t be empty';
+                        return _lang.oldPasswordCanNotBeEmpty;
                       } else if (value.length < 6) {
                         //return 'Please enter a bigger password';
                         return lang.S.of(context).pleaseEnterABiggerPassword;
@@ -176,7 +175,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         isClicked = true;
                         EasyLoading.show();
                         ChangePassRepo repo = ChangePassRepo();
-                        if (await repo.changePass(oldPass: _oldPasswordController.text, newPass: _confirmPasswordController.text, context: context)) {
+                        if (await repo.changePass(
+                            oldPass: _oldPasswordController.text,
+                            newPass: _confirmPasswordController.text,
+                            context: context)) {
                           Navigator.pop(context);
                         } else {
                           isClicked = false;

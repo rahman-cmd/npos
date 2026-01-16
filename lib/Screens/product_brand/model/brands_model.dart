@@ -16,6 +16,7 @@ class Brand {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
   num? id;
   num? businessId;
   String? brandName;

@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.4+6
+version: 1.0.6+8
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -43,7 +43,7 @@ dependencies:
   cached_network_image: ^3.4.1
   url_launcher: ^6.3.1
   flutter_feather_icons: ^2.0.0+1
-  permission_handler: ^11.3.1
+  permission_handler: ^12.0.0+1
   shared_preferences: ^2.5.2
   restart_app: ^1.3.2
   pinput: ^5.0.1
@@ -64,22 +64,36 @@ dependencies:
   animated_notch_bottom_bar: ^1.0.3
   webview_flutter: ^4.10.0
   webview_flutter_android: ^4.3.2
-  fl_chart: ^0.70.2
+  fl_chart: ^1.0.0
   print_bluetooth_thermal: ^1.1.6
-  mobile_scanner: ^6.0.7
+  mobile_scanner: ^7.0.0
   excel: ^4.0.6
   flutter_typeahead: ^5.2.0
   esc_pos_utils_plus: ^2.0.4
   printing: ^5.14.2
   file_selector: ^1.0.3
-  skeletonizer: ^1.4.3
-  upgrader: ^11.3.1
-  share_plus: ^10.1.4
+  file_picker: ^10.2.0
+  share_plus: ^11.0.0
+  bijoy_helper: ^1.1.0
+  hugeicons: ^1.0.2
+  dropdown_button2: ^2.3.9
+  collection: ^1.18.0
+  community_material_icon: ^5.9.55
+  faker: ^2.2.0
+  image:
+  bluetooth_print_plus: ^2.4.6
+  flutter_slidable: ^4.0.0
+  icons_plus: ^5.0.0
+#  pdf_render: ^1.4.12
+  barcode:
+  screenshot:
+  flutter_long_screenshot: ^2.0.0
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   change_app_package_name: ^1.4.0
   icons_launcher: ^3.0.0
 
@@ -90,6 +104,8 @@ flutter:
   assets:
     - images/
     - assets/
+    - assets/hrm/
+    - assets/fonts/
 
 
   fonts:

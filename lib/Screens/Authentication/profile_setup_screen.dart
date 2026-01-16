@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
@@ -53,6 +52,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
       dropDownItems.add(item);
     }
     return DropdownButton(
+      isExpanded: true,
       hint: Text(lang.S.of(context).selectBusinessCategory
           //'Select Business Category'
           ),
@@ -71,6 +71,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final _lang = lang.S.of(context);
     return WillPopScope(
       onWillPop: () async => false,
       child: Consumer(builder: (context, ref, __) {
@@ -341,48 +342,48 @@ class _ProfileSetupState extends State<ProfileSetup> {
                           ),
                         ),
 
-                        ///_______Gst_number____________________________
-                        Row(
-                          children: [
-                            ///_______title__________________________________
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
-                                child: AppTextField(
-                                  validator: (value) {
-                                    return null;
-                                  },
-                                  controller: vatGstTitleController,
-                                  textFieldType: TextFieldType.NAME,
-                                  decoration: kInputDecoration.copyWith(
-                                    hintText: "Enter VAT/GST Title",
-                                    labelText: "VAT/GST Title",
-                                    border: const OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            ///______Vat_and_Gst_Number__________________________________
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: AppTextField(
-                                  validator: (value) {
-                                    return null;
-                                  },
-                                  controller: vatGstNumberController, // Optional
-                                  textFieldType: TextFieldType.NAME,
-                                  decoration: kInputDecoration.copyWith(
-                                    hintText: 'Enter shop VAT/GST number',
-                                    labelText: 'VAT/GST Number',
-                                    border: const OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
+                        // ///_______Gst_number____________________________
+                        // Row(
+                        //   children: [
+                        //     ///_______title__________________________________
+                        //     Expanded(
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
+                        //         child: AppTextField(
+                        //           validator: (value) {
+                        //             return null;
+                        //           },
+                        //           controller: vatGstTitleController,
+                        //           textFieldType: TextFieldType.NAME,
+                        //           decoration: kInputDecoration.copyWith(
+                        //             labelText: _lang.vatGstTitle,
+                        //             hintText: _lang.enterVatGstTitle,
+                        //             border: const OutlineInputBorder(),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //
+                        //     ///______Vat_and_Gst_Number__________________________________
+                        //     Expanded(
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(10.0),
+                        //         child: AppTextField(
+                        //           validator: (value) {
+                        //             return null;
+                        //           },
+                        //           controller: vatGstNumberController, // Optional
+                        //           textFieldType: TextFieldType.NAME,
+                        //           decoration: kInputDecoration.copyWith(
+                        //             hintText: _lang.enterVatGstNumber,
+                        //             labelText: _lang.vatGstNumber,
+                        //             border: const OutlineInputBorder(),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // )
                       ],
                     ),
                   ),

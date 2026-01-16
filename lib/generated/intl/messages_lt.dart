@@ -20,29 +20,85 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'lt';
 
+  static String m0(start) => "Išsiųsti OTP pakartotinai po \$${start} sek.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "CustomerDetails": MessageLookupByLibrary.simpleMessage(
       "Kliento informacija",
     ),
+    "INVOICE": MessageLookupByLibrary.simpleMessage("FATTURA"),
+    "a4PageLogo": MessageLookupByLibrary.simpleMessage(
+      "A4 sąskaitos logotipas",
+    ),
+    "accountDisplayName": MessageLookupByLibrary.simpleMessage(
+      "Rodomas sąskaitos pavadinimas",
+    ),
+    "accountHolderName": MessageLookupByLibrary.simpleMessage(
+      "Sąskaitos savininko vardas",
+    ),
+    "accountName": MessageLookupByLibrary.simpleMessage(
+      "Sąskaitos pavadinimas",
+    ),
+    "accountNumber": MessageLookupByLibrary.simpleMessage(
+      "Sąskaitos pavadinimas",
+    ),
+    "action": MessageLookupByLibrary.simpleMessage("Azione"),
     "actions": MessageLookupByLibrary.simpleMessage("Veiksmai"),
+    "active": MessageLookupByLibrary.simpleMessage("Attivo"),
+    "add": MessageLookupByLibrary.simpleMessage("Aggiungi"),
     "addAPurchase": MessageLookupByLibrary.simpleMessage("Pridėkite pirkimą"),
+    "addAttendance": MessageLookupByLibrary.simpleMessage("Pridėti lankomumą"),
+    "addBank": MessageLookupByLibrary.simpleMessage("Pridėti banką"),
     "addBrand": MessageLookupByLibrary.simpleMessage("Pridėti prekės ženklą"),
+    "addCash": MessageLookupByLibrary.simpleMessage("Pridėti grynųjų"),
     "addCategory": MessageLookupByLibrary.simpleMessage("Pridėti kategoriją"),
     "addContact": MessageLookupByLibrary.simpleMessage("Pridėti kontaktą"),
     "addCustomer": MessageLookupByLibrary.simpleMessage("Pridėkite klientą"),
+    "addCustomers": MessageLookupByLibrary.simpleMessage("Pridėti Klientą"),
     "addDelivery": MessageLookupByLibrary.simpleMessage("Pridėti pristatymą"),
+    "addDepartment": MessageLookupByLibrary.simpleMessage("Pridėti skyrių"),
+    "addDesignation": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naujas pareigas",
+    ),
     "addExpense": MessageLookupByLibrary.simpleMessage("Pridėti išlaidą"),
     "addExpenseCat": MessageLookupByLibrary.simpleMessage(
       "Pridėti išlaidų kategoriją",
     ),
+    "addHoliday": MessageLookupByLibrary.simpleMessage(
+      "Pridėti šventinę dieną",
+    ),
+    "addImage": MessageLookupByLibrary.simpleMessage("Pridėti vaizdą"),
     "addIncome": MessageLookupByLibrary.simpleMessage("Pridėti pajamas"),
     "addIncomeCategory": MessageLookupByLibrary.simpleMessage(
       "Pridėti pajamų kategoriją",
     ),
     "addItems": MessageLookupByLibrary.simpleMessage("Pridėti prekes"),
+    "addLeave": MessageLookupByLibrary.simpleMessage("Pridėti atostogas"),
+    "addMoreFiled": MessageLookupByLibrary.simpleMessage(
+      "Pridėti daugiau laukų",
+    ),
     "addNewAddress": MessageLookupByLibrary.simpleMessage(
       "Pridėti naują adresą",
+    ),
+    "addNewAttendance": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują lankomumą",
+    ),
+    "addNewBankAccounts": MessageLookupByLibrary.simpleMessage(
+      "Pridėti banko sąskaitas",
+    ),
+    "addNewEmployee": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują darbuotoją",
+    ),
+    "addNewHoliday": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują šventinę dieną",
+    ),
+    "addNewLeave": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują atostogų prašymą",
+    ),
+    "addNewModel": MessageLookupByLibrary.simpleMessage("Pridėti naują modelį"),
+    "addNewPayroll": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują darbo užmokesčio žiniaraštį",
     ),
     "addNewProduct": MessageLookupByLibrary.simpleMessage(
       "Pridėti naują produktą",
@@ -50,36 +106,97 @@ class MessageLookup extends MessageLookupByLibrary {
     "addNewPurchase": MessageLookupByLibrary.simpleMessage(
       "Pridėkite naują pirkimą",
     ),
+    "addNewRack": MessageLookupByLibrary.simpleMessage("Pridėti naują stelažą"),
+    "addNewShift": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują pamainą",
+    ),
+    "addNewTax": MessageLookupByLibrary.simpleMessage("Aggiungi Nuova Imposta"),
+    "addNewVariation": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują variaciją",
+    ),
+    "addNewVariations": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naujas variacijas",
+    ),
+    "addNewWarehouse": MessageLookupByLibrary.simpleMessage(
+      "Pridėti naują sandėlį",
+    ),
     "addNote": MessageLookupByLibrary.simpleMessage("Pridėti pastabą"),
+    "addParty": MessageLookupByLibrary.simpleMessage("Pridėti Klientus"),
+    "addPayment": MessageLookupByLibrary.simpleMessage("Pridėti mokėjimą"),
     "addProduct": MessageLookupByLibrary.simpleMessage("Pridėkite produktą"),
     "addProductFirst": MessageLookupByLibrary.simpleMessage(
       "Pirmiausia pridėkite produktą",
     ),
+    "addProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Produktas sėkmingai sukurtas!",
+    ),
+    "addProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės kurti produkto.",
+    ),
     "addPurchase": MessageLookupByLibrary.simpleMessage("Pridėti pirkimą"),
+    "addRole": MessageLookupByLibrary.simpleMessage("Pridėti rolę"),
     "addSale": MessageLookupByLibrary.simpleMessage("Pridėkite pardavimą"),
     "addSales": MessageLookupByLibrary.simpleMessage("Pridėti pardavimus"),
+    "addShelf": MessageLookupByLibrary.simpleMessage("Pridėti naują lentyną"),
+    "addShift": MessageLookupByLibrary.simpleMessage("Pridėti pamainą"),
+    "addStock": MessageLookupByLibrary.simpleMessage("Pridėti Atsargas"),
+    "addSubVariation": MessageLookupByLibrary.simpleMessage(
+      "Pridėti subvariaciją",
+    ),
+    "addTax": MessageLookupByLibrary.simpleMessage("Aggiungi Imposta"),
+    "addTaxGroup": MessageLookupByLibrary.simpleMessage(
+      "Aggiungi Nuovo Gruppo Fiscale",
+    ),
     "addUnit": MessageLookupByLibrary.simpleMessage("Pridėti vienetą"),
     "addUserRole": MessageLookupByLibrary.simpleMessage(
       "Pridėti vartotojo rolę",
+    ),
+    "addVariant": MessageLookupByLibrary.simpleMessage("Pridėti Variantą"),
+    "addVariantDetails": MessageLookupByLibrary.simpleMessage(
+      "Pridėti varianto detales",
     ),
     "addedToCart": MessageLookupByLibrary.simpleMessage(
       "Pridėta prie krepšelio",
     ),
     "adding": MessageLookupByLibrary.simpleMessage("Pridėjama..."),
     "address": MessageLookupByLibrary.simpleMessage("Adresas"),
+    "adjustBankBalance": MessageLookupByLibrary.simpleMessage(
+      "Koreguoti banko balansą",
+    ),
+    "adjustCash": MessageLookupByLibrary.simpleMessage("Koreguoti grynuosius"),
+    "adjustCashBalance": MessageLookupByLibrary.simpleMessage(
+      "Koreguoti grynųjų pinigų balansą",
+    ),
+    "adjustmentDate": MessageLookupByLibrary.simpleMessage("Koregavimo data"),
+    "admin": MessageLookupByLibrary.simpleMessage("Admin"),
+    "advance": MessageLookupByLibrary.simpleMessage("Išankstinis mokėjimas"),
     "all": MessageLookupByLibrary.simpleMessage("Visi"),
     "allBusinessSolutions": MessageLookupByLibrary.simpleMessage(
       "Visi verslo sprendimai",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "NPOS yra išsamus verslo sprendimas, apimantis atsargas, apskaitą, pardavimus, išlaidas ir nuostolius/pelną.",
+      "Npos yra išsamus verslo sprendimas, apimantis atsargas, apskaitą, pardavimus, išlaidas ir nuostolius/pelną.",
     ),
+    "allEmployee": MessageLookupByLibrary.simpleMessage("Visi darbuotojai"),
+    "allParties": MessageLookupByLibrary.simpleMessage("Visos šalys"),
+    "allParty": MessageLookupByLibrary.simpleMessage("Visos šalys"),
     "allTime": MessageLookupByLibrary.simpleMessage("Visas laikas"),
+    "allTransaction": MessageLookupByLibrary.simpleMessage("Visos operacijos"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Jau pridėta"),
     "alreadyHaveAnAccount": MessageLookupByLibrary.simpleMessage(
       "Jau turite paskyrą? ",
     ),
     "amount": MessageLookupByLibrary.simpleMessage("Suma"),
+    "amountMustBeGreaterThanZero": MessageLookupByLibrary.simpleMessage(
+      "Suma turi būti didesnė už 0",
+    ),
+    "amountRoundingMethod": MessageLookupByLibrary.simpleMessage(
+      "Metodo di Arrotondamento Importo",
+    ),
+    "amountsInWord": MessageLookupByLibrary.simpleMessage("Importi in Lettere"),
+    "amountsIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Suma yra privaloma",
+    ),
     "anSMSWillBeSentToTheFollowingNumber": MessageLookupByLibrary.simpleMessage(
       "SMS bus išsiųstas į šį numerį:",
     ),
@@ -92,42 +209,142 @@ class MessageLookup extends MessageLookupByLibrary {
     "appleWatch": MessageLookupByLibrary.simpleMessage("Apple Watch"),
     "apply": MessageLookupByLibrary.simpleMessage("Taikyti"),
     "areYouSure": MessageLookupByLibrary.simpleMessage("Ar tikrai?"),
+    "areYouSureWantToDeleteThisBranch": MessageLookupByLibrary.simpleMessage(
+      "Ar tikrai norite ištrinti šį filialą?",
+    ),
+    "areYouSureWantToDeleteThisRole": MessageLookupByLibrary.simpleMessage(
+      "Ar tikrai norite ištrinti šią rolę?",
+    ),
+    "areYouSureWantToSwitchToDifferentBranch":
+        MessageLookupByLibrary.simpleMessage(
+          "Ar tikrai norite pereiti į kitą filialą?",
+        ),
     "areYouSureYouWant": MessageLookupByLibrary.simpleMessage(
       "Ar tikrai norite ištrinti šią šalį?",
+    ),
+    "areYourSureYouWantToExitFromThisBranch":
+        MessageLookupByLibrary.simpleMessage(
+          "Ar tikrai norite išeiti iš šio filialo?",
+        ),
+    "asOfDate": MessageLookupByLibrary.simpleMessage("Datos būklei"),
+    "assets": MessageLookupByLibrary.simpleMessage("Turtas"),
+    "attachment": MessageLookupByLibrary.simpleMessage("Priedas"),
+    "attendance": MessageLookupByLibrary.simpleMessage("Lankomumas"),
+    "attendanceReport": MessageLookupByLibrary.simpleMessage(
+      "Lankomumo ataskaitos",
+    ),
+    "authorizedSignature": MessageLookupByLibrary.simpleMessage(
+      "Firma Autorizzata",
+    ),
+    "autoCalculatedDays": MessageLookupByLibrary.simpleMessage(
+      "Automatiškai apskaičiuotos dienos",
+    ),
+    "autoSelected": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkta automatiškai",
     ),
     "backToHome": MessageLookupByLibrary.simpleMessage(
       "Grįžti į pagrindinį puslapį",
     ),
     "balance": MessageLookupByLibrary.simpleMessage("Balansas"),
+    "balanceDue": MessageLookupByLibrary.simpleMessage("Mokėtinas likutis"),
+    "balanceSheet": MessageLookupByLibrary.simpleMessage("Balansas"),
     "bangladesh": MessageLookupByLibrary.simpleMessage("Bangladešas"),
+    "bank": MessageLookupByLibrary.simpleMessage("Bankas"),
+    "bankAccounts": MessageLookupByLibrary.simpleMessage("Banko sąskaitos"),
+    "bankDetails": MessageLookupByLibrary.simpleMessage("Banko duomenys"),
+    "bankName": MessageLookupByLibrary.simpleMessage("Banko pavadinimas"),
+    "bankToBankTransfer": MessageLookupByLibrary.simpleMessage(
+      "Pervedimas iš banko į banką",
+    ),
+    "bankToCashTransfer": MessageLookupByLibrary.simpleMessage(
+      "Pervedimas iš banko į grynuosius",
+    ),
+    "barCodePrintLabelSetting": MessageLookupByLibrary.simpleMessage(
+      "Brūkšninio kodo etikečių nustatymai",
+    ),
+    "barcodeGen": MessageLookupByLibrary.simpleMessage(
+      "Brūkšninių Kodų Generatorius",
+    ),
     "barcodeGenerator": MessageLookupByLibrary.simpleMessage(
       "Brūkšninio kodo generatorius",
     ),
+    "barcodes": MessageLookupByLibrary.simpleMessage("Brūkšniniai kodai"),
+    "batch": MessageLookupByLibrary.simpleMessage("Krova"),
+    "batchNo": MessageLookupByLibrary.simpleMessage("Krovos Nr."),
     "billTO": MessageLookupByLibrary.simpleMessage("Sąskaita išrašyta"),
+    "billWiseProfit": MessageLookupByLibrary.simpleMessage(
+      "Pelnas pagal sąskaitas",
+    ),
+    "billingAddress": MessageLookupByLibrary.simpleMessage("Sąskaitos Adresas"),
+    "birthDate": MessageLookupByLibrary.simpleMessage("Gimimo data"),
+    "bluetoothIsTurnedOff": MessageLookupByLibrary.simpleMessage(
+      "Bluetooth išjungtas. Prašome įjungti.",
+    ),
+    "branch": MessageLookupByLibrary.simpleMessage("Filialas"),
+    "branchList": MessageLookupByLibrary.simpleMessage("Filialų sąrašas"),
     "brand": MessageLookupByLibrary.simpleMessage("Prekės ženklas"),
     "brandName": MessageLookupByLibrary.simpleMessage(
       "Prekės ženklo pavadinimas",
     ),
     "brands": MessageLookupByLibrary.simpleMessage("Prekės ženklai"),
+    "breakDuration": MessageLookupByLibrary.simpleMessage("Pertraukos trukmė"),
+    "breakStatus": MessageLookupByLibrary.simpleMessage("Pertraukos būsena"),
+    "breakTime": MessageLookupByLibrary.simpleMessage("Pertraukos laikas"),
+    "bulk": MessageLookupByLibrary.simpleMessage("Masinis Įkėlimas"),
+    "bulkUploads": MessageLookupByLibrary.simpleMessage("Masinis įkėlimas"),
     "businessCat": MessageLookupByLibrary.simpleMessage("Verslo kategorija"),
     "businessName": MessageLookupByLibrary.simpleMessage(
       "Įmonės ir verslo pavadinimas",
     ),
+    "buyNow": MessageLookupByLibrary.simpleMessage("Pirkti dabar"),
     "buyPremium": MessageLookupByLibrary.simpleMessage("Pirkti Premium planą"),
     "call": MessageLookupByLibrary.simpleMessage("Skambinti"),
     "camera": MessageLookupByLibrary.simpleMessage("Kamera"),
+    "canNotEditThisTransactionType": MessageLookupByLibrary.simpleMessage(
+      "Šio tipo operacijos redaguoti negalima.",
+    ),
+    "canNotRetrievePaymentDetails": MessageLookupByLibrary.simpleMessage(
+      "Nepavyko gauti mokėjimo informacijos.",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Atšaukti"),
+    "caningForDevices": MessageLookupByLibrary.simpleMessage(
+      "Ieškoma įrenginių...",
+    ),
+    "cannotTransferToSameAccounts": MessageLookupByLibrary.simpleMessage(
+      "Negalima pervesti į tą pačią sąskaitą.",
+    ),
     "capacity": MessageLookupByLibrary.simpleMessage("Talpa"),
     "cash": MessageLookupByLibrary.simpleMessage("Grynieji"),
+    "cashAndBank": MessageLookupByLibrary.simpleMessage("Grynieji ir bankas"),
+    "cashAndBankManagement": MessageLookupByLibrary.simpleMessage(
+      "Grynųjų pinigų ir banko valdymas",
+    ),
+    "cashFlow": MessageLookupByLibrary.simpleMessage("Pinigų srautas"),
+    "cashIn": MessageLookupByLibrary.simpleMessage("Pinigų įplaukos"),
+    "cashInHand": MessageLookupByLibrary.simpleMessage(
+      "Grynieji pinigai kosoje",
+    ),
+    "cashOut": MessageLookupByLibrary.simpleMessage("Pinigų išmokos"),
+    "cashToBankTransfer": MessageLookupByLibrary.simpleMessage(
+      "Pervedimas iš grynųjų į banką",
+    ),
     "categories": MessageLookupByLibrary.simpleMessage("Kategorijos"),
     "category": MessageLookupByLibrary.simpleMessage("Kategorija"),
     "categoryName": MessageLookupByLibrary.simpleMessage(
       "Kategorijos pavadinimas",
     ),
+    "changeAmount": MessageLookupByLibrary.simpleMessage("Importo Resto"),
     "changePassword": MessageLookupByLibrary.simpleMessage(
       "Pakeisti slaptažodį",
     ),
     "checkEmail": MessageLookupByLibrary.simpleMessage("Tikrinti el. paštą"),
+    "cheque": MessageLookupByLibrary.simpleMessage("Čekiai"),
+    "chequeAmount": MessageLookupByLibrary.simpleMessage("Čekio suma"),
+    "chequeDate": MessageLookupByLibrary.simpleMessage("Čekio data"),
+    "chequeList": MessageLookupByLibrary.simpleMessage("Čekių sąrašas"),
+    "chequeNumber": MessageLookupByLibrary.simpleMessage("Čekio numeris"),
+    "choose": MessageLookupByLibrary.simpleMessage("Pasirinkti"),
+    "chooseCountry": MessageLookupByLibrary.simpleMessage("Pasirinkite Šalį"),
     "chooseCustomer": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite klientą",
     ),
@@ -138,13 +355,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pasirinkite savo funkcijas",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funkcijos yra svarbi dalis, dėl kurios NPOS skiriasi nuo tradicinių sprendimų.",
+      "Funkcijos yra svarbi dalis, dėl kurios Npos skiriasi nuo tradicinių sprendimų.",
     ),
+    "city": MessageLookupByLibrary.simpleMessage("Miestas"),
+    "cityName": MessageLookupByLibrary.simpleMessage("Miestas"),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
+    "clear": MessageLookupByLibrary.simpleMessage("Išvalyti"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
       "Spustelėkite, kad prisijungtumėte",
     ),
     "close": MessageLookupByLibrary.simpleMessage("Uždaryti"),
+    "closed": MessageLookupByLibrary.simpleMessage("Uždaryta"),
     "code": MessageLookupByLibrary.simpleMessage("Kodas"),
     "collectDue": MessageLookupByLibrary.simpleMessage("Surinkti skolą"),
     "collectDues": MessageLookupByLibrary.simpleMessage(
@@ -153,6 +374,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "collectedBy": MessageLookupByLibrary.simpleMessage("Surinko:"),
     "collectedBys": MessageLookupByLibrary.simpleMessage("Ritirato Da"),
     "color": MessageLookupByLibrary.simpleMessage("Spalva"),
+    "combinationOfTheMultipleTaxes": MessageLookupByLibrary.simpleMessage(
+      "Combinazione di più imposte",
+    ),
+    "combo": MessageLookupByLibrary.simpleMessage("Rinkinys (Combo)"),
+    "comboProductReport": MessageLookupByLibrary.simpleMessage(
+      "Rinkinio produktų ataskaita",
+    ),
+    "comboProducts": MessageLookupByLibrary.simpleMessage("Rinkiniai (Combo)"),
+    "comboReport": MessageLookupByLibrary.simpleMessage(
+      "Rinkinių (Combo) ataskaita",
+    ),
     "comingSoon": MessageLookupByLibrary.simpleMessage("Netrukus"),
     "companyAddress": MessageLookupByLibrary.simpleMessage("Įmonės adresas"),
     "confirmDelete": MessageLookupByLibrary.simpleMessage(
@@ -163,6 +395,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "confirmPassword": MessageLookupByLibrary.simpleMessage(
       "Patvirtinti slaptažodį",
+    ),
+    "confirmReturn": MessageLookupByLibrary.simpleMessage(
+      "Patvirtinti grąžinimą",
     ),
     "confirmSMSTo": MessageLookupByLibrary.simpleMessage("Patvirtinti SMS į"),
     "congratulation": MessageLookupByLibrary.simpleMessage("Sveikiname"),
@@ -175,6 +410,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "connectYourPrinter": MessageLookupByLibrary.simpleMessage(
       "Prijunkite savo spausdintuvą",
     ),
+    "connectedTo": MessageLookupByLibrary.simpleMessage("Prisijungta prie"),
     "contactDetials": MessageLookupByLibrary.simpleMessage(
       "Kontaktiniai duomenys",
     ),
@@ -182,7 +418,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "continueButton": MessageLookupByLibrary.simpleMessage("Tęsti"),
     "continueE": MessageLookupByLibrary.simpleMessage("Tęsti"),
     "cost": MessageLookupByLibrary.simpleMessage("Kaina"),
+    "costExclusionTax": MessageLookupByLibrary.simpleMessage(
+      "Savikaina be mokesčių",
+    ),
+    "costInclusionTax": MessageLookupByLibrary.simpleMessage(
+      "Savikaina su mokesčiais",
+    ),
     "country": MessageLookupByLibrary.simpleMessage("Šalis"),
+    "countryName": MessageLookupByLibrary.simpleMessage("Šalies pavadinimas"),
     "create": MessageLookupByLibrary.simpleMessage("Sukurti"),
     "createAFreeAccount": MessageLookupByLibrary.simpleMessage(
       "Sukurti nemokamą paskyrą",
@@ -190,19 +433,49 @@ class MessageLookup extends MessageLookupByLibrary {
     "createAcc": MessageLookupByLibrary.simpleMessage(
       "Sukurti nemokamą paskyrą",
     ),
+    "createBranch": MessageLookupByLibrary.simpleMessage("Sukurti filialą"),
     "createNewPassword": MessageLookupByLibrary.simpleMessage(
       "Sukurti naują slaptažodį",
     ),
+    "createPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės kurti PDF.",
+    ),
+    "createSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės kurti pardavimą.",
+    ),
+    "creditIn": MessageLookupByLibrary.simpleMessage("Kreditas (Įplaukos)"),
+    "creditLimit": MessageLookupByLibrary.simpleMessage(
+      "Kliento Kredito Limitas",
+    ),
     "currency": MessageLookupByLibrary.simpleMessage("Valiuta"),
+    "currentBalance": MessageLookupByLibrary.simpleMessage(
+      "Dabartinis balansas",
+    ),
+    "currentCashBalance": MessageLookupByLibrary.simpleMessage(
+      "Dabartinis grynųjų pinigų balansas",
+    ),
+    "currentMonth": MessageLookupByLibrary.simpleMessage("Šis mėnuo"),
+    "currentYear": MessageLookupByLibrary.simpleMessage("Šie metai"),
+    "currents": MessageLookupByLibrary.simpleMessage("Dabartinis"),
     "custom": MessageLookupByLibrary.simpleMessage("Pritaikytas"),
+    "customDate": MessageLookupByLibrary.simpleMessage("Pasirinktinė data"),
     "customInvoiceBranding": MessageLookupByLibrary.simpleMessage(
       "Individualus sąskaitos faktūros prekės ženklas",
     ),
+    "customPrint": MessageLookupByLibrary.simpleMessage(
+      "Stampa Personalizzata",
+    ),
+    "customer": MessageLookupByLibrary.simpleMessage("Klientas"),
+    "customerDate": MessageLookupByLibrary.simpleMessage("Pasirinktinė data"),
     "customerDue": MessageLookupByLibrary.simpleMessage("Kliento skola"),
+    "customerLedger": MessageLookupByLibrary.simpleMessage("Kliento knyga"),
     "customerName": MessageLookupByLibrary.simpleMessage("Kliento vardas"),
     "customerPay": MessageLookupByLibrary.simpleMessage("Klientas moka"),
     "customerPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Kliento telefono numeris",
+    ),
+    "customerSignature": MessageLookupByLibrary.simpleMessage(
+      "Firma del Cliente",
     ),
     "dailyTransaction": MessageLookupByLibrary.simpleMessage(
       "Dienos sandoriai",
@@ -212,11 +485,36 @@ class MessageLookup extends MessageLookupByLibrary {
       "Duomenys išsaugoti sėkmingai.",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Data"),
+    "dateFilterWarn": MessageLookupByLibrary.simpleMessage(
+      "Pabaigos data negali būti ankstesnė už pradžios datą.",
+    ),
+    "dateIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Data yra privaloma",
+    ),
     "dates": MessageLookupByLibrary.simpleMessage("Data:"),
+    "dayBook": MessageLookupByLibrary.simpleMessage("Dienos knyga"),
     "days": MessageLookupByLibrary.simpleMessage("dienos"),
+    "daysLeft": MessageLookupByLibrary.simpleMessage("Liko dienų"),
     "dealer": MessageLookupByLibrary.simpleMessage("Dileris"),
     "dealerPrice": MessageLookupByLibrary.simpleMessage("Dilerių kaina"),
+    "debitOut": MessageLookupByLibrary.simpleMessage("Debetas (Išlaidos)"),
+    "defaultSellingPrice": MessageLookupByLibrary.simpleMessage(
+      "Numatytoji pardavimo kaina",
+    ),
     "delete": MessageLookupByLibrary.simpleMessage("Ištrinti"),
+    "deleteAcc": MessageLookupByLibrary.simpleMessage("Ištrinti Paskyrą"),
+    "deleteBatchWarn": MessageLookupByLibrary.simpleMessage(
+      "Ar tikrai norite ištrinti šį krovą?",
+    ),
+    "deleteDialogDetails": MessageLookupByLibrary.simpleMessage(
+      "Ar tikrai norite ištrinti savo paskyrą? Šis veiksmas visam laikui ištrins visus jūsų duomenis.",
+    ),
+    "deletePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės ištrinti kliento.",
+    ),
+    "deletedSuccessFully": MessageLookupByLibrary.simpleMessage(
+      "Eliminato con successo!",
+    ),
     "deleting": MessageLookupByLibrary.simpleMessage("Trinama..."),
     "deliveryAddress": MessageLookupByLibrary.simpleMessage(
       "Pristatymo adresas",
@@ -224,55 +522,161 @@ class MessageLookup extends MessageLookupByLibrary {
     "deliveryCharge": MessageLookupByLibrary.simpleMessage(
       "Pristatymo mokestis",
     ),
+    "department": MessageLookupByLibrary.simpleMessage("Skyrius"),
+    "deposit": MessageLookupByLibrary.simpleMessage("Indėlis / Įmoka"),
+    "depositTo": MessageLookupByLibrary.simpleMessage("Įmokėti į"),
     "description": MessageLookupByLibrary.simpleMessage("Aprašymas"),
+    "designation": MessageLookupByLibrary.simpleMessage("Pareigos"),
+    "designationName": MessageLookupByLibrary.simpleMessage(
+      "Pareigų pavadinimas",
+    ),
     "details": MessageLookupByLibrary.simpleMessage("Detalės"),
+    "developedBy": MessageLookupByLibrary.simpleMessage("Sukurta"),
     "digits": MessageLookupByLibrary.simpleMessage(
       "6 skaitmenų PIN kodas buvo išsiųstas į jūsų el. pašto adresą: ",
     ),
+    "disable": MessageLookupByLibrary.simpleMessage("Disabilita"),
     "discount": MessageLookupByLibrary.simpleMessage("Nuolaida"),
+    "displayNameIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Rodomas pavadinimas yra privalomas",
+    ),
     "doNotDisturb": MessageLookupByLibrary.simpleMessage("Netrukdyti"),
+    "doYouReallyWantToDeleteThis": MessageLookupByLibrary.simpleMessage(
+      "Ar tikrai norite tai ištrinti",
+    ),
     "doYouWantToDeleteTheUser": MessageLookupByLibrary.simpleMessage(
       "Ar tikrai norite ištrinti vartotoją?",
     ),
     "doYouWantToExitTheApp": MessageLookupByLibrary.simpleMessage(
       "Ar tikrai norite išeiti iš programėlės?",
     ),
+    "doYouWantToRellyReOpenThisCheque": MessageLookupByLibrary.simpleMessage(
+      "Ar tikrai norite iš naujo atidaryti šį čekį?",
+    ),
     "donNotHaveAnAccount": MessageLookupByLibrary.simpleMessage(
       "Neturite paskyros?",
     ),
+    "done": MessageLookupByLibrary.simpleMessage("Fatto"),
+    "download": MessageLookupByLibrary.simpleMessage("Atsisiųsti"),
+    "downloadApk": MessageLookupByLibrary.simpleMessage("Atsisiųsti APK"),
+    "downloadExcelFormat": MessageLookupByLibrary.simpleMessage(
+      "Atsisiųsti Excel formatą",
+    ),
+    "downloadSuccessfulPleaseCheckYourDocumentFolder":
+        MessageLookupByLibrary.simpleMessage(
+          "Atsiuntimas sėkmingas! Patikrinkite dokumentų aplanką",
+        ),
+    "downloading": MessageLookupByLibrary.simpleMessage("Atsiunčiama..."),
     "due": MessageLookupByLibrary.simpleMessage("Skola"),
     "dueAmount": MessageLookupByLibrary.simpleMessage("Skola: "),
+    "dueBalance": MessageLookupByLibrary.simpleMessage("Mokėtinas balansas"),
     "dueCollection": MessageLookupByLibrary.simpleMessage("Skolos surinkimas"),
     "dueList": MessageLookupByLibrary.simpleMessage("Skolų sąrašas"),
+    "duePay": MessageLookupByLibrary.simpleMessage("Mokėtina suma"),
     "dueReport": MessageLookupByLibrary.simpleMessage("Skolos ataskaita"),
+    "dueSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Pardavimai išsimokėtinai neleidžiami lankytojų klientams.",
+    ),
+    "dues": MessageLookupByLibrary.simpleMessage("Skolos"),
+    "duration": MessageLookupByLibrary.simpleMessage("Trukmė"),
+    "durationDays": MessageLookupByLibrary.simpleMessage("Trukmė (dienomis)"),
     "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
       "Lengvai naudojama mobilioji POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS programa yra nemokama ir lengvai naudojama. Iš tiesų, tai viena geriausių pasaulyje POS sistemų.",
+      "Npos programa yra nemokama ir lengvai naudojama. Iš tiesų, tai viena geriausių pasaulyje POS sistemų.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Redaguoti"),
+    "editAttendance": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti lankomumą",
+    ),
+    "editBankAccounts": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti banko sąskaitas",
+    ),
+    "editBankAdjustment": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti banko koregavimą",
+    ),
+    "editBankToCash": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti pervedimą iš banko į grynuosius",
+    ),
+    "editBankTransfer": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti banko pervedimą",
+    ),
+    "editCashAdjustment": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti grynųjų pinigų koregavimą",
+    ),
+    "editCashToBank": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti pervedimą iš grynųjų į banką",
+    ),
+    "editCategory": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti kategoriją",
+    ),
+    "editDesignation": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti pareigas",
+    ),
+    "editEmployee": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti darbuotoją",
+    ),
+    "editHoliday": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti šventinę dieną",
+    ),
+    "editLeave": MessageLookupByLibrary.simpleMessage("Redaguoti atostogas"),
+    "editModel": MessageLookupByLibrary.simpleMessage("Redaguoti modelį"),
+    "editPayroll": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti darbo užmokesčio žiniaraštį",
+    ),
     "editPhone": MessageLookupByLibrary.simpleMessage(
       "Redaguoti telefono numerį?",
     ),
+    "editProduct": MessageLookupByLibrary.simpleMessage("Redaguoti produktą"),
     "editPurchaseInvoice": MessageLookupByLibrary.simpleMessage(
       "Redaguoti pirkimo sąskaitą faktūrą",
     ),
+    "editRack": MessageLookupByLibrary.simpleMessage("Redaguoti stelažą"),
     "editSalesInvoice": MessageLookupByLibrary.simpleMessage(
       "Redaguoti pardavimo sąskaitą faktūrą",
     ),
+    "editShelf": MessageLookupByLibrary.simpleMessage("Redaguoti lentyną"),
+    "editShift": MessageLookupByLibrary.simpleMessage("Redaguoti pamainą"),
     "editSocailMedia": MessageLookupByLibrary.simpleMessage(
       "Redaguoti socialinę mediją",
     ),
+    "editTax": MessageLookupByLibrary.simpleMessage("Modifica Imposta"),
+    "editTaxGroup": MessageLookupByLibrary.simpleMessage(
+      "Modifica Gruppo Fiscale",
+    ),
+    "editVariations": MessageLookupByLibrary.simpleMessage(
+      "Redaguoti variaciją",
+    ),
+    "editWarehouse": MessageLookupByLibrary.simpleMessage("Redaguoti sandėlį"),
     "email": MessageLookupByLibrary.simpleMessage("El. pašto adresas"),
     "emailCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "El. paštas negali būti tuščias",
     ),
     "emailText": MessageLookupByLibrary.simpleMessage("El. paštas"),
+    "employee": MessageLookupByLibrary.simpleMessage("Darbuotojas"),
+    "enLowStock": MessageLookupByLibrary.simpleMessage(
+      "Įveskite mažą atsargų lygį",
+    ),
+    "end": MessageLookupByLibrary.simpleMessage("Pabaiga"),
+    "endBreakTime": MessageLookupByLibrary.simpleMessage(
+      "Pertraukos pabaigos laikas",
+    ),
     "endDate": MessageLookupByLibrary.simpleMessage("Pabaigos data"),
+    "endDateBeforeStartDate": MessageLookupByLibrary.simpleMessage(
+      "Pabaigos data yra ankstesnė už pradžios datą",
+    ),
+    "endDateCannotBeBeforeStartDate": MessageLookupByLibrary.simpleMessage(
+      "Pabaigos data negali būti ankstesnė už pradžios datą.",
+    ),
+    "endTime": MessageLookupByLibrary.simpleMessage("Pabaigos laikas"),
+    "endTimeIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Pabaigos laikas yra privalomas",
+    ),
     "endYourFreePlan": MessageLookupByLibrary.simpleMessage(
       "Baigti nemokamą planą",
     ),
+    "entBatchNo": MessageLookupByLibrary.simpleMessage("Įveskite Krovos Nr."),
     "enterABrandName": MessageLookupByLibrary.simpleMessage(
       "Įveskite prekės ženklo pavadinimą",
     ),
@@ -285,7 +689,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterAValidStock": MessageLookupByLibrary.simpleMessage(
       "Įveskite galiojantį sandėlį",
     ),
+    "enterAccountDisplayName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite rodomą sąskaitos pavadinimą",
+    ),
+    "enterAccountHolderName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite sąskaitos savininko vardą",
+    ),
+    "enterAccountName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite sąskaitos numerį",
+    ),
+    "enterAddress": MessageLookupByLibrary.simpleMessage("Įveskite Adresą"),
     "enterAmount": MessageLookupByLibrary.simpleMessage("Įveskite sumą"),
+    "enterBalance": MessageLookupByLibrary.simpleMessage("Įveskite balansą"),
+    "enterBankName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite banko pavadinimą",
+    ),
+    "enterBatchNo": MessageLookupByLibrary.simpleMessage(
+      "Įveskite partijos Nr.",
+    ),
+    "enterBreakTime": MessageLookupByLibrary.simpleMessage(
+      "Įveskite pertraukos laiką",
+    ),
     "enterBusiness": MessageLookupByLibrary.simpleMessage(
       "Įveskite verslo/parduotuvės pavadinimą",
     ),
@@ -300,9 +724,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterDealerPrice": MessageLookupByLibrary.simpleMessage(
       "Įveskite dilerių kainą",
     ),
+    "enterDescription": MessageLookupByLibrary.simpleMessage(
+      "Įveskite aprašymą",
+    ),
+    "enterDesignationName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite pareigų pavadinimą",
+    ),
     "enterDiscount": MessageLookupByLibrary.simpleMessage("Įveskite nuolaidą"),
     "enterEmail": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti savo el. pašto adresą, kad gautumėte slaptažodžio atstatymo nuorodą.",
+    ),
+    "enterEndTime": MessageLookupByLibrary.simpleMessage(
+      "Įveskite pabaigos laiką",
     ),
     "enterExpanseCategoryName": MessageLookupByLibrary.simpleMessage(
       "Įveskite išlaidų kategorijos pavadinimą",
@@ -313,11 +746,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterFullAddress": MessageLookupByLibrary.simpleMessage(
       "Įveskite visą adresą",
     ),
+    "enterFullName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite pilną vardą",
+    ),
+    "enterHolidayName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite šventės pavadinimą",
+    ),
     "enterIncomeCategoryName": MessageLookupByLibrary.simpleMessage(
       "Įveskite pajamų kategorijos pavadinimą",
     ),
+    "enterLabelText": MessageLookupByLibrary.simpleMessage(
+      "Įveskite etiketės tekstą",
+    ),
     "enterManufacturerName": MessageLookupByLibrary.simpleMessage(
       "Įveskite gamintojo pavadinimą",
+    ),
+    "enterModelName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite modelio pavadinimą",
     ),
     "enterName": MessageLookupByLibrary.simpleMessage("Įveskite vardą"),
     "enterNote": MessageLookupByLibrary.simpleMessage("Įvesti pastabą"),
@@ -340,18 +785,43 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterSaltingPrice": MessageLookupByLibrary.simpleMessage(
       "Įveskite pardavimo kainą",
     ),
+    "enterShelfName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite lentynos pavadinimą",
+    ),
     "enterSize": MessageLookupByLibrary.simpleMessage("Įveskite dydį"),
+    "enterStartTime": MessageLookupByLibrary.simpleMessage(
+      "Įveskite pradžios laiką",
+    ),
     "enterStock": MessageLookupByLibrary.simpleMessage("Įveskite sandėlį"),
+    "enterTaxRates": MessageLookupByLibrary.simpleMessage(
+      "Inserisci Aliquota Fiscale",
+    ),
     "enterType": MessageLookupByLibrary.simpleMessage("Įveskite tipą"),
+    "enterUserName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite vartotojo vardą",
+    ),
     "enterUserTitle": MessageLookupByLibrary.simpleMessage(
       "Įveskite vartotojo pavadinimą",
     ),
     "enterValidOTP": MessageLookupByLibrary.simpleMessage(
       "Įveskite galiojantį OTP",
     ),
+    "enterValues": MessageLookupByLibrary.simpleMessage("Įveskite reikšmes"),
+    "enterVatGstNumber": MessageLookupByLibrary.simpleMessage(
+      "Inserisci Numero IVA/GST",
+    ),
+    "enterVatGstTitle": MessageLookupByLibrary.simpleMessage(
+      "Inserisci Titolo IVA/GST",
+    ),
+    "enterWarehouseName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite sandėlio pavadinimą",
+    ),
     "enterWeight": MessageLookupByLibrary.simpleMessage("Įveskite svorį"),
     "enterWholesalePrice": MessageLookupByLibrary.simpleMessage(
       "Įveskite didmeninę kainą",
+    ),
+    "enterYourCountry": MessageLookupByLibrary.simpleMessage(
+      "Įveskite savo šalį",
     ),
     "enterYourEmailAddress": MessageLookupByLibrary.simpleMessage(
       "Įveskite savo el. pašto adresą",
@@ -362,21 +832,77 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterYourName": MessageLookupByLibrary.simpleMessage(
       "Įveskite savo vardą",
     ),
+    "enterYourNoteLevel": MessageLookupByLibrary.simpleMessage(
+      "Įveskite pastabos lygį",
+    ),
+    "enterYourPassword": MessageLookupByLibrary.simpleMessage(
+      "Įveskite slaptažodį",
+    ),
     "enterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Įveskite savo telefono numerį",
     ),
+    "enterYourPostSaleMessage": MessageLookupByLibrary.simpleMessage(
+      "Įveskite pranešimą po pardavimo",
+    ),
+    "errorDeletingTax": MessageLookupByLibrary.simpleMessage(
+      "Errore durante l\'eliminazione dell\'imposta",
+    ),
+    "excelFiles": MessageLookupByLibrary.simpleMessage("Excel failai"),
+    "excelUploader": MessageLookupByLibrary.simpleMessage("Excel įkėliklis"),
+    "exclusivePrice": MessageLookupByLibrary.simpleMessage("Kaina be PVM"),
+    "exit": MessageLookupByLibrary.simpleMessage("Išeiti"),
+    "exitBank": MessageLookupByLibrary.simpleMessage("Išeiti iš filialo"),
+    "expDate": MessageLookupByLibrary.simpleMessage("Galiojimo Data"),
     "expense": MessageLookupByLibrary.simpleMessage("Išlaidos"),
     "expenseCat": MessageLookupByLibrary.simpleMessage("Išlaidų kategorijos"),
     "expenseDate": MessageLookupByLibrary.simpleMessage("Išlaidos data"),
     "expenseFor": MessageLookupByLibrary.simpleMessage("Išlaidos už"),
     "expenseReport": MessageLookupByLibrary.simpleMessage("Išlaidų ataskaita"),
+    "expensesType": MessageLookupByLibrary.simpleMessage("Išlaidų rūšys"),
+    "expirationStatus": MessageLookupByLibrary.simpleMessage(
+      "Galiojimo Būsena",
+    ),
+    "expire": MessageLookupByLibrary.simpleMessage("Baigiasi galiojimas"),
+    "expireProductReports": MessageLookupByLibrary.simpleMessage(
+      "Galiojimo pabaigos ataskaitos",
+    ),
+    "expired": MessageLookupByLibrary.simpleMessage("Galiojimas baigėsi"),
+    "expiredDate": MessageLookupByLibrary.simpleMessage("Galiojimo pabaiga"),
+    "expiredItemReport": MessageLookupByLibrary.simpleMessage(
+      "Pasibaigusio galiojimo prekių ataskaita",
+    ),
+    "expiredList": MessageLookupByLibrary.simpleMessage("Elenco Scaduto"),
+    "expiredProduct": MessageLookupByLibrary.simpleMessage(
+      "Pasibaigusio galiojimo prekė",
+    ),
+    "expiry": MessageLookupByLibrary.simpleMessage("Galiojimas"),
+    "extendPlan": MessageLookupByLibrary.simpleMessage("Pratęsti planą"),
     "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+    "failedToDeleteTheDeterment": MessageLookupByLibrary.simpleMessage(
+      "Nepavyko ištrinti skyriaus",
+    ),
+    "failedToDeleteTheTax": MessageLookupByLibrary.simpleMessage(
+      "Impossibile eliminare l\'imposta",
+    ),
     "failedToGetPlatformVersion": MessageLookupByLibrary.simpleMessage(
       "Nepavyko gauti platformos versijos.",
     ),
+    "failedToLoadDepartment": MessageLookupByLibrary.simpleMessage(
+      "Nepavyko įkelti skyrių",
+    ),
+    "failedToProcessReturn": MessageLookupByLibrary.simpleMessage(
+      "Nepavyko apdoroti grąžinimo.",
+    ),
     "fashions": MessageLookupByLibrary.simpleMessage("Mada"),
+    "feature": MessageLookupByLibrary.simpleMessage("Funkcija"),
     "field": MessageLookupByLibrary.simpleMessage("Laukas"),
+    "fifteenthDays": MessageLookupByLibrary.simpleMessage("15 dienų"),
+    "filter": MessageLookupByLibrary.simpleMessage("Filtras"),
+    "filterByDate": MessageLookupByLibrary.simpleMessage(
+      "Filtruoti pagal datą",
+    ),
     "firstName": MessageLookupByLibrary.simpleMessage("Vardas"),
+    "flat": MessageLookupByLibrary.simpleMessage("Fiksuotas"),
     "folder": MessageLookupByLibrary.simpleMessage(
       "Gali būti, kad laiškas atsidūrė jūsų šlamšto aplanke.",
     ),
@@ -391,50 +917,131 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "freePack": MessageLookupByLibrary.simpleMessage("Nemokamas paketas"),
     "freePlan": MessageLookupByLibrary.simpleMessage("Nemokamas planas"),
+    "from": MessageLookupByLibrary.simpleMessage("Iš"),
+    "fromAccount": MessageLookupByLibrary.simpleMessage("Iš sąskaitos"),
     "fromDate": MessageLookupByLibrary.simpleMessage("Nuo datos"),
     "fullName": MessageLookupByLibrary.simpleMessage("Vardas Pavardė"),
     "fullyPaid": MessageLookupByLibrary.simpleMessage("Visiškai apmokėta"),
     "gallery": MessageLookupByLibrary.simpleMessage("Galerija"),
+    "genPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Nėra duomenų PDF generavimui",
+    ),
+    "gender": MessageLookupByLibrary.simpleMessage("Lytis"),
+    "generatePdf": MessageLookupByLibrary.simpleMessage("Generuoti PDF"),
+    "generatingPdf": MessageLookupByLibrary.simpleMessage(
+      "Generazione PDF in corso",
+    ),
     "gotEmail": MessageLookupByLibrary.simpleMessage("Gavote el. laišką"),
     "gotIt": MessageLookupByLibrary.simpleMessage("Supratau"),
+    "grossProfit": MessageLookupByLibrary.simpleMessage(
+      "Bendrasis pelnas (Gross Profit)",
+    ),
+    "guarantee": MessageLookupByLibrary.simpleMessage(
+      "Garantija (užtikrinimas)",
+    ),
     "guest": MessageLookupByLibrary.simpleMessage("Svečias"),
     "haveAcc": MessageLookupByLibrary.simpleMessage("Jau turite paskyrą?"),
+    "hideFiled": MessageLookupByLibrary.simpleMessage("Slėpti laukus"),
+    "highToLowPrice": MessageLookupByLibrary.simpleMessage(
+      "Kaina: nuo didžiausios",
+    ),
     "hintEmail": MessageLookupByLibrary.simpleMessage(
       "Įveskite el. pašto adresą",
     ),
     "hintPassword": MessageLookupByLibrary.simpleMessage("Įveskite slaptažodį"),
+    "holderName": MessageLookupByLibrary.simpleMessage("Savininko vardas"),
+    "holiday": MessageLookupByLibrary.simpleMessage("Šventinė diena"),
+    "holidayList": MessageLookupByLibrary.simpleMessage(
+      "Šventinių dienų sąrašas",
+    ),
     "home": MessageLookupByLibrary.simpleMessage("Pradžia"),
+    "hoursLeft": MessageLookupByLibrary.simpleMessage("Liko valandų"),
+    "hrm": MessageLookupByLibrary.simpleMessage("Žmogiškieji ištekliai (Hrm)"),
+    "iAgreeDeleteMyAccountPermanent": MessageLookupByLibrary.simpleMessage(
+      "Sutinku visam laikui ištrinti savo paskyrą.",
+    ),
+    "ifscCode": MessageLookupByLibrary.simpleMessage("IFSC kodas"),
     "image": MessageLookupByLibrary.simpleMessage("Vaizdas"),
+    "inActive": MessageLookupByLibrary.simpleMessage("Neaktyvus"),
+    "inStock": MessageLookupByLibrary.simpleMessage("Yra sandėlyje"),
+    "inactive": MessageLookupByLibrary.simpleMessage("Neaktyvus"),
+    "inclusivePrice": MessageLookupByLibrary.simpleMessage("Kaina su PVM"),
     "income": MessageLookupByLibrary.simpleMessage("Pajamos"),
     "incomeCategories": MessageLookupByLibrary.simpleMessage(
       "Pajamų kategorijos",
     ),
+    "incomeCategoriesReport": MessageLookupByLibrary.simpleMessage(
+      "Pajamų kategorijų ataskaita",
+    ),
     "incomeDate": MessageLookupByLibrary.simpleMessage("Pajamų data"),
     "incomeFor": MessageLookupByLibrary.simpleMessage("Pajamos už"),
     "incomeReport": MessageLookupByLibrary.simpleMessage("Pajamų ataskaita"),
+    "incomeReportPermission": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės peržiūrėti pajamų ataskaitą.",
+    ),
+    "incomeType": MessageLookupByLibrary.simpleMessage("Pajamų rūšis"),
+    "incomes": MessageLookupByLibrary.simpleMessage("Pajamos"),
+    "informationShowInLabels": MessageLookupByLibrary.simpleMessage(
+      "Informacija etiketėse",
+    ),
     "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
     "instrucation": MessageLookupByLibrary.simpleMessage("Instrukcija"),
     "inv": MessageLookupByLibrary.simpleMessage("Sąsk. Nr."),
+    "invalidAmount": MessageLookupByLibrary.simpleMessage("Neteisinga suma"),
+    "inventory": MessageLookupByLibrary.simpleMessage("Inventorius"),
+    "inventoryPermission": MessageLookupByLibrary.simpleMessage(
+      "Neturite inventoriaus teisių",
+    ),
     "invoice": MessageLookupByLibrary.simpleMessage("Sąskaita faktūra"),
+    "invoiceLogo": MessageLookupByLibrary.simpleMessage("Logo Fattura"),
+    "invoiceNumber": MessageLookupByLibrary.simpleMessage("Numero Fattura"),
     "invoiceViewr": MessageLookupByLibrary.simpleMessage("Sąskaitos peržiūra"),
     "item": MessageLookupByLibrary.simpleMessage("Articolo"),
     "itemAdded": MessageLookupByLibrary.simpleMessage("Prekė pridėta"),
+    "itemName": MessageLookupByLibrary.simpleMessage("Prekės pavadinimas"),
     "itemsSales": MessageLookupByLibrary.simpleMessage("Prekių pardavimai"),
+    "joinDate": MessageLookupByLibrary.simpleMessage("Įsidarbinimo data"),
+    "labelRoleLabelSize1_5Inch": MessageLookupByLibrary.simpleMessage(
+      "Etikečių rulonas 1.5\"*1, 38mm*25mm, tarpas 3.1mm",
+    ),
+    "labelRoleLabelSize2Inch": MessageLookupByLibrary.simpleMessage(
+      "Etikečių rulonas 2\"*1, 50mm*25mm, tarpas 3.1mm",
+    ),
     "lableEmail": MessageLookupByLibrary.simpleMessage("El. paštas"),
     "lablePassword": MessageLookupByLibrary.simpleMessage("Slaptažodis"),
     "language": MessageLookupByLibrary.simpleMessage("Kalba"),
+    "last30Days": MessageLookupByLibrary.simpleMessage("Paskutinės 30 dienų"),
+    "last7Days": MessageLookupByLibrary.simpleMessage("Paskutinės 7 dienos"),
+    "lastMonth": MessageLookupByLibrary.simpleMessage("Praėjęs mėnuo"),
     "lastName": MessageLookupByLibrary.simpleMessage("Pavardė"),
+    "lastYear": MessageLookupByLibrary.simpleMessage("Praėjusiais metais"),
+    "leave": MessageLookupByLibrary.simpleMessage("Atostogos"),
+    "leaveDuration": MessageLookupByLibrary.simpleMessage("Atostogų trukmė"),
+    "leaveList": MessageLookupByLibrary.simpleMessage("Atostogų sąrašas"),
+    "leaveReports": MessageLookupByLibrary.simpleMessage("Atostogų ataskaitos"),
+    "leaveRequest": MessageLookupByLibrary.simpleMessage("Atostogų prašymas"),
+    "leaveType": MessageLookupByLibrary.simpleMessage("Atostogų tipas"),
+    "ledger": MessageLookupByLibrary.simpleMessage("Didžioji knyga (Ledger)"),
     "link": MessageLookupByLibrary.simpleMessage("Nuoroda"),
     "linkedIN": MessageLookupByLibrary.simpleMessage("LinkedIn"),
+    "listIsEmpty": MessageLookupByLibrary.simpleMessage("L\'elenco è vuoto"),
     "loading": MessageLookupByLibrary.simpleMessage("Įkeliama"),
+    "loadingOtpSetting": MessageLookupByLibrary.simpleMessage(
+      "Įkeliami OTP nustatymai...",
+    ),
     "logIn": MessageLookupByLibrary.simpleMessage("Prisijungti"),
     "logInWithMail": MessageLookupByLibrary.simpleMessage(
       "Prisijungti naudojant el. paštą",
     ),
     "logOut": MessageLookupByLibrary.simpleMessage("Atsijungti"),
+    "loginFailedPleaseTryAgain": MessageLookupByLibrary.simpleMessage(
+      "Prisijungti nepavyko. Bandykite dar kartą.",
+    ),
+    "loginGoogle": MessageLookupByLibrary.simpleMessage("Login Google"),
     "loginWithPhone": MessageLookupByLibrary.simpleMessage(
       "Prisijungti telefonu",
     ),
+    "loginX": MessageLookupByLibrary.simpleMessage("Login X"),
     "lorem": MessageLookupByLibrary.simpleMessage(
       "Lorem ipsum dolor sit amet, consectetur adip gravi iscing elit. Ultricies gravida scelerisque arcu facilisis duis in.",
     ),
@@ -451,38 +1058,156 @@ class MessageLookup extends MessageLookupByLibrary {
     "lossProfitReport": MessageLookupByLibrary.simpleMessage(
       "Nuostolių/Pelno ataskaita",
     ),
+    "lowStock": MessageLookupByLibrary.simpleMessage("Mažas Atsargų Lygis"),
+    "lowStockAlert": MessageLookupByLibrary.simpleMessage(
+      "Įspėjimas apie mažas atsargas",
+    ),
+    "lowStockReport": MessageLookupByLibrary.simpleMessage(
+      "Mažo Atsargų Lygio Ataskaita",
+    ),
+    "lowToHighPrice": MessageLookupByLibrary.simpleMessage(
+      "Kaina: nuo mažiausios",
+    ),
     "lp": MessageLookupByLibrary.simpleMessage("Nuostoliai/Pelnas"),
     "lpDetails": MessageLookupByLibrary.simpleMessage(
       "Nuostolių/Pelno detalės",
     ),
+    "manageSetting": MessageLookupByLibrary.simpleMessage("Valdyti nustatymus"),
+    "manuDate": MessageLookupByLibrary.simpleMessage("Gamybos Data"),
+    "manufactureDate": MessageLookupByLibrary.simpleMessage("Gamybos Data"),
     "manufacturer": MessageLookupByLibrary.simpleMessage("Gamintojas"),
     "masterCard": MessageLookupByLibrary.simpleMessage("MasterCard"),
     "messege": MessageLookupByLibrary.simpleMessage("Žinutė"),
     "mobile": MessageLookupByLibrary.simpleMessage("Mobilusis:"),
     "mobiles": MessageLookupByLibrary.simpleMessage("Cellulare"),
+    "model": MessageLookupByLibrary.simpleMessage("Modelis"),
+    "modelCreatedSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "Modelis sėkmingai sukurtas!",
+    ),
+    "modelName": MessageLookupByLibrary.simpleMessage("Modelio pavadinimas"),
+    "modelUpdateSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "Modelis sėkmingai atnaujintas!",
+    ),
+    "models": MessageLookupByLibrary.simpleMessage("Modeliai"),
+    "moneyIn": MessageLookupByLibrary.simpleMessage("Pinigai į"),
+    "moneyOut": MessageLookupByLibrary.simpleMessage("Pinigai iš"),
     "moneyReceipt": MessageLookupByLibrary.simpleMessage(
       "Ricevuta di pagamento",
     ),
+    "month": MessageLookupByLibrary.simpleMessage("Mėnuo"),
     "monthly": MessageLookupByLibrary.simpleMessage("Mėnesinis"),
     "moreInfo": MessageLookupByLibrary.simpleMessage("Daugiau informacijos"),
     "mrp": MessageLookupByLibrary.simpleMessage("MRP"),
+    "mrpOrSalePrice": MessageLookupByLibrary.simpleMessage(
+      "Maksimali pardavimo kaina (MRP)",
+    ),
     "name": MessageLookupByLibrary.simpleMessage("Vardas"),
     "nameCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Vardas negali būti tuščias",
+    ),
+    "needAtLeastTwoBankAccount": MessageLookupByLibrary.simpleMessage(
+      "Pervedimui atlikti reikia bent dviejų banko sąskaitų.",
+    ),
+    "netProfit": MessageLookupByLibrary.simpleMessage(
+      "Grynasis pelnas (Net Profit)",
+    ),
+    "netTotalAmount": MessageLookupByLibrary.simpleMessage(
+      "Grynoji bendra suma",
     ),
     "newPassword": MessageLookupByLibrary.simpleMessage("Naujas slaptažodis"),
     "next": MessageLookupByLibrary.simpleMessage("Toliau"),
     "no": MessageLookupByLibrary.simpleMessage("Ne"),
     "noAcc": MessageLookupByLibrary.simpleMessage("Neturite paskyros?"),
+    "noAccountsFoundMissing": MessageLookupByLibrary.simpleMessage(
+      "Atitinkančių sąskaitų nerasta",
+    ),
+    "noActiveUser": MessageLookupByLibrary.simpleMessage(
+      "Nėra aktyvaus vartotojo",
+    ),
+    "noAttendanceRecordFound": MessageLookupByLibrary.simpleMessage(
+      "Pagal pasirinktus filtrus lankomumo įrašų nerasta.",
+    ),
+    "noAvailableRecordFound": MessageLookupByLibrary.simpleMessage(
+      "Lankomumo įrašų nerasta.",
+    ),
+    "noBankAccountFound": MessageLookupByLibrary.simpleMessage(
+      "Banko sąskaitų nerasta.",
+    ),
+    "noBankAccountsFoundToTransferFrom": MessageLookupByLibrary.simpleMessage(
+      "Nerasta banko sąskaitų, iš kurių būtų galima pervesti.",
+    ),
+    "noBatch": MessageLookupByLibrary.simpleMessage("Nėra partijos"),
+    "noBluetoothDeviceSelected": MessageLookupByLibrary.simpleMessage(
+      "Nepasirinktas joks Bluetooth įrenginys.",
+    ),
+    "noBrunchFound": MessageLookupByLibrary.simpleMessage("Filialų nerasta"),
+    "noChequeFound": MessageLookupByLibrary.simpleMessage("Čekių nerasta"),
     "noData": MessageLookupByLibrary.simpleMessage("Duomenų nėra"),
     "noDataAvailabe": MessageLookupByLibrary.simpleMessage("Duomenų nėra"),
+    "noDataAvailable": MessageLookupByLibrary.simpleMessage("Duomenų nėra"),
+    "noDataAvailableForExport": MessageLookupByLibrary.simpleMessage(
+      "Nėra duomenų eksportui",
+    ),
+    "noDataAvailableForGeneratePdf": MessageLookupByLibrary.simpleMessage(
+      "Nėra duomenų PDF generavimui",
+    ),
     "noDataFound": MessageLookupByLibrary.simpleMessage("Duomenų nerasta"),
+    "noDepartmentFound": MessageLookupByLibrary.simpleMessage(
+      "Skyrių nerasta.",
+    ),
+    "noDescriptionAvailableForThisDepartment":
+        MessageLookupByLibrary.simpleMessage("Šiam skyriui aprašymo nėra."),
+    "noDescriptionAvailableForThisDesignation":
+        MessageLookupByLibrary.simpleMessage("Šioms pareigoms aprašymo nėra."),
+    "noDescriptionProvided": MessageLookupByLibrary.simpleMessage(
+      "Aprašymas nepateiktas.",
+    ),
+    "noDesignationFound": MessageLookupByLibrary.simpleMessage(
+      "Pareigų nerasta.",
+    ),
+    "noDestinationBankAccountFond": MessageLookupByLibrary.simpleMessage(
+      "Paskirties banko sąskaitų nerasta.",
+    ),
+    "noDeviceFound": MessageLookupByLibrary.simpleMessage("Įrenginių nerasta"),
+    "noDue": MessageLookupByLibrary.simpleMessage("Nėra Skolos"),
     "noDueSelected": MessageLookupByLibrary.simpleMessage("Skola nepasirinkta"),
+    "noFileSelected": MessageLookupByLibrary.simpleMessage(
+      "Nepasirinktas joks failas",
+    ),
+    "noHolidayFound": MessageLookupByLibrary.simpleMessage(
+      "Šventinių dienų nerasta.",
+    ),
+    "noHolidayFundMatching": MessageLookupByLibrary.simpleMessage(
+      "Atitinkančių šventinių dienų nerasta",
+    ),
+    "noItemFound": MessageLookupByLibrary.simpleMessage("Prekė nerasta"),
     "noItemSelected": MessageLookupByLibrary.simpleMessage(
       "Nėra pasirinkto elemento",
     ),
+    "noLeaveRecordFound": MessageLookupByLibrary.simpleMessage(
+      "Pagal pasirinktus filtrus atostogų įrašų nerasta.",
+    ),
+    "noLeaveRequestFound": MessageLookupByLibrary.simpleMessage(
+      "Atostogų prašymų nerasta.",
+    ),
+    "noMatched": MessageLookupByLibrary.simpleMessage(
+      "Nerasta atitinkančių produktų.",
+    ),
+    "noMatchingPayrollFound": MessageLookupByLibrary.simpleMessage(
+      "Atitinkančių darbo užmokesčio įrašų nerasta.",
+    ),
+    "noNoteProvided": MessageLookupByLibrary.simpleMessage(
+      "Pastabų nepateikta.",
+    ),
+    "noParty": MessageLookupByLibrary.simpleMessage("Klientų nerasta"),
+    "noPayrollFound": MessageLookupByLibrary.simpleMessage(
+      "Darbo užmokesčio įrašų nerasta.",
+    ),
     "noProductFound": MessageLookupByLibrary.simpleMessage(
       "Produktas nerastas",
+    ),
+    "noProductMatchYourSearch": MessageLookupByLibrary.simpleMessage(
+      "Atitinkančių jūsų paiešką produktų nerasta.",
     ),
     "noProductSelected": MessageLookupByLibrary.simpleMessage(
       "Nėra pasirinkto produkto",
@@ -490,25 +1215,98 @@ class MessageLookup extends MessageLookupByLibrary {
     "noRoleFound": MessageLookupByLibrary.simpleMessage(
       "Vartotojo rolė nerasta",
     ),
+    "noShiftFound": MessageLookupByLibrary.simpleMessage("Pamainų nerasta."),
+    "noStockAvailable": MessageLookupByLibrary.simpleMessage(
+      "Atsargų duomenų nėra.",
+    ),
+    "noSubTaxSelected": MessageLookupByLibrary.simpleMessage(
+      "Nessuna Sotto-Imposta Selezionata",
+    ),
     "noSupplier": MessageLookupByLibrary.simpleMessage("Tiekėjų nėra"),
     "noTransaction": MessageLookupByLibrary.simpleMessage("Sandorių nėra"),
+    "noTransactionFound": MessageLookupByLibrary.simpleMessage(
+      "Operacijų nerasta",
+    ),
+    "noTransactionFoundForThisFilter": MessageLookupByLibrary.simpleMessage(
+      "Operacijų pagal šį filtrą nerasta.",
+    ),
+    "noTransactionToGeneratePdf": MessageLookupByLibrary.simpleMessage(
+      "Nėra operacijų PDF generavimui",
+    ),
+    "noValuesDenied": MessageLookupByLibrary.simpleMessage(
+      "Reikšmės nenustatytos",
+    ),
+    "noVariationFound": MessageLookupByLibrary.simpleMessage(
+      "Variacijų nerasta.",
+    ),
+    "nonFoundableDiscount": MessageLookupByLibrary.simpleMessage(
+      "Neatgaunama (PVM/Nuolaida)",
+    ),
+    "none": MessageLookupByLibrary.simpleMessage("Nėra"),
     "notFound": MessageLookupByLibrary.simpleMessage("Nerasta"),
+    "notInternetConnection": MessageLookupByLibrary.simpleMessage(
+      "Nėra interneto ryšio",
+    ),
+    "notLaunch": MessageLookupByLibrary.simpleMessage(
+      "Nepavyko paleisti telefono programos.",
+    ),
+    "notMatchingResultFound": MessageLookupByLibrary.simpleMessage(
+      "Atitinkančių rezultatų nerasta",
+    ),
     "note": MessageLookupByLibrary.simpleMessage("Pastaba"),
+    "noteLevel": MessageLookupByLibrary.simpleMessage("Pastabos lygis"),
     "notification": MessageLookupByLibrary.simpleMessage("Pranešimas"),
     "off": MessageLookupByLibrary.simpleMessage("Išjungta"),
+    "ok": MessageLookupByLibrary.simpleMessage("Gerai"),
+    "okay": MessageLookupByLibrary.simpleMessage("Gerai"),
+    "oldPassword": MessageLookupByLibrary.simpleMessage("Senas slaptažodis"),
+    "oldPasswordCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
+      "Senas slaptažodis negali būti tuščias",
+    ),
     "on": MessageLookupByLibrary.simpleMessage("Įjungta"),
+    "open": MessageLookupByLibrary.simpleMessage("Atidaryta"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Atidaryti kamerą"),
+    "openSetting": MessageLookupByLibrary.simpleMessage("Atidaryti nustatymus"),
     "openingBalance": MessageLookupByLibrary.simpleMessage("Pradinis balansas"),
+    "openingBalanceIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Pradinis balansas yra privalomas",
+    ),
+    "openingDate": MessageLookupByLibrary.simpleMessage("Atidarymo data"),
+    "opinion": MessageLookupByLibrary.simpleMessage("Įveskite savo nuomonę"),
+    "orContinueWith": MessageLookupByLibrary.simpleMessage("Arba tęsti su"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Sandėlyje nėra"),
+    "outPremiumPlan": MessageLookupByLibrary.simpleMessage(
+      "Mūsų Premium planas",
+    ),
     "packFeatures": MessageLookupByLibrary.simpleMessage("Paketo ypatybės"),
     "package": MessageLookupByLibrary.simpleMessage("Paketas"),
+    "packageDate": MessageLookupByLibrary.simpleMessage("Pakavimo data"),
+    "packageName": MessageLookupByLibrary.simpleMessage("Paketo pavadinimas"),
+    "packingDate": MessageLookupByLibrary.simpleMessage("Pakavimo data"),
     "paid": MessageLookupByLibrary.simpleMessage("Apmokėta"),
     "paidAmount": MessageLookupByLibrary.simpleMessage("Apmokėta suma"),
+    "paidBy": MessageLookupByLibrary.simpleMessage("Pagato Da"),
     "paidVia": MessageLookupByLibrary.simpleMessage("Pagato tramite"),
+    "partialPaid": MessageLookupByLibrary.simpleMessage("Iš dalies apmokėta"),
     "parties": MessageLookupByLibrary.simpleMessage("Šalys"),
+    "partyCreateWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės kurti klientą.",
+    ),
     "partyList": MessageLookupByLibrary.simpleMessage("Šalių sąrašas"),
+    "partyReports": MessageLookupByLibrary.simpleMessage("Šalių ataskaitos"),
+    "partyType": MessageLookupByLibrary.simpleMessage("Šalies tipas"),
+    "partyWiseProfit": MessageLookupByLibrary.simpleMessage(
+      "Pelnas pagal šalis",
+    ),
     "password": MessageLookupByLibrary.simpleMessage("Slaptažodis"),
     "passwordCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Slaptažodis negali būti tuščias",
+    ),
+    "passwordIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Slaptažodis turi būti bent 6 simbolių ilgio",
+    ),
+    "passwordMust6Character": MessageLookupByLibrary.simpleMessage(
+      "Slaptažodis turi būti bent 6 simbolių ilgio",
     ),
     "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
       "Slaptažodžiai nesutampa",
@@ -521,38 +1319,91 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentComplete": MessageLookupByLibrary.simpleMessage(
       "Mokėjimas baigtas",
     ),
+    "paymentDetails": MessageLookupByLibrary.simpleMessage(
+      "Mokėjimo informacija",
+    ),
     "paymentFailed": MessageLookupByLibrary.simpleMessage("Mokėjimas nepavyko"),
     "paymentFailedPleaseTryAgain": MessageLookupByLibrary.simpleMessage(
       "Mokėjimas nepavyko. Prašome bandyti dar kartą.",
     ),
     "paymentGateway": MessageLookupByLibrary.simpleMessage("Mokėjimo šliuzas"),
+    "paymentMethod": MessageLookupByLibrary.simpleMessage("Mokėjimo būdas"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("Mokėjimo būdai"),
     "paymentSuccess": MessageLookupByLibrary.simpleMessage(
       "Mokėjimas sėkmingas",
+    ),
+    "paymentTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti mokėjimo tipą",
     ),
     "paymentTypes": MessageLookupByLibrary.simpleMessage("Mokėjimo tipas"),
     "paymentWasSuccessful": MessageLookupByLibrary.simpleMessage(
       "Mokėjimas buvo sėkmingas!",
     ),
+    "paymentYear": MessageLookupByLibrary.simpleMessage("Mokėjimo metai"),
     "paymentsAmount": MessageLookupByLibrary.simpleMessage("Mokėjimo sumos"),
+    "paymentsTypes": MessageLookupByLibrary.simpleMessage("Mokėjimo būdai"),
     "paypalPay": MessageLookupByLibrary.simpleMessage("Mokėti per PayPal"),
+    "payroll": MessageLookupByLibrary.simpleMessage("Darbo užmokestis"),
+    "payrollList": MessageLookupByLibrary.simpleMessage(
+      "Darbo užmokesčio žiniaraščiai",
+    ),
+    "payrollRecord": MessageLookupByLibrary.simpleMessage(
+      "Darbo užmokesčio įrašas",
+    ),
+    "payrollReports": MessageLookupByLibrary.simpleMessage(
+      "Darbo užmokesčio ataskaitos",
+    ),
+    "pdfGenerateSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "PDF sėkmingai sugeneruotas",
+    ),
+    "percent": MessageLookupByLibrary.simpleMessage("Procentas"),
+    "permissionDenied": MessageLookupByLibrary.simpleMessage(
+      "Prieiga uždrausta",
+    ),
+    "permissionDeniedToDeleteBank": MessageLookupByLibrary.simpleMessage(
+      "Leidimas ištrinti banką atmestas.",
+    ),
+    "permissionDeniedToUpdateBank": MessageLookupByLibrary.simpleMessage(
+      "Leidimas atnaujinti banką nesuteiktas.",
+    ),
+    "permissionDeniedToViewBank": MessageLookupByLibrary.simpleMessage(
+      "Leidimas peržiūrėti banką nesuteiktas.",
+    ),
     "permissionNotGranted": MessageLookupByLibrary.simpleMessage(
       "Leidimas nesuteiktas!",
     ),
+    "personalInfo": MessageLookupByLibrary.simpleMessage(
+      "Asmeninė informacija:",
+    ),
     "phone": MessageLookupByLibrary.simpleMessage("Telefono numeris"),
+    "phoneNotAvail": MessageLookupByLibrary.simpleMessage(
+      "Telefono numeris nėra prieinamas.",
+    ),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Telefono numeris"),
     "phoneVerification": MessageLookupByLibrary.simpleMessage(
       "Telefono numerio patvirtinimas",
     ),
     "phonee": MessageLookupByLibrary.simpleMessage("Telefonas:"),
+    "pickAndUploadFile": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkti ir įkelti failą",
+    ),
     "pickEndDate": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite pabaigos datą",
     ),
     "pickStartDate": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite pradžios datą",
     ),
+    "pleaseAddASalesReturn": MessageLookupByLibrary.simpleMessage(
+      "Prašome pridėti pardavimo grąžinimą",
+    ),
+    "pleaseAddAtLeastOneBank": MessageLookupByLibrary.simpleMessage(
+      "Pridėkite bent vieną banko sąskaitą balansų koregavimui.",
+    ),
     "pleaseAddQuantity": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti kiekį",
+    ),
+    "pleaseCheckYourInternetConnection": MessageLookupByLibrary.simpleMessage(
+      "Patikrinkite interneto ryšį ir bandykite dar kartą",
     ),
     "pleaseConnectThePrinterFirst": MessageLookupByLibrary.simpleMessage(
       "Pirmiausia prijunkite spausdintuvą",
@@ -560,11 +1411,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseConnectYourBlutohPrinter": MessageLookupByLibrary.simpleMessage(
       "Prašome prijungti „Bluetooth“ spausdintuvą",
     ),
+    "pleaseEnableBluetooth": MessageLookupByLibrary.simpleMessage(
+      "Prašome įjungti Bluetooth",
+    ),
     "pleaseEnterABiggerPassword": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti ilgesnį slaptažodį",
     ),
     "pleaseEnterAConfirmPassword": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti patvirtinamąjį slaptažodį",
+    ),
+    "pleaseEnterADate": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti datą",
     ),
     "pleaseEnterAPassword": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti slaptažodį",
@@ -590,6 +1447,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseEnterAValidPurchasePrice": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti galiojančią pirkimo kainą",
     ),
+    "pleaseEnterAValidQuantity": MessageLookupByLibrary.simpleMessage(
+      "Įveskite galiojantį kiekį (min. 1)",
+    ),
     "pleaseEnterAValidSalePrice": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti galiojančią pardavimo kainą",
     ),
@@ -599,8 +1459,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseEnterAmount": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti sumą",
     ),
+    "pleaseEnterAtLeastOneValues": MessageLookupByLibrary.simpleMessage(
+      "Įveskite bent vieną reikšmę.",
+    ),
+    "pleaseEnterBranchName": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti filialo pavadinimą",
+    ),
+    "pleaseEnterDate": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti datą",
+    ),
+    "pleaseEnterDesignationName": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti pareigų pavadinimą",
+    ),
+    "pleaseEnterEndDate": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti pabaigos datą",
+    ),
+    "pleaseEnterHolidayName": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti šventės pavadinimą",
+    ),
     "pleaseEnterName": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti vardą",
+    ),
+    "pleaseEnterRackName": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti stelažo pavadinimą",
+    ),
+    "pleaseEnterShelfName": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti lentynos pavadinimą",
     ),
     "pleaseEnterTheOTP": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti OTP",
@@ -608,11 +1492,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseEnterUnitName": MessageLookupByLibrary.simpleMessage(
       "Įveskite vieneto pavadinimą",
     ),
+    "pleaseEnterValidName": MessageLookupByLibrary.simpleMessage(
+      "Įveskite galiojantį vardą",
+    ),
     "pleaseEnterValidPhoneAndNameFirst": MessageLookupByLibrary.simpleMessage(
       "Pirmiausia įveskite galiojantį telefono numerį ir vardą",
     ),
     "pleaseEnterYourDetails": MessageLookupByLibrary.simpleMessage(
       "Prašome įvesti savo duomenis.",
+    ),
+    "pleaseEnterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti savo telefono numerį",
+    ),
+    "pleaseEnterYourSalary": MessageLookupByLibrary.simpleMessage(
+      "Prašome įvesti savo atlyginimą",
     ),
     "pleaseMakeASaleFirst": MessageLookupByLibrary.simpleMessage(
       "Pirmiausia atlikite pardavimą",
@@ -620,22 +1513,112 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectACategory": MessageLookupByLibrary.simpleMessage(
       "Prašome pasirinkti kategoriją",
     ),
+    "pleaseSelectADestinationBankAccounts":
+        MessageLookupByLibrary.simpleMessage(
+          "Prašome pasirinkti paskirties banko sąskaitą.",
+        ),
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Prašome pasirinkti išlaidų kategoriją",
     ),
-    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Sukūrė NPOS"),
+    "pleaseSelectALeaveType": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti atostogų tipą",
+    ),
+    "pleaseSelectAProductFirst": MessageLookupByLibrary.simpleMessage(
+      "Pirmiausia pasirinkite produktą",
+    ),
+    "pleaseSelectAShift": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti pamainą",
+    ),
+    "pleaseSelectAStartDate": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti pradžios datą",
+    ),
+    "pleaseSelectAStatus": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti būseną",
+    ),
+    "pleaseSelectAnEmployee": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti darbuotoją",
+    ),
+    "pleaseSelectAnMonth": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti mėnesį",
+    ),
+    "pleaseSelectBothAccounts": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti abi sąskaitas.",
+    ),
+    "pleaseSelectBreakStatus": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti pertraukos būseną",
+    ),
+    "pleaseSelectDate": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti datą",
+    ),
+    "pleaseSelectDepartment": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti skyrių",
+    ),
+    "pleaseSelectDesignation": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti pareigas",
+    ),
+    "pleaseSelectForProductReturn": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite prekę grąžinimui",
+    ),
+    "pleaseSelectPaymentYear": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti mokėjimo metus",
+    ),
+    "pleaseSelectProductFirst": MessageLookupByLibrary.simpleMessage(
+      "Pirmiausia pasirinkite produktą",
+    ),
+    "pleaseSelectStartDate": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti pradžios datą",
+    ),
+    "pleaseSelectStatus": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti būseną",
+    ),
+    "pleaseSelectValidStartAndEndDates": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti galiojančias pradžios ir pabaigos datas.",
+    ),
+    "pleaseSelectYourGender": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti lytį",
+    ),
+    "pleaseSelectYourShift": MessageLookupByLibrary.simpleMessage(
+      "Prašome pasirinkti pamainą",
+    ),
+    "pleaseUseValidPurchaseCodeUseTheApp": MessageLookupByLibrary.simpleMessage(
+      "Norėdami naudotis programėle, naudokite galiojantį pirkimo kodą.",
+    ),
+    "pos": MessageLookupByLibrary.simpleMessage("POS (Pos)"),
+    "posSale": MessageLookupByLibrary.simpleMessage("POS Pardavimas"),
+    "postSaleMessage": MessageLookupByLibrary.simpleMessage(
+      "Pranešimas po pardavimo",
+    ),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Sukūrė Acnoo"),
+    "poweredBy": MessageLookupByLibrary.simpleMessage("Alimentato da"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "„Android“ ir „iOS“ programų palaikymas",
     ),
     "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium planas"),
+    "pressToSelect": MessageLookupByLibrary.simpleMessage(
+      "Paspauskite, kad pasirinktumėte",
+    ),
     "previewPdf": MessageLookupByLibrary.simpleMessage("PDF peržiūra"),
     "previousDue": MessageLookupByLibrary.simpleMessage("Ankstesnė skola"),
     "previousPayAmount": MessageLookupByLibrary.simpleMessage(
       "Ankstesnė apmokėta suma",
     ),
     "price": MessageLookupByLibrary.simpleMessage("Kaina"),
+    "priceWarn": MessageLookupByLibrary.simpleMessage(
+      "Kaina negali būti tuščia",
+    ),
     "print": MessageLookupByLibrary.simpleMessage("Spausdinti"),
+    "printBankDetailsAndInvoice": MessageLookupByLibrary.simpleMessage(
+      "Spausdinti banko duomenis sąskaitose faktūrose",
+    ),
+    "printBarCode": MessageLookupByLibrary.simpleMessage(
+      "Spausdinti brūkšninį kodą",
+    ),
+    "printLabel": MessageLookupByLibrary.simpleMessage("Spausdinti etiketę"),
     "printing": MessageLookupByLibrary.simpleMessage("Spausdinimo parinktis"),
+    "printingInvoice": MessageLookupByLibrary.simpleMessage(
+      "Stampa Fattura in corso",
+    ),
+    "printingOption": MessageLookupByLibrary.simpleMessage("Opzione di Stampa"),
     "product": MessageLookupByLibrary.simpleMessage("Produktas"),
     "productBrand": MessageLookupByLibrary.simpleMessage(
       "Produkto prekės ženklas",
@@ -649,12 +1632,60 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "productDetails": MessageLookupByLibrary.simpleMessage("Produkto detalės"),
     "productList": MessageLookupByLibrary.simpleMessage("Produktų sąrašas"),
+    "productModels": MessageLookupByLibrary.simpleMessage("Produkto modeliai"),
     "productName": MessageLookupByLibrary.simpleMessage("Produkto pavadinimas"),
+    "productNotFound": MessageLookupByLibrary.simpleMessage(
+      "Produktas nerastas",
+    ),
+    "productPurchaseHistory": MessageLookupByLibrary.simpleMessage(
+      "Produkto pirkimo istorija",
+    ),
+    "productPurchaseReport": MessageLookupByLibrary.simpleMessage(
+      "Pirkimų ataskaita",
+    ),
+    "productRacks": MessageLookupByLibrary.simpleMessage("Produktų stelažai"),
+    "productReports": MessageLookupByLibrary.simpleMessage(
+      "Produktų ataskaitos",
+    ),
+    "productSaleHistory": MessageLookupByLibrary.simpleMessage(
+      "Produkto pardavimo istorija",
+    ),
+    "productSalesReport": MessageLookupByLibrary.simpleMessage(
+      "Pardavimų ataskaita",
+    ),
+    "productSetting": MessageLookupByLibrary.simpleMessage(
+      "Produkto Nustatymai",
+    ),
+    "productStock": MessageLookupByLibrary.simpleMessage("Produkto atsargos"),
     "productUnit": MessageLookupByLibrary.simpleMessage("Produkto vienetas"),
+    "productVariations": MessageLookupByLibrary.simpleMessage(
+      "Produkto variacijos",
+    ),
+    "productWiseProfit": MessageLookupByLibrary.simpleMessage(
+      "Pelnas pagal produktus",
+    ),
+    "productWiseProfitAndLoss": MessageLookupByLibrary.simpleMessage(
+      "Pelnas ir nuostolis pagal produktus",
+    ),
+    "productWisePurchase": MessageLookupByLibrary.simpleMessage(
+      "Pirkimai pagal produktus",
+    ),
+    "productWiseSale": MessageLookupByLibrary.simpleMessage(
+      "Pardavimai pagal produktus",
+    ),
     "products": MessageLookupByLibrary.simpleMessage("Produktai"),
     "profile": MessageLookupByLibrary.simpleMessage("Profilis"),
     "profileEdit": MessageLookupByLibrary.simpleMessage("Profilio redagavimas"),
     "profit": MessageLookupByLibrary.simpleMessage("Pelnas"),
+    "profitAndLoss": MessageLookupByLibrary.simpleMessage(
+      "Pelnas ir nuostolis",
+    ),
+    "profitAndLossDetailsReport": MessageLookupByLibrary.simpleMessage(
+      "Pelno ir nuostolio ataskaita",
+    ),
+    "profitLoss": MessageLookupByLibrary.simpleMessage("Pelnas ir nuostolis"),
+    "profitMargin": MessageLookupByLibrary.simpleMessage("Pelno Marža (%)"),
+    "profitPercent": MessageLookupByLibrary.simpleMessage("Pelno procentas"),
     "promo": MessageLookupByLibrary.simpleMessage("Akcija"),
     "promoCode": MessageLookupByLibrary.simpleMessage("Akcijos kodas"),
     "purchase": MessageLookupByLibrary.simpleMessage("Pirkimas"),
@@ -664,35 +1695,73 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pirkimas patvirtintas",
     ),
     "purchaseDetails": MessageLookupByLibrary.simpleMessage("Pirkimo detalės"),
+    "purchaseEx": MessageLookupByLibrary.simpleMessage("Pirkimo kaina be PVM"),
+    "purchaseExReq": MessageLookupByLibrary.simpleMessage(
+      "Reikalinga pirkimo kaina be PVM",
+    ),
+    "purchaseIn": MessageLookupByLibrary.simpleMessage("Pirkimo kaina su PVM"),
+    "purchaseInReq": MessageLookupByLibrary.simpleMessage(
+      "Reikalinga pirkimo kaina su PVM",
+    ),
     "purchaseList": MessageLookupByLibrary.simpleMessage("Pirkimų sąrašas"),
     "purchaseNow": MessageLookupByLibrary.simpleMessage("Pirkti dabar"),
     "purchasePremium": MessageLookupByLibrary.simpleMessage(
       "Pirkti Premium planą",
     ),
     "purchasePrice": MessageLookupByLibrary.simpleMessage("Pirkimo kaina"),
+    "purchaseQty": MessageLookupByLibrary.simpleMessage("Pirkimo kiekis"),
+    "purchaseQuantityRequired": MessageLookupByLibrary.simpleMessage(
+      "Pirkimo kiekis yra privalomas",
+    ),
     "purchaseReport": MessageLookupByLibrary.simpleMessage("Pirkimų ataskaita"),
+    "purchaseReturn": MessageLookupByLibrary.simpleMessage(
+      "Pardavimų grąžinimas",
+    ),
     "purchaseReturnReport": MessageLookupByLibrary.simpleMessage(
       "Pirkimo grąžinimo ataskaita",
+    ),
+    "purchaseReturns": MessageLookupByLibrary.simpleMessage(
+      "Pirkimo grąžinimai",
+    ),
+    "purchaseUpdateWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės atnaujinti pirkimus.",
+    ),
+    "purchaseWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės kurti pirkimus.",
     ),
     "purchased": MessageLookupByLibrary.simpleMessage("Įsigyta"),
     "purchasedBy": MessageLookupByLibrary.simpleMessage("Acquistato Da"),
     "qty": MessageLookupByLibrary.simpleMessage("Kiekis"),
     "quantity": MessageLookupByLibrary.simpleMessage("Kiekis"),
+    "quickOver": MessageLookupByLibrary.simpleMessage("Greita Apžvalga"),
     "quickOverview": MessageLookupByLibrary.simpleMessage("Greita apžvalga"),
+    "rack": MessageLookupByLibrary.simpleMessage("Stelažas (Rack)"),
+    "rackName": MessageLookupByLibrary.simpleMessage("Stelažo pavadinimas"),
+    "racks": MessageLookupByLibrary.simpleMessage("Stelažai (Racks)"),
+    "reOpen": MessageLookupByLibrary.simpleMessage("Atidaryti iš naujo"),
+    "read": MessageLookupByLibrary.simpleMessage("Skaityti"),
     "receipt": MessageLookupByLibrary.simpleMessage("Ricevuta"),
     "receivedAmount": MessageLookupByLibrary.simpleMessage("Importo Ricevuto"),
+    "receivedBy": MessageLookupByLibrary.simpleMessage("Gavo"),
+    "receivedFrom": MessageLookupByLibrary.simpleMessage("Gauta iš"),
     "recentTransaction": MessageLookupByLibrary.simpleMessage(
       "Naujausi sandoriai",
     ),
     "recivethePin": MessageLookupByLibrary.simpleMessage("Gauta PIN kodas"),
+    "reduceCash": MessageLookupByLibrary.simpleMessage("Sumažinti grynųjų"),
+    "reference": MessageLookupByLibrary.simpleMessage("Nuoroda"),
     "referenceNo": MessageLookupByLibrary.simpleMessage("Nuorodos numeris"),
+    "referenceNumber": MessageLookupByLibrary.simpleMessage("Nuorodos Nr."),
     "register": MessageLookupByLibrary.simpleMessage("Registruotis"),
     "registerTitle": MessageLookupByLibrary.simpleMessage(
       "Mums reikia užregistruoti jūsų telefoną, kad galėtumėte pradėti!",
     ),
+    "remaining": MessageLookupByLibrary.simpleMessage("Liko"),
     "remainingDue": MessageLookupByLibrary.simpleMessage("Likutis"),
+    "remark": MessageLookupByLibrary.simpleMessage("Pastaba"),
     "rememberMe": MessageLookupByLibrary.simpleMessage("Atsiminti mane"),
     "rememberMeLater": MessageLookupByLibrary.simpleMessage("Atsiminti vėliau"),
+    "remove": MessageLookupByLibrary.simpleMessage("Pašalinti"),
     "reports": MessageLookupByLibrary.simpleMessage("Ataskaitos"),
     "resendIn": MessageLookupByLibrary.simpleMessage(
       "Pakartotinis siuntimas per ",
@@ -700,24 +1769,66 @@ class MessageLookup extends MessageLookupByLibrary {
     "resendOTP": MessageLookupByLibrary.simpleMessage(
       "Įveskite galiojantį OTP",
     ),
+    "resendOtpSeconds": m0,
     "reset": MessageLookupByLibrary.simpleMessage(
       "Atstatykite slaptažodį naudodami savo el. paštą arba telefono numerį",
     ),
     "resetPassword": MessageLookupByLibrary.simpleMessage(
       "Atstatykite slaptažodį, kad atkurtumėte ir prisijungtumėte prie savo paskyros",
     ),
+    "resets": MessageLookupByLibrary.simpleMessage("Atstatyti"),
     "retailer": MessageLookupByLibrary.simpleMessage("Smulkusis prekybininkas"),
+    "retry": MessageLookupByLibrary.simpleMessage("Bandyti dar kartą"),
+    "retryScan": MessageLookupByLibrary.simpleMessage("Ieškoti iš naujo"),
     "retur": MessageLookupByLibrary.simpleMessage("Grąžinti"),
     "returnAmount": MessageLookupByLibrary.simpleMessage("Grąžinimo suma"),
+    "returnQuantity": MessageLookupByLibrary.simpleMessage("Grąžinimo kiekis"),
     "returned": MessageLookupByLibrary.simpleMessage("Grąžinta"),
+    "returnedAmount": MessageLookupByLibrary.simpleMessage("Grąžinta suma"),
     "returnedDate": MessageLookupByLibrary.simpleMessage(
       "Data di Restituzione",
     ),
     "returnedItem": MessageLookupByLibrary.simpleMessage("Articolo Restituito"),
+    "role": MessageLookupByLibrary.simpleMessage("Rolė"),
+    "roleAndPermission": MessageLookupByLibrary.simpleMessage(
+      "Rolės ir leidimai",
+    ),
+    "roles": MessageLookupByLibrary.simpleMessage("Rolės"),
+    "roundToNearestWholeNumber": MessageLookupByLibrary.simpleMessage(
+      "Apvalinti iki artimiausio sveikojo",
+    ),
+    "roundToNearnessDecimalNumber005": MessageLookupByLibrary.simpleMessage(
+      "Apvalinti iki artimiausios dešimtainės (0.05)",
+    ),
+    "roundToNearnessDecimalNumber01": MessageLookupByLibrary.simpleMessage(
+      "Apvalinti iki artimiausios dešimtainės (0.1)",
+    ),
+    "roundToNearnessDecimalNumber05": MessageLookupByLibrary.simpleMessage(
+      "Apvalinti iki artimiausios dešimtainės (0.5)",
+    ),
+    "roundToWholeNumber": MessageLookupByLibrary.simpleMessage(
+      "Apvalinti iki sveikojo skaičiaus",
+    ),
+    "rounding": MessageLookupByLibrary.simpleMessage("Arrotondamento"),
+    "roundingTotal": MessageLookupByLibrary.simpleMessage(
+      "Suapvalintas Iš viso",
+    ),
+    "roundings": MessageLookupByLibrary.simpleMessage("Suapvalinimas (+/-)"),
+    "runningCash": MessageLookupByLibrary.simpleMessage(
+      "Apyvartoje esantys grynieji",
+    ),
+    "sNo": MessageLookupByLibrary.simpleMessage("Nr."),
+    "salary": MessageLookupByLibrary.simpleMessage("Atlyginimas"),
     "sale": MessageLookupByLibrary.simpleMessage("Pardavimas"),
     "saleBy": MessageLookupByLibrary.simpleMessage("Venduto Da"),
+    "saleEdit": MessageLookupByLibrary.simpleMessage("Pardavimo redagavimas"),
     "saleList": MessageLookupByLibrary.simpleMessage("Pardavimų sąrašas"),
     "salePrice": MessageLookupByLibrary.simpleMessage("Pardavimo kaina"),
+    "saleQty": MessageLookupByLibrary.simpleMessage("Pardavimo kiekis"),
+    "saleReq": MessageLookupByLibrary.simpleMessage(
+      "Reikalinga pardavimo kaina",
+    ),
+    "saleReturn": MessageLookupByLibrary.simpleMessage("Pardavimo grąžinimas"),
     "sales": MessageLookupByLibrary.simpleMessage("Pardavimai"),
     "salesBy": MessageLookupByLibrary.simpleMessage("Pardavė:"),
     "salesDetails": MessageLookupByLibrary.simpleMessage("Pardavimo detalės"),
@@ -726,16 +1837,38 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pardavimų ir pirkimų apžvalga",
     ),
     "salesReport": MessageLookupByLibrary.simpleMessage("Pardavimų ataskaita"),
+    "salesReturn": MessageLookupByLibrary.simpleMessage("Pardavimų grąžinimas"),
     "salesReturnReport": MessageLookupByLibrary.simpleMessage(
       "Pardavimo grąžinimo ataskaita",
+    ),
+    "salesSetting": MessageLookupByLibrary.simpleMessage(
+      "Impostazioni Vendite",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Išsaugoti"),
     "saveNPublish": MessageLookupByLibrary.simpleMessage(
       "Išsaugoti ir paskelbti",
     ),
+    "saveSetting": MessageLookupByLibrary.simpleMessage("Išsaugoti Nustatymus"),
+    "saveVariant": MessageLookupByLibrary.simpleMessage("Išsaugoti Variantą"),
+    "saving": MessageLookupByLibrary.simpleMessage("Saugoma"),
+    "scanCode": MessageLookupByLibrary.simpleMessage(
+      "Nuskaityti produkto QR kodą",
+    ),
     "search": MessageLookupByLibrary.simpleMessage("Ieškoti"),
+    "searchAttendance": MessageLookupByLibrary.simpleMessage(
+      "Ieškoti lankomumo",
+    ),
+    "searchBatchNo": MessageLookupByLibrary.simpleMessage(
+      "Ieškoti partijos nr...",
+    ),
     "searchH": MessageLookupByLibrary.simpleMessage("Ieškoti čia...."),
+    "searchLeave": MessageLookupByLibrary.simpleMessage("Ieškoti atostogų"),
     "searchProduct": MessageLookupByLibrary.simpleMessage("Ieškoti produkto"),
+    "searchTransaction": MessageLookupByLibrary.simpleMessage(
+      "Ieškoti operacijų...",
+    ),
+    "searchWith": MessageLookupByLibrary.simpleMessage("Ieškoti..."),
+    "seconds": MessageLookupByLibrary.simpleMessage("sekundės"),
     "seeAllPromoCode": MessageLookupByLibrary.simpleMessage(
       "Peržiūrėti visus akcijų kodus",
     ),
@@ -746,23 +1879,68 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectAInvoice": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite sąskaitą faktūrą",
     ),
+    "selectAccount": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkti sąskaitą",
+    ),
+    "selectAll": MessageLookupByLibrary.simpleMessage("Pasirinkti viską"),
+    "selectAtLeastOneRack": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite bent vieną lentyną",
+    ),
+    "selectBankToCash": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite banką arba grynuosius",
+    ),
     "selectBusinessCategory": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite verslo kategoriją",
     ),
     "selectCategory": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite kategoriją",
     ),
+    "selectCustomer": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite Klientą",
+    ),
+    "selectDate": MessageLookupByLibrary.simpleMessage("Pasirinkite Datą"),
+    "selectDateFirst": MessageLookupByLibrary.simpleMessage(
+      "Pirmiausia pasirinkite datą",
+    ),
+    "selectDepositDestination": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite įmokos paskirtį",
+    ),
+    "selectEmployeeFirst": MessageLookupByLibrary.simpleMessage(
+      "Pirmiausia pasirinkite darbuotoją",
+    ),
+    "selectFDate": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite pradinę datą",
+    ),
+    "selectItems": MessageLookupByLibrary.simpleMessage("Pasirinkti prekes"),
     "selectLang": MessageLookupByLibrary.simpleMessage("Pasirinkite kalbą"),
+    "selectModel": MessageLookupByLibrary.simpleMessage("Pasirinkite Modelį"),
+    "selectOne": MessageLookupByLibrary.simpleMessage("Pasirinkite Vieną"),
+    "selectOneAccount": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite vieną sąskaitą",
+    ),
     "selectProductCategory": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite produkto kategoriją",
     ),
     "selectProductUnit": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite produkto vienetą",
     ),
+    "selectRack": MessageLookupByLibrary.simpleMessage("Pasirinkti stelažą"),
+    "selectShelf": MessageLookupByLibrary.simpleMessage("Pasirinkti lentyną"),
+    "selectStock": MessageLookupByLibrary.simpleMessage("Pasirinkti atsargas"),
+    "selectTax": MessageLookupByLibrary.simpleMessage("Pasirinkite Mokestį"),
+    "selectToDate": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkite galutinę datą",
+    ),
+    "selectType": MessageLookupByLibrary.simpleMessage("Pasirinkti tipą"),
     "selectVariations": MessageLookupByLibrary.simpleMessage(
       "Pasirinkite variacijas:",
     ),
+    "selectWarehouse": MessageLookupByLibrary.simpleMessage(
+      "Pasirinkti sandėlį",
+    ),
     "sellAll": MessageLookupByLibrary.simpleMessage("Parduodate viską >"),
+    "sellingPrice": MessageLookupByLibrary.simpleMessage("Pardavimo kaina"),
+    "sellsBy": MessageLookupByLibrary.simpleMessage("Venduto Da"),
     "send": MessageLookupByLibrary.simpleMessage("Siųsti"),
     "sendCode": MessageLookupByLibrary.simpleMessage("Siųsti kodą"),
     "sendEmail": MessageLookupByLibrary.simpleMessage(
@@ -787,45 +1965,98 @@ class MessageLookup extends MessageLookupByLibrary {
       "Nustatykite savo profilį",
     ),
     "setting": MessageLookupByLibrary.simpleMessage("Nustatymai"),
+    "sevenDays": MessageLookupByLibrary.simpleMessage("7 dienos"),
     "share": MessageLookupByLibrary.simpleMessage("Dalintis"),
+    "shelf": MessageLookupByLibrary.simpleMessage("Lentyna (Shelf)"),
+    "shelfName": MessageLookupByLibrary.simpleMessage("Lentynos pavadinimas"),
+    "shelves": MessageLookupByLibrary.simpleMessage("Lentynos (Shelves)"),
+    "shift": MessageLookupByLibrary.simpleMessage("Pamaina"),
+    "shiftName": MessageLookupByLibrary.simpleMessage("Pamainos pavadinimas"),
+    "shippingAddress": MessageLookupByLibrary.simpleMessage(
+      "Pristatymo Adresas",
+    ),
+    "shippingCharge": MessageLookupByLibrary.simpleMessage(
+      "Spese di Spedizione",
+    ),
     "shopOpeningBalance": MessageLookupByLibrary.simpleMessage(
       "Pradinis parduotuvės balansas",
     ),
     "shopRemainingBalance": MessageLookupByLibrary.simpleMessage(
       "Likutis parduotuvės balansas",
     ),
+    "showAction": MessageLookupByLibrary.simpleMessage("Rodyti veiksmus"),
     "showCode": MessageLookupByLibrary.simpleMessage("Rodyti kodą"),
+    "showCombo": MessageLookupByLibrary.simpleMessage("Rodyti rinkinius"),
+    "showExpireDate": MessageLookupByLibrary.simpleMessage(
+      "Rodyti galiojimo datą",
+    ),
     "showName": MessageLookupByLibrary.simpleMessage("Rodyti pavadinimą"),
     "showPrice": MessageLookupByLibrary.simpleMessage("Rodyti kainą"),
+    "showSingle": MessageLookupByLibrary.simpleMessage("Rodyti vienetinius"),
+    "showVariant": MessageLookupByLibrary.simpleMessage("Rodyti variacijas"),
     "signIn": MessageLookupByLibrary.simpleMessage("Prisijungti"),
     "signUp": MessageLookupByLibrary.simpleMessage("Registruotis"),
+    "single": MessageLookupByLibrary.simpleMessage("Vienetas"),
+    "sixtyDays": MessageLookupByLibrary.simpleMessage("60 dienų"),
     "size": MessageLookupByLibrary.simpleMessage("Dydis"),
     "skip": MessageLookupByLibrary.simpleMessage("Praleisti"),
     "skipTheUpdate": MessageLookupByLibrary.simpleMessage(
       "Praleisti atnaujinimą",
     ),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU / Kodas"),
+    "skuOrCode": MessageLookupByLibrary.simpleMessage("SKU / Kodas"),
     "sl": MessageLookupByLibrary.simpleMessage("N. progressivo"),
     "smartWatch": MessageLookupByLibrary.simpleMessage("Išmanusis laikrodis"),
     "socialMarketing": MessageLookupByLibrary.simpleMessage(
       "Socialinis marketingas",
     ),
+    "sold": MessageLookupByLibrary.simpleMessage("Parduota"),
+    "someThingWithWrongWithTheWebPage": MessageLookupByLibrary.simpleMessage(
+      "Kažkas negerai su tinklalapiu.",
+    ),
     "somethingIs": MessageLookupByLibrary.simpleMessage("Kažkas yra"),
     "staffLogin": MessageLookupByLibrary.simpleMessage(
       "Darbuotojų prisijungimas",
+    ),
+    "start": MessageLookupByLibrary.simpleMessage("Pradėti"),
+    "startBreakTime": MessageLookupByLibrary.simpleMessage(
+      "Pertraukos pradžios laikas",
     ),
     "startDate": MessageLookupByLibrary.simpleMessage("Pradžios data"),
     "startNewSale": MessageLookupByLibrary.simpleMessage(
       "Pradėti naują pardavimą",
     ),
+    "startTime": MessageLookupByLibrary.simpleMessage("Pradžios laikas"),
+    "startTimeIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Pradžios laikas yra privalomas",
+    ),
+    "started": MessageLookupByLibrary.simpleMessage("Pradėta"),
+    "state": MessageLookupByLibrary.simpleMessage("Valstija"),
+    "stateName": MessageLookupByLibrary.simpleMessage("Valstijos Pavadinimas"),
+    "status": MessageLookupByLibrary.simpleMessage("Stato"),
+    "staus": MessageLookupByLibrary.simpleMessage("Būsena (Status)"),
     "stillUnpaid": MessageLookupByLibrary.simpleMessage("Vis dar neapmokėta"),
     "stock": MessageLookupByLibrary.simpleMessage("Sandėlis"),
     "stockList": MessageLookupByLibrary.simpleMessage("Sandelio sąrašas"),
+    "stockOrVariant": MessageLookupByLibrary.simpleMessage(
+      "Atsargos / Variantas",
+    ),
     "stockReport": MessageLookupByLibrary.simpleMessage("Sandelio ataskaita"),
     "stockValue": MessageLookupByLibrary.simpleMessage("Sandelio vertė"),
+    "stockWarn": MessageLookupByLibrary.simpleMessage(
+      "Atsargos turi būti bent 1",
+    ),
     "stocks": MessageLookupByLibrary.simpleMessage("Sandėlis: "),
+    "subTaxList": MessageLookupByLibrary.simpleMessage("Elenco Sotto-Imposte"),
+    "subTaxes": MessageLookupByLibrary.simpleMessage("Sotto-Imposte"),
     "subTotal": MessageLookupByLibrary.simpleMessage("Bendrasis"),
     "submit": MessageLookupByLibrary.simpleMessage("Pateikti"),
+    "subscribeNow": MessageLookupByLibrary.simpleMessage("Prenumeruoti dabar"),
     "subscription": MessageLookupByLibrary.simpleMessage("Prenumerata"),
+    "subscriptionReports": MessageLookupByLibrary.simpleMessage(
+      "Prenumeratų ataskaitos",
+    ),
+    "subscriptions": MessageLookupByLibrary.simpleMessage("Prenumeratos"),
     "subtotal": MessageLookupByLibrary.simpleMessage("Tarpinė suma"),
     "successfullyPaid": MessageLookupByLibrary.simpleMessage(
       "Sėkmingai apmokėta",
@@ -835,26 +2066,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "supplierDetails": MessageLookupByLibrary.simpleMessage(
       "Tiekėjo informacija",
     ),
+    "supplierDue": MessageLookupByLibrary.simpleMessage("Tiekėjo skola"),
+    "supplierLedger": MessageLookupByLibrary.simpleMessage("Tiekėjo knyga"),
     "supplierName": MessageLookupByLibrary.simpleMessage("Tiekėjo pavadinimas"),
+    "switchBank": MessageLookupByLibrary.simpleMessage("Pakeisti filialą?"),
+    "switchs": MessageLookupByLibrary.simpleMessage("Perjungti"),
+    "tax": MessageLookupByLibrary.simpleMessage("Mokestis (Tax)"),
+    "taxGroup": MessageLookupByLibrary.simpleMessage("Gruppo Fiscale"),
+    "taxPercent": MessageLookupByLibrary.simpleMessage("Percentuale Imposta"),
+    "taxRates": MessageLookupByLibrary.simpleMessage("Aliquote Fiscali"),
+    "taxRatesMangeYourTaxRates": MessageLookupByLibrary.simpleMessage(
+      "Aliquote fiscali - Gestisci le tue aliquote fiscali",
+    ),
+    "taxReport": MessageLookupByLibrary.simpleMessage("Mokesčių ataskaita"),
+    "taxReportList": MessageLookupByLibrary.simpleMessage(
+      "Mokesčių ataskaitų sąrašas",
+    ),
+    "taxType": MessageLookupByLibrary.simpleMessage("Mokesčio Tipas"),
+    "taxWithSingleMultipleTaxType": MessageLookupByLibrary.simpleMessage(
+      "Imposta con tipo di imposta singolo/multiplo",
+    ),
     "thakYouForYourPurchase": MessageLookupByLibrary.simpleMessage(
       "Ačiū už jūsų pirkimą",
     ),
     "thankYouForYourDuePayment": MessageLookupByLibrary.simpleMessage(
       "Ačiū už jūsų laiku atliktą mokėjimą",
     ),
+    "thermalInvoicePageLogo": MessageLookupByLibrary.simpleMessage(
+      "Terminio kvito logotipas",
+    ),
+    "thermalPrinterLanguage": MessageLookupByLibrary.simpleMessage(
+      "Terminio spausdintuvo kalba",
+    ),
+    "thermalPrinterPageSize": MessageLookupByLibrary.simpleMessage(
+      "Terminio popieriaus dydis",
+    ),
+    "thirtyDays": MessageLookupByLibrary.simpleMessage("30 dienų"),
+    "thirtyTwoLabelPerSheet": MessageLookupByLibrary.simpleMessage(
+      "32 etiketės lape, 8.27 x 11.69 colių",
+    ),
     "thisMonth": MessageLookupByLibrary.simpleMessage("Šį mėnesį"),
+    "thisPlanIsEligibleForUpgrade": MessageLookupByLibrary.simpleMessage(
+      "Šis planas netinkamas atnaujinimui",
+    ),
+    "thisPlanIsNotAvailableToPurchase": MessageLookupByLibrary.simpleMessage(
+      "Šio plano negalima įsigyti",
+    ),
     "thisProductAlreadyAdded": MessageLookupByLibrary.simpleMessage(
       "Šis produktas jau pridėtas!",
     ),
     "thisWeek": MessageLookupByLibrary.simpleMessage("Šią savaitę"),
     "thisYear": MessageLookupByLibrary.simpleMessage("Šiais metais"),
+    "time": MessageLookupByLibrary.simpleMessage("Laikas"),
+    "timeIn": MessageLookupByLibrary.simpleMessage("Atvykimo laikas"),
+    "timeOut": MessageLookupByLibrary.simpleMessage("Išvykimo laikas"),
+    "to": MessageLookupByLibrary.simpleMessage("Į"),
+    "toAccount": MessageLookupByLibrary.simpleMessage("Į sąskaitą"),
     "toDate": MessageLookupByLibrary.simpleMessage("Iki datos"),
     "today": MessageLookupByLibrary.simpleMessage("Šiandien"),
     "todaySummary": MessageLookupByLibrary.simpleMessage(
       "Šiandieninė santrauka",
     ),
+    "top5Customer": MessageLookupByLibrary.simpleMessage("Top 5 klientai"),
+    "top5Product": MessageLookupByLibrary.simpleMessage("Top 5 produktai"),
+    "top5Supplier": MessageLookupByLibrary.simpleMessage("Top 5 tiekėjai"),
     "total": MessageLookupByLibrary.simpleMessage("Iš viso"),
     "totalAmount": MessageLookupByLibrary.simpleMessage("Bendra suma"),
+    "totalAssets": MessageLookupByLibrary.simpleMessage("Visas turtas"),
+    "totalBalance": MessageLookupByLibrary.simpleMessage("Bendras balansas"),
     "totalCategories": MessageLookupByLibrary.simpleMessage(
       "Iš viso kategorijų",
     ),
@@ -874,14 +2153,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "totalReturnAmount": MessageLookupByLibrary.simpleMessage(
       "Bendras grąžintas kiekis",
     ),
+    "totalReturned": MessageLookupByLibrary.simpleMessage("Totale Restituito"),
+    "totalSalaryAmount": MessageLookupByLibrary.simpleMessage(
+      "Bendra atlyginimo suma",
+    ),
     "totalSales": MessageLookupByLibrary.simpleMessage("Bendras pardavimas"),
     "totalVat": MessageLookupByLibrary.simpleMessage("Bendras PVM"),
     "totall": MessageLookupByLibrary.simpleMessage("Iš viso:"),
+    "tranSacOver": MessageLookupByLibrary.simpleMessage("Sandorių apžvalga"),
+    "transactionType": MessageLookupByLibrary.simpleMessage(
+      "Transakcijos tipas",
+    ),
     "transactions": MessageLookupByLibrary.simpleMessage("Sandoriai"),
+    "transactionsHistoryReport": MessageLookupByLibrary.simpleMessage(
+      "Transakcijų istorija",
+    ),
+    "transfer": MessageLookupByLibrary.simpleMessage("Pervedimas"),
+    "transferCheque": MessageLookupByLibrary.simpleMessage("Pervesti čekį"),
+    "transferDate": MessageLookupByLibrary.simpleMessage("Pervedimo data"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Bandyti dar kartą"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "type": MessageLookupByLibrary.simpleMessage("Tipas"),
+    "typeSelect": MessageLookupByLibrary.simpleMessage("Pasirinkite Tipą"),
     "unPaid": MessageLookupByLibrary.simpleMessage("Neapmokėta"),
+    "unit": MessageLookupByLibrary.simpleMessage("Vienetas"),
     "unitName": MessageLookupByLibrary.simpleMessage("Vieneto pavadinimas"),
     "unitPirce": MessageLookupByLibrary.simpleMessage("Vienetinė kaina"),
     "unitPrice": MessageLookupByLibrary.simpleMessage("Prezzo Unitario"),
@@ -894,15 +2189,38 @@ class MessageLookup extends MessageLookupByLibrary {
       "Neribotas mūsų paketo naudojimas 👇",
     ),
     "update": MessageLookupByLibrary.simpleMessage("Atnaujinti"),
+    "updateBranch": MessageLookupByLibrary.simpleMessage("Atnaujinti filialą"),
     "updateContact": MessageLookupByLibrary.simpleMessage(
       "Atnaujinti kontaktą",
     ),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "Nepavyko atnaujinti atsargų",
+    ),
     "updateNow": MessageLookupByLibrary.simpleMessage("Atnaujinti dabar"),
+    "updatePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės atnaujinti kliento.",
+    ),
     "updateProduct": MessageLookupByLibrary.simpleMessage(
       "Atnaujinti produktą",
     ),
+    "updateProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Produktas sėkmingai atnaujintas!",
+    ),
+    "updateProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės atnaujinti produkto.",
+    ),
     "updateProfile": MessageLookupByLibrary.simpleMessage(
       "Atnaujinkite savo profilį",
+    ),
+    "updatePurchase": MessageLookupByLibrary.simpleMessage(
+      "Atnaujinti pirkimą",
+    ),
+    "updateRole": MessageLookupByLibrary.simpleMessage("Atnaujinti rolę"),
+    "updateSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Neturite teisės atnaujinti pardavimą.",
+    ),
+    "updateSuccess": MessageLookupByLibrary.simpleMessage(
+      "Sėkmingai atnaujinta",
     ),
     "updateYourProfile": MessageLookupByLibrary.simpleMessage(
       "Atnaujinkite savo profilį, kad geriau susipažintumėte su savo klientu",
@@ -912,25 +2230,69 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updating": MessageLookupByLibrary.simpleMessage("Atnaujinama..."),
     "upgradeNow": MessageLookupByLibrary.simpleMessage("Atnaujinti dabar"),
+    "upiIdForQrCode": MessageLookupByLibrary.simpleMessage(
+      "UPI ID skirtas QR kodui",
+    ),
+    "upload": MessageLookupByLibrary.simpleMessage("Įkelti"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Įkelti Paveikslėlį"),
+    "uploading": MessageLookupByLibrary.simpleMessage("Įkeliama..."),
+    "useGallery": MessageLookupByLibrary.simpleMessage("Naudoti galeriją"),
     "useTitleCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Vartotojo pavadinimas negali būti tuščias",
     ),
+    "user": MessageLookupByLibrary.simpleMessage("Vartotojas"),
     "userRole": MessageLookupByLibrary.simpleMessage("Vartotojo rolė"),
     "userRoleDetails": MessageLookupByLibrary.simpleMessage(
       "Vartotojo vaidmens detalės",
     ),
     "userTitle": MessageLookupByLibrary.simpleMessage("Vartotojo pavadinimas"),
+    "values": MessageLookupByLibrary.simpleMessage("Reikšmės"),
+    "variantAdded": MessageLookupByLibrary.simpleMessage(
+      "Variantas sėkmingai pridėtas!",
+    ),
+    "variantDelete": MessageLookupByLibrary.simpleMessage(
+      "Variantas sėkmingai ištrintas!",
+    ),
+    "variantList": MessageLookupByLibrary.simpleMessage("Variacijų sąrašas"),
+    "variationId": MessageLookupByLibrary.simpleMessage("Variacijos ID"),
+    "variations": MessageLookupByLibrary.simpleMessage("Variacijos"),
+    "variationsProduct": MessageLookupByLibrary.simpleMessage(
+      "Variaciniai produktai",
+    ),
     "vat": MessageLookupByLibrary.simpleMessage("PVM"),
+    "vatAndTax": MessageLookupByLibrary.simpleMessage("IVA e Tasse"),
+    "vatGstNumber": MessageLookupByLibrary.simpleMessage("Numero IVA/GST"),
+    "vatGstTitle": MessageLookupByLibrary.simpleMessage("Titolo IVA/GST"),
+    "vatId": MessageLookupByLibrary.simpleMessage("PVM kodas"),
+    "vatNumber": MessageLookupByLibrary.simpleMessage("Partita IVA"),
+    "vatReports": MessageLookupByLibrary.simpleMessage("PVM ataskaitos"),
+    "vatType": MessageLookupByLibrary.simpleMessage("PVM tipas"),
     "verification": MessageLookupByLibrary.simpleMessage("Patikrinimas"),
     "verify": MessageLookupByLibrary.simpleMessage("Patikrinti"),
     "verifyYourEmail": MessageLookupByLibrary.simpleMessage(
       "Patikrinti savo el. paštą",
     ),
     "verityEmail": MessageLookupByLibrary.simpleMessage("Patikrinti el. paštą"),
+    "view": MessageLookupByLibrary.simpleMessage("Peržiūrėti Detales"),
     "viewAll": MessageLookupByLibrary.simpleMessage("Peržiūrėti viską"),
+    "viewDetails": MessageLookupByLibrary.simpleMessage(
+      "Peržiūrėti informaciją",
+    ),
+    "viewPrice": MessageLookupByLibrary.simpleMessage("Matyti kainą"),
+    "viewStock": MessageLookupByLibrary.simpleMessage("Rodyti atsargas"),
+    "viewingTransactionFor": MessageLookupByLibrary.simpleMessage(
+      "Peržiūrimos operacijos, skirtos",
+    ),
     "walkInCustomer": MessageLookupByLibrary.simpleMessage(
       "Atsitiktinis klientas",
     ),
+    "wallet": MessageLookupByLibrary.simpleMessage("Piniginė"),
+    "walletBalance": MessageLookupByLibrary.simpleMessage("Piniginės balansas"),
+    "warehouse": MessageLookupByLibrary.simpleMessage("Sandėlis (Warehouse)"),
+    "warehouseName": MessageLookupByLibrary.simpleMessage(
+      "Sandėlio pavadinimas",
+    ),
+    "warranty": MessageLookupByLibrary.simpleMessage("Garantija"),
     "weHaveSentAConfirmationEmailTo": MessageLookupByLibrary.simpleMessage(
       "Mes išsiuntėme patvirtinimo el. laišką į",
     ),
@@ -949,11 +2311,124 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeYourMessageHere": MessageLookupByLibrary.simpleMessage(
       "Parašykite savo žinutę čia",
     ),
+    "writerTaxHere": MessageLookupByLibrary.simpleMessage(
+      "Scrivi qui il testo...",
+    ),
     "yearly": MessageLookupByLibrary.simpleMessage("Metinis"),
+    "years": MessageLookupByLibrary.simpleMessage("Metai"),
     "yes": MessageLookupByLibrary.simpleMessage("Taip"),
+    "yesterday": MessageLookupByLibrary.simpleMessage("Vakar"),
     "youCanNotPayMoreThenDue": MessageLookupByLibrary.simpleMessage(
       "Negalima mokėti daugiau nei skola",
     ),
+    "youCanNowResendYourOtp": MessageLookupByLibrary.simpleMessage(
+      "Dabar galite išsiųsti OTP pakartotinai.",
+    ),
+    "youDoNotHaveAnyPermissionToGenerateBarCode":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo generuoti brūkšninių kodų.",
+        ),
+    "youDoNotHavePermissionDeleteModel": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo ištrinti modelio.",
+    ),
+    "youDoNotHavePermissionDeleteTheShelf":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo ištrinti lentynos",
+        ),
+    "youDoNotHavePermissionProfitAndLoss": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo peržiūrėti pelno ir nuostolio.",
+    ),
+    "youDoNotHavePermissionToCreateExpenseCategory":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo kurti išlaidų kategorijos.",
+        ),
+    "youDoNotHavePermissionToCreateIncomeCategory":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo kurti pajamų kategorijos.",
+        ),
+    "youDoNotHavePermissionToCreateModel": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo kurti modelio",
+    ),
+    "youDoNotHavePermissionToCreatePurchase":
+        MessageLookupByLibrary.simpleMessage("Neturite leidimo kurti pirkimų."),
+    "youDoNotHavePermissionToDeleteDepartment":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo ištrinti skyriaus.",
+        ),
+    "youDoNotHavePermissionToDeleteDesignation":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo ištrinti pareigų.",
+        ),
+    "youDoNotHavePermissionToDeleteLeaveRequest":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo ištrinti atostogų prašymo.",
+        ),
+    "youDoNotHavePermissionToDeletePayroll":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo ištrinti darbo užmokesčio žiniaraščio.",
+        ),
+    "youDoNotHavePermissionToExportExcel": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo eksportuoti į „Excel“",
+    ),
+    "youDoNotHavePermissionToGenerateBarcode":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo generuoti brūkšninį kodą.",
+        ),
+    "youDoNotHavePermissionToGenerateReport":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo generuoti ataskaitos",
+        ),
+    "youDoNotHavePermissionToUpdateBranch":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo atnaujinti filialo.",
+        ),
+    "youDoNotHavePermissionToUpdateDepartment":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo atnaujinti skyriaus.",
+        ),
+    "youDoNotHavePermissionToUpdateLeaveRequest":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo atnaujinti atostogų prašymo.",
+        ),
+    "youDoNotHavePermissionToUpdateModel": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo atnaujinti modelio",
+    ),
+    "youDoNotHavePermissionToUpgradeHoliday":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo atnaujinti šventinių dienų.",
+        ),
+    "youDoNotHavePermissionToViewAttendance":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo peržiūrėti lankomumo",
+        ),
+    "youDoNotHaveUpdatePayroll": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo atnaujinti darbo užmokesčio žiniaraščio.",
+    ),
+    "youDoNotPermissionToUpdateDesignation":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo atnaujinti pareigų.",
+        ),
+    "youDoNotToHavePermissionToDeleteShift":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo ištrinti pamainos.",
+        ),
+    "youDoNotToHavePermissionToUpdateShift":
+        MessageLookupByLibrary.simpleMessage(
+          "Neturite leidimo atnaujinti pamainos.",
+        ),
+    "youDoNtHavePermissionToCreateRacks": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo kurti stelažų.",
+    ),
+    "youDoNtHavePermissionToDeleteRacks": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo trinti stelažų.",
+    ),
+    "youDoNtHavePermissionToUpdateRacks": MessageLookupByLibrary.simpleMessage(
+      "Neturite leidimo atnaujinti stelažų.",
+    ),
+    "youDonNotHavePermissionToCreateExpense":
+        MessageLookupByLibrary.simpleMessage("Neturite leidimo kurti išlaidų."),
+    "youDonNotHavePermissionToCreateIncome":
+        MessageLookupByLibrary.simpleMessage("Neturite leidimo kurti pajamų."),
     "youHaveToGivePermission": MessageLookupByLibrary.simpleMessage(
       "Jūs turite suteikti leidimą",
     ),
@@ -971,5 +2446,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "yourPackageExpiredToday": MessageLookupByLibrary.simpleMessage(
       "Jūsų paketas baigiasi šiandien\n\nPrašome pirkti iš naujo",
     ),
+    "zip": MessageLookupByLibrary.simpleMessage("Pašto Kodas"),
+    "zipCode": MessageLookupByLibrary.simpleMessage("Įveskite Pašto Kodą"),
   };
 }

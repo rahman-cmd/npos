@@ -9,8 +9,11 @@ import 'package:mobile_pos/Screens/vat_&_tax/provider/text_repo.dart';
 import 'package:mobile_pos/Screens/vat_&_tax/repo/tax_repo.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import '../../GlobalComponents/check_subscription.dart';
-import '../Products/Widgets/widgets.dart';
+
+import '../../http_client/custome_http_client.dart';
+import '../../widgets/empty_widget/_empty_widget.dart';
+import '../../service/check_user_role_permission_provider.dart';
+import '../hrm/widgets/deleteing_alart_dialog.dart';
 import 'model/vat_model.dart';
 
 class TaxReport extends ConsumerStatefulWidget {
@@ -35,16 +38,18 @@ class _TaxReportState extends ConsumerState<TaxReport> {
 
   @override
   Widget build(BuildContext context) {
+    final _lang = lang.S.of(context);
     final taxes = ref.watch(taxProvider);
     final businessProviderData = ref.watch(businessInfoProvider);
     ref.watch(getExpireDateProvider(ref));
+    final permissionService = PermissionService(ref);
     return businessProviderData.when(data: (details) {
       return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
             surfaceTintColor: Colors.white,
-            title: const Text(
-              'Tax Rates',
+            title: Text(
+              _lang.taxRates,
             ),
             centerTitle: true,
             backgroundColor: kWhite,
@@ -61,6 +66,9 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                   groupTaxes.add(element);
                 }
               }
+              if (!permissionService.hasPermission(Permit.vatsRead.value)) {
+                return Center(child: PermitDenyWidget());
+              }
               return RefreshIndicator(
                 onRefresh: () => refreshData(ref),
                 child: SingleChildScrollView(
@@ -71,44 +79,43 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                     children: [
                       //___________________________________Tax Rates______________________________
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Tax rates- Manage your Tax Rates',
+                          Flexible(
+                            child: Text(
+                              _lang.taxRatesMangeYourTaxRates,
+                            ),
                           ),
-                          const Spacer(),
-                          SizedBox(
-                            height: 30.0,
-                            width: 60,
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.only(left: 2, right: 2),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4.0),
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.only(left: 2, right: 2),
+                              minimumSize: Size(60, 30),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              backgroundColor: kSuccessColor,
+                              elevation: 1.0,
+                              foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
+                              shadowColor: kMainColor,
+                              animationDuration: const Duration(milliseconds: 300),
+                              textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CreateSingleTax(),
                                 ),
-                                backgroundColor: kSuccessColor,
-                                elevation: 1.0,
-                                foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
-                                shadowColor: kMainColor,
-                                animationDuration: const Duration(milliseconds: 300),
-                                textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              onPressed: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const CreateSingleTax(),
-                                  ),
-                                );
-                              },
-                              label: const Text(
-                                'Add',
-                                style: TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              icon: const Icon(
-                                FeatherIcons.plus,
-                                size: 15,
-                                color: kWhite,
-                              ),
+                              );
+                            },
+                            label: Text(
+                              _lang.add,
+                              style: TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            icon: const Icon(
+                              FeatherIcons.plus,
+                              size: 15,
+                              color: kWhite,
                             ),
                           ),
                         ],
@@ -134,20 +141,22 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                                 // 'Name',
                               ),
                             ),
-                            const DataColumn(
+                            DataColumn(
                               label: Text(
-                                'Tax rate',
+                                '${_lang.taxRates} %',
                               ),
                             ),
-                            const DataColumn(
+                            DataColumn(
                               label: Text(
-                                'Status',
+                                _lang.status,
                               ),
                             ),
-                            const DataColumn(
+                            DataColumn(
+                              headingRowAlignment: MainAxisAlignment.center,
                               label: Text(
-                                'Acton',
+                                _lang.actions,
                                 overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],
@@ -168,7 +177,7 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                                 ),
                                 DataCell(Center(
                                   child: Text(
-                                    singleTaxes[index].rate.toString(),
+                                    '${singleTaxes[index].rate.toString()}%',
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -176,7 +185,7 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                                 )),
                                 DataCell(Center(
                                   child: Text(
-                                    (singleTaxes[index].status ?? false) ? 'Active' : "Disable",
+                                    (singleTaxes[index].status ?? false) ? _lang.active : _lang.disable,
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -185,94 +194,97 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                                 DataCell(
                                   Row(
                                     children: [
-                                      SizedBox(
-                                        height: 25.0,
-                                        width: 50,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.only(left: 2, right: 2),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(4.0),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(50, 25),
+                                          padding: const EdgeInsets.only(left: 2, right: 2),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(4.0),
+                                          ),
+                                          backgroundColor: kSuccessColor,
+                                          elevation: 1.0,
+                                          foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
+                                          shadowColor: kMainColor,
+                                          animationDuration: const Duration(milliseconds: 300),
+                                          textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => CreateSingleTax(taxModel: singleTaxes[index]),
                                             ),
-                                            backgroundColor: kSuccessColor,
-                                            elevation: 1.0,
-                                            foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
-                                            shadowColor: kMainColor,
-                                            animationDuration: const Duration(milliseconds: 300),
-                                            textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
-                                          ),
-                                          onPressed: () async {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => CreateSingleTax(taxModel: singleTaxes[index]),
-                                              ),
-                                            );
-                                          },
-                                          child: Row(
-                                            children: [
-                                              const Icon(
-                                                FeatherIcons.edit,
-                                                size: 15,
-                                                color: kWhite,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                lang.S.of(context).edit,
-                                                //'Edit',
-                                                style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              FeatherIcons.edit,
+                                              size: 15,
+                                              color: kWhite,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              lang.S.of(context).edit,
+                                              //'Edit',
+                                              style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const SizedBox(width: 5.0),
-                                      SizedBox(
-                                        height: 25.0,
-                                        width: 65,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.only(left: 2, right: 2),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(4.0),
-                                            ),
-                                            backgroundColor: Colors.red,
-                                            elevation: 1.0,
-                                            foregroundColor: Colors.white.withValues(alpha: 0.1),
-                                            shadowColor: Colors.red,
-                                            animationDuration: const Duration(milliseconds: 300),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(50, 25),
+                                          padding: const EdgeInsets.only(left: 2, right: 2),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(4.0),
                                           ),
-                                          onPressed: () async {
-                                            bool result = await showDeleteAlert(context: context, itemsName: 'vat_&_tax');
-                                            if (result) {
-                                              EasyLoading.show(status: 'Deleting...');
-                                              final repo = TaxRepo();
-                                              try {
-                                                final result = await repo.deleteTax(id: singleTaxes[index].id.toString(), ref: ref, context: context);
-                                                if (result) {
-                                                  ref.refresh(taxProvider);
-                                                  EasyLoading.showSuccess('Deleted successfully!');
-                                                } else {
-                                                  EasyLoading.showError('Failed to delete the tax');
-                                                }
-                                              } catch (e) {
-                                                EasyLoading.showError('Error deleting tax: $e');
-                                              } finally {
-                                                EasyLoading.dismiss();
-                                              }
-                                            }
-                                          },
-                                          child: Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.delete_outline,
-                                                size: 17,
-                                                color: kWhite,
+                                          backgroundColor: Colors.red,
+                                          elevation: 1.0,
+                                          foregroundColor: Colors.white.withValues(alpha: 0.1),
+                                          shadowColor: Colors.red,
+                                          animationDuration: const Duration(milliseconds: 300),
+                                        ),
+                                        onPressed: () async {
+                                          if (!permissionService.hasPermission(Permit.vatsDelete.value)) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor: Colors.red,
+                                                content: Text('You do not have permission to delete tax.'),
                                               ),
-                                              const SizedBox(width: 4),
-                                              Text(lang.S.of(context).delete, style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold)),
-                                            ],
-                                          ),
+                                            );
+                                            return;
+                                          }
+                                          bool result = await showDeleteConfirmationDialog(context: context, itemName: 'vat_&_tax');
+                                          if (result) {
+                                            EasyLoading.show(status: _lang.deleting);
+                                            final repo = TaxRepo();
+                                            try {
+                                              final result = await repo.deleteTax(id: singleTaxes[index].id.toString(), ref: ref, context: context);
+                                              if (result) {
+                                                ref.refresh(taxProvider);
+                                                EasyLoading.showSuccess(_lang.deletedSuccessFully);
+                                              } else {
+                                                EasyLoading.showError(_lang.failedToDeleteTheTax);
+                                              }
+                                            } catch (e) {
+                                              EasyLoading.showError('${_lang.errorDeletingTax}: $e');
+                                            } finally {
+                                              EasyLoading.dismiss();
+                                            }
+                                          }
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.delete_outline,
+                                              size: 17,
+                                              color: kWhite,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(lang.S.of(context).delete, style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold)),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -292,48 +304,47 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                       //___________________________________Tax Group______________________________
                       const SizedBox(height: 40.0),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('Tax Group', style: TextStyle(color: kTitleColor, fontWeight: FontWeight.bold)),
-                              Text('(Combination of multiple taxes)', style: TextStyle(color: kGreyTextColor)),
-                            ],
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_lang.taxGroup, style: TextStyle(color: kTitleColor, fontWeight: FontWeight.bold)),
+                                Text('(${_lang.combinationOfTheMultipleTaxes})', style: TextStyle(color: kGreyTextColor)),
+                              ],
+                            ),
                           ),
-                          const Spacer(),
-                          SizedBox(
-                            height: 30.0,
-                            width: 60,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.only(left: 2, right: 2),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4.0),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.only(left: 2, right: 2),
+                              minimumSize: Size(60, 30),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              backgroundColor: kSuccessColor,
+                              elevation: 1.0,
+                              foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
+                              shadowColor: kMainColor,
+                              animationDuration: const Duration(milliseconds: 300),
+                              textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const AddGroupTax()),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  FeatherIcons.plus,
+                                  size: 15,
+                                  color: kWhite,
                                 ),
-                                backgroundColor: kSuccessColor,
-                                elevation: 1.0,
-                                foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
-                                shadowColor: kMainColor,
-                                animationDuration: const Duration(milliseconds: 300),
-                                textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              onPressed: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const AddGroupTax()),
-                                );
-                              },
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    FeatherIcons.plus,
-                                    size: 15,
-                                    color: kWhite,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text('Add', style: TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold)),
-                                ],
-                              ),
+                                SizedBox(width: 4),
+                                Text(_lang.add, style: TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold)),
+                              ],
                             ),
                           ),
                         ],
@@ -358,20 +369,21 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                                 lang.S.of(context).name,
                               ),
                             ),
-                            const DataColumn(
+                            DataColumn(
                               label: Text(
-                                'Tex Rate %',
+                                '${_lang.taxRates} %',
                               ),
                             ),
-                            const DataColumn(
+                            DataColumn(
                               label: Text(
-                                'Sub Taxes',
+                                _lang.subTaxes,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const DataColumn(
+                            DataColumn(
+                              headingRowAlignment: MainAxisAlignment.center,
                               label: Text(
-                                'Acton',
+                                _lang.action,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -392,7 +404,7 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                                 DataCell(
                                   Center(
                                     child: Text(
-                                      groupTaxes[index].rate.toString(),
+                                      '${groupTaxes[index].rate.toString()}%',
                                       textAlign: TextAlign.start,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -419,96 +431,99 @@ class _TaxReportState extends ConsumerState<TaxReport> {
                                 DataCell(
                                   Row(
                                     children: [
-                                      SizedBox(
-                                        height: 25.0,
-                                        width: 50,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.only(left: 2, right: 2),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(4.0),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(50, 25),
+                                          padding: const EdgeInsets.only(left: 2, right: 2),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(4.0),
+                                          ),
+                                          backgroundColor: Colors.green,
+                                          elevation: 1.0,
+                                          foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
+                                          shadowColor: kMainColor,
+                                          animationDuration: const Duration(milliseconds: 300),
+                                          textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => AddGroupTax(taxModel: groupTaxes[index])),
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              FeatherIcons.edit,
+                                              size: 15,
+                                              color: kWhite,
                                             ),
-                                            backgroundColor: Colors.green,
-                                            elevation: 1.0,
-                                            foregroundColor: kGreyTextColor.withValues(alpha: 0.1),
-                                            shadowColor: kMainColor,
-                                            animationDuration: const Duration(milliseconds: 300),
-                                            textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
-                                          ),
-                                          onPressed: () async {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => AddGroupTax(taxModel: groupTaxes[index])),
-                                            );
-                                          },
-                                          child: Row(
-                                            children: [
-                                              const Icon(
-                                                FeatherIcons.edit,
-                                                size: 15,
-                                                color: kWhite,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                lang.S.of(context).edit,
-                                                //'Edit',
-                                                style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              lang.S.of(context).edit,
+                                              //'Edit',
+                                              style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const SizedBox(width: 5.0),
-                                      SizedBox(
-                                        height: 25.0,
-                                        width: 60,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              padding: const EdgeInsets.only(left: 2, right: 2),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(4.0),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.only(left: 2, right: 2),
+                                            minimumSize: Size(50, 25),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                            elevation: 1.0,
+                                            foregroundColor: Colors.white.withValues(alpha: 0.1),
+                                            shadowColor: Colors.red,
+                                            animationDuration: const Duration(milliseconds: 300),
+                                            textStyle: const TextStyle(color: kWhite)),
+                                        onPressed: () async {
+                                          if (!permissionService.hasPermission(Permit.vatsDelete.value)) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor: Colors.red,
+                                                content: Text('You do not have permission to delete tax.'),
                                               ),
-                                              backgroundColor: Colors.red,
-                                              elevation: 1.0,
-                                              foregroundColor: Colors.white.withValues(alpha: 0.1),
-                                              shadowColor: Colors.red,
-                                              animationDuration: const Duration(milliseconds: 300),
-                                              textStyle: const TextStyle(color: kWhite)),
-                                          onPressed: () async {
-                                            bool result = await showDeleteAlert(context: context, itemsName: 'vat_&_tax');
-                                            if (result) {
-                                              EasyLoading.show(status: 'Deleting...');
-                                              final repo = TaxRepo();
-                                              try {
-                                                final result = await repo.deleteTax(id: groupTaxes[index].id.toString(), context: context, ref: ref);
-                                                if (result) {
-                                                  ref.refresh(taxProvider);
-                                                  EasyLoading.showSuccess('Deleted successfully!');
-                                                } else {
-                                                  EasyLoading.showError('Failed to delete the tax');
-                                                }
-                                              } catch (e) {
-                                                EasyLoading.showError('Error deleting tax: $e');
-                                              } finally {
-                                                EasyLoading.dismiss();
+                                            );
+                                            return;
+                                          }
+                                          bool result = await showDeleteConfirmationDialog(context: context, itemName: 'vat_&_tax');
+                                          if (result) {
+                                            EasyLoading.show(status: _lang.deleting);
+                                            final repo = TaxRepo();
+                                            try {
+                                              final result = await repo.deleteTax(id: groupTaxes[index].id.toString(), context: context, ref: ref);
+                                              if (result) {
+                                                ref.refresh(taxProvider);
+                                                EasyLoading.showSuccess(_lang.deletedSuccessFully);
+                                              } else {
+                                                EasyLoading.showError(_lang.failedToDeleteTheTax);
                                               }
+                                            } catch (e) {
+                                              EasyLoading.showError('${_lang.errorDeletingTax}: $e');
+                                            } finally {
+                                              EasyLoading.dismiss();
                                             }
-                                          },
-                                          child: Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.delete_outline,
-                                                size: 17,
-                                                color: kWhite,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                lang.S.of(context).delete,
-                                                //'Delete',
-                                                style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
+                                          }
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.delete_outline,
+                                              size: 17,
+                                              color: kWhite,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              lang.S.of(context).delete,
+                                              //'Delete',
+                                              style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],

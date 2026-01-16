@@ -7,7 +7,7 @@ import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:mobile_pos/Screens/Customers/add_customer.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
-import '../../GlobalComponents/check_subscription.dart';
+
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
 import '../../currency.dart';
@@ -75,7 +75,8 @@ class _PurchaseContactsState extends State<PurchaseContacts> {
                               itemCount: customer.length,
                               itemBuilder: (_, index) {
                                 customer[index].type == 'Supplier' ? color = const Color(0xFFA569BD) : Colors.white;
-                                return customer[index].name!.toLowerCase().trim().contains(searchCustomer) && customer[index].type!.contains('Supplier')
+                                return customer[index].name!.toLowerCase().trim().contains(searchCustomer) &&
+                                        customer[index].type!.contains('Supplier')
                                     ? ListTile(
                                         contentPadding: EdgeInsets.zero,
                                         onTap: () async {
@@ -127,7 +128,9 @@ class _PurchaseContactsState extends State<PurchaseContacts> {
                                           children: [
                                             Expanded(
                                               child: Text(
-                                                customer[index].type ?? '',
+                                                customer[index].type == 'Supplier'
+                                                    ? lang.S.of(context).supplier
+                                                    : customer[index].type ?? '',
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: _theme.textTheme.bodyMedium?.copyWith(
@@ -138,9 +141,13 @@ class _PurchaseContactsState extends State<PurchaseContacts> {
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
-                                              customer[index].due != null && customer[index].due != 0 ? lang.S.of(context).due : 'No Due',
+                                              customer[index].due != null && customer[index].due != 0
+                                                  ? lang.S.of(context).due
+                                                  : lang.S.of(context).noDue,
                                               style: _theme.textTheme.bodyMedium?.copyWith(
-                                                color: customer[index].due != null && customer[index].due != 0 ? const Color(0xFFff5f00) : const Color(0xff7B787B),
+                                                color: customer[index].due != null && customer[index].due != 0
+                                                    ? const Color(0xFFff5f00)
+                                                    : const Color(0xff7B787B),
                                                 fontSize: 14.0,
                                               ),
                                             ),

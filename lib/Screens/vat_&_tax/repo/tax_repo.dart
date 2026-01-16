@@ -8,17 +8,16 @@ import 'package:http/http.dart' as http;
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
 import '../model/vat_model.dart';
 import '../provider/text_repo.dart';
 
 class TaxRepo {
   Future<List<VatModel>> fetchAllTaxes({String? taxType}) async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/vats?type=$taxType');
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    final response = await clientGet.get(url: uri);
 
     if (response.statusCode == 200) {
       final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -94,7 +93,10 @@ class TaxRepo {
     }
 
     try {
-      final response = await customHttpClient.uploadFile(url: uri,fields: request.fields,);
+      final response = await customHttpClient.uploadFile(
+        url: uri,
+        fields: request.fields,
+      );
       // final response = await request.send();
       final responseData = await response.stream.bytesToString();
       final parsedData = jsonDecode(responseData);
@@ -186,7 +188,10 @@ class TaxRepo {
     }
 
     try {
-      final response = await customHttpClient.uploadFile(url: uri,fields: request.fields,);
+      final response = await customHttpClient.uploadFile(
+        url: uri,
+        fields: request.fields,
+      );
       // final response = await request.send();
       final responseData = await response.stream.bytesToString();
       final parsedData = jsonDecode(responseData);

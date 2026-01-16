@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_pos/Screens/Currency/Provider/currency_provider.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
+
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
 import '../../currency.dart';
 import 'Model/currency_model.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
-
 import 'Repo/currency_repo.dart';
 
 class CurrencyScreen extends StatefulWidget {
-  const CurrencyScreen({Key? key}) : super(key: key);
+  const CurrencyScreen({super.key});
 
   @override
   State<CurrencyScreen> createState() => _CurrencyScreenState();
@@ -55,8 +55,8 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                             borderRadius: BorderRadius.circular(6),
                             color: selectedCurrency.name == currencyList[index].name ? kMainColor : kWhite,
                             boxShadow: [
-                              BoxShadow(color: const Color(0xff0C1A4B).withOpacity(0.24), blurRadius: 1),
-                              BoxShadow(color: const Color(0xff473232).withOpacity(0.05), offset: const Offset(0, 3), spreadRadius: -1, blurRadius: 8)
+                              BoxShadow(color: const Color(0xff0C1A4B).withValues(alpha: 0.24), blurRadius: 1),
+                              BoxShadow(color: const Color(0xff473232).withValues(alpha: 0.05), offset: const Offset(0, 3), spreadRadius: -1, blurRadius: 8)
                             ],
                           ),
                           child: ListTile(

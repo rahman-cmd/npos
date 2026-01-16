@@ -12,13 +12,14 @@ class DueCollectionInvoice {
     due = json['due'];
     name = json['name'];
     type = json['type'];
-    if (json[json['type'] == 'Supplier'?'purchases_dues':'sales_dues'] != null) {
+    if (json[json['type'] == 'Supplier' ? 'purchases_dues' : 'sales_dues'] != null) {
       salesDues = [];
-      json[json['type'] == 'Supplier'?'purchases_dues':'sales_dues'].forEach((v) {
+      json[json['type'] == 'Supplier' ? 'purchases_dues' : 'sales_dues'].forEach((v) {
         salesDues?.add(SalesDuesInvoice.fromJson(v));
       });
     }
   }
+
   num? id;
   num? due;
   String? name;
@@ -56,6 +57,7 @@ class SalesDuesInvoice {
     totalAmount = json['totalAmount'];
     invoiceNumber = json['invoiceNumber'];
   }
+
   num? id;
   num? partyId;
   num? dueAmount;

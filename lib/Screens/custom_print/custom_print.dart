@@ -5,7 +5,7 @@ import 'package:mobile_pos/Provider/transactions_provider.dart';
 import 'package:mobile_pos/generated/l10n.dart' as l;
 import 'package:nb_utils/nb_utils.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
+
 import '../../constant.dart';
 import '../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../thermal priting invoices/provider/custom_print_provider.dart';
@@ -22,10 +22,11 @@ class _CustomPrintScreenState extends State<CustomPrintScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _lang = l.S.of(context);
     return Scaffold(
-      backgroundColor: kBackgroundColor,
+      backgroundColor: kWhite,
       appBar: AppBar(
-        title: const Text('Custom Print'),
+        title: Text(_lang.customPrint),
       ),
       body: Consumer(builder: (context, ref, __) {
         final printerData = ref.watch(printerPurchaseProviderNotifier);
@@ -43,7 +44,7 @@ class _CustomPrintScreenState extends State<CustomPrintScreen> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.never,
-                    hintText: "Write text here...",
+                    hintText: _lang.writerTaxHere,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -53,7 +54,9 @@ class _CustomPrintScreenState extends State<CustomPrintScreen> {
                       await printerData.getBluetooth();
                       if (connected) {
                         await printerData.printCustomTicket(
-                            printTransactionModel: PrintPurchaseTransactionModel(personalInformationModel: data, purchaseTransitionModel: null), data: textEditingController.text);
+                            printTransactionModel: PrintPurchaseTransactionModel(personalInformationModel: data, purchaseTransitionModel: null),
+                            data: textEditingController.text,
+                            paperSize: '');
                       } else {
                         showDialog(
                             context: context,
@@ -76,17 +79,17 @@ class _CustomPrintScreenState extends State<CustomPrintScreen> {
                                                 isConnect
                                                     // ignore: use_build_context_synchronously
                                                     ? finish(context)
-                                                    : toast(lang.S.of(context).tryAgain);
+                                                    : toast(l.S.of(context).tryAgain);
                                               },
                                               title: Text(printerData.availableBluetoothDevices[index].name),
-                                              subtitle: Text(lang.S.of(context).clickToConnect),
+                                              subtitle: Text(l.S.of(context).clickToConnect),
                                             );
                                           },
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(top: 20, bottom: 10),
                                           child: Text(
-                                            lang.S.of(context).pleaseConnectYourBlutohPrinter,
+                                            l.S.of(context).pleaseConnectYourBlutohPrinter,
                                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -99,7 +102,7 @@ class _CustomPrintScreenState extends State<CustomPrintScreen> {
                                           },
                                           child: Center(
                                             child: Text(
-                                              lang.S.of(context).cancel,
+                                              l.S.of(context).cancel,
                                               style: const TextStyle(color: kMainColor),
                                             ),
                                           ),

@@ -3,13 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/Screens/Expense/Repo/expanse_category_repo.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../GlobalComponents/glonal_popup.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../service/check_user_role_permission_provider.dart';
 
 class AddExpenseCategory extends StatefulWidget {
   const AddExpenseCategory({Key? key}) : super(key: key);
@@ -29,17 +30,11 @@ class _AddExpenseCategoryState extends State<AddExpenseCategory> {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, __) {
       //final allCategory = ref.watch(expanseCategoryProvider);
+      final permissionService = PermissionService(ref);
       return GlobalPopup(
         child: Scaffold(
           backgroundColor: kWhite,
           appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Image(
-                  image: AssetImage('images/x.png'),
-                )),
             title: Text(
               lang.S.of(context).addExpenseCat,
             ),
@@ -83,6 +78,15 @@ class _AddExpenseCategoryState extends State<AddExpenseCategory> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
+                      if (!permissionService.hasPermission(Permit.expenseCategoriesCreate.value)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text(lang.S.of(context).youDoNotHavePermissionToCreateExpenseCategory),
+                          ),
+                        );
+                        return;
+                      }
                       if (key.currentState?.validate() ?? false) {
                         EasyLoading.show();
                         final categoryRepo = ExpanseCategoryRepo();

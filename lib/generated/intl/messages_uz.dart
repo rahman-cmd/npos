@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addCustomer": MessageLookupByLibrary.simpleMessage(
       "Iltimos, Mijoz Qo\'shing",
     ),
+    "addCustomers": MessageLookupByLibrary.simpleMessage("Mijoz qo\'shish"),
     "addDelivery": MessageLookupByLibrary.simpleMessage(
       "Yetkazib berishni qo\'shish",
     ),
@@ -56,8 +57,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Iltimos, Sotib Olishni Qo\'shing",
     ),
     "addNote": MessageLookupByLibrary.simpleMessage("Eslatma qo\'shish"),
+    "addParty": MessageLookupByLibrary.simpleMessage("Partiyalarni qo\'shish"),
     "addProduct": MessageLookupByLibrary.simpleMessage(
       "Iltimos, Mahsulot Qo\'shing",
+    ),
+    "addProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Mahsulot muvaffaqiyatli yaratildi!",
+    ),
+    "addProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda mahsulot yaratish uchun ruxsat yo\'q.",
     ),
     "addPurchase": MessageLookupByLibrary.simpleMessage(
       "Sotib Olishni Qo\'shish",
@@ -66,9 +74,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Iltimos, Sotishni Qo\'shing",
     ),
     "addSales": MessageLookupByLibrary.simpleMessage("Sotishni Qo\'shish"),
+    "addStock": MessageLookupByLibrary.simpleMessage("Zaxira qo\'shish"),
     "addUnit": MessageLookupByLibrary.simpleMessage("Birlik Qo\'shish"),
     "addUserRole": MessageLookupByLibrary.simpleMessage(
       "Foydalanuvchi Rolini Qo\'shish",
+    ),
+    "addVariant": MessageLookupByLibrary.simpleMessage("Variant qo\'shish"),
+    "addVariantDetails": MessageLookupByLibrary.simpleMessage(
+      "Variant tafsilotlarini qo\'shish",
     ),
     "addedToCart": MessageLookupByLibrary.simpleMessage(
       "Savatchaga qo\'shildi",
@@ -80,7 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Barcha biznes echimlari",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "NPOS bu tovar, hisob, savdo, xarajat va yo\'qotish/foyda bilan to\'liq biznes echimidir.",
+      "Npos bu tovar, hisob, savdo, xarajat va yo\'qotish/foyda bilan to\'liq biznes echimidir.",
     ),
     "allTime": MessageLookupByLibrary.simpleMessage("Barcha vaqt"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage(
@@ -105,13 +118,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "backToHome": MessageLookupByLibrary.simpleMessage("Bosh Sahifaga Qaytish"),
     "balance": MessageLookupByLibrary.simpleMessage("Balans"),
     "bangladesh": MessageLookupByLibrary.simpleMessage("Bangladesh"),
+    "barcodeGen": MessageLookupByLibrary.simpleMessage("Shtrixkod generatori"),
     "barcodeGenerator": MessageLookupByLibrary.simpleMessage(
       "Shtrix kod generatori",
     ),
+    "batch": MessageLookupByLibrary.simpleMessage("Partiya"),
+    "batchNo": MessageLookupByLibrary.simpleMessage("Partiya raqami"),
     "billTO": MessageLookupByLibrary.simpleMessage("Hisob-fakturaga"),
+    "billingAddress": MessageLookupByLibrary.simpleMessage(
+      "Hisob-kitob manzili",
+    ),
     "brand": MessageLookupByLibrary.simpleMessage("Brend"),
     "brandName": MessageLookupByLibrary.simpleMessage("Brend nomi"),
     "brands": MessageLookupByLibrary.simpleMessage("Brendlar"),
+    "bulk": MessageLookupByLibrary.simpleMessage("Ommaviy yuklash"),
     "businessCat": MessageLookupByLibrary.simpleMessage("Biznes Kategoriyasi"),
     "businessName": MessageLookupByLibrary.simpleMessage(
       "Kompaniya va Biznes Nomi",
@@ -133,6 +153,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "checkEmail": MessageLookupByLibrary.simpleMessage(
       "Elektron Pochtani Tekshiring",
     ),
+    "choose": MessageLookupByLibrary.simpleMessage("Tanlash"),
+    "chooseCountry": MessageLookupByLibrary.simpleMessage("Mamlakatni tanlang"),
     "chooseCustomer": MessageLookupByLibrary.simpleMessage("Mijozni Tanlang"),
     "chooseSupplier": MessageLookupByLibrary.simpleMessage(
       "Yetkazib Beruvchini Tanlang",
@@ -141,9 +163,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "O\'zingizning Xususiyatlaringizni Tanlang",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Xususiyatlar NPOSni an\'anaviy echimlardan farq qiladigan muhim qismdir.",
+      "Xususiyatlar POSproni an\'anaviy echimlardan farq qiladigan muhim qismdir.",
     ),
+    "city": MessageLookupByLibrary.simpleMessage("Shahar"),
+    "cityName": MessageLookupByLibrary.simpleMessage("Shahar nomi"),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
+    "clear": MessageLookupByLibrary.simpleMessage("Tozalash"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
       "Ulanish uchun bosing",
     ),
@@ -189,11 +214,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "createNewPassword": MessageLookupByLibrary.simpleMessage(
       "Yangi Parol Yarating",
     ),
+    "createPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda PDF yaratish uchun ruxsat yo\'q.",
+    ),
+    "createSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda savdo yaratish uchun ruxsat yo\'q.",
+    ),
+    "creditLimit": MessageLookupByLibrary.simpleMessage(
+      "Partiya kredit limiti",
+    ),
     "currency": MessageLookupByLibrary.simpleMessage("Valuta"),
     "custom": MessageLookupByLibrary.simpleMessage("Maxsus"),
     "customInvoiceBranding": MessageLookupByLibrary.simpleMessage(
       "Maxsus Invoyce Brendingi",
     ),
+    "customer": MessageLookupByLibrary.simpleMessage("Mijoz"),
     "customerName": MessageLookupByLibrary.simpleMessage("Mijoz Ismi"),
     "customerPay": MessageLookupByLibrary.simpleMessage("Mijoz To\'laydi"),
     "customerPhoneNumber": MessageLookupByLibrary.simpleMessage(
@@ -204,11 +239,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dashboard": MessageLookupByLibrary.simpleMessage("Boshqaruv Paneli"),
     "date": MessageLookupByLibrary.simpleMessage("Sana"),
+    "dateFilterWarn": MessageLookupByLibrary.simpleMessage(
+      "Oxirgi sana boshlang\'ich sanadan oldin bo\'lishi mumkin emas.",
+    ),
     "dates": MessageLookupByLibrary.simpleMessage("Sana:"),
     "days": MessageLookupByLibrary.simpleMessage("kunlar"),
     "dealer": MessageLookupByLibrary.simpleMessage("Diler"),
     "dealerPrice": MessageLookupByLibrary.simpleMessage("Diler narxi"),
     "delete": MessageLookupByLibrary.simpleMessage("O\'chirish"),
+    "deleteAcc": MessageLookupByLibrary.simpleMessage("Hisobni o\'chirish"),
+    "deleteBatchWarn": MessageLookupByLibrary.simpleMessage(
+      "Ushbu partiyani o\'chirmoqchimisiz?",
+    ),
+    "deletePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda partiyani o\'chirish uchun ruxsat yo\'q.",
+    ),
     "deleting": MessageLookupByLibrary.simpleMessage("O\'chirilmoqda..."),
     "deliveryAddress": MessageLookupByLibrary.simpleMessage(
       "Yetkazib berish Manzili",
@@ -237,11 +282,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "dueCollection": MessageLookupByLibrary.simpleMessage("Qarz Undirish"),
     "dueList": MessageLookupByLibrary.simpleMessage("Qarzdorlar Ro\'yxati"),
     "dueReport": MessageLookupByLibrary.simpleMessage("Qarzdorlik Hisoboti"),
+    "dueSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Kirish mijozlari uchun qarzli savdo ruxsat etilmagan.",
+    ),
     "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
       "Mobil posni ishlatish oson",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS ilovasi bepul, ishlatish oson. Aslida, bu dunyodagi eng yaxshi POS tizimlaridan biri.",
+      "Npos ilovasi bepul, ishlatish oson. Aslida, bu dunyodagi eng yaxshi POS tizimlaridan biri.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Tahrirlash"),
     "editPhone": MessageLookupByLibrary.simpleMessage(
@@ -261,8 +309,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Elektron pochta bo\'sh bo\'lishi mumkin emas",
     ),
     "emailText": MessageLookupByLibrary.simpleMessage("Elektron Pochta"),
+    "enLowStock": MessageLookupByLibrary.simpleMessage("Kam zaxirani kiriting"),
     "endYourFreePlan": MessageLookupByLibrary.simpleMessage(
       "BePul Rejangizni Tugating",
+    ),
+    "entBatchNo": MessageLookupByLibrary.simpleMessage(
+      "Partiya raqamini kiriting",
     ),
     "enterAValidOTP": MessageLookupByLibrary.simpleMessage(
       "Amal qiladigan OTPni kiriting",
@@ -270,6 +322,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterAValidStock": MessageLookupByLibrary.simpleMessage(
       "Amal qiladigan zaxirani kiriting",
     ),
+    "enterAddress": MessageLookupByLibrary.simpleMessage("Manzilni kiriting"),
     "enterAmount": MessageLookupByLibrary.simpleMessage("Miqdorni kiriting"),
     "enterBusiness": MessageLookupByLibrary.simpleMessage(
       "Biznes/Do\'kon Nomini Kiriting",
@@ -343,6 +396,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Telefon raqamingizni kiriting",
     ),
+    "expDate": MessageLookupByLibrary.simpleMessage("Amal qilish muddati"),
     "expense": MessageLookupByLibrary.simpleMessage("Xarajat"),
     "expenseCat": MessageLookupByLibrary.simpleMessage(
       "Xarajat Kategoriyalari",
@@ -352,11 +406,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "expenseReport": MessageLookupByLibrary.simpleMessage(
       "Xarajatlar Hisoboti",
     ),
+    "expirationStatus": MessageLookupByLibrary.simpleMessage(
+      "Amal qilish muddati holati",
+    ),
     "failedToGetPlatformVersion": MessageLookupByLibrary.simpleMessage(
       "Platforma versiyasini olishda xatolik yuz berdi.",
     ),
     "fashions": MessageLookupByLibrary.simpleMessage("Moda"),
     "field": MessageLookupByLibrary.simpleMessage("Maydon"),
+    "filter": MessageLookupByLibrary.simpleMessage("Filtr"),
     "firstName": MessageLookupByLibrary.simpleMessage("Ism"),
     "folder": MessageLookupByLibrary.simpleMessage(
       "Ehtimol, pochta sizning spam papkangizga tushgan bo\'lishi mumkin.",
@@ -376,6 +434,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "fullName": MessageLookupByLibrary.simpleMessage("To\'liq Ism"),
     "fullyPaid": MessageLookupByLibrary.simpleMessage("To\'liq To\'langan"),
     "gallery": MessageLookupByLibrary.simpleMessage("Galereya"),
+    "genPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "PDF yaratish uchun ma\'lumot mavjud emas",
+    ),
     "gotEmail": MessageLookupByLibrary.simpleMessage("Sizga Xat Keldi"),
     "gotIt": MessageLookupByLibrary.simpleMessage("Tushunarli"),
     "guest": MessageLookupByLibrary.simpleMessage("Mehmon"),
@@ -395,8 +456,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "incomeDate": MessageLookupByLibrary.simpleMessage("Daromad sanasi"),
     "incomeFor": MessageLookupByLibrary.simpleMessage("Daromad uchun"),
     "incomeReport": MessageLookupByLibrary.simpleMessage("Daromad Hisoboti"),
+    "incomeReportPermission": MessageLookupByLibrary.simpleMessage(
+      "Sizda daromad hisobotini ko\'rish uchun ruxsat yo\'q.",
+    ),
     "instrucation": MessageLookupByLibrary.simpleMessage("Ko\'rsatma"),
     "inv": MessageLookupByLibrary.simpleMessage("Inv Raqami"),
+    "inventoryPermission": MessageLookupByLibrary.simpleMessage(
+      "Sizda inventarizatsiya ruxsati yo\'q",
+    ),
     "invoice": MessageLookupByLibrary.simpleMessage("Invoyce"),
     "invoiceViewr": MessageLookupByLibrary.simpleMessage("Invoyce ko\'rish"),
     "item": MessageLookupByLibrary.simpleMessage("Mahsulot"),
@@ -427,15 +494,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "lossProfitReport": MessageLookupByLibrary.simpleMessage(
       "Yo\'qotish/Foyda Hisoboti",
     ),
+    "lowStock": MessageLookupByLibrary.simpleMessage("Kam zaxira"),
+    "lowStockReport": MessageLookupByLibrary.simpleMessage(
+      "Kam zaxira hisobotlari",
+    ),
     "lp": MessageLookupByLibrary.simpleMessage("Yo\'qotish/Foyda"),
     "lpDetails": MessageLookupByLibrary.simpleMessage(
       "Yo\'qotish/Foyda Tafsilotlari",
+    ),
+    "manuDate": MessageLookupByLibrary.simpleMessage("Ishlab chiqarilgan sana"),
+    "manufactureDate": MessageLookupByLibrary.simpleMessage(
+      "Ishlab chiqarilgan sana",
     ),
     "manufacturer": MessageLookupByLibrary.simpleMessage("Ishlab chiqaruvchi"),
     "masterCard": MessageLookupByLibrary.simpleMessage("Master Card"),
     "messege": MessageLookupByLibrary.simpleMessage("Xabar"),
     "mobile": MessageLookupByLibrary.simpleMessage("Mobil:"),
     "mobiles": MessageLookupByLibrary.simpleMessage("Mobil telefon"),
+    "model": MessageLookupByLibrary.simpleMessage("Model"),
     "moneyReceipt": MessageLookupByLibrary.simpleMessage("Pul kvitansiyasi"),
     "monthly": MessageLookupByLibrary.simpleMessage("Oylik"),
     "moreInfo": MessageLookupByLibrary.simpleMessage("Ko\'proq Ma\'lumot"),
@@ -455,9 +531,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ma\'lumot mavjud emas",
     ),
     "noDataFound": MessageLookupByLibrary.simpleMessage("Ma\'lumot Topilmadi"),
+    "noDue": MessageLookupByLibrary.simpleMessage("Qarz yo\'q"),
     "noItemSelected": MessageLookupByLibrary.simpleMessage(
       "Hech qanday element tanlanmagan",
     ),
+    "noMatched": MessageLookupByLibrary.simpleMessage(
+      "Hech qanday mos mahsulot topilmadi.",
+    ),
+    "noParty": MessageLookupByLibrary.simpleMessage("Partiyalar topilmadi"),
     "noProductSelected": MessageLookupByLibrary.simpleMessage(
       "Hech qanday mahsulot tanlanmagan",
     ),
@@ -469,11 +550,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noTransaction": MessageLookupByLibrary.simpleMessage("Tranzaksiya Yo\'q"),
     "notFound": MessageLookupByLibrary.simpleMessage("Topilmadi"),
+    "notLaunch": MessageLookupByLibrary.simpleMessage(
+      "Telefon ilovasini ishga tushirib bo\'lmadi.",
+    ),
     "note": MessageLookupByLibrary.simpleMessage("Eslatma"),
     "notification": MessageLookupByLibrary.simpleMessage("Xabarnoma"),
     "off": MessageLookupByLibrary.simpleMessage("O\'chirilgan"),
     "on": MessageLookupByLibrary.simpleMessage("Yoqilgan"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Kamerani ochish"),
     "openingBalance": MessageLookupByLibrary.simpleMessage("Ochilish Balansi"),
+    "opinion": MessageLookupByLibrary.simpleMessage("Fikringizni kiriting"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Zaxirada Yo\'q"),
     "packFeatures": MessageLookupByLibrary.simpleMessage("Paket Xususiyatlari"),
     "package": MessageLookupByLibrary.simpleMessage("Paket"),
@@ -481,6 +567,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paidAmount": MessageLookupByLibrary.simpleMessage("To\'langan Miqdor"),
     "paidVia": MessageLookupByLibrary.simpleMessage("Orqali to\'langan"),
     "parties": MessageLookupByLibrary.simpleMessage("Tomonlar"),
+    "partyCreateWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda partiya yaratish uchun ruxsat yo\'q.",
+    ),
     "partyList": MessageLookupByLibrary.simpleMessage("Tomonlar Ro\'yxati"),
     "password": MessageLookupByLibrary.simpleMessage("Parol"),
     "passwordCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
@@ -498,6 +587,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "To\'lov Tugallandi",
     ),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("To\'lov Usullari"),
+    "paymentTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Iltimos, to\'lov turini tanlang",
+    ),
     "paymentTypes": MessageLookupByLibrary.simpleMessage("To\'lov Turi"),
     "paymentsAmount": MessageLookupByLibrary.simpleMessage(
       "To\'lov Miqdorlari",
@@ -507,6 +599,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ruxsat berilmadi!",
     ),
     "phone": MessageLookupByLibrary.simpleMessage("Telefon Raqami"),
+    "phoneNotAvail": MessageLookupByLibrary.simpleMessage(
+      "Telefon raqami mavjud emas.",
+    ),
     "phoneVerification": MessageLookupByLibrary.simpleMessage(
       "Telefon Tasdiqlash",
     ),
@@ -559,8 +654,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectACategory": MessageLookupByLibrary.simpleMessage(
       "Iltimos, kategoriyani tanlang",
     ),
-    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
-      "NPOS tomonidan quvvatlanadi",
+    "posSale": MessageLookupByLibrary.simpleMessage("POS savdosi"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Acnoo tomonidan quvvatlanadi",
     ),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Premium Mijozlarga Yordam",
@@ -572,6 +668,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Oldingi To\'lov Miqdori",
     ),
     "price": MessageLookupByLibrary.simpleMessage("Narx"),
+    "priceWarn": MessageLookupByLibrary.simpleMessage(
+      "Narx bo\'sh bo\'lishi mumkin emas",
+    ),
     "print": MessageLookupByLibrary.simpleMessage("Chop etish"),
     "printing": MessageLookupByLibrary.simpleMessage("Chop Etish Imkoniyati"),
     "product": MessageLookupByLibrary.simpleMessage("Mahsulot"),
@@ -588,11 +687,19 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "productList": MessageLookupByLibrary.simpleMessage("Mahsulot Ro\'yxati"),
     "productName": MessageLookupByLibrary.simpleMessage("Mahsulot nomi"),
+    "productNotFound": MessageLookupByLibrary.simpleMessage(
+      "Mahsulot topilmadi",
+    ),
+    "productSetting": MessageLookupByLibrary.simpleMessage(
+      "Mahsulot sozlamalari",
+    ),
     "productUnit": MessageLookupByLibrary.simpleMessage("Mahsulot Birligi"),
     "products": MessageLookupByLibrary.simpleMessage("Mahsulotlar"),
     "profile": MessageLookupByLibrary.simpleMessage("Profil"),
     "profileEdit": MessageLookupByLibrary.simpleMessage("Profilni Tahrirlash"),
     "profit": MessageLookupByLibrary.simpleMessage("Foyda"),
+    "profitLoss": MessageLookupByLibrary.simpleMessage("Foyda va zarar"),
+    "profitMargin": MessageLookupByLibrary.simpleMessage("Foyda marjasi (%)"),
     "promo": MessageLookupByLibrary.simpleMessage("Promo"),
     "promoCode": MessageLookupByLibrary.simpleMessage("Promo Kodi"),
     "purchase": MessageLookupByLibrary.simpleMessage("Sotib Olish"),
@@ -602,6 +709,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "purchaseConfirmed": MessageLookupByLibrary.simpleMessage(
       "Xarid Tasdiqlandi",
+    ),
+    "purchaseEx": MessageLookupByLibrary.simpleMessage(
+      "Sotib olish narxi (soliqsiz)",
+    ),
+    "purchaseExReq": MessageLookupByLibrary.simpleMessage(
+      "Sotib olish narxi (soliqsiz) talab qilinadi",
+    ),
+    "purchaseIn": MessageLookupByLibrary.simpleMessage(
+      "Sotib olish narxi (soliqli)",
+    ),
+    "purchaseInReq": MessageLookupByLibrary.simpleMessage(
+      "Sotib olish narxi (soliqli) talab qilinadi",
     ),
     "purchaseList": MessageLookupByLibrary.simpleMessage(
       "Sotib Olish Ro\'yxati",
@@ -617,9 +736,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchaseReturnReport": MessageLookupByLibrary.simpleMessage(
       "Xarid qaytarish hisoboti",
     ),
+    "purchaseUpdateWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda xaridlarni yangilash uchun ruxsat yo\'q.",
+    ),
+    "purchaseWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda xaridlarni yaratish uchun ruxsat yo\'q.",
+    ),
     "purchased": MessageLookupByLibrary.simpleMessage("Sotib Olingan"),
     "purchasedBy": MessageLookupByLibrary.simpleMessage("Sotib olgan shaxs"),
     "quantity": MessageLookupByLibrary.simpleMessage("Miqdor"),
+    "quickOver": MessageLookupByLibrary.simpleMessage("Tezkor ko\'rinish"),
     "quickOverview": MessageLookupByLibrary.simpleMessage("Tez Ko\'rinish"),
     "receipt": MessageLookupByLibrary.simpleMessage("Kvitansiya"),
     "receivedAmount": MessageLookupByLibrary.simpleMessage(
@@ -660,10 +786,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "returnedItem": MessageLookupByLibrary.simpleMessage(
       "Qaytarilgan mahsulot",
     ),
+    "roundingTotal": MessageLookupByLibrary.simpleMessage("Yakunlangan jami"),
+    "roundings": MessageLookupByLibrary.simpleMessage("Yakunlash (+/-)"),
     "sale": MessageLookupByLibrary.simpleMessage("Sotish"),
     "saleBy": MessageLookupByLibrary.simpleMessage("Sotgan shaxs"),
     "saleList": MessageLookupByLibrary.simpleMessage("Sotish Ro\'yxati"),
     "salePrice": MessageLookupByLibrary.simpleMessage("Sotish Narxi"),
+    "saleReq": MessageLookupByLibrary.simpleMessage(
+      "Savdo narxi talab qilinadi",
+    ),
     "sales": MessageLookupByLibrary.simpleMessage("Sotish"),
     "salesBy": MessageLookupByLibrary.simpleMessage("Sotilgan Kim tomonidan:"),
     "salesDetails": MessageLookupByLibrary.simpleMessage("Sotish Detallari"),
@@ -679,10 +810,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveNPublish": MessageLookupByLibrary.simpleMessage(
       "Saqlash va Nashr etish",
     ),
+    "saveSetting": MessageLookupByLibrary.simpleMessage("Sozlamalarni saqlash"),
+    "saveVariant": MessageLookupByLibrary.simpleMessage("Variantni saqlash"),
+    "scanCode": MessageLookupByLibrary.simpleMessage(
+      "Mahsulot QR kodini skanerlash",
+    ),
     "search": MessageLookupByLibrary.simpleMessage("Qidirish"),
     "searchProduct": MessageLookupByLibrary.simpleMessage(
       "Mahsulotni qidirish",
     ),
+    "searchWith": MessageLookupByLibrary.simpleMessage("Qidirish..."),
     "seeAllPromoCode": MessageLookupByLibrary.simpleMessage(
       "Barcha promo kodlarini ko\'ring",
     ),
@@ -694,12 +831,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectCategory": MessageLookupByLibrary.simpleMessage(
       "Kategoriyani tanlang",
     ),
+    "selectCustomer": MessageLookupByLibrary.simpleMessage("Mijozni tanlang"),
+    "selectDate": MessageLookupByLibrary.simpleMessage("Sana tanlang"),
+    "selectFDate": MessageLookupByLibrary.simpleMessage(
+      "Boshlang\'ich sanani tanlang",
+    ),
     "selectLang": MessageLookupByLibrary.simpleMessage("Tilni Tanlang"),
+    "selectModel": MessageLookupByLibrary.simpleMessage("Modelni tanlang"),
+    "selectOne": MessageLookupByLibrary.simpleMessage("Birini tanlang"),
     "selectProductCategory": MessageLookupByLibrary.simpleMessage(
       "Mahsulot Kategoriyasini Tanlang",
     ),
     "selectProductUnit": MessageLookupByLibrary.simpleMessage(
       "Mahsulot Birligini Tanlang",
+    ),
+    "selectTax": MessageLookupByLibrary.simpleMessage("Soliqni tanlang"),
+    "selectToDate": MessageLookupByLibrary.simpleMessage(
+      "Oxirgi sanani tanlang",
     ),
     "sellAll": MessageLookupByLibrary.simpleMessage("Hammasini Sotish >"),
     "send": MessageLookupByLibrary.simpleMessage("Yuborish"),
@@ -726,16 +874,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "setting": MessageLookupByLibrary.simpleMessage("Sozlash"),
     "share": MessageLookupByLibrary.simpleMessage("Baham ko\'rish"),
+    "shippingAddress": MessageLookupByLibrary.simpleMessage(
+      "Yetkazib berish manzili",
+    ),
     "showCode": MessageLookupByLibrary.simpleMessage("Kodni ko\'rsatish"),
     "showName": MessageLookupByLibrary.simpleMessage("Nomini ko\'rsatish"),
     "showPrice": MessageLookupByLibrary.simpleMessage("Narxni ko\'rsatish"),
     "signIn": MessageLookupByLibrary.simpleMessage("Kirish"),
     "signUp": MessageLookupByLibrary.simpleMessage("Ro\'yxatdan o\'tish"),
+    "single": MessageLookupByLibrary.simpleMessage("Yagona"),
     "size": MessageLookupByLibrary.simpleMessage("Hajmi"),
     "skip": MessageLookupByLibrary.simpleMessage("O\'tkazib yuborish"),
     "skipTheUpdate": MessageLookupByLibrary.simpleMessage(
       "Yangilanishni o\'tkazib yuborish",
     ),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU / Kod"),
     "sl": MessageLookupByLibrary.simpleMessage("Tartib raqami"),
     "smartWatch": MessageLookupByLibrary.simpleMessage("Aqlli soat"),
     "socialMarketing": MessageLookupByLibrary.simpleMessage(
@@ -745,10 +898,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "startNewSale": MessageLookupByLibrary.simpleMessage(
       "Yangi Savdoni Boshlang",
     ),
+    "state": MessageLookupByLibrary.simpleMessage("Viloyat"),
+    "stateName": MessageLookupByLibrary.simpleMessage("Viloyat nomi"),
     "stillUnpaid": MessageLookupByLibrary.simpleMessage("Hali To\'lanmagan"),
     "stock": MessageLookupByLibrary.simpleMessage("Zaxira"),
     "stockList": MessageLookupByLibrary.simpleMessage("Zaxira Ro\'yxati"),
     "stockReport": MessageLookupByLibrary.simpleMessage("Zaxira Hisoboti"),
+    "stockWarn": MessageLookupByLibrary.simpleMessage(
+      "Zaxira kamida 1 ta bo\'lishi kerak",
+    ),
     "stocks": MessageLookupByLibrary.simpleMessage("Zaxira:"),
     "subTotal": MessageLookupByLibrary.simpleMessage("Jami"),
     "submit": MessageLookupByLibrary.simpleMessage("Yuborish"),
@@ -766,6 +924,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "supplierName": MessageLookupByLibrary.simpleMessage(
       "Yetkazib Beruvchi Nomi",
     ),
+    "taxType": MessageLookupByLibrary.simpleMessage("Soliq turi"),
     "thakYouForYourPurchase": MessageLookupByLibrary.simpleMessage(
       "Xaridlaringiz uchun rahmat",
     ),
@@ -802,8 +961,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "totalSales": MessageLookupByLibrary.simpleMessage("Umumiy Sotish"),
     "totalVat": MessageLookupByLibrary.simpleMessage("Umumiy QQS"),
+    "tranSacOver": MessageLookupByLibrary.simpleMessage(
+      "Tranzaksiya ko\'rinishi",
+    ),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Qayta Urinib Ko\'ring"),
     "type": MessageLookupByLibrary.simpleMessage("Turi"),
+    "typeSelect": MessageLookupByLibrary.simpleMessage("Turini tanlang"),
     "unPaid": MessageLookupByLibrary.simpleMessage("To\'lanmagan"),
     "unitName": MessageLookupByLibrary.simpleMessage("Birlik nomi"),
     "unitPirce": MessageLookupByLibrary.simpleMessage("Birlik Narxi"),
@@ -820,18 +983,41 @@ class MessageLookup extends MessageLookupByLibrary {
     "updateContact": MessageLookupByLibrary.simpleMessage(
       "Kontaktni Yangilash",
     ),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "Zaxirani yangilash muvaffaqiyatsiz tugadi",
+    ),
     "updateNow": MessageLookupByLibrary.simpleMessage("Hozir Yangilang"),
+    "updatePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda partiyani yangilash uchun ruxsat yo\'q.",
+    ),
     "updateProduct": MessageLookupByLibrary.simpleMessage(
       "Mahsulotni Yangilash",
     ),
+    "updateProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Mahsulot muvaffaqiyatli yangilandi!",
+    ),
+    "updateProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda mahsulotni yangilash uchun ruxsat yo\'q.",
+    ),
     "updateProfile": MessageLookupByLibrary.simpleMessage(
       "Profilingizni Yangilang",
+    ),
+    "updateSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Sizda savdoni yangilash uchun ruxsat yo\'q.",
+    ),
+    "updateSuccess": MessageLookupByLibrary.simpleMessage(
+      "Muvaffaqiyatli yangilandi",
     ),
     "updateYourSubscription": MessageLookupByLibrary.simpleMessage(
       "Obunangizni Yangilang",
     ),
     "updating": MessageLookupByLibrary.simpleMessage("Yangilanmoqda..."),
     "upgradeNow": MessageLookupByLibrary.simpleMessage("Hozir Yangilang"),
+    "upload": MessageLookupByLibrary.simpleMessage("Yuklash"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Rasm yuklash"),
+    "useGallery": MessageLookupByLibrary.simpleMessage(
+      "Galereyadan foydalaning",
+    ),
     "useTitleCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Foydalanuvchi sarlavhasi bo\'sh bo\'lishi mumkin emas",
     ),
@@ -842,6 +1028,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "userTitle": MessageLookupByLibrary.simpleMessage(
       "Foydalanuvchi Sarlavhasi",
     ),
+    "variantAdded": MessageLookupByLibrary.simpleMessage(
+      "Variant muvaffaqiyatli qo\'shildi!",
+    ),
+    "variantDelete": MessageLookupByLibrary.simpleMessage(
+      "Variant muvaffaqiyatli o\'chirildi!",
+    ),
     "vat": MessageLookupByLibrary.simpleMessage("Qo\'shilgan Qiymat Soliq"),
     "verification": MessageLookupByLibrary.simpleMessage("Tasdiqlash"),
     "verify": MessageLookupByLibrary.simpleMessage("Tasdiqlash"),
@@ -851,6 +1043,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verityEmail": MessageLookupByLibrary.simpleMessage(
       "Elektron Pochtani Tasdiqlash",
     ),
+    "view": MessageLookupByLibrary.simpleMessage("Tafsilotlarni ko\'rish"),
     "viewAll": MessageLookupByLibrary.simpleMessage("Hammasini Ko\'rish"),
     "walkInCustomer": MessageLookupByLibrary.simpleMessage("O\'tkinchi Mijoz"),
     "weHaveSentAConfirmationEmailTo": MessageLookupByLibrary.simpleMessage(
@@ -889,6 +1082,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "yourPackageExpiredToday": MessageLookupByLibrary.simpleMessage(
       "Sizning Paketi Bugun Tugaydi\n\nIltimos Qayta Xarid Qiling",
+    ),
+    "zip": MessageLookupByLibrary.simpleMessage("Pochta indeksi"),
+    "zipCode": MessageLookupByLibrary.simpleMessage(
+      "Pochta indeksini kiriting",
     ),
   };
 }

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import 'package:http/http.dart' as http;
 
 import '../../../../Const/api_config.dart';
@@ -82,7 +81,6 @@ class ForgotPassRepo {
     };
 
     try {
-
       final response = await http.post(url, headers: headers, body: body);
 
       final responseData = jsonDecode(response.body);

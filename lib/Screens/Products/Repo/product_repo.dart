@@ -1,175 +1,261 @@
 //ignore_for_file: file_names, unused_element, unused_local_variable
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_pos/Provider/product_provider.dart';
+import 'package:mobile_pos/Screens/Products/Model/product_total_stock_model.dart';
+import 'package:mobile_pos/service/check_user_role_permission_provider.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../constant.dart';
+import '../../../core/constant_variables/local_data_saving_keys.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
+import '../../Purchase/Repo/purchase_repo.dart';
 import '../Model/product_model.dart';
+import '../add product/modle/create_product_model.dart';
 
 class ProductRepo {
-  Future<List<ProductModel>> fetchAllProducts() async {
-    final uri = Uri.parse('${APIConfig.url}/products');
+  // ==============================================================================
+  // NEW CREATE PRODUCT FUNCTION
+  // ==============================================================================
+  Future<bool> createProduct({required CreateProductModel data, required BuildContext context, required WidgetRef ref}) async {
+    return _submitProductData(data: data, isUpdate: false, context: context, ref: ref);
+  }
 
-    final response = await http.get(uri, headers: {
+  // ==============================================================================
+  // NEW UPDATE PRODUCT FUNCTION
+  // ==============================================================================
+  Future<bool> updateProduct({required CreateProductModel data, required BuildContext context, required WidgetRef ref}) async {
+    return _submitProductData(data: data, isUpdate: true, context: context, ref: ref);
+  }
+
+  /// Shared Logic for Create and Update to avoid code duplication
+  Future<bool> _submitProductData({required CreateProductModel data, required bool isUpdate, required BuildContext context, required WidgetRef ref}) async {
+    EasyLoading.show(status: isUpdate ? 'Updating Product...' : 'Creating Product...');
+
+    final url = Uri.parse(isUpdate ? '${APIConfig.url}/products/${data.productId}' : '${APIConfig.url}/products');
+
+    var request = http.MultipartRequest('POST', url);
+
+    request.headers.addAll({
       'Accept': 'application/json',
       'Authorization': await getAuthToken(),
     });
+
+    // Helper to safely add simple string fields
+    void addField(String key, dynamic value) {
+      if (value != null && value.toString().isNotEmpty && value.toString() != 'null') {
+        request.fields[key] = value.toString();
+      }
+    }
+
+    // --- 1. Standard Fields ---
+    if (isUpdate) addField('_method', 'put');
+
+    addField('productName', data.name);
+    addField('category_id', data.categoryId);
+    addField('unit_id', data.unitId);
+    addField('productCode', data.productCode);
+    addField('brand_id', data.brandId);
+    addField('model_id', data.modelId);
+    addField('rack_id', data.rackId);
+    addField('shelf_id', data.shelfId);
+    addField('alert_qty', data.alertQty);
+
+    // Serial logic (1 or 0)
+    // addField('has_serial', (data.hasSerial == '1' || data.hasSerial == 'true') ? '1' : '0');
+
+    addField('product_type', data.productType); // single, variant, combo
+    addField('vat_type', data.vatType);
+    addField('vat_id', data.vatId);
+    // Optional: vat_amount if backend calculates it or needs it
+    if (data.vatAmount != null) addField('vat_amount', data.vatAmount);
+
+    // Extra info
+    addField('productManufacturer', data.productManufacturer);
+    addField('productDiscount', data.productDiscount);
+
+    // --- 2. Complex Fields (JSON Encoded) ---
+
+    // A. STOCKS
+    // This handles Single (1 item in list) and Variant (multiple items in list)
+    if (data.stocks != null && data.stocks!.isNotEmpty) {
+      // Convert list of StockDataModel to List of Maps
+      List<Map<String, dynamic>> stockListJson = data.stocks!.map((stock) => stock.toJson()).toList();
+      // Encode to JSON String
+      request.fields['stocks'] = jsonEncode(stockListJson);
+    }
+
+    // B. VARIATION IDs (Only for variant type)
+    if (data.productType?.toLowerCase() == 'variant' && (data.variationIds?.isNotEmpty ?? false)) {
+      request.fields['variation_ids'] = jsonEncode(data.variationIds);
+    }
+
+    // C. COMBO PRODUCTS (Only for combo type)
+    if (data.productType?.toLowerCase() == 'combo' && (data.comboProducts?.isNotEmpty ?? false)) {
+      request.fields['combo_products'] = jsonEncode(data.comboProducts);
+      addField('profit_percent', data.comboProfitPercent);
+      addField('productSalePrice', data.comboProductSalePrice);
+    }
+
+    // D. WARRANTY & GUARANTEE
+    Map<String, String> warrantyInfo = {};
+    if (data.warrantyDuration != null && data.warrantyDuration!.isNotEmpty) {
+      warrantyInfo['warranty_duration'] = data.warrantyDuration!;
+      warrantyInfo['warranty_unit'] = data.warrantyPeriod ?? 'days';
+    }
+    if (data.guaranteeDuration != null && data.guaranteeDuration!.isNotEmpty) {
+      warrantyInfo['guarantee_duration'] = data.guaranteeDuration!;
+      warrantyInfo['guarantee_unit'] = data.guaranteePeriod ?? 'days';
+    }
+
+    if (warrantyInfo.isNotEmpty) {
+      request.fields['warranty_guarantee_info'] = jsonEncode(warrantyInfo);
+    }
+
+    // --- 3. File Upload ---
+    if (data.image != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'productPicture',
+        data.image!.path,
+        filename: data.image!.path.split('/').last,
+      ));
+    }
+
+    // --- Debugging Logs ---
+    print('URL: $url');
+    print('--- Fields ---');
+
+    request.fields.forEach((key, value) {
+      print('$key: $value');
+    });
+    print('--- Fields ---');
+    print(request.fields);
+
+    // --- 4. Execute ---
+    try {
+      // var response = await request.send();
+      CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), ref: ref, context: context);
+      print('Product image: ${data.image?.path}');
+      final response = await customHttpClient.uploadFile(
+        url: url,
+        file: data.image,
+        fileFieldName: 'productPicture',
+        fields: request.fields,
+      );
+      var responseData = await http.Response.fromStream(response);
+
+      EasyLoading.dismiss();
+      print("Response Status: ${response.statusCode}");
+      print("Response Body: ${responseData.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          var body = jsonDecode(responseData.body);
+          EasyLoading.showSuccess(body['message'] ?? (isUpdate ? 'Updated successfully!' : 'Created successfully!'));
+          return true;
+        } catch (e) {
+          // If JSON parsing fails but status is 200
+          EasyLoading.showSuccess(isUpdate ? 'Product updated!' : 'Product created!');
+          return true;
+        }
+      } else {
+        try {
+          var body = jsonDecode(responseData.body);
+          EasyLoading.showError(body['message'] ?? 'Failed to process product');
+        } catch (e) {
+          EasyLoading.showError('Failed with status: ${response.statusCode}');
+        }
+        return false;
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Network Error: ${e.toString()}');
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<String?> generateProductCode() async {
+    final uri = Uri.parse('${APIConfig.url}/product/generate-code');
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+
+    try {
+      final response = await clientGet.get(url: uri);
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        return jsonResponse['data'].toString();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<List<Product>> fetchAllProducts() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+    final uri = Uri.parse('${APIConfig.url}/products');
+
+    final response = await clientGet.get(url: uri);
 
     if (response.statusCode == 200) {
       final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
 
       final partyList = parsedData['data'] as List<dynamic>;
-      return partyList.map((category) => ProductModel.fromJson(category)).toList();
+      return partyList.map((category) => Product.fromJson(category)).toList();
       // Parse into Party objects
     } else {
       throw Exception('Failed to fetch Products');
     }
   }
 
-  Future<void> addProduct({
-    required WidgetRef ref,
-    required BuildContext context,
-    required String productName,
-    required String categoryId,
-    required String productCode,
-    required String productStock,
-    required String productSalePrice,
-    required String productPurchasePrice,
-    File? image,
-    String? size,
-    String? color,
-    String? weight,
-    String? capacity,
-    String? type,
-    String? brandId,
-    String? unitId,
-    String? productWholeSalePrice,
-    String? productDealerPrice,
-    String? productManufacturer,
-    String? productDiscount,
-    String? vatId,
-    String? vatType,
-    String? vatAmount,
-    String? profitMargin,
-    String? lowStock,
-    String? expDate,
-  }) async {
+  Future<ProductListResponse> fetchProducts() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/products');
 
-    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
-
-    var request = http.MultipartRequest('POST', uri)
-      ..headers['Accept'] = 'application/json'
-      ..headers['Authorization'] = await getAuthToken();
-    request.fields.addAll({
-      "productName": productName,
-      "category_id": categoryId,
-      "productCode": productCode,
-      "productStock": productStock,
-      "productSalePrice": productSalePrice,
-      "productPurchasePrice": productPurchasePrice,
-    });
-    if (size != null) request.fields['size'] = size;
-    if (color != null) request.fields['color'] = color;
-    if (weight != null) request.fields['weight'] = weight;
-    if (capacity != null) request.fields['capacity'] = capacity;
-    if (type != null) request.fields['type'] = type;
-    if (brandId != null) request.fields['brand_id'] = brandId.toString();
-    if (unitId != null) request.fields['unit_id'] = unitId;
-    if (vatId != null) request.fields['vat_id'] = vatId;
-    if (vatType != null) request.fields['vat_type'] = vatType;
-    if (vatAmount != null) request.fields['vat_amount'] = vatAmount;
-    if (profitMargin != null) request.fields['profit_percent'] = profitMargin;
-    if (productWholeSalePrice != null) request.fields['productWholeSalePrice'] = productWholeSalePrice;
-    if (productDealerPrice != null) request.fields['productDealerPrice'] = productDealerPrice;
-    if (productManufacturer != null) request.fields['productManufacturer'] = productManufacturer;
-    if (productDiscount != null) request.fields['productDiscount'] = productDiscount;
-    if (image != null) {
-      request.files.add(http.MultipartFile.fromBytes('productPicture', image.readAsBytesSync(), filename: image.path));
-    }
-    if (lowStock != null) request.fields['alert_qty'] = lowStock;
-    if (expDate != null) request.fields['expire_date'] = expDate;
-
-    // final response = await request.send();
-    final response = await customHttpClient.uploadFile(url: uri, file: image, fileFieldName: 'productPicture', fields: request.fields);
-    final responseData = await response.stream.bytesToString();
-    final parsedData = jsonDecode(responseData);
-    EasyLoading.dismiss();
+    final response = await clientGet.get(url: uri);
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Added successful!')));
-      var data1 = ref.refresh(productProvider);
-
-      Navigator.pop(context);
+      final parsedData = jsonDecode(response.body);
+      return ProductListResponse.fromJson(parsedData);
     } else {
-      EasyLoading.dismiss();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product creation failed: ${parsedData['message']}')));
+      throw Exception('Failed to fetch products');
     }
   }
 
-  Future<bool> addForBulkUpload({
-    required String productName,
-    required String categoryId,
-    required String productCode,
-    required String productStock,
-    required String productSalePrice,
-    required String productPurchasePrice,
-    File? image,
-    String? size,
-    String? color,
-    String? weight,
-    String? capacity,
-    String? type,
-    String? brandId,
-    String? unitId,
-    String? productWholeSalePrice,
-    String? productDealerPrice,
-    String? productManufacturer,
-    String? productDiscount,
-  }) async {
-    final uri = Uri.parse('${APIConfig.url}/products');
+  // Fetch Product Details
+  Future<Product> fetchProductDetails({required String productID}) async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
 
-    var request = http.MultipartRequest('POST', uri)
-      ..headers['Accept'] = 'application/json'
-      ..headers['Authorization'] = await getAuthToken();
-    request.fields.addAll({
-      "productName": productName,
-      "category_id": categoryId,
-      "productCode": productCode,
-      "productStock": productStock,
-      "productSalePrice": productSalePrice,
-      "productPurchasePrice": productPurchasePrice,
-    });
-    if (size != null) request.fields['size'] = size;
-    if (color != null) request.fields['color'] = color;
-    if (weight != null) request.fields['weight'] = weight;
-    if (capacity != null) request.fields['capacity'] = capacity;
-    if (type != null) request.fields['type'] = type;
-    if (brandId != null) request.fields['brand_id'] = brandId.toString();
-    if (unitId != null) request.fields['unit_id'] = unitId;
-    if (productWholeSalePrice != null) request.fields['productWholeSalePrice'] = productWholeSalePrice;
-    if (productDealerPrice != null) request.fields['productDealerPrice'] = productDealerPrice;
-    if (productManufacturer != null) request.fields['productManufacturer'] = productManufacturer;
-    if (productDiscount != null) request.fields['productDiscount'] = productDiscount;
-    if (image != null) {
-      request.files.add(http.MultipartFile.fromBytes('productPicture', image.readAsBytesSync(), filename: image.path));
+    final url = Uri.parse('${APIConfig.url}/products/$productID');
+
+    try {
+      var response = await clientGet.get(url: url);
+      EasyLoading.dismiss();
+      print(response.statusCode);
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        return Product.fromJson(jsonData['data']);
+      } else {
+        var data = jsonDecode(response.body);
+        EasyLoading.showError(data['message'] ?? 'Failed to fetch details');
+        throw Exception(data['message'] ?? 'Failed to fetch details');
+      }
+    } catch (e) {
+      // Hide loading indicator and show error
+      EasyLoading.dismiss();
+      EasyLoading.showError('Error: ${e.toString()}');
+      throw Exception('Error: ${e.toString()}');
     }
-
-    final response = await request.send();
-    final responseData = await response.stream.bytesToString();
-    final parsedData = jsonDecode(responseData);
-
-    if (response.statusCode == 200) {
-      return true;
-    }
-    return false;
   }
 
   Future<void> deleteProduct({
@@ -180,112 +266,183 @@ class ProductRepo {
     final String apiUrl = '${APIConfig.url}/products/$id';
 
     try {
-      CustomHttpClient customHttpClient = CustomHttpClient(ref: ref, context: context, client: http.Client());
+      CustomHttpClient customHttpClient = CustomHttpClient(
+        ref: ref,
+        context: context,
+        client: http.Client(),
+      );
+
       final response = await customHttpClient.delete(
         url: Uri.parse(apiUrl),
+        permission: Permit.productsDelete.value,
       );
 
       EasyLoading.dismiss();
 
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Product deleted successfully')));
+      // 👇 Print full response info
+      print('Delete Product Response:');
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
+      print('Headers: ${response.headers}');
 
-        var data1 = ref.refresh(productProvider);
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Product deleted successfully')),
+        );
+
+        ref.refresh(productProvider);
       } else {
         final parsedData = jsonDecode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to delete product: ${parsedData['message']}')));
+        final errorMessage = parsedData['error'].toString().replaceFirst('Exception: ', '');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: kMainColor,
+          ),
+        );
       }
     } catch (e) {
+      print('rrrr');
       EasyLoading.dismiss();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      print('Exception during product delete: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     }
   }
 
-  Future<void> updateProduct({
-    required String productId,
-    required WidgetRef ref,
-    required BuildContext context,
-    required String productName,
-    required String productCode,
-    String? categoryId,
-    required String productSalePrice,
-    required String productPurchasePrice,
-    File? image,
-    String? size,
-    String? color,
-    String? weight,
-    String? capacity,
-    String? type,
-    String? brandId,
-    String? unitId,
-    String? productWholeSalePrice,
-    String? productDealerPrice,
-    String? productManufacturer,
-    String? productDiscount,
-    String? productStock,
-    String? vatId,
-    String? vatType,
-    String? vatAmount,
-    String? profitMargin,
-    String? lowStock,
-    String? expDate,
-  }) async {
-    final uri = Uri.parse('${APIConfig.url}/products/$productId');
-    CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
+  Future<bool> addStock({required String id, required String qty}) async {
+    final url = Uri.parse('${APIConfig.url}/stocks');
+    String token = await getAuthToken() ?? '';
 
-    var request = http.MultipartRequest('POST', uri)
-      ..headers['Accept'] = 'application/json'
-      ..headers['Authorization'] = await getAuthToken();
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': token,
+    };
 
-    request.fields['_method'] = 'put';
-    request.fields.addAll({
-      "productName": productName,
-      "productCode": productCode,
-      "productSalePrice": productSalePrice,
-      "productPurchasePrice": productPurchasePrice,
+    final requestBody = jsonEncode({
+      "stock_id": id,
+      "productStock": qty,
     });
 
-    if (size != null) request.fields['size'] = size;
-    if (color != null) request.fields['color'] = color;
-    if (weight != null) request.fields['weight'] = weight;
-    if (capacity != null) request.fields['capacity'] = capacity;
-    if (type != null) request.fields['type'] = type;
-    request.fields['brand_id'] = brandId != null ? brandId.toString() : '';
-    request.fields['unit_id'] = unitId != null ? unitId.toString() : '';
-    if (categoryId != null) request.fields['category_id'] = categoryId;
-    if (vatId != null) request.fields['vat_id'] = vatId;
-    if (vatType != null) request.fields['vat_type'] = vatType;
-    if (vatAmount != null) request.fields['vat_amount'] = vatAmount;
-    if (profitMargin != null) request.fields['profit_percent'] = profitMargin;
-    if (productWholeSalePrice != null) request.fields['productWholeSalePrice'] = productWholeSalePrice;
-    if (productDealerPrice != null) request.fields['productDealerPrice'] = productDealerPrice;
-    if (productManufacturer != null) request.fields['productManufacturer'] = productManufacturer;
-    if (productDiscount != null) request.fields['productDiscount'] = productDiscount;
-    if (productStock != null) request.fields['productStock'] = productStock;
-    if (image != null) {
-      request.files.add(http.MultipartFile.fromBytes('productPicture', image.readAsBytesSync(), filename: image.path));
+    try {
+      final response = await http.post(url, headers: headers, body: requestBody);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        final data = jsonDecode(response.body);
+        EasyLoading.showError(data['message'] ?? 'Unknown error');
+        return false;
+      }
+    } catch (e) {
+      EasyLoading.showError('Error: ${e.toString()}');
+      return false;
     }
-    if (lowStock != null) request.fields['alert_qty'] = lowStock;
-    if (expDate != null) request.fields['expire_date'] = expDate;
+  }
 
-    print('Update response : ${request.fields}');
-    final response = await customHttpClient.uploadFile(
-      url: uri,
-      file: image,
-      fileFieldName: 'productPicture',
-      fields: request.fields,
-    );
-    final responseData = await response.stream.bytesToString();
+  Future<bool> updateVariation({required CartProductModelPurchase data}) async {
+    EasyLoading.show(status: 'Updating Product...');
+    final url = Uri.parse('${APIConfig.url}/stocks/${data.variantName}');
+    var request = http.MultipartRequest('POST', url);
 
-    final parsedData = jsonDecode(responseData);
+    request.headers.addAll({
+      'Accept': 'application/json',
+      'Authorization': await getAuthToken(),
+    });
 
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Updated Successfully!')));
-      var data1 = ref.refresh(productProvider);
+    void addField(String key, dynamic value) {
+      if (value != null && value.toString().isNotEmpty && value.toString() != 'null') {
+        request.fields[key] = value.toString();
+      }
+    }
 
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product Update failed: ${parsedData['message']}')));
+    // Add standard fields
+    addField('_method', 'put');
+    addField('batch_no', data.batchNumber);
+    addField('productStock', data.quantities);
+    addField('productPurchasePrice', data.productPurchasePrice);
+    addField('profit_percent', data.profitPercent);
+    addField('productSalePrice', data.productSalePrice);
+    addField('productWholeSalePrice', data.productWholeSalePrice);
+    addField('productDealerPrice', data.productDealerPrice);
+    addField('mfg_date', data.mfgDate);
+    addField('expire_date', data.expireDate);
+
+    print('--- Product Data Fields ---');
+    print('Total fields: ${request.fields.length}');
+    print(data.mfgDate);
+    request.fields.forEach((key, value) {
+      print('$key: $value');
+    });
+
+    try {
+      var response = await request.send();
+      var responseData = await http.Response.fromStream(response);
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${responseData.body}');
+
+      EasyLoading.dismiss();
+
+      if (response.statusCode == 200) {
+        try {
+          var body = jsonDecode(responseData.body);
+          EasyLoading.showSuccess(body['message'] ?? 'Product update successfully!');
+          return true;
+        } catch (e) {
+          EasyLoading.showSuccess('Product update successfully!');
+          return true;
+        }
+      } else {
+        try {
+          var body = jsonDecode(responseData.body);
+          EasyLoading.showError(body['message'] ?? 'Failed to update product');
+          print('Error Response: ${responseData.body}');
+        } catch (e) {
+          EasyLoading.showError('Failed to update product. Status: ${response.statusCode}');
+          print('Error Response (non-JSON): ${responseData.body}');
+        }
+        return false;
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Network Error: ${e.toString()}');
+      print('Network Error: ${e.toString()}');
+      return false;
+    }
+  }
+
+  Future<bool> deleteStock({required String id}) async {
+    EasyLoading.show(status: 'Processing');
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString(LocalDataBaseSavingKey.tokenKey) ?? '';
+    final url = Uri.parse('${APIConfig.url}/stocks/$id');
+    final headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    try {
+      var response = await http.delete(
+        url,
+        headers: headers,
+      );
+      EasyLoading.dismiss();
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        var data = jsonDecode(response.body);
+        EasyLoading.showError(data['message'] ?? 'Failed to delete');
+        print(data['message']);
+        return false;
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Error: ${e.toString()}');
+      print(e.toString());
+      return false;
     }
   }
 }

@@ -1,9 +1,11 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/Repository/constant_functions.dart';
+
 import '../../Screens/Home/home.dart';
 
 class BusinessSetupRepo {
@@ -21,7 +23,6 @@ class BusinessSetupRepo {
     EasyLoading.show(status: 'Loading...', dismissOnTap: false);
 
     final uri = Uri.parse('${APIConfig.url}/business');
-
 
     var request = http.MultipartRequest('POST', uri)
       ..headers['Authorization'] = await getAuthToken()
@@ -73,12 +74,15 @@ class BusinessSetupRepo {
   // Handle HTTP response and show appropriate messages
   Future<void> _handleResponse(http.StreamedResponse response, BuildContext context) async {
     EasyLoading.dismiss();
+    print('response: ${response.statusCode}');
+
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile setup successful!')));
       Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
     } else {
       var responseData = await response.stream.bytesToString();
+      print('response: $responseData');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profile setup failed: $responseData')));
     }
   }

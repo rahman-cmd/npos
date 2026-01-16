@@ -1,3 +1,5 @@
+import 'package:nb_utils/nb_utils.dart';
+
 List<Map<String, String>> languageData = [
   {"code": "ab", "name": "Abkhaz", "nativeName": "аҧсуа"},
   {"code": "aa", "name": "Afar", "nativeName": "Afaraf"},
@@ -181,3 +183,8 @@ List<Map<String, String>> languageData = [
   {"code": "yo", "name": "Yoruba", "nativeName": "Yorùbá"},
   {"code": "za", "name": "Zhuang, Chuang", "nativeName": "Saɯ cueŋƅ, Saw cuengh"}
 ];
+final rtlLang = ['ar', 'ar-bh', 'eg-ar', 'fa', 'prs', 'ps', 'ur'];
+Future<String> getLanguageName() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('lang') ?? 'en';
+}

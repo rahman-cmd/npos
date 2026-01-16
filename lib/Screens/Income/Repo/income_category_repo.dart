@@ -10,17 +10,16 @@ import 'package:mobile_pos/Screens/Income/Providers/income_category_provider.dar
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
 import '../Model/income_category.dart';
 
 class IncomeCategoryRepo {
   Future<List<IncomeCategory>> fetchAllIncomeCategory() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/income-categories');
 
     try {
-      final response = await http.get(uri, headers: {
-        'Accept': 'application/json',
-        'Authorization': await getAuthToken(),
-      });
+      final response = await clientGet.get(url: uri);
 
       if (response.statusCode == 200) {
         final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -44,9 +43,12 @@ class IncomeCategoryRepo {
     final uri = Uri.parse('${APIConfig.url}/income-categories');
     CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
 
-    var responseData = await customHttpClient.post(url: uri, body: {
-      'categoryName': categoryName,
-    });
+    var responseData = await customHttpClient.post(
+      url: uri,
+      body: {
+        'categoryName': categoryName,
+      },
+    );
 
     EasyLoading.dismiss();
 

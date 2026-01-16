@@ -1,10 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mobile_pos/Const/api_config.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
-import 'package:nb_utils/nb_utils.dart';
+
 import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../Repository/API/business_info_update_repo.dart';
@@ -27,7 +24,7 @@ class _PrintingInvoiceScreenState extends ConsumerState<SalesSettingsScreen> {
           data: (data) {
             setState(() {
               selectedMethod = roundingMethods.firstWhere(
-                (element) => element.value == data.saleRoundingOption,
+                (element) => element.value == data.data?.saleRoundingOption,
               );
             });
           },
@@ -40,13 +37,14 @@ class _PrintingInvoiceScreenState extends ConsumerState<SalesSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _lang = lang.S.of(context);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: kWhite,
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.black),
-          title: const Text(
-            'Sales Settings',
+          title: Text(
+            _lang.salesSetting,
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -61,7 +59,7 @@ class _PrintingInvoiceScreenState extends ConsumerState<SalesSettingsScreen> {
                     data: (data) async {
                       final businessRepository = BusinessUpdateRepository();
                       final isProfileUpdated = await businessRepository.updateSalesSettings(
-                        id: data.id.toString(),
+                        id: data.data?.id.toString() ?? '',
                         ref: ref,
                         context: context,
                         saleRoundingOption: selectedMethod?.value,
@@ -69,7 +67,6 @@ class _PrintingInvoiceScreenState extends ConsumerState<SalesSettingsScreen> {
 
                       if (isProfileUpdated) {
                         ref.refresh(businessInfoProvider);
-                        ref.refresh(businessSettingProvider);
                         Navigator.pop(context);
                       }
                     },
@@ -85,15 +82,16 @@ class _PrintingInvoiceScreenState extends ConsumerState<SalesSettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 15,
             children: [
-              const Text(
-                'Amount rounding method:',
+              Text(
+                '${_lang.amountRoundingMethod}:',
                 style: TextStyle(
                   fontSize: 16,
                 ),
               ),
               DropdownButtonFormField<AmountRoundingDropdownModel>(
+                isExpanded: true,
                 decoration: InputDecoration(
-                  labelText: 'Amount rounding method',
+                  labelText: _lang.amountRoundingMethod,
                   border: OutlineInputBorder(),
                 ),
                 value: selectedMethod,

@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:mobile_pos/Provider/add_to_cart.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
-import 'package:mobile_pos/core/theme/_app_colors.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
-import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
-import '../../GlobalComponents/returned_tag_widget.dart';
 import '../../GlobalComponents/sales_transaction_widget.dart';
-import '../../PDF Invoice/pdf_common_functions.dart';
-import '../../currency.dart';
-import '../../thermal priting invoices/model/print_transaction_model.dart';
+import '../../http_client/custome_http_client.dart';
 import '../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
 import '../../widgets/empty_widget/_empty_widget.dart';
 import '../Home/home.dart';
-import '../Sales/add_sales.dart';
-import '../invoice_details/sales_invoice_details_screen.dart';
-import '../invoice return/invoice_return_screen.dart';
+import '../../service/check_user_role_permission_provider.dart';
 
 class SalesListScreen extends StatefulWidget {
   const SalesListScreen({super.key});
@@ -70,34 +60,52 @@ class _SalesListScreenState extends State<SalesListScreen> {
           body: Consumer(builder: (context, ref, __) {
             final providerData = ref.watch(salesTransactionProvider);
             final profile = ref.watch(businessInfoProvider);
+            final permissionService = PermissionService(ref);
             return RefreshIndicator.adaptive(
               onRefresh: () => refreshData(ref),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: providerData.when(data: (transaction) {
                   return transaction.isNotEmpty
-                      ? profile.when(data: (shopDetails) {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: transaction.length,
-                            itemBuilder: (context, index) {
-                              return salesTransactionWidget(
-                                context: context,
-                                ref: ref,
-                                businessInfo: shopDetails,
-                                sale: transaction[index],
-                                advancePermission: true,
+                      ? providerData.when(
+                          data: (transaction) {
+                            if (transaction.isEmpty) {
+                              return Center(
+                                child: EmptyWidget(
+                                  message: TextSpan(
+                                    text: lang.S.of(context).addSale,
+                                  ),
+                                ),
                               );
-                            },
-                          );
-                        }, error: (e, stack) {
-                          return Text(e.toString());
-                        }, loading: () {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        })
+                            }
+                            return profile.when(
+                              data: (shopDetails) {
+                                if (!permissionService.hasPermission(Permit.salesRead.value)) {
+                                  return Center(child: PermitDenyWidget());
+                                }
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: transaction.length,
+                                  itemBuilder: (context, index) {
+                                    return salesTransactionWidget(
+                                      context: context,
+                                      ref: ref,
+                                      businessInfo: shopDetails,
+                                      sale: transaction[index],
+                                      advancePermission: true,
+                                      isFromSaleList: true,
+                                    );
+                                  },
+                                );
+                              },
+                              loading: () => const Center(child: CircularProgressIndicator()),
+                              error: (e, stack) => Text(e.toString()),
+                            );
+                          },
+                          loading: () => const Center(child: CircularProgressIndicator()),
+                          error: (e, stack) => Text(e.toString()),
+                        )
                       : Center(
                           child: EmptyWidget(
                           message: TextSpan(

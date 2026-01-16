@@ -1,3 +1,6 @@
+import '../../../model/sale_transaction_model.dart';
+import '../../../widgets/multipal payment mathods/model/payment_transaction_model.dart';
+
 class PurchaseTransaction {
   PurchaseTransaction({
     this.id,
@@ -23,10 +26,12 @@ class PurchaseTransaction {
     this.party,
     this.details,
     this.purchaseReturns,
+    this.transactions, // New Field
     this.vatAmount,
     this.vatId,
     this.vatPercent,
     this.vat,
+    this.branch,
   });
 
   PurchaseTransaction.fromJson(dynamic json) {
@@ -54,21 +59,33 @@ class PurchaseTransaction {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     paymentType = json['payment_type'] != null ? PaymentType.fromJson(json['payment_type']) : null;
+    branch = json['branch'] != null ? Branch.fromJson(json['branch']) : null;
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     party = json['party'] != null ? Party.fromJson(json['party']) : null;
+
     if (json['details'] != null) {
       details = [];
       json['details'].forEach((v) {
         details?.add(PurchaseDetails.fromJson(v));
       });
     }
+
     if (json['purchase_returns'] != null) {
       purchaseReturns = [];
       json['purchase_returns'].forEach((v) {
         purchaseReturns?.add(PurchaseReturn.fromJson(v));
       });
     }
+
+    // New List from JSON
+    if (json['transactions'] != null) {
+      transactions = [];
+      json['transactions'].forEach((v) {
+        transactions?.add(PaymentsTransaction.fromJson(v));
+      });
+    }
   }
+
   num? id;
   num? partyId;
   num? businessId;
@@ -88,6 +105,7 @@ class PurchaseTransaction {
   bool? isPaid;
   int? paymentTypeId;
   PaymentType? paymentType;
+  Branch? branch;
   String? purchaseDate;
   String? createdAt;
   String? updatedAt;
@@ -95,41 +113,8 @@ class PurchaseTransaction {
   Party? party;
   List<PurchaseDetails>? details;
   List<PurchaseReturn>? purchaseReturns;
+  List<PaymentsTransaction>? transactions; // Added
   PurchaseVat? vat;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = id;
-    map['party_id'] = partyId;
-    map['business_id'] = businessId;
-    map['user_id'] = userId;
-    map['discountAmount'] = discountAmount;
-    map['discount_percent'] = discountPercent;
-    map['shipping_charge'] = shippingCharge;
-    map['discount_type'] = discountType;
-    map['dueAmount'] = dueAmount;
-    map['paidAmount'] = paidAmount;
-    map['totalAmount'] = totalAmount;
-    map['invoiceNumber'] = invoiceNumber;
-    map['isPaid'] = isPaid;
-    map['paymentType'] = paymentType;
-    map['purchaseDate'] = purchaseDate;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
-    if (user != null) {
-      map['user'] = user?.toJson();
-    }
-    if (party != null) {
-      map['party'] = party?.toJson();
-    }
-    if (details != null) {
-      map['details'] = details?.map((v) => v.toJson()).toList();
-    }
-    if (purchaseReturns != null) {
-      map['purchase_returns'] = purchaseReturns?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
 }
 
 class PurchaseDetails {
@@ -139,7 +124,16 @@ class PurchaseDetails {
     this.productId,
     this.productPurchasePrice,
     this.quantities,
+    this.productWholeSalePrice,
+    this.productSalePrice,
+    this.productDealerPrice,
+    this.productStock,
+    this.profitPercent,
+    this.mfgDate,
+    this.expireDate,
+    this.stockId,
     this.product,
+    this.stock,
   });
 
   PurchaseDetails.fromJson(dynamic json) {
@@ -148,13 +142,32 @@ class PurchaseDetails {
     productId = json['product_id'];
     productPurchasePrice = json['productPurchasePrice'];
     quantities = json['quantities'];
+    productDealerPrice = json['productDealerPrice'];
+    productSalePrice = json['productSalePrice'];
+    productStock = json['productStock'];
+    profitPercent = json['profit_percent'];
+    mfgDate = json['mfg_date'];
+    expireDate = json['expire_date'];
+    stockId = json['stock_id']; // Added
+    productWholeSalePrice = json['productWholeSalePrice'];
     product = json['product'] != null ? Product.fromJson(json['product']) : null;
+    stock = json['stock'] != null ? PurchaseStock.fromJson(json['stock']) : null;
   }
+
   num? id;
   num? purchaseId;
   num? productId;
   num? productPurchasePrice;
   num? quantities;
+  num? productDealerPrice;
+  num? productSalePrice;
+  num? productWholeSalePrice;
+  num? productStock;
+  num? profitPercent;
+  num? stockId; // Added
+  PurchaseStock? stock;
+  String? mfgDate;
+  String? expireDate;
   Product? product;
 
   Map<String, dynamic> toJson() {
@@ -164,6 +177,7 @@ class PurchaseDetails {
     map['product_id'] = productId;
     map['productPurchasePrice'] = productPurchasePrice;
     map['quantities'] = quantities;
+    map['stock_id'] = stockId;
     if (product != null) {
       map['product'] = product?.toJson();
     }
@@ -177,30 +191,33 @@ class Product {
     this.productName,
     this.categoryId,
     this.category,
-    this.productWholeSalePrice,
-    this.productSalePrice,
-    this.productDealerPrice,
-    this.productStock,
+    this.productType,
+    this.vatAmount,
+    this.vatType,
+    this.vat,
   });
 
   Product.fromJson(dynamic json) {
     id = json['id'];
     productName = json['productName'];
+    productType = json['product_type'];
     categoryId = json['category_id'];
-    productDealerPrice = json['productDealerPrice'];
-    productSalePrice = json['productSalePrice'];
-    productStock = json['productStock'];
-    productWholeSalePrice = json['productWholeSalePrice'];
+    vatAmount = json['vat_amount'];
+    vatType = json['vat_type'];
+
     category = json['category'] != null ? Category.fromJson(json['category']) : null;
+    vat = json['vat'] != null ? PurchaseProductVat.fromJson(json['vat']) : null;
   }
+
   num? id;
   String? productName;
+  String? productType;
+  String? vatType;
   num? categoryId;
-  num? productDealerPrice;
-  num? productSalePrice;
-  num? productWholeSalePrice;
-  num? productStock;
+  num? vatAmount;
+
   Category? category;
+  PurchaseProductVat? vat;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -224,6 +241,7 @@ class Category {
     id = json['id'];
     categoryName = json['categoryName'];
   }
+
   num? id;
   String? categoryName;
 
@@ -235,12 +253,35 @@ class Category {
   }
 }
 
+class PurchaseStock {
+  PurchaseStock({
+    this.id,
+    this.batchNo,
+    this.variantName,
+    this.warehouseId,
+  });
+
+  PurchaseStock.fromJson(dynamic json) {
+    id = json['id'];
+    batchNo = json['batch_no'] ?? 'N/A';
+    variantName = json['variant_name']; // Added
+    warehouseId = json['warehouse_id']; // Added
+  }
+
+  num? id;
+  String? batchNo;
+  String? variantName; // Added
+  num? warehouseId; // Added
+}
+
 class Party {
   Party({
     this.id,
     this.name,
     this.email,
     this.phone,
+    this.type,
+    this.address,
   });
 
   Party.fromJson(dynamic json) {
@@ -248,18 +289,25 @@ class Party {
     name = json['name'];
     email = json['email'];
     phone = json['phone'];
+    type = json['type']; // Added based on JSON
+    address = json['address']; // Added based on JSON
   }
+
   num? id;
   String? name;
   String? email;
+  String? address;
   String? phone;
+  String? type;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['name'] = name;
     map['email'] = email;
+    map['address'] = address;
     map['phone'] = phone;
+    map['type'] = type;
     return map;
   }
 }
@@ -276,6 +324,7 @@ class User {
     name = json['name'];
     role = json['role'];
   }
+
   num? id;
   String? name;
   String? role;
@@ -289,7 +338,27 @@ class User {
   }
 }
 
-///----------purchase return----------------------------
+class Branch {
+  Branch({
+    this.id,
+    this.name,
+    this.phone,
+    this.address,
+  });
+
+  Branch.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+    phone = json['phone'];
+    address = json['address'];
+  }
+
+  num? id;
+  String? name;
+  String? phone;
+  String? address;
+}
+
 class PurchaseReturn {
   PurchaseReturn({
     this.id,
@@ -317,6 +386,7 @@ class PurchaseReturn {
       });
     }
   }
+
   num? id;
   num? businessId;
   num? purchaseId;
@@ -360,6 +430,7 @@ class PurchaseReturnDetails {
     returnAmount = json['return_amount'];
     returnQty = json['return_qty'];
   }
+
   num? id;
   num? businessId;
   num? purchaseReturnId;
@@ -391,6 +462,7 @@ class PurchaseVat {
     name = json['name'];
     rate = json['rate'];
   }
+
   num? id;
   String? name;
   num? rate;
@@ -406,6 +478,25 @@ class PaymentType {
     id = json['id'];
     name = json['name'];
   }
+
   num? id;
+  String? name;
+}
+
+class PurchaseProductVat {
+  PurchaseProductVat({
+    this.id,
+    this.name,
+    this.rate,
+  });
+
+  PurchaseProductVat.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+    rate = json['rate'];
+  }
+
+  num? id;
+  num? rate;
   String? name;
 }

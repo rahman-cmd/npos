@@ -1,12 +1,14 @@
 class LogInResponseModel {
   LogInResponseModel({
-      this.message,
-      this.data,});
+    this.message,
+    this.data,
+  });
 
   LogInResponseModel.fromJson(dynamic json) {
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
+
   String? message;
   Data? data;
 
@@ -18,15 +20,15 @@ class LogInResponseModel {
     }
     return map;
   }
-
 }
 
 class Data {
   Data({
-      this.name,
-      this.email,
-      this.isSetupped,
-      this.token,});
+    this.name,
+    this.email,
+    this.isSetupped,
+    this.token,
+  });
 
   Data.fromJson(dynamic json) {
     name = json['name'];
@@ -34,6 +36,7 @@ class Data {
     isSetupped = json['is_setupped'];
     token = json['token'];
   }
+
   String? name;
   String? email;
   bool? isSetupped;
@@ -47,5 +50,4 @@ class Data {
     map['token'] = token;
     return map;
   }
-
 }

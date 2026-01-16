@@ -25,6 +25,7 @@ class VatModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
   num? id;
   String? name;
   num? businessId;
@@ -62,6 +63,7 @@ class SubVat {
     name = json['name'];
     rate = json['rate'];
   }
+
   num? id;
   String? name;
   num? rate;

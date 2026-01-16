@@ -1,6 +1,3 @@
-
-
-
 class ChartData {
   ChartData(this.x, this.y, this.y1);
 

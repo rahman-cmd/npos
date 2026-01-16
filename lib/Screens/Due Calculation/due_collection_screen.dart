@@ -1,4 +1,3 @@
-// ignore_for_file: unused_result
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -14,7 +13,7 @@ import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart';
 import '../../currency.dart';
-import '../../widgets/payment_type/_payment_type_dropdown.dart';
+import '../../widgets/multipal payment mathods/multi_payment_widget.dart';
 import '../Customers/Model/parties_model.dart';
 import 'Model/due_collection_invoice_model.dart';
 import 'Providers/due_provider.dart';
@@ -28,6 +27,9 @@ class DueCollectionScreen extends StatefulWidget {
 }
 
 class _DueCollectionScreenState extends State<DueCollectionScreen> {
+  // Key for MultiPaymentWidget
+  final GlobalKey<MultiPaymentWidgetState> paymentWidgetKey = GlobalKey();
+
   num paidAmount = 0;
   num remainDueAmount = 0;
   num dueAmount = 0;
@@ -42,26 +44,63 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
   }
 
   TextEditingController paidText = TextEditingController();
-  TextEditingController dateController = TextEditingController(text: DateTime.now().toString());
+  TextEditingController dateController = TextEditingController(text: DateTime.now().toString().substring(0, 10));
+  DateTime selectedDate = DateTime.now();
 
   SalesDuesInvoice? selectedInvoice;
-  int? paymentType;
+  // int? paymentType; // Removed old single payment type
 
   // List of items in our dropdown menu
-
   int count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listener to update state when paidText changes (either manually or via MultiPaymentWidget)
+    paidText.addListener(() {
+      if (paidText.text.isEmpty) {
+        if (mounted) {
+          setState(() {
+            paidAmount = 0;
+          });
+        }
+      } else {
+        final val = double.tryParse(paidText.text) ?? 0;
+        // Validation: Cannot pay more than due
+        if (val <= dueAmount) {
+          if (mounted) {
+            setState(() {
+              paidAmount = val;
+            });
+          }
+        } else {
+          // If widget pushes value > due, or user types > due
+          // You might want to handle this gracefully.
+          // For now, keeping your old logic:
+          paidText.clear();
+          if (mounted) {
+            setState(() {
+              paidAmount = 0;
+            });
+          }
+          EasyLoading.showError(lang.S.of(context).youCanNotPayMoreThenDue);
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     count++;
     return Consumer(builder: (context, consumerRef, __) {
-      // final printerData = consumerRef.watch(printerDueProviderNotifier);
       final personalData = consumerRef.watch(businessInfoProvider);
       final dueInvoiceData = consumerRef.watch(dueInvoiceListProvider(widget.customerModel.id?.round() ?? 0));
       final _theme = Theme.of(context);
+
       return personalData.when(data: (data) {
         List<SalesDuesInvoice> items = [];
         num openingDueAmount = 0;
+
         return GlobalPopup(
           child: Scaffold(
             backgroundColor: kWhite,
@@ -100,16 +139,17 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                               return Expanded(
                                 child: DropdownButtonFormField<SalesDuesInvoice>(
                                   isExpanded: true,
-                                  value: selectedInvoice,
+                                  initialValue: selectedInvoice,
                                   hint: Text(
                                     lang.S.of(context).selectAInvoice,
-                                    //'Select a invoice'
                                   ),
                                   icon: selectedInvoice != null
                                       ? GestureDetector(
                                           onTap: () {
                                             setState(() {
                                               selectedInvoice = null;
+                                              // Reset payment widget when invoice is cleared
+                                              // paymentWidgetKey.currentState?.clear();
                                             });
                                           },
                                           child: const Icon(
@@ -134,6 +174,8 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                       paidAmount = 0;
                                       paidText.clear();
                                       selectedInvoice = newValue;
+                                      // Reset payment widget when invoice changes
+                                      // paymentWidgetKey.currentState?.clear();
                                     });
                                   },
                                   decoration: const InputDecoration(),
@@ -164,7 +206,12 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                       );
                                       if (picked != null) {
                                         setState(() {
-                                          dateController.text = picked.toString();
+                                          selectedDate = selectedDate.copyWith(
+                                            year: picked.year,
+                                            month: picked.month,
+                                            day: picked.day,
+                                          );
+                                          dateController.text = picked.toString().substring(0, 10);
                                         });
                                       }
                                     },
@@ -188,7 +235,9 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: widget.customerModel.due == null ? '$currency${0}' : '$currency${widget.customerModel.due}',
+                                      text: widget.customerModel.due == null
+                                          ? '$currency${0}'
+                                          : '$currency${widget.customerModel.due!}',
                                       style: const TextStyle(color: Color(0xFFFF8C34)),
                                     ),
                                   ]),
@@ -263,28 +312,8 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                       height: 30,
                                       child: TextFormField(
                                         controller: paidText,
-                                        onChanged: (value) {
-                                          if (value == '') {
-                                            setState(() {
-                                              paidAmount = 0;
-                                            });
-                                          } else {
-                                            if (value.toDouble() <= dueAmount) {
-                                              setState(() {
-                                                paidAmount = double.parse(value);
-                                              });
-                                            } else {
-                                              paidText.clear();
-                                              setState(() {
-                                                paidAmount = 0;
-                                              });
-                                              EasyLoading.showError(
-                                                lang.S.of(context).youCanNotPayMoreThenDue,
-                                                // 'You can\'t pay more then due'
-                                              );
-                                            }
-                                          }
-                                        },
+                                        // Make ReadOnly if multiple payments are selected to avoid conflict
+                                        readOnly: (paymentWidgetKey.currentState?.getPaymentEntries().length ?? 1) > 1,
                                         textAlign: TextAlign.right,
                                         decoration: const InputDecoration(
                                           hintText: '0',
@@ -324,17 +353,18 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                     ),
                   ),
 
-                  ///__________Payment_Type_______________________________________
+                  ///__________Payment_Type_Widget_______________________________________
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
                         const Divider(height: 20),
-                        PaymentTypeSelectorDropdown(
-                          value: paymentType,
-                          onChanged: (value) => setState(
-                            () => paymentType = value,
-                          ),
+                        MultiPaymentWidget(
+                          key: paymentWidgetKey,
+                          showWalletOption: true, // Configure as needed
+                          showChequeOption: (widget.customerModel.type != 'Supplier'), // Configure as needed
+                          totalAmountController: paidText,
+                          onPaymentListChanged: () {},
                         ),
                         const Divider(height: 20),
                       ],
@@ -379,10 +409,17 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                       ),
                       onPressed: () async {
                         if (paidAmount > 0 && dueAmount > 0) {
-                          if(paymentType==null){
-                            EasyLoading.showError('Please select a payment type');
-                          }else{
+                          // Get payments from widget
+                          List<PaymentEntry> payments = paymentWidgetKey.currentState?.getPaymentEntries() ?? [];
+
+                          if (payments.isEmpty) {
+                            EasyLoading.showError(lang.S.of(context).noDueSelected); // Or "Please select payment"
+                          } else {
                             EasyLoading.show();
+
+                            // Serialize Payment List
+                            List<Map<String, dynamic>> paymentData = payments.map((e) => e.toJson()).toList();
+
                             DueRepo repo = DueRepo();
                             DueCollection? dueData;
                             dueData = await repo.dueCollect(
@@ -390,11 +427,10 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                               context: context,
                               partyId: widget.customerModel.id ?? 0,
                               invoiceNumber: selectedInvoice?.invoiceNumber,
-                              paymentDate: dateController.text,
-                              paymentType: paymentType?.toString() ?? '',
+                              paymentDate: selectedDate.toIso8601String(),
+                              payments: paymentData,
                               payDueAmount: paidAmount,
                             );
-                            print('due collection: $dueData');
 
                             if (dueData != null) {
                               DueInvoiceDetails(
@@ -404,11 +440,9 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                               ).launch(context);
                             }
                           }
-
                         } else {
                           EasyLoading.showError(
                             lang.S.of(context).noDueSelected,
-                            //'No Due Selected'
                           );
                         }
                       },

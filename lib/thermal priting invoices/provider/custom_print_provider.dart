@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:image/image.dart' as img;
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+
 import '../../constant.dart';
 import '../model/print_transaction_model.dart';
 
@@ -30,11 +32,18 @@ class PrinterPurchase extends ChangeNotifier {
     return status;
   }
 
-  Future<bool> printCustomTicket({required PrintPurchaseTransactionModel printTransactionModel, required String data}) async {
+  Future<bool> printCustomTicket(
+      {required PrintPurchaseTransactionModel printTransactionModel,
+      required String data,
+      required String paperSize}) async {
     bool isPrinted = false;
     bool? isConnected = await PrintBluetoothThermal.connectionStatus;
     if (isConnected == true) {
-      List<int> bytes = await customPrintTicket(printTransactionModel: printTransactionModel, data: data);
+      List<int> bytes = await customPrintTicket(
+        printTransactionModel: printTransactionModel,
+        data: data,
+        paperSize: paperSize,
+      );
       await PrintBluetoothThermal.writeBytes(bytes);
       isPrinted = true;
     } else {
@@ -44,11 +53,17 @@ class PrinterPurchase extends ChangeNotifier {
     return isPrinted;
   }
 
-  Future<List<int>> customPrintTicket({
-    required PrintPurchaseTransactionModel printTransactionModel,
-    required String data,
-  }) async {
+  Future<List<int>> customPrintTicket(
+      {required PrintPurchaseTransactionModel printTransactionModel,
+      required String data,
+      required String paperSize}) async {
     List<int> bytes = [];
+    PaperSize? size;
+    if (paperSize == '2 inch 58mm') {
+      size = PaperSize.mm58;
+    } else {
+      size = PaperSize.mm80;
+    }
 
     try {
       CapabilityProfile profile = await CapabilityProfile.load();
@@ -79,7 +94,7 @@ class PrinterPurchase extends ChangeNotifier {
       }
 
       // Add company name
-      final companyNameText = printTransactionModel.personalInformationModel.companyName ?? '';
+      final companyNameText = printTransactionModel.personalInformationModel.data?.companyName ?? '';
       bytes += generator.text(
         companyNameText,
         styles: const PosStyles(
@@ -91,7 +106,7 @@ class PrinterPurchase extends ChangeNotifier {
       );
 
       // Add address
-      final address = printTransactionModel.personalInformationModel.address ?? '';
+      final address = printTransactionModel.personalInformationModel.data?.address ?? '';
       if (address.isNotEmpty) {
         bytes += generator.text(
           address,
@@ -100,19 +115,21 @@ class PrinterPurchase extends ChangeNotifier {
       }
 
       // Add phone number
-      final phoneNumber = printTransactionModel.personalInformationModel.phoneNumber ?? '';
+      final phoneNumber = printTransactionModel.personalInformationModel.data?.phoneNumber ?? '';
       if (phoneNumber.isNotEmpty) {
         bytes += generator.text(
           'Tel: $phoneNumber',
           styles: const PosStyles(align: PosAlign.center),
-          linesAfter: printTransactionModel.personalInformationModel.vatNumber?.trim().isNotEmpty == true ? 0 : 1,
+          linesAfter: printTransactionModel.personalInformationModel.data?.vatNo?.trim().isNotEmpty == true ? 0 : 1,
         );
       }
 
       // Add VAT information if available
-      final vatNumber = printTransactionModel.personalInformationModel.vatNumber;
-      if (vatNumber != null && vatNumber.trim().isNotEmpty) {
-        final vatName = printTransactionModel.personalInformationModel.vatName;
+      final vatNumber = printTransactionModel.personalInformationModel.data?.vatNo;
+      if (vatNumber != null &&
+          vatNumber.trim().isNotEmpty &&
+          printTransactionModel.personalInformationModel.data?.meta?.showVat == 1) {
+        final vatName = printTransactionModel.personalInformationModel.data?.vatName;
         final label = vatName != null ? '$vatName:' : 'Shop GST:';
         bytes += generator.text(
           '$label $vatNumber',

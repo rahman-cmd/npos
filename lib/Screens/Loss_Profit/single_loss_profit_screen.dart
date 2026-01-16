@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile_pos/Screens/Products/add%20product/add_product.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../constant.dart';
 import '../../currency.dart';
+import '../../http_client/custome_http_client.dart';
 import '../../model/sale_transaction_model.dart';
+import '../../widgets/empty_widget/_empty_widget.dart';
+import '../../service/check_user_role_permission_provider.dart';
+import '../Products/add product/modle/create_product_model.dart';
 
-class SingleLossProfitScreen extends StatefulWidget {
+class SingleLossProfitScreen extends ConsumerStatefulWidget {
   const SingleLossProfitScreen({
-    Key? key,
+    super.key,
     required this.transactionModel,
-  }) : super(key: key);
+  });
 
   final SalesTransactionModel transactionModel;
 
   @override
-  State<SingleLossProfitScreen> createState() => _SingleLossProfitScreenState();
+  ConsumerState<SingleLossProfitScreen> createState() => _SingleLossProfitScreenState();
 }
 
-class _SingleLossProfitScreenState extends State<SingleLossProfitScreen> {
+class _SingleLossProfitScreenState extends ConsumerState<SingleLossProfitScreen> {
   double getTotalProfit() {
     double totalProfit = 0;
     for (var element in widget.transactionModel.salesDetails!) {
@@ -53,6 +59,7 @@ class _SingleLossProfitScreenState extends State<SingleLossProfitScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final permissionService = PermissionService(ref);
     return GlobalPopup(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -71,231 +78,236 @@ class _SingleLossProfitScreenState extends State<SingleLossProfitScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('${lang.S.of(context).invoice} #${widget.transactionModel.invoiceNumber}'),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                        child: Text(
-                      widget.transactionModel.party?.name ?? '',
-                      maxLines: 2,
-                    )),
-                    Text(
-                      "${lang.S.of(context).dates} ${DateFormat.yMMMd().format(
-                        DateTime.parse(widget.transactionModel.saleDate ?? ''),
-                      )}",
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${lang.S.of(context).mobile}${widget.transactionModel.party?.phone ?? ''}",
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    Text(
-                      DateFormat.jm().format(DateTime.parse(widget.transactionModel.saleDate ?? '')),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  color: kMainColor.withOpacity(0.2),
-                  child: Row(
+                if (permissionService.hasPermission(Permit.lossProfitsDetailsRead.value)) ...{
+                  Text('${lang.S.of(context).invoice} #${widget.transactionModel.invoiceNumber}'),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          lang.S.of(context).product,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          lang.S.of(context).quantity,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          lang.S.of(context).profit,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                      Flexible(
+                          child: Text(
+                        widget.transactionModel.party?.name ?? '',
+                        maxLines: 2,
+                      )),
                       Text(
-                        lang.S.of(context).loss,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        "${lang.S.of(context).dates} ${DateFormat.yMMMd().format(
+                          DateTime.parse(widget.transactionModel.saleDate ?? ''),
+                        )}",
                       ),
                     ],
                   ),
-                ),
-                ListView.builder(
-                    itemCount: widget.transactionModel.salesDetails!.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      // double purchasePrice = double.parse(widget.transactionModel.details![index].productPurchasePrice.toString()) *
-                      //     double.parse(widget.transactionModel.details![index].quantities.toString());
-                      // double salePrice = double.parse(widget.transactionModel.details![index].price.toString()) *
-                      //     double.parse(widget.transactionModel.details![index].quantities.toString());
-                      //
-                      // double profit = salePrice - purchasePrice;
-
-                      return Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                widget.transactionModel.salesDetails?[index].product?.productName.toString() ?? '',
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Center(
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${lang.S.of(context).mobile}${widget.transactionModel.party?.phone ?? ''}",
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        DateFormat.jm().format(DateTime.parse(widget.transactionModel.saleDate ?? '')),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: kMainColor.withOpacity(0.2),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            lang.S.of(context).product,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            lang.S.of(context).quantity,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            lang.S.of(context).profit,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Text(
+                          lang.S.of(context).loss,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListView.builder(
+                      itemCount: widget.transactionModel.salesDetails!.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
                                 child: Text(
-                                  widget.transactionModel.salesDetails?[index].quantities.toString() ?? '',
+                                  '${widget.transactionModel.salesDetails?[index].product?.productName.toString() ?? ''}${widget.transactionModel.salesDetails?[index].product?.productType == ProductType.variant.name ? ' [${widget.transactionModel.salesDetails?[index].stock?.batchNo}]' : ''}',
+                                  textAlign: TextAlign.start,
                                 ),
                               ),
-                            ),
-                            Expanded(
+                              Expanded(
                                 flex: 2,
                                 child: Center(
                                   child: Text(
-                                    !(widget.transactionModel.salesDetails?[index].lossProfit?.isNegative ?? false)
+                                    widget.transactionModel.salesDetails?[index].quantities.toString() ?? '',
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 2,
+                                  child: Center(
+                                    child: Text(
+                                      !(widget.transactionModel.salesDetails?[index].lossProfit?.isNegative ?? false)
+                                          ? "$currency${widget.transactionModel.salesDetails?[index].lossProfit!.abs().toString()}"
+                                          : '0',
+                                    ),
+                                  )),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    (widget.transactionModel.salesDetails?[index].lossProfit?.isNegative ?? false)
                                         ? "$currency${widget.transactionModel.salesDetails?[index].lossProfit!.abs().toString()}"
                                         : '0',
                                   ),
-                                )),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  (widget.transactionModel.salesDetails?[index].lossProfit?.isNegative ?? false)
-                                      ? "$currency${widget.transactionModel.salesDetails?[index].lossProfit!.abs().toString()}"
-                                      : '0',
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                            ],
+                          ),
+                        );
+                      }),
+                } else
+                  Center(child: PermitDenyWidget()),
               ],
             ),
           ),
         ),
-        bottomNavigationBar: Container(
-          color: Colors.white,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                decoration: BoxDecoration(color: kMainColor.withOpacity(0.2), border: const Border(bottom: BorderSide(width: 1, color: Colors.grey))),
-                padding: const EdgeInsets.all(10),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              lang.S.of(context).total,
-                              textAlign: TextAlign.start,
-                              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+        bottomNavigationBar: Visibility(
+          visible: permissionService.hasPermission(Permit.lossProfitsDetailsRead.value),
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: kMainColor.withOpacity(0.2),
+                      border: const Border(bottom: BorderSide(width: 1, color: Colors.grey))),
+                  padding: const EdgeInsets.all(10),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                lang.S.of(context).total,
+                                textAlign: TextAlign.start,
+                                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              formatPointNumber(getTotalQuantity()),
-                            ),
-                          ),
-                          Expanded(
+                            Expanded(
                               flex: 2,
                               child: Text(
-                                "$currency${getTotalProfit()}",
-                              )),
-                          Text(
-                            "$currency${getTotalLoss()}",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: kMainColor.withOpacity(0.2), border: const Border(bottom: BorderSide(width: 1, color: Colors.grey))),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              lang.S.of(context).discount,
-                              textAlign: TextAlign.start,
-                              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                                formatPointNumber(getTotalQuantity()),
+                              ),
                             ),
-                          ),
-                          Text(
-                            "$currency${widget.transactionModel.discountAmount ?? 0}",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: kMainColor.withOpacity(0.2),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              widget.transactionModel.detailsSumLossProfit!.isNegative ? lang.S.of(context).totalLoss : lang.S.of(context).totalProfit,
-                              textAlign: TextAlign.start,
-                              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "$currency${getTotalProfit()}",
+                                )),
+                            Text(
+                              "$currency${getTotalLoss()}",
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          Text(
-                            widget.transactionModel.detailsSumLossProfit!.isNegative
-                                ? "$currency${widget.transactionModel.detailsSumLossProfit!.toInt().abs()}"
-                                : "$currency${widget.transactionModel.detailsSumLossProfit!.toInt()}",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: kMainColor.withOpacity(0.2),
+                      border: const Border(bottom: BorderSide(width: 1, color: Colors.grey))),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                lang.S.of(context).discount,
+                                textAlign: TextAlign.start,
+                                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Text(
+                              "$currency${widget.transactionModel.discountAmount ?? 0}",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: kMainColor.withOpacity(0.2),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                widget.transactionModel.detailsSumLossProfit!.isNegative
+                                    ? lang.S.of(context).totalLoss
+                                    : lang.S.of(context).totalProfit,
+                                textAlign: TextAlign.start,
+                                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Text(
+                              widget.transactionModel.detailsSumLossProfit!.isNegative
+                                  ? "$currency${widget.transactionModel.detailsSumLossProfit!.toInt().abs()}"
+                                  : "$currency${widget.transactionModel.detailsSumLossProfit!.toInt()}",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,319 +1,547 @@
 import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
+import 'package:mobile_pos/generated/l10n.dart' as l;
 import 'package:nb_utils/nb_utils.dart';
-import 'package:path_provider/path_provider.dart';
-
 import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../GlobalComponents/sales_transaction_widget.dart';
-import '../../../PDF Invoice/pdf_common_functions.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
 import '../../../core/theme/_app_colors.dart';
 import '../../../currency.dart';
-import '../../../thermal priting invoices/model/print_transaction_model.dart';
+import '../../../pdf_report/sales_report/sales_report_excel.dart';
+import '../../../pdf_report/sales_report/sales_report_pdf.dart';
+import '../../../pdf_report/sales_retunrn_report/sales_returned_excel.dart';
+import '../../../pdf_report/sales_retunrn_report/sales_returned_pdf.dart';
 import '../../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
-import '../../invoice_details/sales_invoice_details_screen.dart';
+import '../../../service/check_user_role_permission_provider.dart';
+import '../../../widgets/empty_widget/_empty_widget.dart';
 
-class SalesReturnReportScreen extends StatefulWidget {
+class SalesReturnReportScreen extends ConsumerStatefulWidget {
   const SalesReturnReportScreen({super.key});
 
   @override
   SalesReturnReportScreenState createState() => SalesReturnReportScreenState();
 }
 
-class SalesReturnReportScreenState extends State<SalesReturnReportScreen> {
-  TextEditingController fromDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime(DateTime.now().year, DateTime.now().month, 1)));
-  TextEditingController toDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime.now()));
-  DateTime fromDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
-  DateTime toDate = DateTime.now();
+class SalesReturnReportScreenState extends ConsumerState<SalesReturnReportScreen> {
+  final TextEditingController fromDateController = TextEditingController();
+  final TextEditingController toDateController = TextEditingController();
 
-  List<String> timeLimit = [
-    'ToDay',
-    'This Week',
-    'This Month',
-    'This Year',
-    'All Time',
-    'Custom',
-  ];
-  String? dropdownValue = 'This Month';
-  Map<String, String> getTranslateTime(BuildContext context) {
-    return {
-      'ToDay': lang.S.of(context).today,
-      'This Week': lang.S.of(context).thisWeek,
-      'This Month': lang.S.of(context).thisMonth,
-      'This Year': lang.S.of(context).thisYear,
-      "All Time": lang.S.of(context).allTime,
-    };
+  final Map<String, String> dateOptions = {
+    'today': l.S.current.today,
+    'yesterday': l.S.current.yesterday,
+    'last_seven_days': l.S.current.last7Days,
+    'last_thirty_days': l.S.current.last30Days,
+    'current_month': l.S.current.currentMonth,
+    'last_month': l.S.current.lastMonth,
+    'current_year': l.S.current.currentYear,
+    'custom_date': l.S.current.customerDate,
+  };
+
+  String selectedTime = 'today';
+  bool _isRefreshing = false;
+  bool _showCustomDatePickers = false;
+
+  DateTime? fromDate;
+  DateTime? toDate;
+  String searchCustomer = '';
+
+  /// Generates the date range string for the provider
+  FilterModel _getDateRangeFilter() {
+    if (_showCustomDatePickers && fromDate != null && toDate != null) {
+      return FilterModel(
+        duration: 'custom_date',
+        fromDate: DateFormat('yyyy-MM-dd', 'en_US').format(fromDate!),
+        toDate: DateFormat('yyyy-MM-dd', 'en_US').format(toDate!),
+      );
+    } else {
+      return FilterModel(duration: selectedTime.toLowerCase());
+    }
   }
 
-  void changeDate({required DateTime from}) {
+  Future<void> _selectDate({
+    required BuildContext context,
+    required bool isFrom,
+  }) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+      initialDate: isFrom ? fromDate ?? DateTime.now() : toDate ?? DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (isFrom) {
+          fromDate = picked;
+          fromDateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        } else {
+          toDate = picked;
+          toDateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        }
+      });
+
+      if (fromDate != null && toDate != null) _refreshFilteredProvider();
+    }
+  }
+
+  Future<void> _refreshFilteredProvider() async {
+    if (_isRefreshing) return;
+    _isRefreshing = true;
+    try {
+      final filter = _getDateRangeFilter();
+      ref.refresh(filteredSaleReturnedProvider(filter));
+      await Future.delayed(const Duration(milliseconds: 300)); // small delay
+    } finally {
+      _isRefreshing = false;
+    }
+  }
+
+  void _updateDateUI(DateTime? from, DateTime? to) {
     setState(() {
       fromDate = from;
-      fromDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(from));
+      toDate = to;
 
-      toDate = DateTime.now();
-      toDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)));
+      fromDateController.text = from != null ? DateFormat('yyyy-MM-dd').format(from) : '';
+
+      toDateController.text = to != null ? DateFormat('yyyy-MM-dd').format(to) : '';
     });
   }
 
-  Future<String> getPDFPath({required String data}) async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
-    return '$appDocPath/your_pdf_file.pdf'; // Replace with the actual file name
+  void _setDateRangeFromDropdown(String value) {
+    final now = DateTime.now();
+
+    switch (value) {
+      case 'today':
+        _updateDateUI(now, now);
+        break;
+
+      case 'yesterday':
+        final y = now.subtract(const Duration(days: 1));
+        _updateDateUI(y, y);
+        break;
+
+      case 'last_seven_days':
+        _updateDateUI(
+          now.subtract(const Duration(days: 6)),
+          now,
+        );
+        break;
+
+      case 'last_thirty_days':
+        _updateDateUI(
+          now.subtract(const Duration(days: 29)),
+          now,
+        );
+        break;
+
+      case 'current_month':
+        _updateDateUI(
+          DateTime(now.year, now.month, 1),
+          now,
+        );
+        break;
+
+      case 'last_month':
+        final first = DateTime(now.year, now.month - 1, 1);
+        final last = DateTime(now.year, now.month, 0);
+        _updateDateUI(first, last);
+        break;
+
+      case 'current_year':
+        _updateDateUI(
+          DateTime(now.year, 1, 1),
+          now,
+        );
+        break;
+
+      case 'custom_date':
+        // Custom: User will select manually
+        _updateDateUI(null, null);
+        break;
+    }
   }
 
-  bool _isRefreshing = false; // Prevents multiple refresh calls
+  @override
+  void initState() {
+    super.initState();
 
-  Future<void> refreshData(WidgetRef ref) async {
-    if (_isRefreshing) return; // Prevent duplicate refresh calls
-    _isRefreshing = true;
+    final now = DateTime.now();
 
-    ref.refresh(salesReturnTransactionProvider);
+    // Set initial From and To date = TODAY
+    fromDate = now;
+    toDate = now;
 
-    await Future.delayed(const Duration(seconds: 1)); // Optional delay
-    _isRefreshing = false;
+    fromDateController.text = DateFormat('yyyy-MM-dd').format(now);
+    toDateController.text = DateFormat('yyyy-MM-dd').format(now);
+  }
+
+  @override
+  void dispose() {
+    fromDateController.dispose();
+    toDateController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final translateTime = getTranslateTime(context);
     final _theme = Theme.of(context);
-    return GlobalPopup(
-      child: Scaffold(
-        backgroundColor: kWhite,
-        appBar: AppBar(
-          title: Text(
-            lang.S.of(context).salesReturnReport,
-          ),
-          iconTheme: const IconThemeData(color: Colors.black),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-        ),
-        body: Consumer(builder: (context, ref, __) {
-          final providerData = ref.watch(salesReturnTransactionProvider);
-          final printerData = ref.watch(thermalPrinterProvider);
-          final personalData = ref.watch(businessInfoProvider);
-          final businessSettingData = ref.watch(businessSettingProvider);
-          return RefreshIndicator(
-            onRefresh: () => refreshData(ref),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 20, bottom: 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: AppTextField(
-                            textFieldType: TextFieldType.NAME,
-                            readOnly: true,
-                            controller: fromDateTextEditingController,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              labelText: lang.S.of(context).fromDate,
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                onPressed: () async {
-                                  final DateTime? picked = await showDatePicker(
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2015, 8),
-                                    lastDate: DateTime(2101),
-                                    context: context,
-                                  );
-                                  setState(() {
-                                    fromDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
-                                    fromDate = picked!;
-                                    dropdownValue = 'Custom';
-                                  });
-                                },
-                                icon: const Icon(FeatherIcons.calendar),
-                              ),
+    return Consumer(
+      builder: (context, ref, __) {
+        final filter = _getDateRangeFilter();
+        final _lang = l.S.of(context);
+        final providerData = ref.watch(filteredSaleReturnedProvider(filter));
+        final personalData = ref.watch(businessInfoProvider);
+        final permissionService = PermissionService(ref);
+        return GlobalPopup(
+          child: Scaffold(
+            backgroundColor: kWhite,
+            appBar: AppBar(
+              title: Text(
+                l.S.of(context).salesReturnReport,
+              ),
+              actions: [
+                personalData.when(
+                  data: (business) {
+                    return providerData.when(
+                      data: (transaction) {
+                        return Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (transaction.isNotEmpty) {
+                                  generateSaleReturnReportPdf(context, transaction, business, fromDate, toDate);
+                                } else {
+                                  EasyLoading.showError(_lang.listIsEmpty);
+                                }
+                              },
+                              icon: HugeIcon(icon: HugeIcons.strokeRoundedPdf02, color: kSecondayColor),
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: AppTextField(
-                            textFieldType: TextFieldType.NAME,
-                            readOnly: true,
-                            controller: toDateTextEditingController,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              labelText: lang.S.of(context).toDate,
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                onPressed: () async {
-                                  final DateTime? picked = await showDatePicker(
-                                    initialDate: toDate,
-                                    firstDate: DateTime(2015, 8),
-                                    lastDate: DateTime(2101),
-                                    context: context,
-                                  );
-
-                                  setState(() {
-                                    toDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
-                                    picked!.isToday ? toDate = DateTime.now() : toDate = picked;
-                                    dropdownValue = 'Custom';
-                                  });
-                                },
-                                icon: const Icon(FeatherIcons.calendar),
-                              ),
+                            IconButton(
+                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                if (transaction.isNotEmpty) {
+                                  generateSaleReturnReportExcel(context, transaction, business, fromDate, toDate);
+                                } else {
+                                  EasyLoading.showInfo(_lang.noDataAvailableForGeneratePdf);
+                                }
+                              },
+                              icon: SvgPicture.asset('assets/excel.svg'),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+                            SizedBox(width: 8),
+                          ],
+                        );
+                      },
+                      error: (e, stack) => Center(
+                        child: Text(e.toString()),
+                      ),
+                      loading: SizedBox.shrink,
+                    );
+                  },
+                  error: (e, stack) => Center(
+                    child: Text(e.toString()),
                   ),
-                  providerData.when(data: (transaction) {
-                    double totalSaleReturn = 0;
-                    for (var element in transaction) {
-                      if ((fromDate.isBefore(DateTime.parse(element.saleDate ?? '')) || DateTime.parse(element.saleDate ?? '').isAtSameMomentAs(fromDate)) &&
-                          (toDate.isAfter(DateTime.parse(element.saleDate ?? '')) || DateTime.parse(element.saleDate ?? '').isAtSameMomentAs(toDate))) {
-                        for (var element in element.salesReturns!) {
-                          for (var d in element.salesReturnDetails!) {
-                            totalSaleReturn += (d.returnAmount ?? 0);
-                          }
-                        }
-                      }
-                    }
-
-                    return transaction.isNotEmpty
-                        ? Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Container(
-                                  height: 100,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      color: kMainColor.withOpacity(0.1),
-                                      border: Border.all(width: 1, color: kMainColor),
-                                      borderRadius: const BorderRadius.all(Radius.circular(15))),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "$currency${totalSaleReturn.toStringAsFixed(2)}",
-                                            style: const TextStyle(color: Colors.green, fontSize: 20),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          const Text(
-                                            'Total Return',
-                                            style: TextStyle(color: Colors.black, fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        width: 1,
-                                        height: 60,
-                                        color: kMainColor,
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        width: 150,
-                                        padding: const EdgeInsets.all(5),
-                                        decoration: BoxDecoration(border: Border.all(color: kMainColor, width: 1), borderRadius: const BorderRadius.all(Radius.circular(8))),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                            underline: null,
-                                            // underline: const Divider(color: Colors.black),
-                                            value: dropdownValue,
-                                            icon: const Icon(Icons.keyboard_arrow_down),
-                                            items: timeLimit.map((String items) {
-                                              return DropdownMenuItem(
-                                                value: items,
-                                                child: Text(translateTime[items] ?? items),
-                                              );
-                                            }).toList(),
-                                            onChanged: (newValue) {
-                                              setState(() {
-                                                dropdownValue = newValue.toString();
-
-                                                switch (newValue) {
-                                                  case 'ToDay':
-                                                    changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
-                                                    break;
-                                                  case 'This Week':
-                                                    changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().weekday));
-                                                    break;
-                                                  case 'This Month':
-                                                    changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, 1));
-                                                    break;
-                                                  case 'This Year':
-                                                    changeDate(from: DateTime(DateTime.now().year, 1, 1));
-                                                    break;
-                                                  case 'All Time':
-                                                    changeDate(from: DateTime(2020, 1, 1));
-                                                    break;
-                                                }
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                  loading: SizedBox.shrink,
+                ),
+              ],
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(50),
+                child: Column(
+                  children: [
+                    Divider(thickness: 1, color: kBottomBorder, height: 1),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Row(
+                              children: [
+                                Icon(IconlyLight.calendar, color: kPeraColor, size: 20),
+                                SizedBox(width: 3),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_showCustomDatePickers) {
+                                      _selectDate(context: context, isFrom: true);
+                                    }
+                                  },
+                                  child: Text(
+                                    fromDate != null ? DateFormat('dd MMM yyyy').format(fromDate!) : _lang.from,
+                                    style: Theme.of(context).textTheme.bodyMedium,
                                   ),
                                 ),
-                              ),
-                              ListView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: transaction.length,
-                                itemBuilder: (context, index) {
-                                  num returndAmount = 0;
-                                  for (var element in transaction[index].salesReturns!) {
-                                    for (var sales in element.salesReturnDetails!) {
-                                      returndAmount += (sales.returnAmount ?? 0);
-                                    }
-                                  }
-                                  return Visibility(
-                                    visible: (fromDate.isBefore(DateTime.parse(transaction[index].saleDate ?? '')) ||
-                                            DateTime.parse(transaction[index].saleDate ?? '').isAtSameMomentAs(fromDate)) &&
-                                        (toDate.isAfter(DateTime.parse(transaction[index].saleDate ?? '')) ||
-                                            DateTime.parse(transaction[index].saleDate ?? '').isAtSameMomentAs(toDate)),
-                                    child: salesTransactionWidget(
-                                        context: context,
-                                        ref: ref,
-                                        businessInfo: personalData.value!,
-                                        sale: transaction[index],
-                                        advancePermission: false,
-                                        returnAmount: returndAmount),
+                                SizedBox(width: 4),
+                                Text(
+                                  _lang.to,
+                                  style: _theme.textTheme.titleSmall,
+                                ),
+                                SizedBox(width: 4),
+                                Flexible(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (_showCustomDatePickers) {
+                                        _selectDate(context: context, isFrom: false);
+                                      }
+                                    },
+                                    child: Text(
+                                      toDate != null ? DateFormat('dd MMM yyyy').format(toDate!) : _lang.to,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 2),
+                          RotatedBox(
+                            quarterTurns: 1,
+                            child: Container(
+                              height: 1,
+                              width: 20,
+                              color: kSubPeraColor,
+                            ),
+                          ),
+                          SizedBox(width: 2),
+                          Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                iconSize: 20,
+                                value: selectedTime,
+                                isExpanded: true,
+                                items: dateOptions.entries.map((entry) {
+                                  return DropdownMenuItem<String>(
+                                    value: entry.key,
+                                    child: Text(
+                                      entry.value,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: _theme.textTheme.bodyMedium,
+                                    ),
                                   );
+                                }).toList(),
+                                onChanged: (value) {
+                                  if (value == null) return;
+
+                                  setState(() {
+                                    selectedTime = value;
+                                    _showCustomDatePickers = value == 'custom_date';
+                                  });
+
+                                  if (value != 'custom_date') {
+                                    _setDateRangeFromDropdown(value);
+                                    _refreshFilteredProvider();
+                                  }
                                 },
                               ),
-                            ],
-                          )
-                        : Center(
-                            child: Text(
-                              lang.S.of(context).addSale,
-                              maxLines: 2,
-                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
                             ),
-                          );
-                  }, error: (e, stack) {
-                    return Text(e.toString());
-                  }, loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  }),
-                ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(thickness: 1, color: kBottomBorder, height: 1),
+                  ],
+                ),
               ),
+              iconTheme: const IconThemeData(color: Colors.black),
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              elevation: 0.0,
             ),
-          );
-        }),
-      ),
+            body: RefreshIndicator(
+              onRefresh: () => _refreshFilteredProvider(),
+              child: Consumer(builder: (context, ref, __) {
+                final filter = _getDateRangeFilter();
+                final providerData = ref.watch(filteredSaleReturnedProvider(filter));
+                final printerData = ref.watch(thermalPrinterProvider);
+                final personalData = ref.watch(businessInfoProvider);
+                final permissionService = PermissionService(ref);
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      providerData.when(data: (transaction) {
+                        final filteredTransactions = transaction.where((sale) {
+                          final customerName = sale.user?.name?.toLowerCase() ?? '';
+                          final invoiceNumber = sale.invoiceNumber?.toLowerCase() ?? '';
+                          return customerName.contains(searchCustomer) || invoiceNumber.contains(searchCustomer);
+                        }).toList();
+                        final totalSales =
+                            filteredTransactions.fold<num>(0, (sum, saleReturn) => sum + (saleReturn.totalAmount ?? 0));
+                        num returnAmount = 0;
+                        for (var sale in filteredTransactions) {
+                          for (var salesReturn in sale.salesReturns!) {
+                            for (var sales in salesReturn.salesReturnDetails!) {
+                              returnAmount += sales.returnAmount!;
+                            }
+                          }
+                        }
+
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 12, bottom: 0),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          searchCustomer = value.toLowerCase().trim();
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        prefixIconConstraints: const BoxConstraints(
+                                          minHeight: 20,
+                                          minWidth: 20,
+                                        ),
+                                        prefixIcon: Padding(
+                                          padding: const EdgeInsetsDirectional.only(start: 10),
+                                          child: Icon(
+                                            FeatherIcons.search,
+                                            color: kGrey6,
+                                          ),
+                                        ),
+                                        hintText: l.S.of(context).searchH,
+                                      ),
+                                    ),
+                                  ),
+                                  if (_showCustomDatePickers) SizedBox(height: 10),
+                                  // const SizedBox(height: 12),
+                                ],
+                              ),
+                            ),
+                            filteredTransactions.isNotEmpty
+                                ? Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                height: 77,
+                                                decoration: BoxDecoration(
+                                                  color: kSuccessColor.withValues(alpha: 0.1),
+                                                  borderRadius: const BorderRadius.all(
+                                                    Radius.circular(8),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "$currency${formatPointNumber(totalSales)}",
+                                                      style: _theme.textTheme.titleLarge?.copyWith(
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      l.S.of(context).totalSales,
+                                                      style: _theme.textTheme.titleMedium?.copyWith(
+                                                        fontWeight: FontWeight.w500,
+                                                        color: kPeraColor,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 12),
+                                            Expanded(
+                                              child: Container(
+                                                height: 77,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  color: DAppColors.kWarning.withValues(alpha: 0.1),
+                                                  borderRadius: const BorderRadius.all(
+                                                    Radius.circular(8),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "$currency${formatPointNumber(returnAmount)}",
+                                                      style: _theme.textTheme.titleLarge?.copyWith(
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      _lang.returnedAmount,
+                                                      style: _theme.textTheme.titleMedium?.copyWith(
+                                                        fontWeight: FontWeight.w500,
+                                                        color: kPeraColor,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: transaction.length,
+                                        itemBuilder: (context, index) {
+                                          num returndAmount = 0;
+                                          for (var element in transaction[index].salesReturns!) {
+                                            for (var sales in element.salesReturnDetails!) {
+                                              returndAmount += (sales.returnAmount ?? 0);
+                                            }
+                                          }
+                                          return salesTransactionWidget(
+                                              context: context,
+                                              ref: ref,
+                                              businessInfo: personalData.value!,
+                                              sale: transaction[index],
+                                              advancePermission: true,
+                                              returnAmount: returndAmount);
+                                        },
+                                      )
+                                    ],
+                                  )
+                                : Center(
+                                    child: EmptyWidgetUpdated(
+                                      message: TextSpan(
+                                        text: _lang.pleaseAddASalesReturn,
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        );
+                      }, error: (e, stack) {
+                        return Text(e.toString());
+                      }, loading: () {
+                        return const Center(child: CircularProgressIndicator());
+                      }),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ),
+        );
+      },
     );
   }
 }

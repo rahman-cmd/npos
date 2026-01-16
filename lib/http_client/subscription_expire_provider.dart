@@ -19,5 +19,8 @@ class SubscriptionNotifier extends StateNotifier<SubscriptionState> {
             isExpired: DateTime.now().isAfter(DateTime.parse(newExpireDate).add(const Duration(days: 1))),
           )
         : SubscriptionState(isExpired: true);
+    print('✅ subscriptipn loaded: $newExpireDate');
   }
 }
+
+

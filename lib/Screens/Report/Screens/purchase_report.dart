@@ -1,416 +1,672 @@
-//ignore_for_file: file_names, unused_element, unused_local_variable
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_pos/Provider/transactions_provider.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
+import 'package:mobile_pos/generated/l10n.dart' as l;
+import 'package:mobile_pos/pdf_report/purchase_report/purchase_report_pdf.dart';
+import 'package:mobile_pos/pdf_report/purchase_report/purchase_report_excel.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../GlobalComponents/glonal_popup.dart';
 import '../../../GlobalComponents/returned_tag_widget.dart';
-import '../../../PDF Invoice/pdf_common_functions.dart';
 import '../../../PDF Invoice/purchase_invoice_pdf.dart';
 import '../../../Provider/profile_provider.dart';
 import '../../../constant.dart';
 import '../../../core/theme/_app_colors.dart';
 import '../../../currency.dart';
+import '../../../http_client/custome_http_client.dart';
 import '../../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
+import '../../../widgets/empty_widget/_empty_widget.dart';
+import '../../../service/check_user_role_permission_provider.dart';
 import '../../invoice_details/purchase_invoice_details.dart';
 
-class PurchaseReportScreen extends StatefulWidget {
+class PurchaseReportScreen extends ConsumerStatefulWidget {
   const PurchaseReportScreen({super.key});
 
   @override
   PurchaseReportState createState() => PurchaseReportState();
 }
 
-class PurchaseReportState extends State<PurchaseReportScreen> {
-  bool _isRefreshing = false; // Prevents multiple refresh calls
+class PurchaseReportState extends ConsumerState<PurchaseReportScreen> {
+  final TextEditingController fromDateController = TextEditingController();
+  final TextEditingController toDateController = TextEditingController();
 
-  Future<void> refreshData(WidgetRef ref) async {
-    if (_isRefreshing) return; // Prevent duplicate refresh calls
+  final Map<String, String> dateOptions = {
+    'today': l.S.current.today,
+    'yesterday': l.S.current.yesterday,
+    'last_seven_days': l.S.current.last7Days,
+    'last_thirty_days': l.S.current.last30Days,
+    'current_month': l.S.current.currentMonth,
+    'last_month': l.S.current.lastMonth,
+    'current_year': l.S.current.currentYear,
+    'custom_date': l.S.current.customDate,
+  };
+
+  String selectedTime = 'today';
+  bool _isRefreshing = false;
+  bool _showCustomDatePickers = false;
+
+  DateTime? fromDate;
+  DateTime? toDate;
+  String searchCustomer = '';
+
+  /// Generates the date range string for the provider
+  FilterModel _getDateRangeFilter() {
+    if (_showCustomDatePickers && fromDate != null && toDate != null) {
+      return FilterModel(
+        duration: 'custom_date',
+        fromDate: DateFormat('yyyy-MM-dd', 'en_US').format(fromDate!),
+        toDate: DateFormat('yyyy-MM-dd', 'en_US').format(toDate!),
+      );
+    } else {
+      return FilterModel(duration: selectedTime.toLowerCase());
+    }
+  }
+
+  Future<void> _selectDate({
+    required BuildContext context,
+    required bool isFrom,
+  }) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+      initialDate: isFrom ? fromDate ?? DateTime.now() : toDate ?? DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (isFrom) {
+          fromDate = picked;
+          fromDateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        } else {
+          toDate = picked;
+          toDateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        }
+      });
+
+      if (fromDate != null && toDate != null) _refreshFilteredProvider();
+    }
+  }
+
+  Future<void> _refreshFilteredProvider() async {
+    if (_isRefreshing) return;
     _isRefreshing = true;
-
-    ref.refresh(purchaseTransactionProvider);
-    ref.refresh(businessInfoProvider);
-    ref.refresh(getExpireDateProvider(ref));
-
-    await Future.delayed(const Duration(seconds: 1)); // Optional delay
-    _isRefreshing = false;
+    try {
+      final filter = _getDateRangeFilter();
+      ref.refresh(filterPurchaseProvider(filter));
+      await Future.delayed(const Duration(milliseconds: 300)); // small delay
+    } finally {
+      _isRefreshing = false;
+    }
   }
 
-  TextEditingController fromDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime(DateTime.now().year, DateTime.now().month, 1)));
-  TextEditingController toDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime.now()));
-  DateTime fromDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
-  DateTime toDate = DateTime.now();
-
-  List<String> timeLimit = [
-    'ToDay',
-    'This Week',
-    'This Month',
-    'This Year',
-    'All Time',
-    'Custom',
-  ];
-  String? dropdownValue = 'This Month';
-  Map<String, String> getTranslateTime(BuildContext context) {
-    return {
-      'ToDay': lang.S.of(context).today,
-      'This Week': lang.S.of(context).thisWeek,
-      'This Month': lang.S.of(context).thisMonth,
-      'This Year': lang.S.of(context).thisYear,
-      "All Time": lang.S.of(context).allTime,
-      // "Custom": lang.S.of(context).custom,
-    };
+  @override
+  void dispose() {
+    fromDateController.dispose();
+    toDateController.dispose();
+    super.dispose();
   }
 
-  void changeDate({required DateTime from}) {
+  void _updateDateUI(DateTime? from, DateTime? to) {
     setState(() {
       fromDate = from;
-      fromDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(from));
+      toDate = to;
 
-      toDate = DateTime.now();
-      toDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)));
+      fromDateController.text = from != null ? DateFormat('yyyy-MM-dd').format(from) : '';
+
+      toDateController.text = to != null ? DateFormat('yyyy-MM-dd').format(to) : '';
     });
+  }
+
+  void _setDateRangeFromDropdown(String value) {
+    final now = DateTime.now();
+
+    switch (value) {
+      case 'today':
+        _updateDateUI(now, now);
+        break;
+
+      case 'yesterday':
+        final y = now.subtract(const Duration(days: 1));
+        _updateDateUI(y, y);
+        break;
+
+      case 'last_seven_days':
+        _updateDateUI(
+          now.subtract(const Duration(days: 6)),
+          now,
+        );
+        break;
+
+      case 'last_thirty_days':
+        _updateDateUI(
+          now.subtract(const Duration(days: 29)),
+          now,
+        );
+        break;
+
+      case 'current_month':
+        _updateDateUI(
+          DateTime(now.year, now.month, 1),
+          now,
+        );
+        break;
+
+      case 'last_month':
+        final first = DateTime(now.year, now.month - 1, 1);
+        final last = DateTime(now.year, now.month, 0);
+        _updateDateUI(first, last);
+        break;
+
+      case 'current_year':
+        _updateDateUI(
+          DateTime(now.year, 1, 1),
+          now,
+        );
+        break;
+
+      case 'custom_date':
+        // Custom: User will select manually
+        _updateDateUI(null, null);
+        break;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final now = DateTime.now();
+
+    // Set initial From and To date = TODAY
+    fromDate = now;
+    toDate = now;
+
+    fromDateController.text = DateFormat('yyyy-MM-dd').format(now);
+    toDateController.text = DateFormat('yyyy-MM-dd').format(now);
   }
 
   @override
   Widget build(BuildContext context) {
-    final translateTime = getTranslateTime(context);
     final _theme = Theme.of(context);
-    return GlobalPopup(
-      child: Scaffold(
-        backgroundColor: kWhite,
-        appBar: AppBar(
-          title: Text(
-            lang.S.of(context).purchaseReport,
-          ),
-          iconTheme: const IconThemeData(color: Colors.black),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-        ),
-        body: Consumer(builder: (context, ref, __) {
-          final purchaseData = ref.watch(purchaseTransactionProvider);
-          final printerData = ref.watch(thermalPrinterProvider);
-          final personalData = ref.watch(businessInfoProvider);
-          final business = ref.watch(businessSettingProvider);
-
-          return RefreshIndicator(
-            onRefresh: () => refreshData(ref),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 20, bottom: 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: AppTextField(
-                            textFieldType: TextFieldType.NAME,
-                            readOnly: true,
-                            controller: fromDateTextEditingController,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              labelText: lang.S.of(context).fromDate,
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                onPressed: () async {
-                                  final DateTime? picked = await showDatePicker(
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2015, 8),
-                                    lastDate: DateTime(2101),
-                                    context: context,
-                                  );
-                                  setState(() {
-                                    fromDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
-                                    fromDate = picked!;
-
-                                    dropdownValue = 'Custom';
-                                  });
-                                },
-                                icon: const Icon(FeatherIcons.calendar),
-                              ),
+    return Consumer(
+      builder: (context, ref, __) {
+        final filter = _getDateRangeFilter();
+        final purchaseData = ref.watch(filterPurchaseProvider(filter));
+        final printerData = ref.watch(thermalPrinterProvider);
+        final personalData = ref.watch(businessInfoProvider);
+        final permissionService = PermissionService(ref);
+        return GlobalPopup(
+          child: Scaffold(
+            backgroundColor: kWhite,
+            appBar: AppBar(
+              title: Text(
+                l.S.of(context).purchaseReport,
+              ),
+              actions: [
+                personalData.when(
+                  data: (business) {
+                    return purchaseData.when(
+                      data: (transaction) {
+                        return Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (transaction.isNotEmpty) {
+                                  generatePurchaseReport(context, transaction, business, fromDate, toDate);
+                                } else {
+                                  EasyLoading.showError(l.S.of(context).listIsEmpty);
+                                }
+                              },
+                              icon: HugeIcon(icon: HugeIcons.strokeRoundedPdf02, color: kSecondayColor),
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: AppTextField(
-                            textFieldType: TextFieldType.NAME,
-                            readOnly: true,
-                            controller: toDateTextEditingController,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              labelText: lang.S.of(context).toDate,
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                onPressed: () async {
-                                  final DateTime? picked = await showDatePicker(
-                                    initialDate: toDate,
-                                    firstDate: DateTime(2015, 8),
-                                    lastDate: DateTime(2101),
-                                    context: context,
-                                  );
-
-                                  setState(() {
-                                    toDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
-                                    picked!.isToday ? toDate = DateTime.now() : toDate = picked;
-
-                                    dropdownValue = 'Custom';
-                                  });
-                                },
-                                icon: const Icon(FeatherIcons.calendar),
-                              ),
+                            IconButton(
+                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                if (transaction.isNotEmpty) {
+                                  generatePurchaseReportExcel(context, transaction, business, fromDate, toDate);
+                                } else {
+                                  EasyLoading.showInfo(l.S.of(context).noDataAvailableForGeneratePdf);
+                                }
+                              },
+                              icon: SvgPicture.asset('assets/excel.svg'),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+                            SizedBox(width: 8),
+                          ],
+                        );
+                      },
+                      error: (e, stack) => Center(
+                        child: Text(e.toString()),
+                      ),
+                      loading: SizedBox.shrink,
+                    );
+                  },
+                  error: (e, stack) => Center(
+                    child: Text(e.toString()),
                   ),
-                  purchaseData.when(data: (transaction) {
-                    double totalPurchase = 0;
-                    for (var element in transaction) {
-                      if ((fromDate.isBefore(DateTime.parse(element.purchaseDate ?? '')) || DateTime.parse(element.purchaseDate ?? '').isAtSameMomentAs(fromDate)) &&
-                          (toDate.isAfter(DateTime.parse(element.purchaseDate ?? '')) || DateTime.parse(element.purchaseDate ?? '').isAtSameMomentAs(toDate))) {
-                        totalPurchase = totalPurchase + element.totalAmount!;
-                      }
-                    }
-                    return transaction.isNotEmpty
-                        ? Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                                child: Container(
-                                  height: 100,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      color: kMainColor.withOpacity(0.1),
-                                      border: Border.all(width: 1, color: kMainColor),
-                                      borderRadius: const BorderRadius.all(Radius.circular(15))),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
+                  loading: SizedBox.shrink,
+                ),
+              ],
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(50),
+                child: Column(
+                  children: [
+                    Divider(thickness: 1, color: kBottomBorder, height: 1),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Row(
+                              children: [
+                                Icon(IconlyLight.calendar, color: kPeraColor, size: 20),
+                                SizedBox(width: 3),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_showCustomDatePickers) {
+                                      _selectDate(context: context, isFrom: true);
+                                    }
+                                  },
+                                  child: Text(
+                                    fromDate != null
+                                        ? DateFormat('dd MMM yyyy').format(fromDate!)
+                                        : l.S.of(context).from,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  l.S.of(context).to,
+                                  style: _theme.textTheme.titleSmall,
+                                ),
+                                SizedBox(width: 4),
+                                Flexible(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (_showCustomDatePickers) {
+                                        _selectDate(context: context, isFrom: false);
+                                      }
+                                    },
+                                    child: Text(
+                                      toDate != null ? DateFormat('dd MMM yyyy').format(toDate!) : l.S.of(context).to,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 2),
+                          RotatedBox(
+                            quarterTurns: 1,
+                            child: Container(
+                              height: 1,
+                              width: 20,
+                              color: kSubPeraColor,
+                            ),
+                          ),
+                          SizedBox(width: 2),
+                          Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                iconSize: 20,
+                                value: selectedTime,
+                                isExpanded: true,
+                                items: dateOptions.entries.map((entry) {
+                                  return DropdownMenuItem<String>(
+                                    value: entry.key,
+                                    child: Text(
+                                      entry.value,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: _theme.textTheme.bodyMedium,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  if (value == null) return;
+
+                                  setState(() {
+                                    selectedTime = value;
+                                    _showCustomDatePickers = value == 'custom_date';
+                                  });
+
+                                  if (value != 'custom_date') {
+                                    _setDateRangeFromDropdown(value);
+                                    _refreshFilteredProvider();
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(thickness: 1, color: kBottomBorder, height: 1),
+                  ],
+                ),
+              ),
+              iconTheme: const IconThemeData(color: Colors.black),
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              elevation: 0.0,
+            ),
+            body: RefreshIndicator(
+              onRefresh: () => _refreshFilteredProvider(),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    if (permissionService.hasPermission(Permit.purchaseReportsRead.value)) ...{
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 12, bottom: 0),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              searchCustomer = value.toLowerCase().trim();
+                            });
+                          },
+                          decoration: InputDecoration(
+                            prefixIconConstraints: const BoxConstraints(
+                              minHeight: 20,
+                              minWidth: 20,
+                            ),
+                            prefixIcon: Padding(
+                              padding: const EdgeInsetsDirectional.only(start: 10),
+                              child: Icon(
+                                FeatherIcons.search,
+                                color: kGrey6,
+                              ),
+                            ),
+                            hintText: l.S.of(context).searchH,
+                          ),
+                        ),
+                      ),
+                      purchaseData.when(data: (transaction) {
+                        final filteredTransactions = transaction.where((purchase) {
+                          final customerName = purchase.user?.name?.toLowerCase() ?? '';
+                          final invoiceNumber = purchase.invoiceNumber?.toLowerCase() ?? '';
+                          return customerName.contains(searchCustomer) || invoiceNumber.contains(searchCustomer);
+                        }).toList();
+                        final totalPurchase =
+                            filteredTransactions.fold<num>(0, (sum, purchase) => sum + (purchase.totalAmount ?? 0));
+                        final totalDues =
+                            filteredTransactions.fold<num>(0, (sum, purchase) => sum + (purchase.dueAmount ?? 0));
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      height: 77,
+                                      decoration: BoxDecoration(
+                                        color: kSuccessColor.withValues(alpha: 0.1),
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(8),
+                                        ),
+                                      ),
+                                      child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "$currency ${totalPurchase.toStringAsFixed(2)}",
-                                            style: const TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 20,
+                                            "$currency${formatPointNumber(totalPurchase)}",
+                                            style: _theme.textTheme.titleLarge?.copyWith(
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                          const SizedBox(height: 10),
+                                          const SizedBox(height: 4),
                                           Text(
-                                            lang.S.of(context).totalPurchase,
-                                            //'Total Purchase',
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
+                                            l.S.of(context).totalPurchase,
+                                            style: _theme.textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: kPeraColor,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                        width: 1,
-                                        height: 60,
-                                        color: kMainColor,
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        width: 150,
-                                        padding: const EdgeInsets.all(5),
-                                        decoration: BoxDecoration(border: Border.all(color: kMainColor, width: 1), borderRadius: const BorderRadius.all(Radius.circular(8))),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                            underline: null,
-                                            // underline: const Divider(color: Colors.black),
-                                            value: dropdownValue,
-                                            icon: const Icon(Icons.keyboard_arrow_down),
-                                            items: timeLimit.map((String items) {
-                                              return DropdownMenuItem(
-                                                value: items,
-                                                child: Text(translateTime[items] ?? items),
-                                              );
-                                            }).toList(),
-                                            onChanged: (newValue) {
-                                              setState(() {
-                                                dropdownValue = newValue.toString();
-
-                                                switch (newValue) {
-                                                  case 'ToDay':
-                                                    changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
-                                                    break;
-                                                  case 'This Week':
-                                                    changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().weekday));
-                                                    break;
-                                                  case 'This Month':
-                                                    changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, 1));
-                                                    break;
-                                                  case 'This Year':
-                                                    changeDate(from: DateTime(DateTime.now().year, 1, 1));
-                                                    break;
-                                                  case 'All Time':
-                                                    changeDate(from: DateTime(2020, 1, 1));
-                                                    break;
-                                                  // case 'Custom':
-                                                  //   _setCustomDateRange(context);
-                                                  //   break;
-                                                }
-                                              });
-                                            },
-                                          ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Container(
+                                      height: 77,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: DAppColors.kWarning.withValues(alpha: 0.1),
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(8),
                                         ),
                                       ),
-                                    ],
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "$currency${formatPointNumber(totalDues)}",
+                                            style: _theme.textTheme.titleLarge?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            l.S.of(context).balanceDue,
+                                            style: _theme.textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: kPeraColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: transaction.length,
-                                itemBuilder: (context, index) {
-                                  return Visibility(
-                                    visible: (fromDate.isBefore(DateTime.parse(transaction[index].purchaseDate ?? '')) ||
-                                            DateTime.parse(transaction[index].purchaseDate ?? '').isAtSameMomentAs(fromDate)) &&
-                                        (toDate.isAfter(DateTime.parse(transaction[index].purchaseDate ?? '')) ||
-                                            DateTime.parse(transaction[index].purchaseDate ?? '').isAtSameMomentAs(toDate)),
-                                    child: Column(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            PurchaseInvoiceDetails(
-                                              businessInfo: personalData.value!,
-                                              transitionModel: transaction[index],
-                                            ).launch(context);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                                            width: context.width(),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Flexible(
-                                                      child: Text(
-                                                        transaction[index].party?.name ?? '',
-                                                        style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 4),
-                                                    Text(
-                                                      '#${transaction[index].invoiceNumber}',
-                                                      style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                                          decoration: BoxDecoration(
-                                                              color: transaction[index].dueAmount! <= 0
-                                                                  ? const Color(0xff0dbf7d).withOpacity(0.1)
-                                                                  : const Color(0xFFED1A3B).withOpacity(0.1),
-                                                              borderRadius: const BorderRadius.all(Radius.circular(2))),
-                                                          child: Text(
-                                                            transaction[index].dueAmount! <= 0 ? lang.S.of(context).paid : lang.S.of(context).unPaid,
-                                                            style: TextStyle(color: transaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
+                            ),
+                            filteredTransactions.isNotEmpty
+                                ? ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: filteredTransactions.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              PurchaseInvoiceDetails(
+                                                businessInfo: personalData.value!,
+                                                transitionModel: filteredTransactions[index],
+                                              ).launch(context);
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                              width: context.width(),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Flexible(
+                                                        child: Text(
+                                                          filteredTransactions[index].party?.name ?? '',
+                                                          style: _theme.textTheme.bodyMedium?.copyWith(
+                                                            fontWeight: FontWeight.w500,
+                                                            fontSize: 15,
                                                           ),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,
                                                         ),
-
-                                                        ///________Return_tag_________________________________________
-                                                        ReturnedTagWidget(show: transaction[index].purchaseReturns?.isNotEmpty ?? false),
-                                                      ],
-                                                    ),
-                                                    Text(
-                                                      DateFormat.yMMMd().format(DateTime.parse(transaction[index].purchaseDate ?? '')),
-                                                      style: const TextStyle(color: DAppColors.kSecondary),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '${lang.S.of(context).total} : $currency ${transaction[index].totalAmount.toString()}',
-                                                      style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 14, color: DAppColors.kSecondary),
-                                                    ),
-                                                    const SizedBox(width: 4),
-                                                    if (transaction[index].dueAmount!.toInt() != 0)
-                                                      Text(
-                                                        '${lang.S.of(context).paid} : $currency ${transaction[index].totalAmount!.toDouble() - transaction[index].dueAmount!.toDouble()}',
-                                                        style: const TextStyle(color: Colors.grey),
                                                       ),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    if (transaction[index].dueAmount!.toInt() == 0)
+                                                      const SizedBox(width: 4),
                                                       Text(
-                                                        '${lang.S.of(context).paid} : $currency ${transaction[index].totalAmount!.toDouble() - transaction[index].dueAmount!.toDouble()}',
-                                                        style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                                                        '#${filteredTransactions[index].invoiceNumber}',
+                                                        style: _theme.textTheme.titleSmall?.copyWith(
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
                                                       ),
-                                                    if (transaction[index].dueAmount!.toInt() != 0)
-                                                      Text(
-                                                        '${lang.S.of(context).due}: $currency ${transaction[index].dueAmount.toString()}',
-                                                        style: _theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
-                                                      ),
-                                                    personalData.when(data: (data) {
-                                                      return Row(
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
                                                         children: [
-                                                          IconButton(
-                                                            padding: EdgeInsets.zero,
-                                                            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                                            onPressed: () async {
-                                                              if ((Theme.of(context).platform == TargetPlatform.android)) {
-                                                                ///________Print_______________________________________________________
-
-                                                                PrintPurchaseTransactionModel model =
-                                                                    PrintPurchaseTransactionModel(purchaseTransitionModel: transaction[index], personalInformationModel: data);
-                                                                await printerData.printPurchaseThermalInvoiceNow(
-                                                                  transaction: model,
-                                                                  productList: model.purchaseTransitionModel!.details,
-                                                                  context: context,
-                                                                );
-                                                              }
-                                                            },
-                                                            icon: const Icon(
-                                                              FeatherIcons.printer,
-                                                              color: Colors.grey,
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                                            decoration: BoxDecoration(
+                                                                color: filteredTransactions[index].dueAmount! <= 0
+                                                                    ? const Color(0xff0dbf7d).withValues(alpha: 0.1)
+                                                                    : const Color(0xFFED1A3B).withValues(alpha: 0.1),
+                                                                borderRadius:
+                                                                    const BorderRadius.all(Radius.circular(4))),
+                                                            child: Text(
+                                                              filteredTransactions[index].dueAmount! <= 0
+                                                                  ? l.S.of(context).paid
+                                                                  : l.S.of(context).unPaid,
+                                                              style: _theme.textTheme.titleSmall?.copyWith(
+                                                                color: filteredTransactions[index].dueAmount! <= 0
+                                                                    ? const Color(0xff0dbf7d)
+                                                                    : const Color(0xFFED1A3B),
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
                                                             ),
                                                           ),
-                                                          const SizedBox(width: 10),
-                                                          business.when(data: (businessData) {
-                                                            return Row(
+
+                                                          ///________Return_tag_________________________________________
+                                                          ReturnedTagWidget(
+                                                              show: filteredTransactions[index]
+                                                                      .purchaseReturns
+                                                                      ?.isNotEmpty ??
+                                                                  false),
+                                                        ],
+                                                      ),
+                                                      Text(
+                                                        DateFormat.yMMMd().format(DateTime.parse(
+                                                            filteredTransactions[index].purchaseDate ?? '')),
+                                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                                          color: kPeragrapColor,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        '${l.S.of(context).total} : $currency ${filteredTransactions[index].totalAmount.toString()}',
+                                                        style: _theme.textTheme.titleSmall?.copyWith(
+                                                          fontWeight: FontWeight.w500,
+                                                          color: kPeraColor,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      if (filteredTransactions[index].dueAmount!.toInt() != 0)
+                                                        Text(
+                                                          '${l.S.of(context).paid} : $currency ${filteredTransactions[index].totalAmount!.toDouble() - filteredTransactions[index].dueAmount!.toDouble()}',
+                                                          style: _theme.textTheme.titleSmall?.copyWith(
+                                                            fontWeight: FontWeight.w500,
+                                                            color: kPeraColor,
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 3),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      if (filteredTransactions[index].dueAmount!.toInt() == 0)
+                                                        Text(
+                                                          '${l.S.of(context).paid} : $currency ${filteredTransactions[index].totalAmount!.toDouble() - filteredTransactions[index].dueAmount!.toDouble()}',
+                                                          style: _theme.textTheme.titleSmall?.copyWith(
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      if (filteredTransactions[index].dueAmount!.toInt() != 0)
+                                                        Text(
+                                                          '${l.S.of(context).due}: $currency ${filteredTransactions[index].dueAmount.toString()}',
+                                                          style: _theme.textTheme.titleSmall?.copyWith(
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      personalData.when(data: (data) {
+                                                        return Row(
+                                                          children: [
+                                                            IconButton(
+                                                              padding: EdgeInsets.zero,
+                                                              visualDensity:
+                                                                  const VisualDensity(horizontal: -4, vertical: -4),
+                                                              onPressed: () async {
+                                                                if ((Theme.of(context).platform ==
+                                                                    TargetPlatform.android)) {
+                                                                  ///________Print_______________________________________________________
+                                                                  PrintPurchaseTransactionModel model =
+                                                                      PrintPurchaseTransactionModel(
+                                                                          purchaseTransitionModel:
+                                                                              filteredTransactions[index],
+                                                                          personalInformationModel: data);
+                                                                  await printerData.printPurchaseThermalInvoiceNow(
+                                                                    transaction: model,
+                                                                    productList: model.purchaseTransitionModel!.details,
+                                                                    context: context,
+                                                                    invoiceSize: data.data?.invoiceSize,
+                                                                  );
+                                                                }
+                                                              },
+                                                              icon: const Icon(
+                                                                FeatherIcons.printer,
+                                                                color: kPeraColor,
+                                                                size: 22,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Row(
                                                               children: [
                                                                 IconButton(
                                                                   padding: EdgeInsets.zero,
-                                                                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                                                  onPressed: () => PurchaseInvoicePDF.generatePurchaseDocument(transaction[index], data, context, businessData),
-                                                                  icon: const Icon(
-                                                                    Icons.picture_as_pdf,
-                                                                    color: Colors.grey,
+                                                                  visualDensity:
+                                                                      const VisualDensity(horizontal: -4, vertical: -4),
+                                                                  onPressed: () =>
+                                                                      PurchaseInvoicePDF.generatePurchaseDocument(
+                                                                          filteredTransactions[index], data, context,
+                                                                          showPreview: true),
+                                                                  icon: HugeIcon(
+                                                                    icon: HugeIcons.strokeRoundedPdf02,
+                                                                    size: 22,
+                                                                    color: kPeraColor,
+                                                                  ),
+                                                                ),
+                                                                IconButton(
+                                                                  padding: EdgeInsets.zero,
+                                                                  visualDensity:
+                                                                      const VisualDensity(horizontal: -4, vertical: -4),
+                                                                  onPressed: () =>
+                                                                      PurchaseInvoicePDF.generatePurchaseDocument(
+                                                                          filteredTransactions[index], data, context,
+                                                                          download: true),
+                                                                  icon: HugeIcon(
+                                                                    icon: HugeIcons.strokeRoundedDownload01,
+                                                                    size: 22,
+                                                                    color: kPeraColor,
                                                                   ),
                                                                 ),
                                                                 IconButton(
@@ -421,61 +677,59 @@ class PurchaseReportState extends State<PurchaseReportScreen> {
                                                                         vertical: -4,
                                                                       )),
                                                                   onPressed: () =>
-                                                                      PurchaseInvoicePDF.generatePurchaseDocument(transaction[index], data, context, businessData, isShare: true),
-                                                                  icon: const Icon(
-                                                                    Icons.share_outlined,
-                                                                    color: Colors.grey,
+                                                                      PurchaseInvoicePDF.generatePurchaseDocument(
+                                                                          filteredTransactions[index], data, context,
+                                                                          isShare: true),
+                                                                  icon: HugeIcon(
+                                                                    icon: HugeIcons.strokeRoundedShare08,
+                                                                    size: 22,
+                                                                    color: kPeraColor,
                                                                   ),
                                                                 ),
                                                               ],
-                                                            );
-                                                          }, error: (e, stack) {
-                                                            return Text(e.toString());
-                                                          }, loading: () {
-                                                            return const Center(
-                                                              child: CircularProgressIndicator(),
-                                                            );
-                                                          })
-                                                        ],
-                                                      );
-                                                    }, error: (e, stack) {
-                                                      return Text(e.toString());
-                                                    }, loading: () {
-                                                      //return const Text('Loading');
-                                                      return Text(lang.S.of(context).loading);
-                                                    }),
-                                                  ],
-                                                ),
-                                              ],
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }, error: (e, stack) {
+                                                        return Text(e.toString());
+                                                      }, loading: () {
+                                                        //return const Text('Loading');
+                                                        return Text(l.S.of(context).loading);
+                                                      }),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const Divider(),
-                                      ],
+                                          const Divider(height: 0, color: kBottomBorder),
+                                        ],
+                                      );
+                                    },
+                                  )
+                                : Center(
+                                    child: EmptyWidgetUpdated(
+                                      message: TextSpan(
+                                        text: l.S.of(context).addSale,
+                                      ),
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
-                          )
-                        : Center(
-                            child: Text(
-                              lang.S.of(context).addNewPurchase,
-                              maxLines: 2,
-                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
-                            ),
-                          );
-                  }, error: (e, stack) {
-                    return Text(e.toString());
-                  }, loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  }),
-                ],
+                                  ),
+                          ],
+                        );
+                      }, error: (e, stack) {
+                        return Text(e.toString());
+                      }, loading: () {
+                        return const Center(child: CircularProgressIndicator());
+                      }),
+                    } else
+                      Center(child: PermitDenyWidget()),
+                  ],
+                ),
               ),
             ),
-          );
-        }),
-      ),
+          ),
+        );
+      },
     );
   }
 }

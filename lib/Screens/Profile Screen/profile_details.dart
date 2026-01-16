@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_pos/Screens/Profile%20Screen/edit_profile.dart';
 import 'package:mobile_pos/currency.dart';
@@ -7,13 +6,10 @@ import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../Const/api_config.dart';
-import '../../GlobalComponents/button_global.dart';
-import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart';
 import '../Authentication/change password/change_password_screen.dart';
-import '../Authentication/forgot password/set_new_password.dart';
 
 class ProfileDetails extends StatefulWidget {
   const ProfileDetails({super.key});
@@ -29,14 +25,14 @@ class ProfileDetailsState extends State<ProfileDetails> {
     return Consumer(builder: (context, ref, __) {
       final businessInfo = ref.watch(businessInfoProvider);
       return businessInfo.when(data: (details) {
-        TextEditingController addressController = TextEditingController(text: details.address);
-        TextEditingController openingBalanceController = TextEditingController(text: details.shopOpeningBalance.toString());
-        TextEditingController remainingBalanceController = TextEditingController(text: details.remainingShopBalance.toString());
-        TextEditingController phoneController = TextEditingController(text: details.phoneNumber);
-        TextEditingController nameController = TextEditingController(text: details.companyName);
-        TextEditingController categoryController = TextEditingController(text: details.category?.name);
-        TextEditingController vatGstTitleController = TextEditingController(text: details.vatName);
-        TextEditingController vatGstNumberController = TextEditingController(text: details.vatNumber);
+        TextEditingController addressController = TextEditingController(text: details.data?.address);
+        TextEditingController openingBalanceController = TextEditingController(text: details.data?.shopOpeningBalance.toString());
+        TextEditingController remainingBalanceController = TextEditingController(text: details.data?.remainingShopBalance.toString());
+        TextEditingController phoneController = TextEditingController(text: details.data?.phoneNumber);
+        TextEditingController nameController = TextEditingController(text: details.data?.companyName);
+        TextEditingController categoryController = TextEditingController(text: details.data?.category?.name);
+        TextEditingController vatGstTitleController = TextEditingController(text: details.data?.vatName);
+        TextEditingController vatGstNumberController = TextEditingController(text: details.data?.vatNo);
         return GlobalPopup(
           child: Scaffold(
             backgroundColor: kWhite,
@@ -46,7 +42,7 @@ class ProfileDetailsState extends State<ProfileDetails> {
               ),
               actions: [
                 Visibility(
-                  visible: details.user?.visibility?.profileEditPermission ?? true,
+                  // visible: details.data?.user?.visibility?.profileEditPermission ?? true,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 15.0),
                     child: GestureDetector(
@@ -91,8 +87,12 @@ class ProfileDetailsState extends State<ProfileDetails> {
               padding: const EdgeInsets.all(10.0),
               child: ElevatedButton.icon(
                 label: Text(lang.S.of(context).changePassword),
-                onPressed: ()  {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(),));
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChangePasswordScreen(),
+                      ));
                 },
               ),
             ),
@@ -105,13 +105,13 @@ class ProfileDetailsState extends State<ProfileDetails> {
                       child: Container(
                         height: 100.0,
                         width: 100.0,
-                        decoration: details.pictureUrl == null
+                        decoration: details.data?.pictureUrl == null
                             ? BoxDecoration(
                                 image: const DecorationImage(image: AssetImage('images/no_shop_image.png'), fit: BoxFit.cover),
                                 borderRadius: BorderRadius.circular(50),
                               )
                             : BoxDecoration(
-                                image: DecorationImage(image: NetworkImage(APIConfig.domain + details.pictureUrl.toString()), fit: BoxFit.cover),
+                                image: DecorationImage(image: NetworkImage(APIConfig.domain + (details.data?.pictureUrl.toString() ?? '')), fit: BoxFit.cover),
                                 borderRadius: BorderRadius.circular(50),
                               ),
                       ),
@@ -140,7 +140,7 @@ class ProfileDetailsState extends State<ProfileDetails> {
                       padding: const EdgeInsets.all(10.0),
                       child: AppTextField(
                         readOnly: true,
-                        initialValue: details.user?.email,
+                        initialValue: details.data?.user?.email,
                         cursorColor: kGreyTextColor,
                         decoration: kInputDecoration.copyWith(
                           //labelText: "Email",
@@ -219,7 +219,7 @@ class ProfileDetailsState extends State<ProfileDetails> {
                               controller: vatGstTitleController,
                               textFieldType: TextFieldType.NAME,
                               decoration: kInputDecoration.copyWith(
-                                labelText: "VAT/GST Title",
+                                labelText:  lang.S.of(context).vatGstTitle,
                                 border: const OutlineInputBorder(),
                               ),
                             ),
@@ -235,10 +235,11 @@ class ProfileDetailsState extends State<ProfileDetails> {
                               validator: (value) {
                                 return null;
                               },
-                              controller: vatGstNumberController, // Optional
+                              controller: vatGstNumberController,
+                              // Optional
                               textFieldType: TextFieldType.NAME,
                               decoration: kInputDecoration.copyWith(
-                                labelText: 'VAT/GST Number',
+                                labelText: lang.S.of(context).vatGstNumber,
                                 border: const OutlineInputBorder(),
                               ),
                             ),
@@ -265,23 +266,23 @@ class ProfileDetailsState extends State<ProfileDetails> {
                       ),
                     ),
 
-                    ///__________Remaining_Balance________________________
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: AppTextField(
-                        readOnly: true,
-                        cursorColor: kGreyTextColor,
-                        controller: remainingBalanceController,
-                        decoration: kInputDecoration.copyWith(
-                          prefixText: '$currency ',
-                          labelText: lang.S.of(context).shopRemainingBalance,
-                          border: const OutlineInputBorder().copyWith(borderSide: const BorderSide(color: kGreyTextColor)),
-                          hoverColor: kGreyTextColor,
-                          fillColor: kGreyTextColor,
-                        ),
-                        textFieldType: TextFieldType.NAME,
-                      ),
-                    ),
+                    // ///__________Remaining_Balance________________________
+                    // Padding(
+                    //   padding: const EdgeInsets.all(10.0),
+                    //   child: AppTextField(
+                    //     readOnly: true,
+                    //     cursorColor: kGreyTextColor,
+                    //     controller: remainingBalanceController,
+                    //     decoration: kInputDecoration.copyWith(
+                    //       prefixText: '$currency ',
+                    //       labelText: lang.S.of(context).shopRemainingBalance,
+                    //       border: const OutlineInputBorder().copyWith(borderSide: const BorderSide(color: kGreyTextColor)),
+                    //       hoverColor: kGreyTextColor,
+                    //       fillColor: kGreyTextColor,
+                    //     ),
+                    //     textFieldType: TextFieldType.NAME,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

@@ -1,10 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
+import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 import '../../../constant.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 Future<dynamic> checkEmailForCodePupUp({required String email, required BuildContext context, required TextTheme textTheme}) {
   return showDialog(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_pos/constant.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 import '_app_colors.dart';
 
-abstract class NPOSTheme {
+abstract class AcnooTheme {
   static const _fontFamily = 'NotoSans';
+
   static ThemeData kLightTheme(BuildContext context) {
     final mainTheme = ThemeData.light();
     final textTheme = _getTextTheme(mainTheme.textTheme);
@@ -23,14 +23,14 @@ abstract class NPOSTheme {
         ),
       ),
       dropdownMenuTheme: const DropdownMenuThemeData(
-        textStyle: const TextStyle(color: kTitleColor, fontSize: 16.0, fontWeight: FontWeight.normal),
+        textStyle: TextStyle(color: kTitleColor, fontSize: 16.0, fontWeight: FontWeight.normal),
         menuStyle: MenuStyle(
           backgroundColor: WidgetStatePropertyAll(Colors.white),
           surfaceTintColor: WidgetStatePropertyAll(Colors.white),
         ),
         inputDecorationTheme: InputDecorationTheme(
-          hintStyle: const TextStyle(color: kNeutralColor, fontSize: 14.0, fontWeight: FontWeight.normal),
-          labelStyle: const TextStyle(color: kTitleColor, fontSize: 16.0, fontWeight: FontWeight.normal),
+          hintStyle: TextStyle(color: kNeutralColor, fontSize: 14.0, fontWeight: FontWeight.normal),
+          labelStyle: TextStyle(color: kTitleColor, fontSize: 16.0, fontWeight: FontWeight.normal),
           iconColor: kGreyTextColor,
           contentPadding: EdgeInsets.only(left: 10.0, right: 7.0),
         ),
@@ -45,7 +45,7 @@ abstract class NPOSTheme {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         focusColor: kMainColor,
         outlineBorder: const BorderSide(color: Color(0xFFD7D9DE), width: 1.0),
-        hintStyle: const TextStyle(color: kNeutralColor, fontSize: 14.0, fontWeight: FontWeight.normal),
+        hintStyle: const TextStyle(color: kNeutralColor, fontSize: 16.0, fontWeight: FontWeight.normal),
         labelStyle: const TextStyle(color: kTitleColor, fontSize: 16.0, fontWeight: FontWeight.normal),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6.0),
@@ -89,6 +89,7 @@ abstract class NPOSTheme {
     horizontal: 24,
     vertical: 12,
   );
+
   //------------------snackbar theme------------------------
   static SnackBarThemeData _getSnackBarTheme() {
     return const SnackBarThemeData(
@@ -99,7 +100,8 @@ abstract class NPOSTheme {
   }
 
   static const _buttonDensity = VisualDensity.standard;
-  static _getElevatedButtonTheme(TextTheme baseTextTheme) {
+
+  static ElevatedButtonThemeData _getElevatedButtonTheme(TextTheme baseTextTheme) {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         padding: _buttonPadding,
@@ -121,7 +123,9 @@ abstract class NPOSTheme {
       visualDensity: _buttonDensity,
       padding: _buttonPadding,
       side: const BorderSide(color: kMainColor),
+      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'NotoSans'),
       foregroundColor: kMainColor,
+      minimumSize: const Size.fromHeight(48),
     ),
   );
 

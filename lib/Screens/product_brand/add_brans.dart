@@ -2,13 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 import '../../GlobalComponents/glonal_popup.dart';
-import 'brand repo/brand_repo.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../service/check_user_role_permission_provider.dart';
 import '../product_brand/model/brands_model.dart';
+import 'brand repo/brand_repo.dart';
 
 class AddBrands extends StatefulWidget {
   const AddBrands({super.key, this.brand});
@@ -37,6 +38,7 @@ class _AddBrandsState extends State<AddBrands> {
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
     return Consumer(builder: (context, ref, __) {
+      final permissionService = PermissionService(ref);
       return GlobalPopup(
         child: Scaffold(
           backgroundColor: kWhite,
@@ -89,6 +91,28 @@ class _AddBrandsState extends State<AddBrands> {
                       disabledBackgroundColor: _theme.colorScheme.primary.withValues(alpha: 0.15),
                     ),
                     onPressed: () async {
+                      if (widget.brand == null) {
+                        if (!permissionService.hasPermission(Permit.brandsCreate.value)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('You do not have permission to create brand'),
+                            ),
+                          );
+                          return;
+                        }
+                      } else {
+                        if (!permissionService.hasPermission(Permit.brandsUpdate.value)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('You do not have permission to update brand'),
+                            ),
+                          );
+                          return;
+                        }
+                      }
+
                       if (_key.currentState!.validate()) {
                         BrandsRepo brandRepo = BrandsRepo();
                         widget.brand == null

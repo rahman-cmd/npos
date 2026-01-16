@@ -1,3 +1,5 @@
+import 'package:mobile_pos/generated/l10n.dart' as lang;
+
 class AmountRoundingDropdownModel {
   late String value;
   late String option;
@@ -6,12 +8,12 @@ class AmountRoundingDropdownModel {
 }
 
 final List<AmountRoundingDropdownModel> roundingMethods = [
-  AmountRoundingDropdownModel(value: 'none', option: 'None'),
-  AmountRoundingDropdownModel(value: 'round_up', option: 'Round to whole number'),
-  AmountRoundingDropdownModel(value: 'nearest_whole_number', option: 'Round to nearest whole number'),
-  AmountRoundingDropdownModel(value: 'nearest_0.05', option: 'Round to nearest decimal (0.05)'),
-  AmountRoundingDropdownModel(value: 'nearest_0.1', option: 'Round to nearest decimal (0.1)'),
-  AmountRoundingDropdownModel(value: 'nearest_0.5', option: 'Round to nearest decimal (0.5)'),
+  AmountRoundingDropdownModel(value: 'none', option: lang.S.current.none),
+  AmountRoundingDropdownModel(value: 'round_up', option: lang.S.current.roundToWholeNumber),
+  AmountRoundingDropdownModel(value: 'nearest_whole_number', option: lang.S.current.roundToNearestWholeNumber),
+  AmountRoundingDropdownModel(value: 'nearest_0.05', option: lang.S.current.roundToNearnessDecimalNumber005),
+  AmountRoundingDropdownModel(value: 'nearest_0.1', option: lang.S.current.roundToNearnessDecimalNumber01),
+  AmountRoundingDropdownModel(value: 'nearest_0.5', option: lang.S.current.roundToNearnessDecimalNumber05),
 ];
 
 num roundNumber({required num value, required String roundingType}) {

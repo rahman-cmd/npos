@@ -1,26 +1,34 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_long_screenshot/flutter_long_screenshot.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile_pos/Screens/invoice_details/components/common_image_builder.dart';
 import 'package:mobile_pos/currency.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart' as pro;
 
 import '../../Const/api_config.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart' as mainConstant;
-import '../../invoice_constant.dart';
+import '../../constant.dart' show fontSizeForPrinter;
 import '../../model/business_info_model.dart';
 import '../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
+import '../../widgets/dotted_border/global_dotted_border.dart';
+import '../../widgets/universal_image.dart';
 import '../Due Calculation/Model/due_collection_model.dart';
+import '../language/language_provider.dart';
 
 class DueInvoiceDetails extends StatefulWidget {
-  const DueInvoiceDetails({super.key, required this.dueCollection, required this.personalInformationModel, this.isFromDue});
+  const DueInvoiceDetails(
+      {super.key, required this.dueCollection, required this.personalInformationModel, this.isFromDue});
 
   final DueCollection dueCollection;
-  final BusinessInformation personalInformationModel;
+  final BusinessInformationModel personalInformationModel;
   final bool? isFromDue;
 
   @override
@@ -28,473 +36,660 @@ class DueInvoiceDetails extends StatefulWidget {
 }
 
 class _DueInvoiceDetailsState extends State<DueInvoiceDetails> {
+  final GlobalKey _screenshotKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final _theme = Theme.of(context);
     final _lang = lang.S.of(context);
-    return Consumer(builder: (context, ref, __) {
-      final printerData = ref.watch(thermalPrinterProvider);
-      final businessSettingData = ref.watch(businessSettingProvider);
-      return GlobalPopup(
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      visualDensity: const VisualDensity(horizontal: -4),
-                      leading: businessSettingData.when(
-                        data: (business) {
-                          final isSvg = business.pictureUrl?.endsWith('.svg');
-                          final imageUrl = '${APIConfig.domain}${business.pictureUrl}';
-                          const placeholder = AssetImage(mainConstant.logo);
-                          return business.pictureUrl.isEmptyOrNull
-                              ? _buildInvoiceLogo(image: placeholder)
-                              : (isSvg ?? false)
-                                  ? SvgPicture.network(imageUrl, height: 54.12, width: 52, fit: BoxFit.cover)
-                                  : _buildInvoiceLogo(
-                                      image: NetworkImage(imageUrl),
-                                    );
-                        },
-                        error: (e, stack) => Text(e.toString()),
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      title: Text(
-                        '${widget.personalInformationModel.companyName}',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      subtitle: Text.rich(
-                        TextSpan(
-                          text: '${_lang.mobiles} : ',
-                          children: [
-                            TextSpan(
-                              text: '${widget.personalInformationModel.phoneNumber}',
-                            )
-                          ],
-                        ),
-                      ),
-                      trailing: Container(
-                        alignment: Alignment.center,
-                        height: 52,
-                        width: 110,
-                        // padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            bottomLeft: Radius.circular(25),
-                          ),
-                        ),
-                        child: Text(
-                          _lang.moneyReceipt,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            color: white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // ListTile(
-                    //   contentPadding: EdgeInsets.zero,
-                    //   title: Text(
-                    //     '${widget.personalInformationModel.companyName}',
-                    //     style: kTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, fontSize: 18.0),
-                    //   ),
-                    //   subtitle: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text(
-                    //         widget.personalInformationModel.address.toString(),
-                    //         style: kTextStyle.copyWith(
-                    //           color: kGreyTextColor,
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         widget.personalInformationModel.phoneNumber.toString(),
-                    //         style: kTextStyle.copyWith(
-                    //           color: kGreyTextColor,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    //   isThreeLine: true,
-                    // ),
-                    const SizedBox(height: 10.0),
-
-                    ///-----------------header data----------------------------
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.tight,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text.rich(
-                                TextSpan(
-                                  text: '${lang.S.of(context).billTO} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.dueCollection.party?.name ?? '',
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  text: '${_lang.mobiles} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.dueCollection.party?.phone ?? '',
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text.rich(
-                                TextSpan(
-                                  text: '${_lang.receipt} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: '#${widget.dueCollection.invoiceNumber}',
-                                    )
-                                  ],
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  text: '${lang.S.of(context).date} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: DateFormat.yMMMd().format(DateTime.parse(widget.dueCollection.paymentDate ?? '')),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  text: '${_lang.collectedBys} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.dueCollection.user?.role == "shop-owner" ? 'Admin' : widget.dueCollection.user?.name ?? '',
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  text: '${widget.personalInformationModel.address ?? 'Address'} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.personalInformationModel.address ?? '',
-                                    )
-                                  ],
-                                ),
-                                textAlign: TextAlign.end,
-                              ).visible(widget.personalInformationModel.address != null),
-
-                              Text.rich(
-                                TextSpan(
-                                  text: '${widget.personalInformationModel.crNo ?? 'C.R'} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.personalInformationModel.crNo ?? '',
-                                    )
-                                  ],
-                                ),
-                                textAlign: TextAlign.end,
-                              ).visible(widget.personalInformationModel.crNo != null),
-
-                              Text.rich(
-                                TextSpan(
-                                  text: '${widget.personalInformationModel.vatName ?? 'VAT Number'} : ',
-                                  children: [
-                                    TextSpan(
-                                      text: widget.personalInformationModel.vatNumber ?? '',
-                                    )
-                                  ],
-                                ),
-                                textAlign: TextAlign.end,
-                              ).visible(widget.personalInformationModel.vatNumber != null),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 30.0),
-                    //Product data
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Table(
-                        defaultColumnWidth: const FixedColumnWidth(150),
-                        border: const TableBorder(
-                          verticalInside: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                          left: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                          right: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                          bottom: BorderSide(
-                            color: Color(0xffD9D9D9),
-                          ),
-                        ),
+    return Consumer(
+      builder: (context, ref, __) {
+        final printerData = ref.watch(thermalPrinterProvider);
+        final businessSettingData = ref.watch(businessInfoProvider);
+        final locale = Localizations.localeOf(context).languageCode;
+        return GlobalPopup(
+          child: SafeArea(
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: SingleChildScrollView(
+                child: RepaintBoundary(
+                  key: _screenshotKey,
+                  child: SizedBox(
+                    width: 374,
+                    child: Container(
+                      width: 374,
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TableRow(
+                          ///----------------header--------------------------------------------
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                //----------Invoice Logo------------------------
+                                if (widget.personalInformationModel.data?.showThermalInvoiceLogo == 1)
+                                  businessSettingData.when(
+                                    data: (business) {
+                                      final isSvg = business.data?.thermalInvoiceLogo?.endsWith('.svg');
+                                      final imageUrl = '${APIConfig.domain}${business.data?.thermalInvoiceLogo}';
+                                      const placeholder = AssetImage(mainConstant.logo);
+                                      return (business.data?.thermalInvoiceLogo?.isEmptyOrNull ?? true)
+                                          ? buildInvoiceLogo(image: placeholder)
+                                          : (isSvg ?? false)
+                                              ? SvgPicture.network(
+                                                  imageUrl,
+                                                  height: 54.12,
+                                                  width: 52,
+                                                  fit: BoxFit.cover,
+                                                  colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                                                )
+                                              : buildInvoiceLogo(image: NetworkImage(imageUrl));
+                                    },
+                                    error: (e, stack) => Text(e.toString()),
+                                    loading: () => const Center(child: CircularProgressIndicator()),
+                                  ),
+                                //----------company name---------------------------
+                                if (widget.personalInformationModel.data?.meta?.showCompanyName == 1)
+                                  Text('${widget.personalInformationModel.data?.companyName}',
+                                      style: _theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                                //-------------company Branch---------------------------------
+                                if (widget.dueCollection.branch?.name?.isNotEmpty ?? false)
+                                  Text.rich(
+                                    TextSpan(
+                                      text: '${_lang.branch} : ',
+                                      children: [
+                                        TextSpan(
+                                          text: widget.dueCollection.branch?.name.toString() ?? 'n/a',
+                                          style: _theme.textTheme.bodyLarge?.copyWith(
+                                            fontSize:
+                                                fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                            color: mainConstant.kTextColor,
+                                          ),
+                                        ),
+                                      ],
+                                      style: _theme.textTheme.bodyLarge?.copyWith(
+                                        fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                        color: mainConstant.kTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                //----------------Address----------------------------------
+                                if (widget.personalInformationModel.data?.meta?.showAddress == 1)
+                                  Text(
+                                    '${_lang.address}: ${widget.personalInformationModel.data?.address ?? ''}',
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                  ),
+                                //---------------Phone-------------------------------------------
+                                if (widget.personalInformationModel.data?.meta?.showPhoneNumber == 1)
+                                  Text(
+                                    '${_lang.mobile} ${(widget.dueCollection.branch?.phone?.isNotEmpty ?? false) ? widget.dueCollection.branch?.phone?.toString() ?? 'n/a' : widget.personalInformationModel.data?.phoneNumber?.toString() ?? 'n/a'}',
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                  ),
+                                //-----------------email----------------------------
+                                if (widget.personalInformationModel.data?.meta?.showEmail == 1)
+                                  Text(
+                                    '${_lang.email}: ${widget.personalInformationModel.data?.user?.email ?? ''}',
+                                    style: _theme.textTheme.bodyLarge?.copyWith(
+                                      fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                SizedBox(height: 8),
+                                //-----------------Invoice-------------------
+                                Text(
+                                  _lang.moneyReceipt.toUpperCase(),
+                                  style: _theme.textTheme.headlineSmall
+                                      ?.copyWith(fontWeight: FontWeight.w600, decoration: TextDecoration.underline),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16),
+
+                          ///--------header data-----------------
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Color(0xffC52127), // Red background
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _lang.sl,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.left,
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    //Invoice
+                                    Text.rich(
+                                      TextSpan(
+                                        text: '${lang.S.of(context).receipt} : ',
+                                        children: [
+                                          TextSpan(
+                                            text: widget.dueCollection.invoiceNumber ?? '',
+                                            style: _theme.textTheme.titleSmall?.copyWith(
+                                              fontSize:
+                                                  fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                              color: mainConstant.kTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize:
+                                              fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    //name
+                                    Text.rich(
+                                      TextSpan(
+                                        text: '${lang.S.of(context).name} : ',
+                                        children: [TextSpan(text: widget.dueCollection.party?.name ?? '')],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize:
+                                              fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    //mobile
+                                    Text.rich(
+                                      TextSpan(
+                                        text: '${lang.S.of(context).mobile} ',
+                                        children: [TextSpan(text: widget.dueCollection.party?.phone ?? '')],
+                                        style: _theme.textTheme.bodyMedium?.copyWith(
+                                          fontSize:
+                                              fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                          color: mainConstant.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    if (widget.personalInformationModel.data?.invoiceSize != "3_inch_80mm") ...[
+                                      //date----------------
+                                      Text.rich(
+                                        TextSpan(
+                                          text: '${lang.S.of(context).date} : ',
+                                          children: [
+                                            TextSpan(
+                                                text: DateFormat.yMMMd()
+                                                    .format(DateTime.parse(widget.dueCollection.paymentDate ?? '')))
+                                          ],
+                                          style: _theme.textTheme.bodyMedium?.copyWith(
+                                            fontSize:
+                                                fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                            color: mainConstant.kTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      //Time
+                                      Text.rich(
+                                        textAlign: TextAlign.end,
+                                        TextSpan(
+                                          text: '${locale == "en" ? 'Time' : lang.S.of(context).allTime}: ',
+                                          children: [
+                                            TextSpan(
+                                                text: DateFormat.jm().format(DateTime.parse(
+                                                    widget.dueCollection.paymentDate ?? DateTime.now().toString())))
+                                          ],
+                                          style: _theme.textTheme.bodyMedium?.copyWith(
+                                            fontSize:
+                                                fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                            color: mainConstant.kTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      //Sales by
+                                      Text.rich(
+                                        TextSpan(
+                                          text: '${lang.S.of(context).collectedBy} ',
+                                          children: [
+                                            TextSpan(
+                                                text: widget.dueCollection.user?.role == "shop-owner"
+                                                    ? 'Admin'
+                                                    : widget.dueCollection.user?.name ?? '')
+                                          ],
+                                          style: _theme.textTheme.titleSmall?.copyWith(
+                                              fontSize:
+                                                  fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                              color: mainConstant.kTextColor),
+                                        ),
+                                      ),
+                                      //Vat Number
+                                      Visibility(
+                                        visible: widget.personalInformationModel.data?.vatNo != null &&
+                                            widget.personalInformationModel.data?.meta?.showVat == 1,
+                                        child: Text.rich(
+                                          TextSpan(
+                                            text:
+                                                '${widget.personalInformationModel.data?.vatName ?? _lang.vatNumber} : ',
+                                            children: [
+                                              TextSpan(text: widget.personalInformationModel.data?.vatNo ?? '')
+                                            ],
+                                            style: _theme.textTheme.bodyLarge?.copyWith(
+                                              fontSize:
+                                                  fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                              color: mainConstant.kTextColor,
+                                            ),
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
                                 ),
                               ),
-                              Container(
-                                color: const Color(0xffC52127), // Red background
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _lang.totalDue,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                              SizedBox(width: 8),
+                              if (widget.personalInformationModel.data?.invoiceSize == "3_inch_80mm") ...[
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      //date----------------
+                                      Text.rich(
+                                        TextSpan(
+                                          text: '${lang.S.of(context).date} : ',
+                                          children: [
+                                            TextSpan(
+                                                text: DateFormat.yMMMd()
+                                                    .format(DateTime.parse(widget.dueCollection.paymentDate ?? '')))
+                                          ],
+                                          style: _theme.textTheme.bodyMedium?.copyWith(
+                                            fontSize:
+                                                fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                            color: mainConstant.kTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      //Time
+                                      Text.rich(
+                                        textAlign: TextAlign.end,
+                                        TextSpan(
+                                          text: '${locale == "en" ? 'Time' : lang.S.of(context).allTime}: ',
+                                          children: [
+                                            TextSpan(
+                                                text: DateFormat.jm().format(DateTime.parse(
+                                                    widget.dueCollection.paymentDate ?? DateTime.now().toString())))
+                                          ],
+                                          style: _theme.textTheme.bodyMedium?.copyWith(
+                                            fontSize:
+                                                fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                            color: mainConstant.kTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      //Sales by
+                                      Text.rich(
+                                        TextSpan(
+                                          text: '${lang.S.of(context).collectedBy} ',
+                                          children: [
+                                            TextSpan(
+                                                text: widget.dueCollection.user?.role == "shop-owner"
+                                                    ? 'Admin'
+                                                    : widget.dueCollection.user?.name ?? '')
+                                          ],
+                                          style: _theme.textTheme.titleSmall?.copyWith(
+                                              fontSize:
+                                                  fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                              color: mainConstant.kTextColor),
+                                        ),
+                                      ),
+                                      //Vat Number
+                                      Visibility(
+                                        visible: widget.personalInformationModel.data?.vatNo != null &&
+                                            widget.personalInformationModel.data?.meta?.showVat == 1,
+                                        child: Text.rich(
+                                          TextSpan(
+                                            text:
+                                                '${widget.personalInformationModel.data?.vatName ?? _lang.vatNumber} : ',
+                                            children: [
+                                              TextSpan(text: widget.personalInformationModel.data?.vatNo ?? '')
+                                            ],
+                                            style: _theme.textTheme.bodyLarge?.copyWith(
+                                              fontSize:
+                                                  fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                              color: mainConstant.kTextColor,
+                                            ),
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  textAlign: TextAlign.left,
                                 ),
-                              ),
-                              Container(
-                                color: const Color(0xff000000), // Black background
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _lang.paymentsAmount,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Container(
-                                color: const Color(0xff000000), // Black background
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _lang.remainingDue,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
+                              ],
                             ],
                           ),
-                          TableRow(
+
+                          ///-----------------header data----------------------------
+                          const SizedBox(height: 12.0),
+
+                          ///--------------------Product table data----------------------
+                          globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                //SL
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    _lang.sl,
+                                    textAlign: TextAlign.start,
+                                    style: _theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize:
+                                          fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize) - 4,
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                  ),
+                                ),
+                                //Product
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    _lang.totalDue,
+                                    textAlign: TextAlign.start,
+                                    style: _theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize:
+                                          fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize) - 4,
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                  ),
+                                ),
+                                //Quantity
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    _lang.payment,
+                                    textAlign: TextAlign.center,
+                                    style: _theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize:
+                                          fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize) - 4,
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                  ),
+                                ),
+                                //Unit Price
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    _lang.remainingDue,
+                                    textAlign: TextAlign.center,
+                                    style: _theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize:
+                                          fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize) - 4,
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      '1',
+                                      textAlign: TextAlign.start,
+                                      style: _theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                        color: mainConstant.kTextColor,
+                                      ),
+                                    )),
+                                Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      "$currency${widget.dueCollection.totalDue?.toStringAsFixed(2)}",
+                                      textAlign: TextAlign.start,
+                                      style: _theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                        color: mainConstant.kTextColor,
+                                      ),
+                                    )),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    "$currency${(widget.dueCollection.totalDue!.toDouble() - widget.dueCollection.dueAmountAfterPay!).toStringAsFixed(2)}",
+                                    // '$currency${formatPointNumber(saleDetail.price)}',
+                                    textAlign: TextAlign.center,
+                                    style: _theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                      color: mainConstant.kTextColor,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      "$currency${widget.dueCollection.dueAmountAfterPay?.toStringAsFixed(2)}",
+                                      textAlign: TextAlign.end,
+                                      style: _theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                        color: mainConstant.kTextColor,
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 7),
+                          globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                          SizedBox(height: 12),
+                          Align(
+                            alignment: AlignmentGeometry.centerRight,
+                            child: Text(
+                              "${_lang.payableAmount}: $currency ${widget.dueCollection.totalDue?.toStringAsFixed(2) ?? '0.00'}",
+                              style: _theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                color: mainConstant.kTextColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "${_lang.receivedAmount}: $currency ${(widget.dueCollection.totalDue!.toDouble() - widget.dueCollection.dueAmountAfterPay!.toDouble()).toStringAsFixed(2)}",
+                              style: _theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                color: mainConstant.kTextColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "${_lang.dueAmount} $currency ${widget.dueCollection.dueAmountAfterPay?.toStringAsFixed(2) ?? '0.00'}",
+                              style: _theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                color: mainConstant.kTextColor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          globalDottedLine(borderColor: Colors.black54, height: 2, generatedLine: 60),
+                          SizedBox(height: 6),
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text('1', textAlign: TextAlign.left),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "$currency${widget.dueCollection.totalDue?.toStringAsFixed(2)}",
-                                  textAlign: TextAlign.left,
+                              Text(
+                                '${_lang.paidVia} :',
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: mainConstant.kPeraColor,
+                                  fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "$currency${(widget.dueCollection.totalDue!.toDouble() - widget.dueCollection.dueAmountAfterPay!).toStringAsFixed(2)}",
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "$currency${widget.dueCollection.dueAmountAfterPay?.toStringAsFixed(2)}",
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
+                              ...?(widget.dueCollection.transactions?.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final item = entry.value;
+
+                                String label;
+                                switch (item.transactionType) {
+                                  case 'cash_payment':
+                                    label = 'Cash';
+                                    break;
+
+                                  case 'cheque_payment':
+                                    label = 'Cheque';
+                                    break;
+
+                                  case 'wallet_payment':
+                                    label = 'Wallet';
+                                    break;
+
+                                  default:
+                                    label = item.paymentType?.name ?? 'n/a';
+                                }
+
+                                final isLast = index == widget.dueCollection.transactions!.length - 1;
+                                final text = isLast ? label : '$label,';
+
+                                return Text(
+                                  text,
+                                  style: _theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: mainConstant.kPeraColor,
+                                    fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                  ),
+                                );
+                              }).toList()),
                             ],
                           ),
+                          const SizedBox(height: 20.0),
+                          if (widget.personalInformationModel.data?.showNote == 1) ...[
+                            Text(
+                              '${widget.personalInformationModel.data?.invoiceNoteLevel ?? ''}: ${widget.personalInformationModel.data?.invoiceNote ?? ''}',
+                              style: _theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: mainConstant.kPeraColor,
+                                fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                          ],
+                          if (widget.personalInformationModel.data?.showGratitudeMsg == 1)
+                            Center(
+                              child: Text(
+                                widget.personalInformationModel.data?.gratitudeMessage ?? '',
+                                maxLines: 3,
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: mainConstant.kPeraColor,
+                                  fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          if (widget.personalInformationModel.data?.showInvoiceScannerLogo == 1)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Center(
+                                child: UniversalImage(
+                                  imagePath:
+                                      '${APIConfig.domain}${widget.personalInformationModel.data?.invoiceScannerLogo}',
+                                  height: 120,
+                                  width: 120,
+                                ),
+                              ),
+                            ),
+                          if (widget.personalInformationModel.data?.developByLevel != null ||
+                              widget.personalInformationModel.data?.developBy != null)
+                            Center(
+                              child: Text(
+                                '${widget.personalInformationModel.data?.developByLevel ?? ''} ${widget.personalInformationModel.data?.developBy ?? ''}',
+                                style: _theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: mainConstant.kPeraColor,
+                                  fontSize: fontSizeForPrinter(widget.personalInformationModel.data?.invoiceSize),
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: 40),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10.0),
-                    Row(
-                      children: [
-                        Text(
-                          "${_lang.paidVia}: ${widget.dueCollection.paymentType?.name??'N/A'}",
-                          style: const TextStyle(
-                            color: Colors.black,
+                  ),
+                ),
+              ),
+              bottomNavigationBar: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  height: 60,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            if (widget.isFromDue ?? false) {
+                              int count = 0;
+                              Navigator.popUntil(context, (route) {
+                                return count++ == 2;
+                              });
+                            } else {
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Text(
+                            lang.S.of(context).cancel,
                           ),
                         ),
-                        const Spacer(),
-                        Text(
-                          "${_lang.payableAmount}: $currency ${widget.dueCollection.totalDue?.toStringAsFixed(2) ?? '0.00'}",
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5.0),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "${_lang.receivedAmount}: $currency ${(widget.dueCollection.totalDue!.toDouble() - widget.dueCollection.dueAmountAfterPay!.toDouble()).toStringAsFixed(2)}",
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
                       ),
-                    ),
-                    const SizedBox(height: 5.0),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "${_lang.dueAmount} $currency ${widget.dueCollection.dueAmountAfterPay?.toStringAsFixed(2) ?? '0.00'}",
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      SizedBox(width: 16),
+                      pro.Consumer<LanguageChangeProvider>(
+                        builder: (BuildContext context, LanguageChangeProvider value, Widget? child) {
+                          return Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                PrintDueTransactionModel model = PrintDueTransactionModel(
+                                  dueTransactionModel: widget.dueCollection,
+                                  personalInformationModel: widget.personalInformationModel,
+                                );
+                                await printerData.printDueThermalInvoiceNow(
+                                    invoiceSize: widget.personalInformationModel.data?.invoiceSize,
+                                    transaction: model,
+                                    context: context);
+                              },
+                              child: Text(
+                                lang.S.of(context).print,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    const SizedBox(height: 10.0),
-                    Center(
-                      child: Text(
-                        lang.S.of(context).thankYouForYourDuePayment,
-                        maxLines: 1,
-                        style: theme.textTheme.titleMedium?.copyWith(color: kTitleColor, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-            bottomNavigationBar: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      if (widget.isFromDue ?? false) {
-                        int count = 0;
-                        Navigator.popUntil(context, (route) {
-                          return count++ == 2;
-                        });
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Container(
-                      height: 60,
-                      width: context.width() / 3,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          lang.S.of(context).cancel,
-                          // 'Cancel',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      PrintDueTransactionModel model =
-                          PrintDueTransactionModel(dueTransactionModel: widget.dueCollection, personalInformationModel: widget.personalInformationModel);
-                      await printerData.printDueThermalInvoiceNow(transaction: model, context: context);
-                    },
-                    child: Container(
-                      height: 60,
-                      width: context.width() / 3,
-                      decoration: const BoxDecoration(
-                        color: mainConstant.kMainColor,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          lang.S.of(context).print,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
-        ),
-      );
-    });
-  }
-
-  Widget _buildInvoiceLogo({required ImageProvider image}) {
-    return Container(
-      height: 54.12,
-      width: 52,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: image,
-        ),
-      ),
+        );
+      },
     );
   }
 }

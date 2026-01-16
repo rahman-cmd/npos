@@ -20,56 +20,151 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'et';
 
+  static String m0(start) => "Saada OTP uuesti \$${start} sekundi pärast";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "CustomerDetails": MessageLookupByLibrary.simpleMessage("Customer Details"),
+    "INVOICE": MessageLookupByLibrary.simpleMessage("ARVE"),
+    "a4PageLogo": MessageLookupByLibrary.simpleMessage("A4 arve logo"),
+    "accountDisplayName": MessageLookupByLibrary.simpleMessage(
+      "Konto kuvatav nimi",
+    ),
+    "accountHolderName": MessageLookupByLibrary.simpleMessage(
+      "Konto omaniku nimi",
+    ),
+    "accountName": MessageLookupByLibrary.simpleMessage("Konto nimi"),
+    "accountNumber": MessageLookupByLibrary.simpleMessage("Konto nimi"),
+    "action": MessageLookupByLibrary.simpleMessage("Tegevus"),
     "actions": MessageLookupByLibrary.simpleMessage("Tegevused"),
+    "active": MessageLookupByLibrary.simpleMessage("Aktiivne"),
+    "add": MessageLookupByLibrary.simpleMessage("Lisa"),
     "addAPurchase": MessageLookupByLibrary.simpleMessage("Palun Lisa Ostu"),
+    "addAttendance": MessageLookupByLibrary.simpleMessage("Lisa kohalolek"),
+    "addBank": MessageLookupByLibrary.simpleMessage("Lisa pank"),
     "addBrand": MessageLookupByLibrary.simpleMessage("Add Brand"),
+    "addCash": MessageLookupByLibrary.simpleMessage("Lisa sularaha"),
     "addCategory": MessageLookupByLibrary.simpleMessage("Lisa Kategooria"),
     "addContact": MessageLookupByLibrary.simpleMessage("Add Contact"),
     "addCustomer": MessageLookupByLibrary.simpleMessage(
       "Please Add A Customer",
     ),
+    "addCustomers": MessageLookupByLibrary.simpleMessage("Lisa klient"),
     "addDelivery": MessageLookupByLibrary.simpleMessage("Lisa Tarne"),
+    "addDepartment": MessageLookupByLibrary.simpleMessage("Lisa osakond"),
+    "addDesignation": MessageLookupByLibrary.simpleMessage(
+      "Lisa uus ametinimetus",
+    ),
     "addExpense": MessageLookupByLibrary.simpleMessage("Add Expense"),
     "addExpenseCat": MessageLookupByLibrary.simpleMessage(
       "Add Expense Category",
     ),
+    "addHoliday": MessageLookupByLibrary.simpleMessage("Lisa püha"),
+    "addImage": MessageLookupByLibrary.simpleMessage("Lisa pilt"),
     "addIncome": MessageLookupByLibrary.simpleMessage("Lisa tulu"),
     "addIncomeCategory": MessageLookupByLibrary.simpleMessage(
       "Lisa tulu kategooria",
     ),
     "addItems": MessageLookupByLibrary.simpleMessage("Lisa Esemeid"),
+    "addLeave": MessageLookupByLibrary.simpleMessage("Lisa puhkus"),
+    "addMoreFiled": MessageLookupByLibrary.simpleMessage("Lisa rohkem välju"),
     "addNewAddress": MessageLookupByLibrary.simpleMessage("Lisa Uus Aadress"),
+    "addNewAttendance": MessageLookupByLibrary.simpleMessage(
+      "Lisa uus kohalolek",
+    ),
+    "addNewBankAccounts": MessageLookupByLibrary.simpleMessage(
+      "Lisa pangakontod",
+    ),
+    "addNewEmployee": MessageLookupByLibrary.simpleMessage("Lisa uus töötaja"),
+    "addNewHoliday": MessageLookupByLibrary.simpleMessage("Lisa uus püha"),
+    "addNewLeave": MessageLookupByLibrary.simpleMessage("Lisa uus puhkus"),
+    "addNewModel": MessageLookupByLibrary.simpleMessage("Lisa uus mudel"),
+    "addNewPayroll": MessageLookupByLibrary.simpleMessage(
+      "Lisa uus palgaarvestus",
+    ),
     "addNewProduct": MessageLookupByLibrary.simpleMessage("Add New Product"),
     "addNewPurchase": MessageLookupByLibrary.simpleMessage("Palun Lisa Ostu"),
+    "addNewRack": MessageLookupByLibrary.simpleMessage("Lisa uus riiuliblokk"),
+    "addNewShift": MessageLookupByLibrary.simpleMessage("Lisa uus vahetus"),
+    "addNewTax": MessageLookupByLibrary.simpleMessage("Lisa uus maks"),
+    "addNewVariation": MessageLookupByLibrary.simpleMessage(
+      "Lisa uus variatsioon",
+    ),
+    "addNewVariations": MessageLookupByLibrary.simpleMessage(
+      "Lisa uusi variatsioone",
+    ),
+    "addNewWarehouse": MessageLookupByLibrary.simpleMessage("Lisa uus ladu"),
     "addNote": MessageLookupByLibrary.simpleMessage("Lisa Märkus"),
+    "addParty": MessageLookupByLibrary.simpleMessage("Lisa osapooled"),
+    "addPayment": MessageLookupByLibrary.simpleMessage("Lisa makse"),
     "addProduct": MessageLookupByLibrary.simpleMessage("Please Add A Product"),
     "addProductFirst": MessageLookupByLibrary.simpleMessage(
       "Lisa kõigepealt toode",
     ),
+    "addProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Toode loodud edukalt!",
+    ),
+    "addProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba toote loomiseks.",
+    ),
     "addPurchase": MessageLookupByLibrary.simpleMessage("Add Purchase"),
+    "addRole": MessageLookupByLibrary.simpleMessage("Lisa roll"),
     "addSale": MessageLookupByLibrary.simpleMessage("Palun Lisa Müügi"),
     "addSales": MessageLookupByLibrary.simpleMessage("Lisa Müük"),
+    "addShelf": MessageLookupByLibrary.simpleMessage("Lisa uus riiul"),
+    "addShift": MessageLookupByLibrary.simpleMessage("Lisa vahetus"),
+    "addStock": MessageLookupByLibrary.simpleMessage("Lisa laoseis"),
+    "addSubVariation": MessageLookupByLibrary.simpleMessage("Lisa alamvariant"),
+    "addTax": MessageLookupByLibrary.simpleMessage("Lisa maks"),
+    "addTaxGroup": MessageLookupByLibrary.simpleMessage("Lisa uus maksugrupp"),
     "addUnit": MessageLookupByLibrary.simpleMessage("Add Unit"),
     "addUserRole": MessageLookupByLibrary.simpleMessage("Lisa Kasutajaroll"),
+    "addVariant": MessageLookupByLibrary.simpleMessage("Lisa variant"),
+    "addVariantDetails": MessageLookupByLibrary.simpleMessage(
+      "Lisa variandi andmed",
+    ),
     "addedToCart": MessageLookupByLibrary.simpleMessage("Lisatud ostukorvi"),
     "adding": MessageLookupByLibrary.simpleMessage("Lisamine..."),
     "address": MessageLookupByLibrary.simpleMessage("Address"),
+    "adjustBankBalance": MessageLookupByLibrary.simpleMessage(
+      "Korrigeeri pangasaldot",
+    ),
+    "adjustCash": MessageLookupByLibrary.simpleMessage("Korrigeeri sularaha"),
+    "adjustCashBalance": MessageLookupByLibrary.simpleMessage(
+      "Korrigeeri sularahasaldot",
+    ),
+    "adjustmentDate": MessageLookupByLibrary.simpleMessage(
+      "Korrigeerimise kuupäev",
+    ),
+    "admin": MessageLookupByLibrary.simpleMessage("Admin"),
+    "advance": MessageLookupByLibrary.simpleMessage("Ettemaks"),
     "all": MessageLookupByLibrary.simpleMessage("Kõik"),
     "allBusinessSolutions": MessageLookupByLibrary.simpleMessage(
       "Kõik ärilahendused",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "NPOS on täielik ärilahendus koos laoseisuga, arvestuse, müügiga, kulude ja kahjumi/kasumiga.",
+      "Npos on täielik ärilahendus koos laoseisuga, arvestuse, müügiga, kulude ja kahjumi/kasumiga.",
     ),
+    "allEmployee": MessageLookupByLibrary.simpleMessage("Kõik töötajad"),
+    "allParties": MessageLookupByLibrary.simpleMessage("Kõik osapooled"),
+    "allParty": MessageLookupByLibrary.simpleMessage("Kõik osapooled"),
     "allTime": MessageLookupByLibrary.simpleMessage("Kogu aeg"),
+    "allTransaction": MessageLookupByLibrary.simpleMessage("Kõik tehingud"),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("Already Added"),
     "alreadyHaveAnAccount": MessageLookupByLibrary.simpleMessage(
       "Kas teil on juba konto? ",
     ),
     "amount": MessageLookupByLibrary.simpleMessage("Amount"),
+    "amountMustBeGreaterThanZero": MessageLookupByLibrary.simpleMessage(
+      "Summa peab olema suurem kui 0",
+    ),
+    "amountRoundingMethod": MessageLookupByLibrary.simpleMessage(
+      "Summa ümardamise meetod",
+    ),
+    "amountsInWord": MessageLookupByLibrary.simpleMessage("Summad sõnadega"),
+    "amountsIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Summa on nõutav",
+    ),
     "anSMSWillBeSentToTheFollowingNumber": MessageLookupByLibrary.simpleMessage(
       "SMS saadetakse järgmisele numbrile: ",
     ),
@@ -82,47 +177,147 @@ class MessageLookup extends MessageLookupByLibrary {
     "appleWatch": MessageLookupByLibrary.simpleMessage("Apple Watch"),
     "apply": MessageLookupByLibrary.simpleMessage("Rakenda"),
     "areYouSure": MessageLookupByLibrary.simpleMessage("Oled Sa Kindel?"),
+    "areYouSureWantToDeleteThisBranch": MessageLookupByLibrary.simpleMessage(
+      "Kas olete kindel, et soovite selle harukontori kustutada?",
+    ),
+    "areYouSureWantToDeleteThisRole": MessageLookupByLibrary.simpleMessage(
+      "Kas olete kindel, et soovite selle rolli kustutada?",
+    ),
+    "areYouSureWantToSwitchToDifferentBranch":
+        MessageLookupByLibrary.simpleMessage(
+          "Kas olete kindel, et soovite vahetada teise harukontori vastu?",
+        ),
     "areYouSureYouWant": MessageLookupByLibrary.simpleMessage(
       "Oled sa kindel, et soovid selle poole kustutada?",
     ),
+    "areYourSureYouWantToExitFromThisBranch":
+        MessageLookupByLibrary.simpleMessage(
+          "Kas olete kindel, et soovite sellest harukontorist väljuda?",
+        ),
+    "asOfDate": MessageLookupByLibrary.simpleMessage("Seisuga kuupäev"),
+    "assets": MessageLookupByLibrary.simpleMessage("Varad"),
+    "attachment": MessageLookupByLibrary.simpleMessage("Manus"),
+    "attendance": MessageLookupByLibrary.simpleMessage("Kohalolek"),
+    "attendanceReport": MessageLookupByLibrary.simpleMessage(
+      "Kohaloleku aruanded",
+    ),
+    "authorizedSignature": MessageLookupByLibrary.simpleMessage(
+      "Volitatud allkiri",
+    ),
+    "autoCalculatedDays": MessageLookupByLibrary.simpleMessage(
+      "Automaatselt arvutatud päevad",
+    ),
+    "autoSelected": MessageLookupByLibrary.simpleMessage(
+      "Automaatselt valitud",
+    ),
     "backToHome": MessageLookupByLibrary.simpleMessage("Tagasi Avalehele"),
     "balance": MessageLookupByLibrary.simpleMessage("Saldo"),
+    "balanceDue": MessageLookupByLibrary.simpleMessage("Tasumata saldo"),
+    "balanceSheet": MessageLookupByLibrary.simpleMessage("Bilanss"),
     "bangladesh": MessageLookupByLibrary.simpleMessage("Bangladesh"),
+    "bank": MessageLookupByLibrary.simpleMessage("Pank"),
+    "bankAccounts": MessageLookupByLibrary.simpleMessage("Pangakontod"),
+    "bankDetails": MessageLookupByLibrary.simpleMessage("Panga andmed"),
+    "bankName": MessageLookupByLibrary.simpleMessage("Panga nimi"),
+    "bankToBankTransfer": MessageLookupByLibrary.simpleMessage(
+      "Pank-panka ülekanne",
+    ),
+    "bankToCashTransfer": MessageLookupByLibrary.simpleMessage(
+      "Pank-sularaha ülekanne",
+    ),
+    "barCodePrintLabelSetting": MessageLookupByLibrary.simpleMessage(
+      "Vöötkoodi sildi seaded",
+    ),
+    "barcodeGen": MessageLookupByLibrary.simpleMessage("Vöötkoodi generaator"),
     "barcodeGenerator": MessageLookupByLibrary.simpleMessage(
       "Barkoodi generaator",
     ),
+    "barcodes": MessageLookupByLibrary.simpleMessage("Vöötkoodid"),
+    "batch": MessageLookupByLibrary.simpleMessage("Partii"),
+    "batchNo": MessageLookupByLibrary.simpleMessage("Partii number"),
     "billTO": MessageLookupByLibrary.simpleMessage("Arve Saajale"),
+    "billWiseProfit": MessageLookupByLibrary.simpleMessage("Arvepõhine kasum"),
+    "billingAddress": MessageLookupByLibrary.simpleMessage("Arve aadress"),
+    "birthDate": MessageLookupByLibrary.simpleMessage("Sünnikuupäev"),
+    "bluetoothIsTurnedOff": MessageLookupByLibrary.simpleMessage(
+      "Bluetooth on väljas. Palun lülita see sisse.",
+    ),
+    "branch": MessageLookupByLibrary.simpleMessage("Harukontor"),
+    "branchList": MessageLookupByLibrary.simpleMessage(
+      "Harukontorite nimekiri",
+    ),
     "brand": MessageLookupByLibrary.simpleMessage("Mark"),
     "brandName": MessageLookupByLibrary.simpleMessage("Brand name"),
     "brands": MessageLookupByLibrary.simpleMessage("Brands"),
+    "breakDuration": MessageLookupByLibrary.simpleMessage("Pausi kestus"),
+    "breakStatus": MessageLookupByLibrary.simpleMessage("Pausi staatus"),
+    "breakTime": MessageLookupByLibrary.simpleMessage("Pausi aeg"),
+    "bulk": MessageLookupByLibrary.simpleMessage("Massilaadimine"),
+    "bulkUploads": MessageLookupByLibrary.simpleMessage("Masslaadimine"),
     "businessCat": MessageLookupByLibrary.simpleMessage("Business Category"),
     "businessName": MessageLookupByLibrary.simpleMessage(
       "Company & Business Name",
     ),
+    "buyNow": MessageLookupByLibrary.simpleMessage("Osta kohe"),
     "buyPremium": MessageLookupByLibrary.simpleMessage("Osta Premium Plaan"),
     "call": MessageLookupByLibrary.simpleMessage("Helista"),
     "camera": MessageLookupByLibrary.simpleMessage("Kaamera"),
+    "canNotEditThisTransactionType": MessageLookupByLibrary.simpleMessage(
+      "Seda tehingutüüpi ei saa muuta.",
+    ),
+    "canNotRetrievePaymentDetails": MessageLookupByLibrary.simpleMessage(
+      "Makseandmeid ei õnnestunud kätte saada.",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "caningForDevices": MessageLookupByLibrary.simpleMessage(
+      "Seadmete otsimine...",
+    ),
+    "cannotTransferToSameAccounts": MessageLookupByLibrary.simpleMessage(
+      "Ei saa samale kontole üle kanda.",
+    ),
     "capacity": MessageLookupByLibrary.simpleMessage("Mahutavus"),
     "cash": MessageLookupByLibrary.simpleMessage("Sularaha"),
+    "cashAndBank": MessageLookupByLibrary.simpleMessage("Sularaha ja pank"),
+    "cashAndBankManagement": MessageLookupByLibrary.simpleMessage(
+      "Sularaha ja panga haldus",
+    ),
+    "cashFlow": MessageLookupByLibrary.simpleMessage("Rahavoog"),
+    "cashIn": MessageLookupByLibrary.simpleMessage("Sularaha sisse"),
+    "cashInHand": MessageLookupByLibrary.simpleMessage("Sularaha kassa"),
+    "cashOut": MessageLookupByLibrary.simpleMessage("Sularaha välja"),
+    "cashToBankTransfer": MessageLookupByLibrary.simpleMessage(
+      "Sularaha-panka ülekanne",
+    ),
     "categories": MessageLookupByLibrary.simpleMessage("Kategooriad"),
     "category": MessageLookupByLibrary.simpleMessage("Kategooria"),
     "categoryName": MessageLookupByLibrary.simpleMessage("Category name"),
+    "changeAmount": MessageLookupByLibrary.simpleMessage("Muutus summa"),
     "changePassword": MessageLookupByLibrary.simpleMessage("Change Password"),
     "checkEmail": MessageLookupByLibrary.simpleMessage("Kontrolli E-posti"),
+    "cheque": MessageLookupByLibrary.simpleMessage("Tšekid"),
+    "chequeAmount": MessageLookupByLibrary.simpleMessage("Tšeki summa"),
+    "chequeDate": MessageLookupByLibrary.simpleMessage("Tšeki kuupäev"),
+    "chequeList": MessageLookupByLibrary.simpleMessage("Tšekkide nimekiri"),
+    "chequeNumber": MessageLookupByLibrary.simpleMessage("Tšeki number"),
+    "choose": MessageLookupByLibrary.simpleMessage("Vali"),
+    "chooseCountry": MessageLookupByLibrary.simpleMessage("Vali riik"),
     "chooseCustomer": MessageLookupByLibrary.simpleMessage("Vali Klient"),
     "chooseSupplier": MessageLookupByLibrary.simpleMessage("Vali Tarnija"),
     "choseYourFeature": MessageLookupByLibrary.simpleMessage(
       "Valige oma funktsioonid",
     ),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Funktsioonid on oluline osa, mis eristab NPOS traditsioonilistest lahendustest.",
+      "Funktsioonid on oluline osa, mis eristab Npos traditsioonilistest lahendustest.",
     ),
+    "city": MessageLookupByLibrary.simpleMessage("Linn"),
+    "cityName": MessageLookupByLibrary.simpleMessage("Linname"),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
+    "clear": MessageLookupByLibrary.simpleMessage("Tühjenda"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage(
       "Klõpsake ühendamiseks",
     ),
     "close": MessageLookupByLibrary.simpleMessage("Sulge"),
+    "closed": MessageLookupByLibrary.simpleMessage("Suletud"),
     "code": MessageLookupByLibrary.simpleMessage("Kood"),
     "collectDue": MessageLookupByLibrary.simpleMessage("Collect Due"),
     "collectDues": MessageLookupByLibrary.simpleMessage(
@@ -131,6 +326,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "collectedBy": MessageLookupByLibrary.simpleMessage("Kogutud Kõrval:"),
     "collectedBys": MessageLookupByLibrary.simpleMessage("Kogutud"),
     "color": MessageLookupByLibrary.simpleMessage("Värv"),
+    "combinationOfTheMultipleTaxes": MessageLookupByLibrary.simpleMessage(
+      "Mitme maksu kombinatsioon",
+    ),
+    "combo": MessageLookupByLibrary.simpleMessage("Komplekt"),
+    "comboProductReport": MessageLookupByLibrary.simpleMessage(
+      "Komplekstoodete aruanne",
+    ),
+    "comboProducts": MessageLookupByLibrary.simpleMessage("Komplekttooted"),
+    "comboReport": MessageLookupByLibrary.simpleMessage(
+      "Kombineeritud aruanne",
+    ),
     "comingSoon": MessageLookupByLibrary.simpleMessage("Tulemas Peagi"),
     "companyAddress": MessageLookupByLibrary.simpleMessage("Firma Aadress"),
     "confirmDelete": MessageLookupByLibrary.simpleMessage(
@@ -138,6 +344,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "confirmPass": MessageLookupByLibrary.simpleMessage("Kinnita Parool"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Kinnita Parool"),
+    "confirmReturn": MessageLookupByLibrary.simpleMessage("Kinnita tagastus"),
     "confirmSMSTo": MessageLookupByLibrary.simpleMessage(
       "Kinnita SMS aadressile",
     ),
@@ -147,28 +354,64 @@ class MessageLookup extends MessageLookupByLibrary {
     "connectYourPrinter": MessageLookupByLibrary.simpleMessage(
       "Ühendage oma printer",
     ),
+    "connectedTo": MessageLookupByLibrary.simpleMessage("Ühendatud"),
     "contactDetials": MessageLookupByLibrary.simpleMessage("Kontaktandmed"),
     "contactUs": MessageLookupByLibrary.simpleMessage("Võta Meiega Ühendust"),
     "continueButton": MessageLookupByLibrary.simpleMessage("Continue"),
     "continueE": MessageLookupByLibrary.simpleMessage("Jätka"),
     "cost": MessageLookupByLibrary.simpleMessage("Hind"),
+    "costExclusionTax": MessageLookupByLibrary.simpleMessage(
+      "Kulu ilma maksuta",
+    ),
+    "costInclusionTax": MessageLookupByLibrary.simpleMessage(
+      "Kulu koos maksuga",
+    ),
     "country": MessageLookupByLibrary.simpleMessage("Riik"),
+    "countryName": MessageLookupByLibrary.simpleMessage("Riigi nimi"),
     "create": MessageLookupByLibrary.simpleMessage("Loo"),
     "createAFreeAccount": MessageLookupByLibrary.simpleMessage(
       "Loo Tasuta Konto",
     ),
     "createAcc": MessageLookupByLibrary.simpleMessage("Loo Tasuta Konto"),
+    "createBranch": MessageLookupByLibrary.simpleMessage("Loo harukontor"),
     "createNewPassword": MessageLookupByLibrary.simpleMessage("Loo Uus Parool"),
+    "createPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba PDF-i loomiseks.",
+    ),
+    "createSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba müügi loomiseks.",
+    ),
+    "creditIn": MessageLookupByLibrary.simpleMessage("Kreedit (Sisse)"),
+    "creditLimit": MessageLookupByLibrary.simpleMessage(
+      "Osapoole krediidilimiit",
+    ),
     "currency": MessageLookupByLibrary.simpleMessage("Valuuta"),
+    "currentBalance": MessageLookupByLibrary.simpleMessage("Praegune saldo"),
+    "currentCashBalance": MessageLookupByLibrary.simpleMessage(
+      "Praegune sularahasaldo",
+    ),
+    "currentMonth": MessageLookupByLibrary.simpleMessage("Käesolev kuu"),
+    "currentYear": MessageLookupByLibrary.simpleMessage("Käesolev aasta"),
+    "currents": MessageLookupByLibrary.simpleMessage("Praegune"),
     "custom": MessageLookupByLibrary.simpleMessage("Kohandatud"),
+    "customDate": MessageLookupByLibrary.simpleMessage("Kohandatud kuupäev"),
     "customInvoiceBranding": MessageLookupByLibrary.simpleMessage(
       "Kohandatud arve brändimine",
     ),
+    "customPrint": MessageLookupByLibrary.simpleMessage(
+      "Kohandatud printimine",
+    ),
+    "customer": MessageLookupByLibrary.simpleMessage("Klient"),
+    "customerDate": MessageLookupByLibrary.simpleMessage("Kohandatud kuupäev"),
     "customerDue": MessageLookupByLibrary.simpleMessage("Kliendi Võlgnevused"),
+    "customerLedger": MessageLookupByLibrary.simpleMessage("Kliendi pearaamat"),
     "customerName": MessageLookupByLibrary.simpleMessage("Customer Name"),
     "customerPay": MessageLookupByLibrary.simpleMessage("Klient maksab"),
     "customerPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Kliendi telefoninumber",
+    ),
+    "customerSignature": MessageLookupByLibrary.simpleMessage(
+      "Kliendi allkiri",
     ),
     "dailyTransaction": MessageLookupByLibrary.simpleMessage("Päevane Tehing"),
     "dashboard": MessageLookupByLibrary.simpleMessage("Juhtpaneel"),
@@ -176,63 +419,176 @@ class MessageLookup extends MessageLookupByLibrary {
       "Andmed salvestati edukalt.",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
+    "dateFilterWarn": MessageLookupByLibrary.simpleMessage(
+      "Lõppkuupäev ei saa olla enne alguskuupäeva.",
+    ),
+    "dateIsRequired": MessageLookupByLibrary.simpleMessage("Kuupäev on nõutav"),
     "dates": MessageLookupByLibrary.simpleMessage("Date:"),
+    "dayBook": MessageLookupByLibrary.simpleMessage("Päevaraamat"),
     "days": MessageLookupByLibrary.simpleMessage("päeva"),
+    "daysLeft": MessageLookupByLibrary.simpleMessage("Päevi jäänud"),
     "dealer": MessageLookupByLibrary.simpleMessage("Dealer"),
     "dealerPrice": MessageLookupByLibrary.simpleMessage("Dealer price"),
+    "debitOut": MessageLookupByLibrary.simpleMessage("Deebet (Välja)"),
+    "defaultSellingPrice": MessageLookupByLibrary.simpleMessage(
+      "Vaikimisi müügihind",
+    ),
     "delete": MessageLookupByLibrary.simpleMessage("Kustuta"),
+    "deleteAcc": MessageLookupByLibrary.simpleMessage("Kustuta konto"),
+    "deleteBatchWarn": MessageLookupByLibrary.simpleMessage(
+      "Kas oled kindel, et soovid selle partii kustutada?",
+    ),
+    "deleteDialogDetails": MessageLookupByLibrary.simpleMessage(
+      "Kas olete kindel, et soovite oma konto kustutada? See toiming kustutab jäädavalt kõik teie andmed.",
+    ),
+    "deletePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba osapoole kustutamiseks.",
+    ),
+    "deletedSuccessFully": MessageLookupByLibrary.simpleMessage(
+      "Edukalt kustutatud!",
+    ),
     "deleting": MessageLookupByLibrary.simpleMessage("Kustutamine..."),
     "deliveryAddress": MessageLookupByLibrary.simpleMessage("Tarneaadress"),
     "deliveryCharge": MessageLookupByLibrary.simpleMessage("Tarnekulu"),
+    "department": MessageLookupByLibrary.simpleMessage("Osakond"),
+    "deposit": MessageLookupByLibrary.simpleMessage("Deposiit"),
+    "depositTo": MessageLookupByLibrary.simpleMessage("Deponeeri kuhu"),
     "description": MessageLookupByLibrary.simpleMessage("Kirjeldus"),
+    "designation": MessageLookupByLibrary.simpleMessage("Ametinimetus"),
+    "designationName": MessageLookupByLibrary.simpleMessage(
+      "Ametinimetuse nimi",
+    ),
     "details": MessageLookupByLibrary.simpleMessage("Detailid"),
+    "developedBy": MessageLookupByLibrary.simpleMessage("Arendaja"),
     "digits": MessageLookupByLibrary.simpleMessage(
       "6-kohaline kood on saadetud teie e-posti aadressile: ",
     ),
+    "disable": MessageLookupByLibrary.simpleMessage("Keela"),
     "discount": MessageLookupByLibrary.simpleMessage("Discount"),
+    "displayNameIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Kuvatav nimi on nõutav",
+    ),
     "doNotDisturb": MessageLookupByLibrary.simpleMessage("Ära häiri"),
+    "doYouReallyWantToDeleteThis": MessageLookupByLibrary.simpleMessage(
+      "Kas soovite tõesti selle kustutada",
+    ),
     "doYouWantToDeleteTheUser": MessageLookupByLibrary.simpleMessage(
       "Kas soovite kasutaja kustutada?",
     ),
     "doYouWantToExitTheApp": MessageLookupByLibrary.simpleMessage(
       "Kas soovite rakendusest lahkuda?",
     ),
+    "doYouWantToRellyReOpenThisCheque": MessageLookupByLibrary.simpleMessage(
+      "Kas soovite tõesti selle tšeki uuesti avada?",
+    ),
     "donNotHaveAnAccount": MessageLookupByLibrary.simpleMessage(
       "Pole veel kontot?",
     ),
+    "done": MessageLookupByLibrary.simpleMessage("Valmis"),
+    "download": MessageLookupByLibrary.simpleMessage("Laadi alla"),
+    "downloadApk": MessageLookupByLibrary.simpleMessage("Laadi alla APK"),
+    "downloadExcelFormat": MessageLookupByLibrary.simpleMessage(
+      "Laadi alla Exceli vorming",
+    ),
+    "downloadSuccessfulPleaseCheckYourDocumentFolder":
+        MessageLookupByLibrary.simpleMessage(
+          "Allalaadimine õnnestus! Palun kontrolli oma dokumentide kausta",
+        ),
+    "downloading": MessageLookupByLibrary.simpleMessage("Allalaadimine..."),
     "due": MessageLookupByLibrary.simpleMessage("Due"),
     "dueAmount": MessageLookupByLibrary.simpleMessage("Due Amount: "),
+    "dueBalance": MessageLookupByLibrary.simpleMessage("Võlgnevus"),
     "dueCollection": MessageLookupByLibrary.simpleMessage(
       "Võlgnevuste kogumine",
     ),
     "dueList": MessageLookupByLibrary.simpleMessage("Due List"),
+    "duePay": MessageLookupByLibrary.simpleMessage("Võlgnevus"),
     "dueReport": MessageLookupByLibrary.simpleMessage("Võlgnevuste Aruanne"),
+    "dueSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Viivitatud müük ei ole lubatud kliendile ilma kontota.",
+    ),
+    "dues": MessageLookupByLibrary.simpleMessage("Võlgnevused"),
+    "duration": MessageLookupByLibrary.simpleMessage("Kestus"),
+    "durationDays": MessageLookupByLibrary.simpleMessage("Kestus (Päevad)"),
     "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
       "Lihtne kasutada mobiilset kassapunkti",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "NPOS rakendus on tasuta ja lihtne kasutada. Tegelikult on see üks parimaid kassapunktisüsteeme üle maailma.",
+      "Npos rakendus on tasuta ja lihtne kasutada. Tegelikult on see üks parimaid kassapunktisüsteeme üle maailma.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
+    "editAttendance": MessageLookupByLibrary.simpleMessage("Muuda kohalolekut"),
+    "editBankAccounts": MessageLookupByLibrary.simpleMessage(
+      "Muuda pangakontosid",
+    ),
+    "editBankAdjustment": MessageLookupByLibrary.simpleMessage(
+      "Muuda panga korrigeerimist",
+    ),
+    "editBankToCash": MessageLookupByLibrary.simpleMessage(
+      "Muuda pank sularahaks",
+    ),
+    "editBankTransfer": MessageLookupByLibrary.simpleMessage(
+      "Muuda pangaülekannet",
+    ),
+    "editCashAdjustment": MessageLookupByLibrary.simpleMessage(
+      "Muuda sularaha korrigeerimist",
+    ),
+    "editCashToBank": MessageLookupByLibrary.simpleMessage(
+      "Muuda sularaha pangaks",
+    ),
+    "editCategory": MessageLookupByLibrary.simpleMessage("Muuda kategooriat"),
+    "editDesignation": MessageLookupByLibrary.simpleMessage(
+      "Muuda ametinimetust",
+    ),
+    "editEmployee": MessageLookupByLibrary.simpleMessage("Muuda töötajat"),
+    "editHoliday": MessageLookupByLibrary.simpleMessage("Muuda püha"),
+    "editLeave": MessageLookupByLibrary.simpleMessage("Muuda puhkust"),
+    "editModel": MessageLookupByLibrary.simpleMessage("Muuda mudelit"),
+    "editPayroll": MessageLookupByLibrary.simpleMessage("Muuda palgaarvestust"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Muuda Telefoninumbrit?"),
+    "editProduct": MessageLookupByLibrary.simpleMessage("Muuda toodet"),
     "editPurchaseInvoice": MessageLookupByLibrary.simpleMessage(
       "Muuda Ostuarvet",
     ),
+    "editRack": MessageLookupByLibrary.simpleMessage("Muuda riiuliblokki"),
     "editSalesInvoice": MessageLookupByLibrary.simpleMessage(
       "Muuda Müügiarvet",
     ),
+    "editShelf": MessageLookupByLibrary.simpleMessage("Muuda riiulit"),
+    "editShift": MessageLookupByLibrary.simpleMessage("Muuda vahetust"),
     "editSocailMedia": MessageLookupByLibrary.simpleMessage(
       "Muuda Sotsiaalmeediat",
     ),
+    "editTax": MessageLookupByLibrary.simpleMessage("Muuda maksu"),
+    "editTaxGroup": MessageLookupByLibrary.simpleMessage("Muuda maksugruppi"),
+    "editVariations": MessageLookupByLibrary.simpleMessage(
+      "Muuda variatsiooni",
+    ),
+    "editWarehouse": MessageLookupByLibrary.simpleMessage("Muuda ladu"),
     "email": MessageLookupByLibrary.simpleMessage("Email Address"),
     "emailCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "E-post ei saa olla tühi",
     ),
     "emailText": MessageLookupByLibrary.simpleMessage("E-post"),
+    "employee": MessageLookupByLibrary.simpleMessage("Töötaja"),
+    "enLowStock": MessageLookupByLibrary.simpleMessage("Sisesta madal laoseis"),
+    "end": MessageLookupByLibrary.simpleMessage("Lõpp"),
+    "endBreakTime": MessageLookupByLibrary.simpleMessage("Pausi lõppaeg"),
     "endDate": MessageLookupByLibrary.simpleMessage("Lõppkuupäev"),
+    "endDateBeforeStartDate": MessageLookupByLibrary.simpleMessage(
+      "Lõppkuupäev enne alguskuupäeva",
+    ),
+    "endDateCannotBeBeforeStartDate": MessageLookupByLibrary.simpleMessage(
+      "Lõppkuupäev ei saa olla enne alguskuupäeva.",
+    ),
+    "endTime": MessageLookupByLibrary.simpleMessage("Lõppaeg"),
+    "endTimeIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Lõppaeg on nõutav",
+    ),
     "endYourFreePlan": MessageLookupByLibrary.simpleMessage(
       "Lõpeta Tasuta Plaan",
     ),
+    "entBatchNo": MessageLookupByLibrary.simpleMessage("Sisesta partii number"),
     "enterABrandName": MessageLookupByLibrary.simpleMessage(
       "Sisesta brändinimi",
     ),
@@ -245,7 +601,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterAValidStock": MessageLookupByLibrary.simpleMessage(
       "Sisesta kehtiv laoseis",
     ),
+    "enterAccountDisplayName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta konto kuvatav nimi",
+    ),
+    "enterAccountHolderName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta konto omaniku nimi",
+    ),
+    "enterAccountName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta kontonumber",
+    ),
+    "enterAddress": MessageLookupByLibrary.simpleMessage("Sisesta aadress"),
     "enterAmount": MessageLookupByLibrary.simpleMessage("Sisestage Summa"),
+    "enterBalance": MessageLookupByLibrary.simpleMessage("Sisesta saldo"),
+    "enterBankName": MessageLookupByLibrary.simpleMessage("Sisesta panga nimi"),
+    "enterBatchNo": MessageLookupByLibrary.simpleMessage("Sisesta partii nr"),
+    "enterBreakTime": MessageLookupByLibrary.simpleMessage("Sisesta pausi aeg"),
     "enterBusiness": MessageLookupByLibrary.simpleMessage(
       "Sisestage Ettevõtte/Poe Nimi",
     ),
@@ -260,12 +630,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterDealerPrice": MessageLookupByLibrary.simpleMessage(
       "Sisesta Edasimüüja Hind",
     ),
+    "enterDescription": MessageLookupByLibrary.simpleMessage(
+      "Sisesta kirjeldus",
+    ),
+    "enterDesignationName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta ametinimetuse nimi",
+    ),
     "enterDiscount": MessageLookupByLibrary.simpleMessage(
       "Sisesta allahindlus",
     ),
     "enterEmail": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage oma e-posti aadress parooli lähtestamise lingi saamiseks.",
     ),
+    "enterEndTime": MessageLookupByLibrary.simpleMessage("Sisesta lõppaeg"),
     "enterExpanseCategoryName": MessageLookupByLibrary.simpleMessage(
       "Sisesta kulukategooria nimi",
     ),
@@ -275,11 +652,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterFullAddress": MessageLookupByLibrary.simpleMessage(
       "Sisestage täielik aadress",
     ),
+    "enterFullName": MessageLookupByLibrary.simpleMessage("Sisesta täisnimi"),
+    "enterHolidayName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta püha nimi",
+    ),
     "enterIncomeCategoryName": MessageLookupByLibrary.simpleMessage(
       "Sisesta tulu kategooria nimi",
     ),
+    "enterLabelText": MessageLookupByLibrary.simpleMessage(
+      "Sisesta sildi tekst",
+    ),
     "enterManufacturerName": MessageLookupByLibrary.simpleMessage(
       "Sisesta tootja nimi",
+    ),
+    "enterModelName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta mudeli nimi",
     ),
     "enterName": MessageLookupByLibrary.simpleMessage("Sisestage Nimi"),
     "enterNote": MessageLookupByLibrary.simpleMessage("Sisesta Märkus"),
@@ -302,16 +689,39 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterSaltingPrice": MessageLookupByLibrary.simpleMessage(
       "Sisesta Soolitushind",
     ),
+    "enterShelfName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta riiuli nimi",
+    ),
     "enterSize": MessageLookupByLibrary.simpleMessage("Sisesta Suurus"),
+    "enterStartTime": MessageLookupByLibrary.simpleMessage("Sisesta algusaeg"),
     "enterStock": MessageLookupByLibrary.simpleMessage("Sisesta laoseis"),
+    "enterTaxRates": MessageLookupByLibrary.simpleMessage(
+      "Sisestage maksumäär",
+    ),
     "enterType": MessageLookupByLibrary.simpleMessage("Sisesta Tüüp"),
+    "enterUserName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta kasutajanimi",
+    ),
     "enterUserTitle": MessageLookupByLibrary.simpleMessage(
       "Sisesta Kasutaja Pealkiri",
     ),
     "enterValidOTP": MessageLookupByLibrary.simpleMessage("Sisesta kehtiv OTP"),
+    "enterValues": MessageLookupByLibrary.simpleMessage("Sisesta väärtused"),
+    "enterVatGstNumber": MessageLookupByLibrary.simpleMessage(
+      "Sisestage KM/GST number",
+    ),
+    "enterVatGstTitle": MessageLookupByLibrary.simpleMessage(
+      "Sisestage KM/GST pealkiri",
+    ),
+    "enterWarehouseName": MessageLookupByLibrary.simpleMessage(
+      "Sisesta lao nimi",
+    ),
     "enterWeight": MessageLookupByLibrary.simpleMessage("Sisesta Kaal"),
     "enterWholesalePrice": MessageLookupByLibrary.simpleMessage(
       "Sisesta Hulgimüügihind",
+    ),
+    "enterYourCountry": MessageLookupByLibrary.simpleMessage(
+      "Sisestage oma riik",
     ),
     "enterYourEmailAddress": MessageLookupByLibrary.simpleMessage(
       "Sisestage oma e-posti aadress",
@@ -320,21 +730,73 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sisestage oma täisnimi",
     ),
     "enterYourName": MessageLookupByLibrary.simpleMessage("Sisestage oma nimi"),
+    "enterYourNoteLevel": MessageLookupByLibrary.simpleMessage(
+      "Sisesta märkme tase",
+    ),
+    "enterYourPassword": MessageLookupByLibrary.simpleMessage("Sisesta parool"),
     "enterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Sisestage oma telefoninumber",
     ),
+    "enterYourPostSaleMessage": MessageLookupByLibrary.simpleMessage(
+      "Sisesta müügijärgne sõnum",
+    ),
+    "errorDeletingTax": MessageLookupByLibrary.simpleMessage(
+      "Viga maksu kustutamisel",
+    ),
+    "excelFiles": MessageLookupByLibrary.simpleMessage("Exceli failid"),
+    "excelUploader": MessageLookupByLibrary.simpleMessage("Exceli üleslaadija"),
+    "exclusivePrice": MessageLookupByLibrary.simpleMessage(
+      "Hind ilma käibemaksuta",
+    ),
+    "exit": MessageLookupByLibrary.simpleMessage("Välju"),
+    "exitBank": MessageLookupByLibrary.simpleMessage("Välju harukontorist"),
+    "expDate": MessageLookupByLibrary.simpleMessage("Aegumiskuupäev"),
     "expense": MessageLookupByLibrary.simpleMessage("Kulu"),
     "expenseCat": MessageLookupByLibrary.simpleMessage("Expense Categories"),
     "expenseDate": MessageLookupByLibrary.simpleMessage("Expense Date"),
     "expenseFor": MessageLookupByLibrary.simpleMessage("Expense For"),
     "expenseReport": MessageLookupByLibrary.simpleMessage("Expense Report"),
+    "expensesType": MessageLookupByLibrary.simpleMessage("Kulude tüübid"),
+    "expirationStatus": MessageLookupByLibrary.simpleMessage("Aegumisseisund"),
+    "expire": MessageLookupByLibrary.simpleMessage("Aegub"),
+    "expireProductReports": MessageLookupByLibrary.simpleMessage(
+      "Aeguvate toodete aruanded",
+    ),
+    "expired": MessageLookupByLibrary.simpleMessage("Aegunud"),
+    "expiredDate": MessageLookupByLibrary.simpleMessage("Aegumiskuupäev"),
+    "expiredItemReport": MessageLookupByLibrary.simpleMessage(
+      "Aegunud kaupade aruanne",
+    ),
+    "expiredList": MessageLookupByLibrary.simpleMessage("Aegunud loend"),
+    "expiredProduct": MessageLookupByLibrary.simpleMessage("Aegunud toode"),
+    "expiry": MessageLookupByLibrary.simpleMessage("Aegumine"),
+    "extendPlan": MessageLookupByLibrary.simpleMessage("Pikenda paketti"),
     "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+    "failedToDeleteTheDeterment": MessageLookupByLibrary.simpleMessage(
+      "Osakonna kustutamine ebaõnnestus",
+    ),
+    "failedToDeleteTheTax": MessageLookupByLibrary.simpleMessage(
+      "Maksu kustutamine ebaõnnestus",
+    ),
     "failedToGetPlatformVersion": MessageLookupByLibrary.simpleMessage(
       "Platvormi versiooni hankimine ebaõnnestus.",
     ),
+    "failedToLoadDepartment": MessageLookupByLibrary.simpleMessage(
+      "Osakondade laadimine ebaõnnestus",
+    ),
+    "failedToProcessReturn": MessageLookupByLibrary.simpleMessage(
+      "Tagastamise töötlemine ebaõnnestus.",
+    ),
     "fashions": MessageLookupByLibrary.simpleMessage("Mood"),
+    "feature": MessageLookupByLibrary.simpleMessage("Funktsioon"),
     "field": MessageLookupByLibrary.simpleMessage("Väli"),
+    "fifteenthDays": MessageLookupByLibrary.simpleMessage("15 päeva"),
+    "filter": MessageLookupByLibrary.simpleMessage("Filter"),
+    "filterByDate": MessageLookupByLibrary.simpleMessage(
+      "Filtreeri kuupäeva järgi",
+    ),
     "firstName": MessageLookupByLibrary.simpleMessage("Eesnimi"),
+    "flat": MessageLookupByLibrary.simpleMessage("Fikseeritud"),
     "folder": MessageLookupByLibrary.simpleMessage(
       "Võib-olla on kiri sattunud teie rämpsposti kausta.",
     ),
@@ -347,50 +809,127 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "freePack": MessageLookupByLibrary.simpleMessage("Tasuta Pakett"),
     "freePlan": MessageLookupByLibrary.simpleMessage("Tasuta Plaan"),
+    "from": MessageLookupByLibrary.simpleMessage("Kust"),
+    "fromAccount": MessageLookupByLibrary.simpleMessage("Kontolt"),
     "fromDate": MessageLookupByLibrary.simpleMessage("From Date"),
     "fullName": MessageLookupByLibrary.simpleMessage("Täisnimi"),
     "fullyPaid": MessageLookupByLibrary.simpleMessage("Täielikult Makstud"),
     "gallery": MessageLookupByLibrary.simpleMessage("Galerii"),
+    "genPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "PDF-i genereerimiseks andmeid pole saadaval",
+    ),
+    "gender": MessageLookupByLibrary.simpleMessage("Sugu"),
+    "generatePdf": MessageLookupByLibrary.simpleMessage("Genereeri PDF"),
+    "generatingPdf": MessageLookupByLibrary.simpleMessage(
+      "PDF-i genereerimine",
+    ),
     "gotEmail": MessageLookupByLibrary.simpleMessage("Saite E-kirja"),
     "gotIt": MessageLookupByLibrary.simpleMessage("Sain Arusaamiseks"),
+    "grossProfit": MessageLookupByLibrary.simpleMessage(
+      "Brutokasum (Gross Profit)",
+    ),
+    "guarantee": MessageLookupByLibrary.simpleMessage("Garantii"),
     "guest": MessageLookupByLibrary.simpleMessage("Külaline"),
     "haveAcc": MessageLookupByLibrary.simpleMessage("On juba konto?"),
+    "hideFiled": MessageLookupByLibrary.simpleMessage("Peida väljad"),
+    "highToLowPrice": MessageLookupByLibrary.simpleMessage("Hind: kallis enne"),
     "hintEmail": MessageLookupByLibrary.simpleMessage(
       "Sisesta e-posti aadress",
     ),
     "hintPassword": MessageLookupByLibrary.simpleMessage("Sisesta parool"),
+    "holderName": MessageLookupByLibrary.simpleMessage("Omaniku nimi"),
+    "holiday": MessageLookupByLibrary.simpleMessage("Püha"),
+    "holidayList": MessageLookupByLibrary.simpleMessage("Pühade nimekiri"),
     "home": MessageLookupByLibrary.simpleMessage("Kodu"),
+    "hoursLeft": MessageLookupByLibrary.simpleMessage("Tunde jäänud"),
+    "hrm": MessageLookupByLibrary.simpleMessage("Personalijuhtimine"),
+    "iAgreeDeleteMyAccountPermanent": MessageLookupByLibrary.simpleMessage(
+      "Nõustun oma konto jäädava kustutamisega.",
+    ),
+    "ifscCode": MessageLookupByLibrary.simpleMessage("IFSC kood"),
     "image": MessageLookupByLibrary.simpleMessage("Pilt"),
+    "inActive": MessageLookupByLibrary.simpleMessage("Mitteaktiivne"),
+    "inStock": MessageLookupByLibrary.simpleMessage("Laos"),
+    "inactive": MessageLookupByLibrary.simpleMessage("Mitteaktiivne"),
+    "inclusivePrice": MessageLookupByLibrary.simpleMessage(
+      "Hind koos käibemaksuga",
+    ),
     "income": MessageLookupByLibrary.simpleMessage("Tulu"),
     "incomeCategories": MessageLookupByLibrary.simpleMessage(
       "Tulu kategooriad",
     ),
+    "incomeCategoriesReport": MessageLookupByLibrary.simpleMessage(
+      "Tulukategooriate aruanne",
+    ),
     "incomeDate": MessageLookupByLibrary.simpleMessage("Tulu kuupäev"),
     "incomeFor": MessageLookupByLibrary.simpleMessage("Tulu eest"),
     "incomeReport": MessageLookupByLibrary.simpleMessage("Tulu aruanne"),
+    "incomeReportPermission": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba tuluaruande vaatamiseks.",
+    ),
+    "incomeType": MessageLookupByLibrary.simpleMessage("Tulu tüüp"),
+    "incomes": MessageLookupByLibrary.simpleMessage("Tulud"),
+    "informationShowInLabels": MessageLookupByLibrary.simpleMessage(
+      "Siltidel kuvatav info",
+    ),
     "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
     "instrucation": MessageLookupByLibrary.simpleMessage("Juhis"),
     "inv": MessageLookupByLibrary.simpleMessage("Inv No"),
+    "invalidAmount": MessageLookupByLibrary.simpleMessage("Vigane summa"),
+    "inventory": MessageLookupByLibrary.simpleMessage("Laoseis"),
+    "inventoryPermission": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub laovaru luba",
+    ),
     "invoice": MessageLookupByLibrary.simpleMessage("Invoice"),
+    "invoiceLogo": MessageLookupByLibrary.simpleMessage("Arve logo"),
+    "invoiceNumber": MessageLookupByLibrary.simpleMessage("Arve number"),
     "invoiceViewr": MessageLookupByLibrary.simpleMessage("Arve Vaataja"),
     "item": MessageLookupByLibrary.simpleMessage("Ese"),
     "itemAdded": MessageLookupByLibrary.simpleMessage("Ese lisatud"),
+    "itemName": MessageLookupByLibrary.simpleMessage("Kauba nimi"),
     "itemsSales": MessageLookupByLibrary.simpleMessage("Esemete müük"),
+    "joinDate": MessageLookupByLibrary.simpleMessage("Liitumiskuupäev"),
+    "labelRoleLabelSize1_5Inch": MessageLookupByLibrary.simpleMessage(
+      "Sildirull 1.5\"*1, 38mm*25mm, vahe 3.1mm",
+    ),
+    "labelRoleLabelSize2Inch": MessageLookupByLibrary.simpleMessage(
+      "Sildirull 2\"*1, 50mm*25mm, vahe 3.1mm",
+    ),
     "lableEmail": MessageLookupByLibrary.simpleMessage("E-post"),
     "lablePassword": MessageLookupByLibrary.simpleMessage("Parool"),
     "language": MessageLookupByLibrary.simpleMessage("Language"),
+    "last30Days": MessageLookupByLibrary.simpleMessage("Viimased 30 päeva"),
+    "last7Days": MessageLookupByLibrary.simpleMessage("Viimased 7 päeva"),
+    "lastMonth": MessageLookupByLibrary.simpleMessage("Eelmise kuu"),
     "lastName": MessageLookupByLibrary.simpleMessage("Perekonnanimi"),
+    "lastYear": MessageLookupByLibrary.simpleMessage("Eelmine aasta"),
+    "leave": MessageLookupByLibrary.simpleMessage("Puhkus"),
+    "leaveDuration": MessageLookupByLibrary.simpleMessage("Puhkuse kestus"),
+    "leaveList": MessageLookupByLibrary.simpleMessage("Puhkuste nimekiri"),
+    "leaveReports": MessageLookupByLibrary.simpleMessage("Puhkuse aruanded"),
+    "leaveRequest": MessageLookupByLibrary.simpleMessage("Puhkusetaotlus"),
+    "leaveType": MessageLookupByLibrary.simpleMessage("Puhkuse tüüp"),
+    "ledger": MessageLookupByLibrary.simpleMessage("Pearaamat"),
     "link": MessageLookupByLibrary.simpleMessage("Link"),
     "linkedIN": MessageLookupByLibrary.simpleMessage("LinkedIn"),
+    "listIsEmpty": MessageLookupByLibrary.simpleMessage("Loend on tühi"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading"),
+    "loadingOtpSetting": MessageLookupByLibrary.simpleMessage(
+      "OTP seadete laadimine...",
+    ),
     "logIn": MessageLookupByLibrary.simpleMessage("Logi Sisse"),
     "logInWithMail": MessageLookupByLibrary.simpleMessage(
       "Logi Sisse E-posti Teel",
     ),
     "logOut": MessageLookupByLibrary.simpleMessage("Logi Välja"),
+    "loginFailedPleaseTryAgain": MessageLookupByLibrary.simpleMessage(
+      "Sisselogimine ebaõnnestus. Palun proovi uuesti.",
+    ),
+    "loginGoogle": MessageLookupByLibrary.simpleMessage("Login Google"),
     "loginWithPhone": MessageLookupByLibrary.simpleMessage(
       "Logi Sisse Telefoni Teel",
     ),
+    "loginX": MessageLookupByLibrary.simpleMessage("Login X"),
     "lorem": MessageLookupByLibrary.simpleMessage(
       "Lorem ipsum dolor sit amet, consectetur adip gravi iscing elit. Ultricies gravida scelerisque arcu facilisis duis in.",
     ),
@@ -407,64 +946,255 @@ class MessageLookup extends MessageLookupByLibrary {
     "lossProfitReport": MessageLookupByLibrary.simpleMessage(
       "Kadu/Kasumi aruanne",
     ),
+    "lowStock": MessageLookupByLibrary.simpleMessage("Madal laoseis"),
+    "lowStockAlert": MessageLookupByLibrary.simpleMessage(
+      "Madala laoseisu hoiatus",
+    ),
+    "lowStockReport": MessageLookupByLibrary.simpleMessage(
+      "Madalate laoseisude aruanne",
+    ),
+    "lowToHighPrice": MessageLookupByLibrary.simpleMessage("Hind: odav enne"),
     "lp": MessageLookupByLibrary.simpleMessage("Loss/Profit"),
     "lpDetails": MessageLookupByLibrary.simpleMessage("Loss/Profit Details"),
+    "manageSetting": MessageLookupByLibrary.simpleMessage("Halda seadeid"),
+    "manuDate": MessageLookupByLibrary.simpleMessage("Tootmiskuupäev"),
+    "manufactureDate": MessageLookupByLibrary.simpleMessage("Tootmiskuupäev"),
     "manufacturer": MessageLookupByLibrary.simpleMessage("Manufacturer"),
     "masterCard": MessageLookupByLibrary.simpleMessage("Mastercard"),
     "messege": MessageLookupByLibrary.simpleMessage("Sõnum"),
     "mobile": MessageLookupByLibrary.simpleMessage("Mobile:"),
     "mobiles": MessageLookupByLibrary.simpleMessage("Mobiil"),
+    "model": MessageLookupByLibrary.simpleMessage("Mudel"),
+    "modelCreatedSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "Mudel on edukalt loodud!",
+    ),
+    "modelName": MessageLookupByLibrary.simpleMessage("Mudeli nimi"),
+    "modelUpdateSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "Mudel on edukalt uuendatud!",
+    ),
+    "models": MessageLookupByLibrary.simpleMessage("Mudelid"),
+    "moneyIn": MessageLookupByLibrary.simpleMessage("Raha sisse"),
+    "moneyOut": MessageLookupByLibrary.simpleMessage("Raha välja"),
     "moneyReceipt": MessageLookupByLibrary.simpleMessage("Rahatšekk"),
+    "month": MessageLookupByLibrary.simpleMessage("Kuu"),
     "monthly": MessageLookupByLibrary.simpleMessage("Kuuline"),
     "moreInfo": MessageLookupByLibrary.simpleMessage("More Info"),
     "mrp": MessageLookupByLibrary.simpleMessage("MRP"),
+    "mrpOrSalePrice": MessageLookupByLibrary.simpleMessage(
+      "Müügi piirhind (MRP)",
+    ),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "nameCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Nimi ei saa olla tühi",
     ),
+    "needAtLeastTwoBankAccount": MessageLookupByLibrary.simpleMessage(
+      "Ülekande tegemiseks on vaja vähemalt kahte pangakontot.",
+    ),
+    "netProfit": MessageLookupByLibrary.simpleMessage(
+      "Puhaskasum (Net Profit)",
+    ),
+    "netTotalAmount": MessageLookupByLibrary.simpleMessage("Netosumma kokku"),
     "newPassword": MessageLookupByLibrary.simpleMessage("Uus Parool"),
     "next": MessageLookupByLibrary.simpleMessage("Järgmine"),
     "no": MessageLookupByLibrary.simpleMessage("Ei"),
     "noAcc": MessageLookupByLibrary.simpleMessage("Pole veel kontot?"),
+    "noAccountsFoundMissing": MessageLookupByLibrary.simpleMessage(
+      "Sobivaid kontosid ei leitud",
+    ),
+    "noActiveUser": MessageLookupByLibrary.simpleMessage(
+      "Aktiivset kasutajat pole",
+    ),
+    "noAttendanceRecordFound": MessageLookupByLibrary.simpleMessage(
+      "Valitud filtrite jaoks ei leitud kohaloleku kirjeid.",
+    ),
+    "noAvailableRecordFound": MessageLookupByLibrary.simpleMessage(
+      "Kohaloleku kirjeid ei leitud.",
+    ),
+    "noBankAccountFound": MessageLookupByLibrary.simpleMessage(
+      "Pangakontosid ei leitud.",
+    ),
+    "noBankAccountsFoundToTransferFrom": MessageLookupByLibrary.simpleMessage(
+      "Pangakontosid, kust üle kanda, ei leitud.",
+    ),
+    "noBatch": MessageLookupByLibrary.simpleMessage("Partii puudub"),
+    "noBluetoothDeviceSelected": MessageLookupByLibrary.simpleMessage(
+      "Bluetooth seadet pole valitud.",
+    ),
+    "noBrunchFound": MessageLookupByLibrary.simpleMessage(
+      "Harukontorit ei leitud",
+    ),
+    "noChequeFound": MessageLookupByLibrary.simpleMessage("Tšekki ei leitud"),
     "noData": MessageLookupByLibrary.simpleMessage("No Data Available"),
     "noDataAvailabe": MessageLookupByLibrary.simpleMessage(
       "Andmeid pole saadaval",
     ),
+    "noDataAvailable": MessageLookupByLibrary.simpleMessage("Andmed puuduvad"),
+    "noDataAvailableForExport": MessageLookupByLibrary.simpleMessage(
+      "Eksportimiseks puuduvad andmed",
+    ),
+    "noDataAvailableForGeneratePdf": MessageLookupByLibrary.simpleMessage(
+      "PDF-i genereerimiseks pole andmeid saadaval",
+    ),
     "noDataFound": MessageLookupByLibrary.simpleMessage("Andmeid ei Leitud"),
+    "noDepartmentFound": MessageLookupByLibrary.simpleMessage(
+      "Osakonda ei leitud.",
+    ),
+    "noDescriptionAvailableForThisDepartment":
+        MessageLookupByLibrary.simpleMessage(
+          "Selle osakonna kohta pole kirjeldust saadaval.",
+        ),
+    "noDescriptionAvailableForThisDesignation":
+        MessageLookupByLibrary.simpleMessage(
+          "Selle ametinimetuse kohta pole kirjeldust saadaval.",
+        ),
+    "noDescriptionProvided": MessageLookupByLibrary.simpleMessage(
+      "Kirjeldust ei lisatud.",
+    ),
+    "noDesignationFound": MessageLookupByLibrary.simpleMessage(
+      "Ametinimetust ei leitud.",
+    ),
+    "noDestinationBankAccountFond": MessageLookupByLibrary.simpleMessage(
+      "Sihtpangakontosid ei leitud.",
+    ),
+    "noDeviceFound": MessageLookupByLibrary.simpleMessage("Seadet ei leitud"),
+    "noDue": MessageLookupByLibrary.simpleMessage("Võlg puudub"),
     "noDueSelected": MessageLookupByLibrary.simpleMessage(
       "Ühtegi Võlgnevust Pole Valitud",
     ),
+    "noFileSelected": MessageLookupByLibrary.simpleMessage(
+      "Faili pole valitud",
+    ),
+    "noHolidayFound": MessageLookupByLibrary.simpleMessage("Pühi ei leitud."),
+    "noHolidayFundMatching": MessageLookupByLibrary.simpleMessage(
+      "Sobivaid pühi ei leitud",
+    ),
+    "noItemFound": MessageLookupByLibrary.simpleMessage("Artiklit ei leitud"),
     "noItemSelected": MessageLookupByLibrary.simpleMessage(
       "Ühtegi eset pole valitud",
     ),
+    "noLeaveRecordFound": MessageLookupByLibrary.simpleMessage(
+      "Valitud filtrite jaoks ei leitud puhkuse kirjeid.",
+    ),
+    "noLeaveRequestFound": MessageLookupByLibrary.simpleMessage(
+      "Puhkuse taotlusi ei leitud.",
+    ),
+    "noMatched": MessageLookupByLibrary.simpleMessage(
+      "Sobivaid tooteid ei leitud.",
+    ),
+    "noMatchingPayrollFound": MessageLookupByLibrary.simpleMessage(
+      "Sobivaid palgaarvestuse kirjeid ei leitud.",
+    ),
+    "noNoteProvided": MessageLookupByLibrary.simpleMessage(
+      "Märkust ei lisatud.",
+    ),
+    "noParty": MessageLookupByLibrary.simpleMessage("Osapooli ei leitud"),
+    "noPayrollFound": MessageLookupByLibrary.simpleMessage(
+      "Palgaarvestuse kirjeid ei leitud.",
+    ),
     "noProductFound": MessageLookupByLibrary.simpleMessage("Tooteid ei Leitud"),
+    "noProductMatchYourSearch": MessageLookupByLibrary.simpleMessage(
+      "Teie otsingule ei vasta ühtegi toodet.",
+    ),
     "noProductSelected": MessageLookupByLibrary.simpleMessage(
       "Ühtegi toodet pole valitud",
     ),
     "noRoleFound": MessageLookupByLibrary.simpleMessage(
       "Kasutajarolli ei leitud",
     ),
+    "noShiftFound": MessageLookupByLibrary.simpleMessage("Vahetusi ei leitud."),
+    "noStockAvailable": MessageLookupByLibrary.simpleMessage(
+      "Laoseisu andmed puuduvad.",
+    ),
+    "noSubTaxSelected": MessageLookupByLibrary.simpleMessage(
+      "Alamaks pole valitud",
+    ),
     "noSupplier": MessageLookupByLibrary.simpleMessage(
       "Tarnijat pole saadaval",
     ),
     "noTransaction": MessageLookupByLibrary.simpleMessage("Tehinguid pole"),
+    "noTransactionFound": MessageLookupByLibrary.simpleMessage(
+      "Tehinguid ei leitud",
+    ),
+    "noTransactionFoundForThisFilter": MessageLookupByLibrary.simpleMessage(
+      "Selle filtri jaoks tehinguid ei leitud.",
+    ),
+    "noTransactionToGeneratePdf": MessageLookupByLibrary.simpleMessage(
+      "PDF-i genereerimiseks pole tehinguid",
+    ),
+    "noValuesDenied": MessageLookupByLibrary.simpleMessage(
+      "Väärtusi pole määratud",
+    ),
+    "noVariationFound": MessageLookupByLibrary.simpleMessage(
+      "Variatsiooni ei leitud.",
+    ),
+    "nonFoundableDiscount": MessageLookupByLibrary.simpleMessage(
+      "Tagastamatu (KM/Allahindlus)",
+    ),
+    "none": MessageLookupByLibrary.simpleMessage("Puudub"),
     "notFound": MessageLookupByLibrary.simpleMessage("Ei Leitud"),
+    "notInternetConnection": MessageLookupByLibrary.simpleMessage(
+      "Internetiohendus puudub",
+    ),
+    "notLaunch": MessageLookupByLibrary.simpleMessage(
+      "Telefonirakenduse käivitamine ebaõnnestus.",
+    ),
+    "notMatchingResultFound": MessageLookupByLibrary.simpleMessage(
+      "Vastavaid tulemusi ei leitud",
+    ),
     "note": MessageLookupByLibrary.simpleMessage("Note"),
+    "noteLevel": MessageLookupByLibrary.simpleMessage("Märkme tase"),
     "notification": MessageLookupByLibrary.simpleMessage("Teavitus"),
     "off": MessageLookupByLibrary.simpleMessage("väljas"),
+    "ok": MessageLookupByLibrary.simpleMessage("Ok"),
+    "okay": MessageLookupByLibrary.simpleMessage("Olgu"),
+    "oldPassword": MessageLookupByLibrary.simpleMessage("Vana parool"),
+    "oldPasswordCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
+      "Vana parool ei tohi olla tühi",
+    ),
     "on": MessageLookupByLibrary.simpleMessage("sees"),
+    "open": MessageLookupByLibrary.simpleMessage("Avatud"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Ava kaamera"),
+    "openSetting": MessageLookupByLibrary.simpleMessage("Ava seaded"),
     "openingBalance": MessageLookupByLibrary.simpleMessage("Avaavaldus"),
+    "openingBalanceIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Algne saldo on nõutav",
+    ),
+    "openingDate": MessageLookupByLibrary.simpleMessage("Avamise kuupäev"),
+    "opinion": MessageLookupByLibrary.simpleMessage("Sisesta oma arvamus"),
+    "orContinueWith": MessageLookupByLibrary.simpleMessage("Või jätka kaudu"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Otsa saanud"),
+    "outPremiumPlan": MessageLookupByLibrary.simpleMessage(
+      "Meie Premium pakett",
+    ),
     "packFeatures": MessageLookupByLibrary.simpleMessage("Paketi Omadused"),
     "package": MessageLookupByLibrary.simpleMessage("Pakett"),
+    "packageDate": MessageLookupByLibrary.simpleMessage("Pakendamise kuupäev"),
+    "packageName": MessageLookupByLibrary.simpleMessage("Paketi nimi"),
+    "packingDate": MessageLookupByLibrary.simpleMessage("Pakendamise kuupäev"),
     "paid": MessageLookupByLibrary.simpleMessage("Paid"),
     "paidAmount": MessageLookupByLibrary.simpleMessage("Paid Amount"),
+    "paidBy": MessageLookupByLibrary.simpleMessage("Maksja"),
     "paidVia": MessageLookupByLibrary.simpleMessage("Makstud läbi"),
+    "partialPaid": MessageLookupByLibrary.simpleMessage("Osaliselt tasutud"),
     "parties": MessageLookupByLibrary.simpleMessage("Osalejad"),
+    "partyCreateWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba osapoole loomiseks.",
+    ),
     "partyList": MessageLookupByLibrary.simpleMessage("Parties List"),
+    "partyReports": MessageLookupByLibrary.simpleMessage("Osapoole aruanded"),
+    "partyType": MessageLookupByLibrary.simpleMessage("Osapoole tüüp"),
+    "partyWiseProfit": MessageLookupByLibrary.simpleMessage(
+      "Osapoolepõhine kasum",
+    ),
     "password": MessageLookupByLibrary.simpleMessage("Parool"),
     "passwordCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Parool ei saa olla tühi",
+    ),
+    "passwordIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Parool peab olema vähemalt 6 märki pikk",
+    ),
+    "passwordMust6Character": MessageLookupByLibrary.simpleMessage(
+      "Parool peab olema vähemalt 6 märki pikk",
     ),
     "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
       "Paroolid ei klapi",
@@ -475,32 +1205,81 @@ class MessageLookup extends MessageLookupByLibrary {
     "payableAmount": MessageLookupByLibrary.simpleMessage("Makstav summa"),
     "payment": MessageLookupByLibrary.simpleMessage("Makse"),
     "paymentComplete": MessageLookupByLibrary.simpleMessage("Makse Valmis"),
+    "paymentDetails": MessageLookupByLibrary.simpleMessage("Makse üksikasjad"),
     "paymentFailed": MessageLookupByLibrary.simpleMessage("Makse Ebaõnnestus"),
     "paymentFailedPleaseTryAgain": MessageLookupByLibrary.simpleMessage(
       "Makse ebaõnnestus. Palun proovige uuesti.",
     ),
     "paymentGateway": MessageLookupByLibrary.simpleMessage("Maksevärav"),
+    "paymentMethod": MessageLookupByLibrary.simpleMessage("Makseviis"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("Payment Methods"),
     "paymentSuccess": MessageLookupByLibrary.simpleMessage("Makse Õnnestus"),
+    "paymentTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Palun vali maksetüüp",
+    ),
     "paymentTypes": MessageLookupByLibrary.simpleMessage("Payment Type"),
     "paymentWasSuccessful": MessageLookupByLibrary.simpleMessage(
       "Makse õnnestus!",
     ),
+    "paymentYear": MessageLookupByLibrary.simpleMessage("Makseaasta"),
     "paymentsAmount": MessageLookupByLibrary.simpleMessage("Maksete Summad"),
+    "paymentsTypes": MessageLookupByLibrary.simpleMessage("Maksetüübid"),
     "paypalPay": MessageLookupByLibrary.simpleMessage("Maksa Paypaliga"),
+    "payroll": MessageLookupByLibrary.simpleMessage("Palgaarvestus"),
+    "payrollList": MessageLookupByLibrary.simpleMessage(
+      "Palgaarvestuse nimekiri",
+    ),
+    "payrollRecord": MessageLookupByLibrary.simpleMessage(
+      "Palgaarvestuse kirje",
+    ),
+    "payrollReports": MessageLookupByLibrary.simpleMessage(
+      "Palgaarvestuse aruanded",
+    ),
+    "pdfGenerateSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "PDF edukalt genereeritud",
+    ),
+    "percent": MessageLookupByLibrary.simpleMessage("Protsent"),
+    "permissionDenied": MessageLookupByLibrary.simpleMessage(
+      "Juurdepääs keelatud",
+    ),
+    "permissionDeniedToDeleteBank": MessageLookupByLibrary.simpleMessage(
+      "Panga kustutamiseks luba keelatud.",
+    ),
+    "permissionDeniedToUpdateBank": MessageLookupByLibrary.simpleMessage(
+      "Panga andmete uuendamine keelatud.",
+    ),
+    "permissionDeniedToViewBank": MessageLookupByLibrary.simpleMessage(
+      "Panga andmete vaatamine keelatud.",
+    ),
     "permissionNotGranted": MessageLookupByLibrary.simpleMessage(
       "Luba pole antud!",
     ),
+    "personalInfo": MessageLookupByLibrary.simpleMessage("Isiklik info:"),
     "phone": MessageLookupByLibrary.simpleMessage("Phone Number"),
+    "phoneNotAvail": MessageLookupByLibrary.simpleMessage(
+      "Telefoninumber pole saadaval.",
+    ),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Telefoninumber"),
     "phoneVerification": MessageLookupByLibrary.simpleMessage(
       "Telefonivõrgu Kinnitamine",
     ),
     "phonee": MessageLookupByLibrary.simpleMessage("Telefon:"),
+    "pickAndUploadFile": MessageLookupByLibrary.simpleMessage(
+      "Vali ja laadi fail üles",
+    ),
     "pickEndDate": MessageLookupByLibrary.simpleMessage("Vali Lõppkuupäev"),
     "pickStartDate": MessageLookupByLibrary.simpleMessage("Vali Alguskuupäev"),
+    "pleaseAddASalesReturn": MessageLookupByLibrary.simpleMessage(
+      "Palun lisage müügitagastus",
+    ),
+    "pleaseAddAtLeastOneBank": MessageLookupByLibrary.simpleMessage(
+      "Palun lisage saldode korrigeerimiseks vähemalt üks pangakonto.",
+    ),
     "pleaseAddQuantity": MessageLookupByLibrary.simpleMessage(
       "Palun lisa kogus",
+    ),
+    "pleaseCheckYourInternetConnection": MessageLookupByLibrary.simpleMessage(
+      "Palun kontrolli oma internetiühendust ja proovi uuesti",
     ),
     "pleaseConnectThePrinterFirst": MessageLookupByLibrary.simpleMessage(
       "Palun ühendage printer kõigepealt",
@@ -508,11 +1287,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseConnectYourBlutohPrinter": MessageLookupByLibrary.simpleMessage(
       "Palun ühendage oma Bluetooth-printer",
     ),
+    "pleaseEnableBluetooth": MessageLookupByLibrary.simpleMessage(
+      "Palun lülita Bluetooth sisse",
+    ),
     "pleaseEnterABiggerPassword": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage pikem parool",
     ),
     "pleaseEnterAConfirmPassword": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage kinnitusparool",
+    ),
+    "pleaseEnterADate": MessageLookupByLibrary.simpleMessage(
+      "Palun sisestage kuupäev",
     ),
     "pleaseEnterAPassword": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage parool",
@@ -538,6 +1323,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseEnterAValidPurchasePrice": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage kehtiv ostuhind",
     ),
+    "pleaseEnterAValidQuantity": MessageLookupByLibrary.simpleMessage(
+      "Sisesta kehtiv kogus (vähemalt 1)",
+    ),
     "pleaseEnterAValidSalePrice": MessageLookupByLibrary.simpleMessage(
       "Palun sisesta kehtiv müügihind",
     ),
@@ -547,8 +1335,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseEnterAmount": MessageLookupByLibrary.simpleMessage(
       "Palun Sisestage Summa",
     ),
+    "pleaseEnterAtLeastOneValues": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta vähemalt üks väärtus.",
+    ),
+    "pleaseEnterBranchName": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta harukontori nimi",
+    ),
+    "pleaseEnterDate": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta kuupäev",
+    ),
+    "pleaseEnterDesignationName": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta ametinimetuse nimi",
+    ),
+    "pleaseEnterEndDate": MessageLookupByLibrary.simpleMessage(
+      "Palun vali lõppkuupäev",
+    ),
+    "pleaseEnterHolidayName": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta püha nimi",
+    ),
     "pleaseEnterName": MessageLookupByLibrary.simpleMessage(
       "Palun Sisestage Nimi",
+    ),
+    "pleaseEnterRackName": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta riiulibloki nimi",
+    ),
+    "pleaseEnterShelfName": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta riiuli nimi",
     ),
     "pleaseEnterTheOTP": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage OTP",
@@ -556,11 +1368,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseEnterUnitName": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage ühikunimi",
     ),
+    "pleaseEnterValidName": MessageLookupByLibrary.simpleMessage(
+      "Palun sisesta kehtiv nimi",
+    ),
     "pleaseEnterValidPhoneAndNameFirst": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage kõigepealt kehtiv telefoninumber ja nimi",
     ),
     "pleaseEnterYourDetails": MessageLookupByLibrary.simpleMessage(
       "Palun sisestage oma andmed.",
+    ),
+    "pleaseEnterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
+      "Palun sisestage oma telefoninumber",
+    ),
+    "pleaseEnterYourSalary": MessageLookupByLibrary.simpleMessage(
+      "Palun sisestage oma palk",
     ),
     "pleaseMakeASaleFirst": MessageLookupByLibrary.simpleMessage(
       "Palun tehke kõigepealt müük",
@@ -568,24 +1389,101 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectACategory": MessageLookupByLibrary.simpleMessage(
       "Palun valige kategooria",
     ),
+    "pleaseSelectADestinationBankAccounts":
+        MessageLookupByLibrary.simpleMessage("Palun valige sihtpangakonto."),
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Palun valige kulukategooria",
     ),
-    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage(
-      "Toiteallikas NPOS",
+    "pleaseSelectALeaveType": MessageLookupByLibrary.simpleMessage(
+      "Palun valige puhkuse tüüp",
     ),
+    "pleaseSelectAProductFirst": MessageLookupByLibrary.simpleMessage(
+      "Palun vali esmalt toode",
+    ),
+    "pleaseSelectAShift": MessageLookupByLibrary.simpleMessage(
+      "Palun valige vahetus",
+    ),
+    "pleaseSelectAStartDate": MessageLookupByLibrary.simpleMessage(
+      "Palun valige alguskuupäev",
+    ),
+    "pleaseSelectAStatus": MessageLookupByLibrary.simpleMessage(
+      "Palun valige staatus",
+    ),
+    "pleaseSelectAnEmployee": MessageLookupByLibrary.simpleMessage(
+      "Palun valige töötaja",
+    ),
+    "pleaseSelectAnMonth": MessageLookupByLibrary.simpleMessage(
+      "Palun valige kuu",
+    ),
+    "pleaseSelectBothAccounts": MessageLookupByLibrary.simpleMessage(
+      "Palun valige mõlemad kontod.",
+    ),
+    "pleaseSelectBreakStatus": MessageLookupByLibrary.simpleMessage(
+      "Palun valige pausi staatus",
+    ),
+    "pleaseSelectDate": MessageLookupByLibrary.simpleMessage(
+      "Palun valige kuupäev",
+    ),
+    "pleaseSelectDepartment": MessageLookupByLibrary.simpleMessage(
+      "Palun valige osakond",
+    ),
+    "pleaseSelectDesignation": MessageLookupByLibrary.simpleMessage(
+      "Palun valige ametinimetus",
+    ),
+    "pleaseSelectForProductReturn": MessageLookupByLibrary.simpleMessage(
+      "Palun vali toode tagastamiseks",
+    ),
+    "pleaseSelectPaymentYear": MessageLookupByLibrary.simpleMessage(
+      "Palun valige makseaasta",
+    ),
+    "pleaseSelectProductFirst": MessageLookupByLibrary.simpleMessage(
+      "Palun vali esmalt toode",
+    ),
+    "pleaseSelectStartDate": MessageLookupByLibrary.simpleMessage(
+      "Palun vali alguskuupäev",
+    ),
+    "pleaseSelectStatus": MessageLookupByLibrary.simpleMessage(
+      "Palun valige staatus",
+    ),
+    "pleaseSelectValidStartAndEndDates": MessageLookupByLibrary.simpleMessage(
+      "Palun valige kehtivad algus- ja lõppkuupäevad.",
+    ),
+    "pleaseSelectYourGender": MessageLookupByLibrary.simpleMessage(
+      "Palun valige oma sugu",
+    ),
+    "pleaseSelectYourShift": MessageLookupByLibrary.simpleMessage(
+      "Palun valige oma vahetus",
+    ),
+    "pos": MessageLookupByLibrary.simpleMessage("Kassa"),
+    "posSale": MessageLookupByLibrary.simpleMessage("POS-müük"),
+    "postSaleMessage": MessageLookupByLibrary.simpleMessage(
+      "Müügijärgne sõnum",
+    ),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
+      "Toiteallikas Acnoo",
+    ),
+    "poweredBy": MessageLookupByLibrary.simpleMessage("Tootja"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Premium klienditugi",
     ),
     "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium Plaan"),
+    "pressToSelect": MessageLookupByLibrary.simpleMessage("Vajuta valimiseks"),
     "previewPdf": MessageLookupByLibrary.simpleMessage("PDF eelvaade"),
     "previousDue": MessageLookupByLibrary.simpleMessage("Previous Due"),
     "previousPayAmount": MessageLookupByLibrary.simpleMessage(
       "Eelnev Maksumissumma",
     ),
     "price": MessageLookupByLibrary.simpleMessage("Hind"),
+    "priceWarn": MessageLookupByLibrary.simpleMessage("Hind ei saa olla tühi"),
     "print": MessageLookupByLibrary.simpleMessage("Prindi"),
+    "printBankDetailsAndInvoice": MessageLookupByLibrary.simpleMessage(
+      "Prindi pangaandmed arvetel",
+    ),
+    "printBarCode": MessageLookupByLibrary.simpleMessage("Prindi vöötkood"),
+    "printLabel": MessageLookupByLibrary.simpleMessage("Prindi silt"),
     "printing": MessageLookupByLibrary.simpleMessage("Printimisvalik"),
+    "printingInvoice": MessageLookupByLibrary.simpleMessage("Arve printimine"),
+    "printingOption": MessageLookupByLibrary.simpleMessage("Printimise valik"),
     "product": MessageLookupByLibrary.simpleMessage("Product"),
     "productBrand": MessageLookupByLibrary.simpleMessage("Tootemark"),
     "productCategory": MessageLookupByLibrary.simpleMessage("Tootekategooria"),
@@ -595,12 +1493,52 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "productDetails": MessageLookupByLibrary.simpleMessage("Toote Detailid"),
     "productList": MessageLookupByLibrary.simpleMessage("Product List"),
+    "productModels": MessageLookupByLibrary.simpleMessage("Toote mudelid"),
     "productName": MessageLookupByLibrary.simpleMessage("Product name"),
+    "productNotFound": MessageLookupByLibrary.simpleMessage("Toodet ei leitud"),
+    "productPurchaseHistory": MessageLookupByLibrary.simpleMessage(
+      "Toote ostuajalugu",
+    ),
+    "productPurchaseReport": MessageLookupByLibrary.simpleMessage(
+      "Toote ostuaruanne",
+    ),
+    "productRacks": MessageLookupByLibrary.simpleMessage("Toote riiuliblokid"),
+    "productReports": MessageLookupByLibrary.simpleMessage("Toote aruanded"),
+    "productSaleHistory": MessageLookupByLibrary.simpleMessage(
+      "Toote müügiajalugu",
+    ),
+    "productSalesReport": MessageLookupByLibrary.simpleMessage(
+      "Toote müügiaruanne",
+    ),
+    "productSetting": MessageLookupByLibrary.simpleMessage("Toote seaded"),
+    "productStock": MessageLookupByLibrary.simpleMessage("Toote laoseis"),
     "productUnit": MessageLookupByLibrary.simpleMessage("Toote Ühik"),
+    "productVariations": MessageLookupByLibrary.simpleMessage(
+      "Toote variatsioonid",
+    ),
+    "productWiseProfit": MessageLookupByLibrary.simpleMessage(
+      "Tootepõhine kasum",
+    ),
+    "productWiseProfitAndLoss": MessageLookupByLibrary.simpleMessage(
+      "Tootepõhine kasum ja kahjum",
+    ),
+    "productWisePurchase": MessageLookupByLibrary.simpleMessage(
+      "Tootepõhine ost",
+    ),
+    "productWiseSale": MessageLookupByLibrary.simpleMessage(
+      "Tootepõhine kahjum",
+    ),
     "products": MessageLookupByLibrary.simpleMessage("Tooted"),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "profileEdit": MessageLookupByLibrary.simpleMessage("Profiili muutmine"),
     "profit": MessageLookupByLibrary.simpleMessage("Profit"),
+    "profitAndLoss": MessageLookupByLibrary.simpleMessage("Kasum ja kahjum"),
+    "profitAndLossDetailsReport": MessageLookupByLibrary.simpleMessage(
+      "Kasumi ja kahjumi aruanne",
+    ),
+    "profitLoss": MessageLookupByLibrary.simpleMessage("Kasum ja kahjum"),
+    "profitMargin": MessageLookupByLibrary.simpleMessage("Kasumimarginaal (%)"),
+    "profitPercent": MessageLookupByLibrary.simpleMessage("Kasumimäär"),
     "promo": MessageLookupByLibrary.simpleMessage("Promptsioon"),
     "promoCode": MessageLookupByLibrary.simpleMessage("Promokood"),
     "purchase": MessageLookupByLibrary.simpleMessage("Ost"),
@@ -608,56 +1546,128 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchaseBy": MessageLookupByLibrary.simpleMessage("Ostetud Kõrval:"),
     "purchaseConfirmed": MessageLookupByLibrary.simpleMessage("Ost Kinnitatud"),
     "purchaseDetails": MessageLookupByLibrary.simpleMessage("Ostude Andmed"),
+    "purchaseEx": MessageLookupByLibrary.simpleMessage(
+      "Ostu hind ilma maksudeta",
+    ),
+    "purchaseExReq": MessageLookupByLibrary.simpleMessage(
+      "Nõutud on ostuhind ilma maksudeta",
+    ),
+    "purchaseIn": MessageLookupByLibrary.simpleMessage(
+      "Ostu hind koos maksudega",
+    ),
+    "purchaseInReq": MessageLookupByLibrary.simpleMessage(
+      "Nõutud on ostuhind koos maksudega",
+    ),
     "purchaseList": MessageLookupByLibrary.simpleMessage("Ostude Nimekiri"),
     "purchaseNow": MessageLookupByLibrary.simpleMessage("Purchase Now"),
     "purchasePremium": MessageLookupByLibrary.simpleMessage(
       "Osta Premium Plaan",
     ),
     "purchasePrice": MessageLookupByLibrary.simpleMessage("Purchase Price"),
+    "purchaseQty": MessageLookupByLibrary.simpleMessage("Ostu kogus"),
+    "purchaseQuantityRequired": MessageLookupByLibrary.simpleMessage(
+      "Ostukogus on kohustuslik",
+    ),
     "purchaseReport": MessageLookupByLibrary.simpleMessage("Ostuaruanne"),
+    "purchaseReturn": MessageLookupByLibrary.simpleMessage("Müügi tagastus"),
     "purchaseReturnReport": MessageLookupByLibrary.simpleMessage(
       "Ostude tagastamise aruanne",
+    ),
+    "purchaseReturns": MessageLookupByLibrary.simpleMessage("Ostu tagastused"),
+    "purchaseUpdateWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba ostude uuendamiseks.",
+    ),
+    "purchaseWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba ostude loomiseks.",
     ),
     "purchased": MessageLookupByLibrary.simpleMessage("Ostetud"),
     "purchasedBy": MessageLookupByLibrary.simpleMessage("Ostetud"),
     "qty": MessageLookupByLibrary.simpleMessage("Kogus"),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
+    "quickOver": MessageLookupByLibrary.simpleMessage("Kiire ülevaade"),
     "quickOverview": MessageLookupByLibrary.simpleMessage("Kiire Ülevaade"),
+    "rack": MessageLookupByLibrary.simpleMessage("Riiuliblokk (Rack)"),
+    "rackName": MessageLookupByLibrary.simpleMessage("Riiulibloki nimi"),
+    "racks": MessageLookupByLibrary.simpleMessage("Riiuliblokid (Racks)"),
+    "reOpen": MessageLookupByLibrary.simpleMessage("Ava uuesti"),
+    "read": MessageLookupByLibrary.simpleMessage("Loe"),
     "receipt": MessageLookupByLibrary.simpleMessage("Tšekk / Arve"),
     "receivedAmount": MessageLookupByLibrary.simpleMessage("Saadud summa"),
+    "receivedBy": MessageLookupByLibrary.simpleMessage("Vastuvõtja"),
+    "receivedFrom": MessageLookupByLibrary.simpleMessage("Saadud kellelt"),
     "recentTransaction": MessageLookupByLibrary.simpleMessage(
       "Recent Transactions",
     ),
     "recivethePin": MessageLookupByLibrary.simpleMessage("Sain PIN-koodi"),
+    "reduceCash": MessageLookupByLibrary.simpleMessage("Vähenda sularaha"),
+    "reference": MessageLookupByLibrary.simpleMessage("Viide"),
     "referenceNo": MessageLookupByLibrary.simpleMessage("Reference Number"),
+    "referenceNumber": MessageLookupByLibrary.simpleMessage("Viitenumber"),
     "register": MessageLookupByLibrary.simpleMessage("Registreeri"),
     "registerTitle": MessageLookupByLibrary.simpleMessage(
       "Me peame registreerima teie telefoni enne alustamist!",
     ),
+    "remaining": MessageLookupByLibrary.simpleMessage("Järelejäänud"),
     "remainingDue": MessageLookupByLibrary.simpleMessage("Jääk Võlgnetav"),
+    "remark": MessageLookupByLibrary.simpleMessage("Märkus"),
     "rememberMe": MessageLookupByLibrary.simpleMessage("Jäta meelde"),
     "rememberMeLater": MessageLookupByLibrary.simpleMessage(
       "Tuleta mulle hiljem meelde",
     ),
+    "remove": MessageLookupByLibrary.simpleMessage("Eemalda"),
     "reports": MessageLookupByLibrary.simpleMessage("Aruanded"),
     "resendIn": MessageLookupByLibrary.simpleMessage("Saada OTP uuesti sisse "),
     "resendOTP": MessageLookupByLibrary.simpleMessage("Sisesta kehtiv OTP"),
+    "resendOtpSeconds": m0,
     "reset": MessageLookupByLibrary.simpleMessage(
       "Lähtesta parool oma e-posti või telefoninumbri abil",
     ),
     "resetPassword": MessageLookupByLibrary.simpleMessage(
       "Lähtesta oma parool taastamiseks ja konto sisselogimiseks",
     ),
+    "resets": MessageLookupByLibrary.simpleMessage("Lähtesta"),
     "retailer": MessageLookupByLibrary.simpleMessage("Retailer"),
+    "retry": MessageLookupByLibrary.simpleMessage("Proovi uuesti"),
+    "retryScan": MessageLookupByLibrary.simpleMessage("Otsi uuesti"),
     "retur": MessageLookupByLibrary.simpleMessage("Tagastamine"),
     "returnAmount": MessageLookupByLibrary.simpleMessage("Tagastatav Summa"),
+    "returnQuantity": MessageLookupByLibrary.simpleMessage("Tagastatav kogus"),
     "returned": MessageLookupByLibrary.simpleMessage("Tagastatud"),
+    "returnedAmount": MessageLookupByLibrary.simpleMessage("Tagastatud summa"),
     "returnedDate": MessageLookupByLibrary.simpleMessage("Tagastamise kuupäev"),
     "returnedItem": MessageLookupByLibrary.simpleMessage("Tagastatud toode"),
+    "role": MessageLookupByLibrary.simpleMessage("Roll"),
+    "roleAndPermission": MessageLookupByLibrary.simpleMessage("Roll ja luba"),
+    "roles": MessageLookupByLibrary.simpleMessage("Rollid"),
+    "roundToNearestWholeNumber": MessageLookupByLibrary.simpleMessage(
+      "Lähima täisarvuni",
+    ),
+    "roundToNearnessDecimalNumber005": MessageLookupByLibrary.simpleMessage(
+      "Lähima kümnendkohani (0.05)",
+    ),
+    "roundToNearnessDecimalNumber01": MessageLookupByLibrary.simpleMessage(
+      "Lähima kümnendkohani (0.1)",
+    ),
+    "roundToNearnessDecimalNumber05": MessageLookupByLibrary.simpleMessage(
+      "Lähima kümnendkohani (0.5)",
+    ),
+    "roundToWholeNumber": MessageLookupByLibrary.simpleMessage(
+      "Ümarda täisarvuni",
+    ),
+    "rounding": MessageLookupByLibrary.simpleMessage("Ümardamine"),
+    "roundingTotal": MessageLookupByLibrary.simpleMessage("Ümardatud summa"),
+    "roundings": MessageLookupByLibrary.simpleMessage("Ümardamine (+/-)"),
+    "runningCash": MessageLookupByLibrary.simpleMessage("Jooksev sularaha"),
+    "sNo": MessageLookupByLibrary.simpleMessage("Nr"),
+    "salary": MessageLookupByLibrary.simpleMessage("Palk"),
     "sale": MessageLookupByLibrary.simpleMessage("Müük"),
     "saleBy": MessageLookupByLibrary.simpleMessage("Müüdud"),
+    "saleEdit": MessageLookupByLibrary.simpleMessage("Müügi muutmine"),
     "saleList": MessageLookupByLibrary.simpleMessage("Müügide Nimekiri"),
     "salePrice": MessageLookupByLibrary.simpleMessage("Sale Price"),
+    "saleQty": MessageLookupByLibrary.simpleMessage("Müügi kogus"),
+    "saleReq": MessageLookupByLibrary.simpleMessage("Nõutud müügihind"),
+    "saleReturn": MessageLookupByLibrary.simpleMessage("Müügitagastus"),
     "sales": MessageLookupByLibrary.simpleMessage("Müük"),
     "salesBy": MessageLookupByLibrary.simpleMessage("Müüdud Kõrval:"),
     "salesDetails": MessageLookupByLibrary.simpleMessage("Müügidetailid"),
@@ -666,35 +1676,88 @@ class MessageLookup extends MessageLookupByLibrary {
       "Müügi- ja Ostude Ülevaade",
     ),
     "salesReport": MessageLookupByLibrary.simpleMessage("Müügiaruanne"),
+    "salesReturn": MessageLookupByLibrary.simpleMessage("Müügi tagastus"),
     "salesReturnReport": MessageLookupByLibrary.simpleMessage(
       "Müügi tagastamise aruanne",
     ),
+    "salesSetting": MessageLookupByLibrary.simpleMessage("Müügi seaded"),
     "save": MessageLookupByLibrary.simpleMessage("Salvesta"),
     "saveNPublish": MessageLookupByLibrary.simpleMessage("Save and Publish"),
+    "saveSetting": MessageLookupByLibrary.simpleMessage("Salvesta seaded"),
+    "saveVariant": MessageLookupByLibrary.simpleMessage("Salvesta variant"),
+    "saving": MessageLookupByLibrary.simpleMessage("Salvestamine"),
+    "scanCode": MessageLookupByLibrary.simpleMessage("Skaneeri toote QR-kood"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "searchAttendance": MessageLookupByLibrary.simpleMessage(
+      "Otsi kohalolekut",
+    ),
+    "searchBatchNo": MessageLookupByLibrary.simpleMessage(
+      "Otsi partii numbrit...",
+    ),
     "searchH": MessageLookupByLibrary.simpleMessage("Otsi Siit...."),
+    "searchLeave": MessageLookupByLibrary.simpleMessage("Otsi puhkusi"),
     "searchProduct": MessageLookupByLibrary.simpleMessage("Otsi toodet"),
+    "searchTransaction": MessageLookupByLibrary.simpleMessage(
+      "Otsi tehinguid...",
+    ),
+    "searchWith": MessageLookupByLibrary.simpleMessage("Otsi..."),
+    "seconds": MessageLookupByLibrary.simpleMessage("sekundit"),
     "seeAllPromoCode": MessageLookupByLibrary.simpleMessage(
       "Vaata kõiki promokoode",
     ),
     "select": MessageLookupByLibrary.simpleMessage("Select"),
     "selectABrand": MessageLookupByLibrary.simpleMessage("Vali mark"),
     "selectAInvoice": MessageLookupByLibrary.simpleMessage("Vali Arve"),
+    "selectAccount": MessageLookupByLibrary.simpleMessage("Valige konto"),
+    "selectAll": MessageLookupByLibrary.simpleMessage("Vali kõik"),
+    "selectAtLeastOneRack": MessageLookupByLibrary.simpleMessage(
+      "Vali vähemalt üks riiul",
+    ),
+    "selectBankToCash": MessageLookupByLibrary.simpleMessage(
+      "Vali pank või sularaha",
+    ),
     "selectBusinessCategory": MessageLookupByLibrary.simpleMessage(
       "Vali Ettevõtte Kategooria",
     ),
     "selectCategory": MessageLookupByLibrary.simpleMessage("Vali Kategooria"),
+    "selectCustomer": MessageLookupByLibrary.simpleMessage("Vali klient"),
+    "selectDate": MessageLookupByLibrary.simpleMessage("Vali kuupäev"),
+    "selectDateFirst": MessageLookupByLibrary.simpleMessage(
+      "Valige esmalt kuupäev",
+    ),
+    "selectDepositDestination": MessageLookupByLibrary.simpleMessage(
+      "Vali deposiidi sihtkoht",
+    ),
+    "selectEmployeeFirst": MessageLookupByLibrary.simpleMessage(
+      "Valige esmalt töötaja",
+    ),
+    "selectFDate": MessageLookupByLibrary.simpleMessage("Vali alguskuupäev"),
+    "selectItems": MessageLookupByLibrary.simpleMessage("Vali artiklid"),
     "selectLang": MessageLookupByLibrary.simpleMessage("Select Your Language"),
+    "selectModel": MessageLookupByLibrary.simpleMessage("Vali mudel"),
+    "selectOne": MessageLookupByLibrary.simpleMessage("Vali üks"),
+    "selectOneAccount": MessageLookupByLibrary.simpleMessage(
+      "Valige üks konto",
+    ),
     "selectProductCategory": MessageLookupByLibrary.simpleMessage(
       "Vali Tootekategooria",
     ),
     "selectProductUnit": MessageLookupByLibrary.simpleMessage(
       "Vali Toote Ühik",
     ),
+    "selectRack": MessageLookupByLibrary.simpleMessage("Vali riiuliblokk"),
+    "selectShelf": MessageLookupByLibrary.simpleMessage("Vali riiul"),
+    "selectStock": MessageLookupByLibrary.simpleMessage("Vali laovaru"),
+    "selectTax": MessageLookupByLibrary.simpleMessage("Vali maks"),
+    "selectToDate": MessageLookupByLibrary.simpleMessage("Vali lõppkuupäev"),
+    "selectType": MessageLookupByLibrary.simpleMessage("Valige tüüp"),
     "selectVariations": MessageLookupByLibrary.simpleMessage(
       "Vali variandid: ",
     ),
+    "selectWarehouse": MessageLookupByLibrary.simpleMessage("Vali ladu"),
     "sellAll": MessageLookupByLibrary.simpleMessage("Müü Kõik >"),
+    "sellingPrice": MessageLookupByLibrary.simpleMessage("Müügihind"),
+    "sellsBy": MessageLookupByLibrary.simpleMessage("Müüja"),
     "send": MessageLookupByLibrary.simpleMessage("Saada"),
     "sendCode": MessageLookupByLibrary.simpleMessage("Saada Kood"),
     "sendEmail": MessageLookupByLibrary.simpleMessage(
@@ -715,62 +1778,155 @@ class MessageLookup extends MessageLookupByLibrary {
       "Seadista Oma Profiil",
     ),
     "setting": MessageLookupByLibrary.simpleMessage("Seade"),
+    "sevenDays": MessageLookupByLibrary.simpleMessage("7 päeva"),
     "share": MessageLookupByLibrary.simpleMessage("Jaga"),
+    "shelf": MessageLookupByLibrary.simpleMessage("Riiul (Shelf)"),
+    "shelfName": MessageLookupByLibrary.simpleMessage("Riiuli nimi"),
+    "shelves": MessageLookupByLibrary.simpleMessage("Riiulid (Shelves)"),
+    "shift": MessageLookupByLibrary.simpleMessage("Vahetus"),
+    "shiftName": MessageLookupByLibrary.simpleMessage("Vahetuse nimi"),
+    "shippingAddress": MessageLookupByLibrary.simpleMessage("Saatmisaadress"),
+    "shippingCharge": MessageLookupByLibrary.simpleMessage("Saatmiskulu"),
     "shopOpeningBalance": MessageLookupByLibrary.simpleMessage("Poe Avasaldo"),
     "shopRemainingBalance": MessageLookupByLibrary.simpleMessage(
       "Poe Jääksaldo",
     ),
+    "showAction": MessageLookupByLibrary.simpleMessage("Näita tegevust"),
     "showCode": MessageLookupByLibrary.simpleMessage("Näita koodi"),
+    "showCombo": MessageLookupByLibrary.simpleMessage("Näita komplekte"),
+    "showExpireDate": MessageLookupByLibrary.simpleMessage(
+      "Näita aegumiskuupäeva",
+    ),
     "showName": MessageLookupByLibrary.simpleMessage("Näita nime"),
     "showPrice": MessageLookupByLibrary.simpleMessage("Näita hinda"),
+    "showSingle": MessageLookupByLibrary.simpleMessage("Näita üksikuid"),
+    "showVariant": MessageLookupByLibrary.simpleMessage("Näita variante"),
     "signIn": MessageLookupByLibrary.simpleMessage("Logi Sisse"),
     "signUp": MessageLookupByLibrary.simpleMessage("Registreeru"),
+    "single": MessageLookupByLibrary.simpleMessage("Üksik"),
+    "sixtyDays": MessageLookupByLibrary.simpleMessage("60 päeva"),
     "size": MessageLookupByLibrary.simpleMessage("Suurus"),
     "skip": MessageLookupByLibrary.simpleMessage("Jäta Vahele"),
     "skipTheUpdate": MessageLookupByLibrary.simpleMessage(
       "Jäta Värskendus Vahele",
     ),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU / Kood"),
+    "skuOrCode": MessageLookupByLibrary.simpleMessage("SKU / Kood"),
     "sl": MessageLookupByLibrary.simpleMessage("Jrk. nr"),
     "smartWatch": MessageLookupByLibrary.simpleMessage("Nutikas kell"),
     "socialMarketing": MessageLookupByLibrary.simpleMessage(
       "Sotsiaalmeedia Turundus",
     ),
+    "sold": MessageLookupByLibrary.simpleMessage("Müüdud"),
+    "someThingWithWrongWithTheWebPage": MessageLookupByLibrary.simpleMessage(
+      "Veebilehel tekkis viga.",
+    ),
     "somethingIs": MessageLookupByLibrary.simpleMessage("Midagi on"),
     "staffLogin": MessageLookupByLibrary.simpleMessage("Töötaja Sisselogimine"),
+    "start": MessageLookupByLibrary.simpleMessage("Alusta"),
+    "startBreakTime": MessageLookupByLibrary.simpleMessage("Pausi algusaeg"),
     "startDate": MessageLookupByLibrary.simpleMessage("Alguskuupäev"),
     "startNewSale": MessageLookupByLibrary.simpleMessage("Alusta Uut Müüki"),
+    "startTime": MessageLookupByLibrary.simpleMessage("Algusaeg"),
+    "startTimeIsRequired": MessageLookupByLibrary.simpleMessage(
+      "Algusaeg on nõutav",
+    ),
+    "started": MessageLookupByLibrary.simpleMessage("Alustatud"),
+    "state": MessageLookupByLibrary.simpleMessage("Maakond"),
+    "stateName": MessageLookupByLibrary.simpleMessage("Maakonna nimi"),
+    "status": MessageLookupByLibrary.simpleMessage("Staatus"),
+    "staus": MessageLookupByLibrary.simpleMessage("Staatus"),
     "stillUnpaid": MessageLookupByLibrary.simpleMessage("Veel Maksumata"),
     "stock": MessageLookupByLibrary.simpleMessage("Stock"),
     "stockList": MessageLookupByLibrary.simpleMessage("Laoseisude Nimekiri"),
+    "stockOrVariant": MessageLookupByLibrary.simpleMessage("Ladu / Variant"),
     "stockReport": MessageLookupByLibrary.simpleMessage("Laoseisu aruanne"),
     "stockValue": MessageLookupByLibrary.simpleMessage("Laoseisude Väärtus"),
+    "stockWarn": MessageLookupByLibrary.simpleMessage(
+      "Laoseis peab olema vähemalt 1",
+    ),
     "stocks": MessageLookupByLibrary.simpleMessage("Laos: "),
+    "subTaxList": MessageLookupByLibrary.simpleMessage("Alamaksude loend"),
+    "subTaxes": MessageLookupByLibrary.simpleMessage("Alamaksud"),
     "subTotal": MessageLookupByLibrary.simpleMessage("Vahesumma"),
     "submit": MessageLookupByLibrary.simpleMessage("Esita"),
+    "subscribeNow": MessageLookupByLibrary.simpleMessage("Telli kohe"),
     "subscription": MessageLookupByLibrary.simpleMessage("Tellimused"),
+    "subscriptionReports": MessageLookupByLibrary.simpleMessage(
+      "Tellimuse aruanded",
+    ),
+    "subscriptions": MessageLookupByLibrary.simpleMessage("Tellimused"),
     "subtotal": MessageLookupByLibrary.simpleMessage("Vahesumma"),
     "successfullyPaid": MessageLookupByLibrary.simpleMessage("Edukal makstud"),
     "supplerPay": MessageLookupByLibrary.simpleMessage("Tarnija maksab"),
     "supplier": MessageLookupByLibrary.simpleMessage("Supplier"),
     "supplierDetails": MessageLookupByLibrary.simpleMessage("Tarnija andmed"),
+    "supplierDue": MessageLookupByLibrary.simpleMessage("Võlg tarnijale"),
+    "supplierLedger": MessageLookupByLibrary.simpleMessage("Tarnija pearaamat"),
     "supplierName": MessageLookupByLibrary.simpleMessage("Tarnija Nimi"),
+    "switchBank": MessageLookupByLibrary.simpleMessage("Vaheta harukontorit?"),
+    "switchs": MessageLookupByLibrary.simpleMessage("Vaheta"),
+    "tax": MessageLookupByLibrary.simpleMessage("Maks (Tax)"),
+    "taxGroup": MessageLookupByLibrary.simpleMessage("Maksu grupp"),
+    "taxPercent": MessageLookupByLibrary.simpleMessage("Maksu protsent"),
+    "taxRates": MessageLookupByLibrary.simpleMessage("Maksumäärad"),
+    "taxRatesMangeYourTaxRates": MessageLookupByLibrary.simpleMessage(
+      "Maksumäärad - Hallake oma maksumäärasid",
+    ),
+    "taxReport": MessageLookupByLibrary.simpleMessage("Maksuaruanne"),
+    "taxReportList": MessageLookupByLibrary.simpleMessage(
+      "Maksuaruannete nimekiri",
+    ),
+    "taxType": MessageLookupByLibrary.simpleMessage("Maksutüüp"),
+    "taxWithSingleMultipleTaxType": MessageLookupByLibrary.simpleMessage(
+      "Maks ühe/mitme maksutüübiga",
+    ),
     "thakYouForYourPurchase": MessageLookupByLibrary.simpleMessage(
       "Tänan teid ostu eest",
     ),
     "thankYouForYourDuePayment": MessageLookupByLibrary.simpleMessage(
       "Tänan teid võla tasumise eest",
     ),
+    "thermalInvoicePageLogo": MessageLookupByLibrary.simpleMessage(
+      "Termoarve logo",
+    ),
+    "thermalPrinterLanguage": MessageLookupByLibrary.simpleMessage(
+      "Termoprinteri keel",
+    ),
+    "thermalPrinterPageSize": MessageLookupByLibrary.simpleMessage(
+      "Termoprinteri paberi suurus",
+    ),
+    "thirtyDays": MessageLookupByLibrary.simpleMessage("30 päeva"),
+    "thirtyTwoLabelPerSheet": MessageLookupByLibrary.simpleMessage(
+      "32 silti lehel, 8.27 x 11.69 tolli",
+    ),
     "thisMonth": MessageLookupByLibrary.simpleMessage("Sel kuul"),
+    "thisPlanIsEligibleForUpgrade": MessageLookupByLibrary.simpleMessage(
+      "See pakett ei ole uuendatav",
+    ),
+    "thisPlanIsNotAvailableToPurchase": MessageLookupByLibrary.simpleMessage(
+      "See pakett pole ostmiseks saadaval",
+    ),
     "thisProductAlreadyAdded": MessageLookupByLibrary.simpleMessage(
       "See toode on juba lisatud!",
     ),
     "thisWeek": MessageLookupByLibrary.simpleMessage("Sel nädalal"),
     "thisYear": MessageLookupByLibrary.simpleMessage("Sel aastal"),
+    "time": MessageLookupByLibrary.simpleMessage("Aeg"),
+    "timeIn": MessageLookupByLibrary.simpleMessage("Aeg sisse"),
+    "timeOut": MessageLookupByLibrary.simpleMessage("Aeg välja"),
+    "to": MessageLookupByLibrary.simpleMessage("Kuhu"),
+    "toAccount": MessageLookupByLibrary.simpleMessage("Kontole"),
     "toDate": MessageLookupByLibrary.simpleMessage("To Date"),
     "today": MessageLookupByLibrary.simpleMessage("Täna"),
     "todaySummary": MessageLookupByLibrary.simpleMessage("Tänase Kokkuvõte"),
+    "top5Customer": MessageLookupByLibrary.simpleMessage("Top 5 klienti"),
+    "top5Product": MessageLookupByLibrary.simpleMessage("Top 5 toodet"),
+    "top5Supplier": MessageLookupByLibrary.simpleMessage("Top 5 tarnijat"),
     "total": MessageLookupByLibrary.simpleMessage("Total"),
     "totalAmount": MessageLookupByLibrary.simpleMessage("Total Amount"),
+    "totalAssets": MessageLookupByLibrary.simpleMessage("Kogu vara"),
+    "totalBalance": MessageLookupByLibrary.simpleMessage("Kogusaldo"),
     "totalCategories": MessageLookupByLibrary.simpleMessage(
       "Kokku Kategooriaid",
     ),
@@ -790,14 +1946,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "totalReturnAmount": MessageLookupByLibrary.simpleMessage(
       "Tagastatud kogusumma",
     ),
+    "totalReturned": MessageLookupByLibrary.simpleMessage("Kokku tagastatud"),
+    "totalSalaryAmount": MessageLookupByLibrary.simpleMessage(
+      "Kogupalga summa",
+    ),
     "totalSales": MessageLookupByLibrary.simpleMessage("Kokku müüdud"),
     "totalVat": MessageLookupByLibrary.simpleMessage("Kokku KM"),
     "totall": MessageLookupByLibrary.simpleMessage("Kokku:"),
+    "tranSacOver": MessageLookupByLibrary.simpleMessage("Tehingute ülevaade"),
+    "transactionType": MessageLookupByLibrary.simpleMessage("Tehingu tüüp"),
     "transactions": MessageLookupByLibrary.simpleMessage("Tehingud"),
+    "transactionsHistoryReport": MessageLookupByLibrary.simpleMessage(
+      "Tehingute ajalugu",
+    ),
+    "transfer": MessageLookupByLibrary.simpleMessage("Ülekanne"),
+    "transferCheque": MessageLookupByLibrary.simpleMessage("Tšeki ülekanne"),
+    "transferDate": MessageLookupByLibrary.simpleMessage("Ülekande kuupäev"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "type": MessageLookupByLibrary.simpleMessage("Tüüp"),
+    "typeSelect": MessageLookupByLibrary.simpleMessage("Vali tüüp"),
     "unPaid": MessageLookupByLibrary.simpleMessage("UnPaid"),
+    "unit": MessageLookupByLibrary.simpleMessage("Ühik"),
     "unitName": MessageLookupByLibrary.simpleMessage("Unit name"),
     "unitPirce": MessageLookupByLibrary.simpleMessage("Ühikuhind"),
     "unitPrice": MessageLookupByLibrary.simpleMessage("Ühiku hind"),
@@ -808,11 +1978,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "Piiramatu kasutus meie pakendis 👇",
     ),
     "update": MessageLookupByLibrary.simpleMessage("Update"),
+    "updateBranch": MessageLookupByLibrary.simpleMessage("Uuenda harukontorit"),
     "updateContact": MessageLookupByLibrary.simpleMessage("Update Contact"),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "Laoseisu uuendamine ebaõnnestus",
+    ),
     "updateNow": MessageLookupByLibrary.simpleMessage("Uuenda Nüüd"),
+    "updatePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba osapoole uuendamiseks.",
+    ),
     "updateProduct": MessageLookupByLibrary.simpleMessage("Update Product"),
+    "updateProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Toode uuendatud edukalt!",
+    ),
+    "updateProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba toote uuendamiseks.",
+    ),
     "updateProfile": MessageLookupByLibrary.simpleMessage(
       "Update Your Profile",
+    ),
+    "updatePurchase": MessageLookupByLibrary.simpleMessage("Uuenda ostu"),
+    "updateRole": MessageLookupByLibrary.simpleMessage("Uuenda rolli"),
+    "updateSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Sul puudub luba müügi uuendamiseks.",
+    ),
+    "updateSuccess": MessageLookupByLibrary.simpleMessage(
+      "Uuendamine õnnestus",
     ),
     "updateYourProfile": MessageLookupByLibrary.simpleMessage(
       "Uuenda oma profiili, et ühenduda oma kliendiga parema mulje saamiseks",
@@ -822,25 +2013,65 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updating": MessageLookupByLibrary.simpleMessage("Uuendamine..."),
     "upgradeNow": MessageLookupByLibrary.simpleMessage("Uuenda Nüüd"),
+    "upiIdForQrCode": MessageLookupByLibrary.simpleMessage(
+      "UPI ID QR-koodi jaoks",
+    ),
+    "upload": MessageLookupByLibrary.simpleMessage("Laadi üles"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Laadi pilt üles"),
+    "uploading": MessageLookupByLibrary.simpleMessage("Üleslaadimine..."),
+    "useGallery": MessageLookupByLibrary.simpleMessage("Kasuta galeriid"),
     "useTitleCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Kasutaja pealkiri ei saa olla tühi",
     ),
+    "user": MessageLookupByLibrary.simpleMessage("Kasutaja"),
     "userRole": MessageLookupByLibrary.simpleMessage("Kasutajaroll"),
     "userRoleDetails": MessageLookupByLibrary.simpleMessage(
       "Kasutajarolli üksikasjad",
     ),
     "userTitle": MessageLookupByLibrary.simpleMessage("Kasutaja Pealkiri"),
+    "values": MessageLookupByLibrary.simpleMessage("Väärtused"),
+    "variantAdded": MessageLookupByLibrary.simpleMessage(
+      "Variant lisatud edukalt!",
+    ),
+    "variantDelete": MessageLookupByLibrary.simpleMessage(
+      "Variant kustutatud edukalt!",
+    ),
+    "variantList": MessageLookupByLibrary.simpleMessage("Variantide nimekiri"),
+    "variationId": MessageLookupByLibrary.simpleMessage("Variatsiooni ID"),
+    "variations": MessageLookupByLibrary.simpleMessage("Variatsioonid"),
+    "variationsProduct": MessageLookupByLibrary.simpleMessage(
+      "Variatsioonidega tooted",
+    ),
     "vat": MessageLookupByLibrary.simpleMessage("KM"),
+    "vatAndTax": MessageLookupByLibrary.simpleMessage("KM ja maks"),
+    "vatGstNumber": MessageLookupByLibrary.simpleMessage("KM/GST number"),
+    "vatGstTitle": MessageLookupByLibrary.simpleMessage("KM/GST pealkiri"),
+    "vatId": MessageLookupByLibrary.simpleMessage("KMKR number / VAT ID"),
+    "vatNumber": MessageLookupByLibrary.simpleMessage("KM-number"),
+    "vatReports": MessageLookupByLibrary.simpleMessage("KM aruanded"),
+    "vatType": MessageLookupByLibrary.simpleMessage("KM tüüp"),
     "verification": MessageLookupByLibrary.simpleMessage("Kinnitamine"),
     "verify": MessageLookupByLibrary.simpleMessage("Kinnita"),
     "verifyYourEmail": MessageLookupByLibrary.simpleMessage(
       "Kinnita Oma E-post",
     ),
     "verityEmail": MessageLookupByLibrary.simpleMessage("Kontrolli E-posti"),
+    "view": MessageLookupByLibrary.simpleMessage("Vaata detaile"),
     "viewAll": MessageLookupByLibrary.simpleMessage("View All"),
+    "viewDetails": MessageLookupByLibrary.simpleMessage("Vaata üksikasju"),
+    "viewPrice": MessageLookupByLibrary.simpleMessage("Vaata hinda"),
+    "viewStock": MessageLookupByLibrary.simpleMessage("Vaata laoseisu"),
+    "viewingTransactionFor": MessageLookupByLibrary.simpleMessage(
+      "Vaatab tehinguid",
+    ),
     "walkInCustomer": MessageLookupByLibrary.simpleMessage(
       "Sisse astuv klient",
     ),
+    "wallet": MessageLookupByLibrary.simpleMessage("Rahakott"),
+    "walletBalance": MessageLookupByLibrary.simpleMessage("Rahakoti saldo"),
+    "warehouse": MessageLookupByLibrary.simpleMessage("Ladu (Warehouse)"),
+    "warehouseName": MessageLookupByLibrary.simpleMessage("Lao nimi"),
+    "warranty": MessageLookupByLibrary.simpleMessage("Garantii"),
     "weHaveSentAConfirmationEmailTo": MessageLookupByLibrary.simpleMessage(
       "Oleme saatnud kinnituskirja aadressile",
     ),
@@ -859,11 +2090,113 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeYourMessageHere": MessageLookupByLibrary.simpleMessage(
       "Kirjuta oma sõnum siia",
     ),
+    "writerTaxHere": MessageLookupByLibrary.simpleMessage(
+      "Kirjuta siia tekst...",
+    ),
     "yearly": MessageLookupByLibrary.simpleMessage("Aastane"),
+    "years": MessageLookupByLibrary.simpleMessage("Aastat"),
     "yes": MessageLookupByLibrary.simpleMessage("Jah"),
+    "yesterday": MessageLookupByLibrary.simpleMessage("Eile"),
     "youCanNotPayMoreThenDue": MessageLookupByLibrary.simpleMessage(
       "Te ei saa maksta rohkem kui võlgnetav summa",
     ),
+    "youCanNowResendYourOtp": MessageLookupByLibrary.simpleMessage(
+      "Saate nüüd OTP uuesti saata.",
+    ),
+    "youDoNotHaveAnyPermissionToGenerateBarCode":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub õigus vöötkoodide genereerimiseks.",
+        ),
+    "youDoNotHavePermissionDeleteTheShelf":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub õigus riiuli kustutamiseks",
+        ),
+    "youDoNotHavePermissionProfitAndLoss": MessageLookupByLibrary.simpleMessage(
+      "Teil puudub luba kasumi ja kahjumi jaoks.",
+    ),
+    "youDoNotHavePermissionToCreateExpenseCategory":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub õigus kulukategooria loomiseks.",
+        ),
+    "youDoNotHavePermissionToCreatePurchase":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub õigus ostude loomiseks.",
+        ),
+    "youDoNotHavePermissionToDeleteDepartment":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba osakonna kustutamiseks.",
+        ),
+    "youDoNotHavePermissionToDeleteDesignation":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba ametinimetuse kustutamiseks.",
+        ),
+    "youDoNotHavePermissionToDeleteLeaveRequest":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba puhkusetaotluse kustutamiseks.",
+        ),
+    "youDoNotHavePermissionToDeletePayroll":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba palgaarvestuse kustutamiseks.",
+        ),
+    "youDoNotHavePermissionToExportExcel": MessageLookupByLibrary.simpleMessage(
+      "Teil puudub luba Excelisse eksportimiseks",
+    ),
+    "youDoNotHavePermissionToGenerateBarcode":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub õigus vöötkoodi genereerimiseks.",
+        ),
+    "youDoNotHavePermissionToGenerateReport":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba aruande genereerimiseks",
+        ),
+    "youDoNotHavePermissionToUpdateBranch":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba harukontori uuendamiseks.",
+        ),
+    "youDoNotHavePermissionToUpdateDepartment":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba osakonna uuendamiseks.",
+        ),
+    "youDoNotHavePermissionToUpdateLeaveRequest":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba puhkusetaotluse uuendamiseks.",
+        ),
+    "youDoNotHavePermissionToUpgradeHoliday":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba pühade uuendamiseks.",
+        ),
+    "youDoNotHavePermissionToViewAttendance":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba kohaloleku vaatamiseks",
+        ),
+    "youDoNotHaveUpdatePayroll": MessageLookupByLibrary.simpleMessage(
+      "Teil puudub luba palgaarvestuse uuendamiseks.",
+    ),
+    "youDoNotPermissionToUpdateDesignation":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba ametinimetuse uuendamiseks.",
+        ),
+    "youDoNotToHavePermissionToDeleteShift":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba vahetuse kustutamiseks.",
+        ),
+    "youDoNotToHavePermissionToUpdateShift":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub luba vahetuse uuendamiseks.",
+        ),
+    "youDoNtHavePermissionToCreateRacks": MessageLookupByLibrary.simpleMessage(
+      "Teil puudub õigus riiuliblokkide loomiseks.",
+    ),
+    "youDoNtHavePermissionToDeleteRacks": MessageLookupByLibrary.simpleMessage(
+      "Teil puudub õigus riiuliblokkide kustutamiseks.",
+    ),
+    "youDoNtHavePermissionToUpdateRacks": MessageLookupByLibrary.simpleMessage(
+      "Teil puudub õigus riiuliblokkide muutmiseks.",
+    ),
+    "youDonNotHavePermissionToCreateExpense":
+        MessageLookupByLibrary.simpleMessage(
+          "Teil puudub õigus kulu loomiseks.",
+        ),
     "youHaveToGivePermission": MessageLookupByLibrary.simpleMessage(
       "Teil peab olema luba",
     ),
@@ -881,5 +2214,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "yourPackageExpiredToday": MessageLookupByLibrary.simpleMessage(
       "Teie pakett aegub täna\n\nPalun ostke uuesti",
     ),
+    "zip": MessageLookupByLibrary.simpleMessage("Postiindeks"),
+    "zipCode": MessageLookupByLibrary.simpleMessage("Sisesta postiindeks"),
   };
 }

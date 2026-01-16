@@ -7,8 +7,11 @@ import 'package:mobile_pos/Screens/Profile%20Screen/profile_details.dart';
 import 'package:mobile_pos/Screens/Settings/printing_invoice/printing_invoice_screen.dart';
 import 'package:mobile_pos/Screens/Settings/sales%20settings/sales_settings_screen.dart';
 import 'package:mobile_pos/Screens/User%20Roles/user_role_screen.dart';
+import 'package:mobile_pos/Screens/cash%20and%20bank/bank%20account/bank_account_list_screen.dart';
+import 'package:mobile_pos/Screens/cash%20and%20bank/cansh%20in%20hand/cash_in_hand_screen.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
+
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart';
@@ -16,19 +19,21 @@ import '../../currency.dart';
 import '../../widgets/page_navigation_list/_page_navigation_list.dart';
 import '../Authentication/Repo/logout_repo.dart';
 import '../Currency/currency_screen.dart';
+import '../../service/check_user_role_permission_provider.dart';
 import '../barcode/gererate_barcode.dart';
+import '../cash and bank/cheques/cheques_list_screen.dart';
 import '../language/language.dart';
-import '../payment_type/payment_type_list_screen.dart';
 import '../subscription/package_screen.dart';
+import 'delete_acount_allart_dialog.dart';
 
-class SettingScreen extends StatefulWidget {
+class SettingScreen extends ConsumerStatefulWidget {
   const SettingScreen({super.key});
 
   @override
-  SettingScreenState createState() => SettingScreenState();
+  ConsumerState<SettingScreen> createState() => SettingScreenState();
 }
 
-class SettingScreenState extends State<SettingScreen> {
+class SettingScreenState extends ConsumerState<SettingScreen> {
   bool expanded = false;
   bool expandedHelp = false;
   bool expandedAbout = false;
@@ -65,7 +70,6 @@ class SettingScreenState extends State<SettingScreen> {
                   child: Builder(
                     builder: (_) {
                       final _details = businessInfo.value;
-
                       return ListTile(
                         leading: GestureDetector(
                           onTap: () => const ProfileDetails().launch(context),
@@ -74,14 +78,14 @@ class SettingScreenState extends State<SettingScreen> {
                               const Size.square(54),
                             ),
                             decoration: BoxDecoration(
-                              image: _details?.pictureUrl == null
+                              image: _details?.data?.pictureUrl == null
                                   ? const DecorationImage(
                                       image: AssetImage('images/no_shop_image.png'),
                                       fit: BoxFit.cover,
                                     )
                                   : DecorationImage(
                                       image: NetworkImage(
-                                        APIConfig.domain + _details!.pictureUrl!,
+                                        APIConfig.domain + (_details?.data?.pictureUrl ?? ''),
                                       ),
                                       fit: BoxFit.cover,
                                     ),
@@ -90,7 +94,9 @@ class SettingScreenState extends State<SettingScreen> {
                           ),
                         ),
                         title: Text(
-                          _details?.user?.role == 'staff' ? '${_details?.companyName ?? ''} [${_details?.user?.name ?? ''}]' : _details?.companyName ?? '',
+                          _details?.data?.user?.role == 'staff'
+                              ? '${_details?.data?.companyName ?? ''} [${_details?.data?.user?.name ?? ''}]'
+                              : _details?.data?.companyName ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -98,7 +104,7 @@ class SettingScreenState extends State<SettingScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                         subtitle: Text(
-                          _details?.category?.name ?? '',
+                          _details?.data?.category?.name ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -138,22 +144,25 @@ class SettingScreenState extends State<SettingScreen> {
                       ref.invalidate(businessInfoProvider);
                       EasyLoading.show(status: lang.S.of(context).logOut);
                       LogOutRepo repo = LogOutRepo();
-                      await repo.signOutApi(context: context, ref: ref);
+                      await repo.signOutApi();
+                    }
+                    if (value.value == 'delete_account') {
+                      showDeleteAccountDialog(context, ref);
                     }
                   }
                 },
-                footer: Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 24,
-                    top: 8,
-                  ),
-                  child: Text(
-                    'NPOS V-$appVersion',
-                    style: _theme.textTheme.bodyLarge?.copyWith(
-                      color: kGreyTextColor,
-                    ),
-                  ),
-                ),
+                // footer: Padding(
+                //   padding: const EdgeInsetsDirectional.only(
+                //     start: 24,
+                //     top: 8,
+                //   ),
+                //   child: Text(
+                //     'Npos V-$appVersion',
+                //     style: _theme.textTheme.bodyLarge?.copyWith(
+                //       color: kGreyTextColor,
+                //     ),
+                //   ),
+                // ),
               ),
             ),
           );
@@ -169,13 +178,13 @@ class SettingScreenState extends State<SettingScreen> {
         svgIconPath: 'assets/profile.svg',
         route: const ProfileDetails(),
       ),
-      const PageNavigationNavTile(
-        title: 'Printing Invoice',
+      PageNavigationNavTile(
+        title: lang.S.of(context).printingInvoice,
         svgIconPath: 'assets/print.svg',
         route: PrintingInvoiceScreen(),
       ),
-      const PageNavigationNavTile(
-        title: 'Sales Settings',
+      PageNavigationNavTile(
+        title: lang.S.of(context).salesSetting,
         svgIconPath: 'assets/sales.svg',
         route: SalesSettingsScreen(),
       ),
@@ -189,10 +198,35 @@ class SettingScreenState extends State<SettingScreen> {
         svgIconPath: 'assets/dashboard.svg',
         route: const DashboardScreen(),
       ),
+      if (PermissionService(ref).hasPermission(Permit.rolesRead.value))
+        PageNavigationNavTile(
+          title: lang.S.of(context).userRole,
+          svgIconPath: 'assets/userRole.svg',
+          route: const UserRoleScreen(),
+        ),
+
+      /// NEW EXPANSION TILE: CASH & BANK
       PageNavigationNavTile(
-        title: lang.S.of(context).userRole,
-        svgIconPath: 'assets/userRole.svg',
-        route: const UserRoleScreen(),
+        title: lang.S.of(context).cashAndBank,
+        svgIconPath: 'assets/cash_bank.svg',
+        type: PageNavigationListTileType.expansion,
+        children: [
+          PageNavigationNavTile(
+            title: lang.S.of(context).bankAccounts,
+            svgIconPath: 'assets/bank.svg',
+            route: BankAccountListScreen(),
+          ),
+          PageNavigationNavTile(
+            title: lang.S.of(context).cashInHand,
+            svgIconPath: 'assets/cash.svg',
+            route: CashInHandScreen(),
+          ),
+          PageNavigationNavTile(
+            title: lang.S.of(context).cheque,
+            svgIconPath: 'assets/cheque.svg',
+            route: ChequesListScreen(),
+          ),
+        ],
       ),
       PageNavigationNavTile(
         title: lang.S.of(context).currency,
@@ -226,14 +260,17 @@ class SettingScreenState extends State<SettingScreen> {
         route: const SelectLanguage(),
       ),
       PageNavigationNavTile(
-        title: lang.S.of(context).paymentTypes,
-        svgIconPath: 'assets/payment_type.svg',
-        route: const PaymentTypeScreen(),
+        title: lang.S.of(context).deleteAcc,
+        svgIconPath: 'assets/account_delete.svg',
+        value: 'delete_account',
+        hideTrailing: true,
+        type: PageNavigationListTileType.function,
       ),
       PageNavigationNavTile(
         title: lang.S.of(context).logOut,
         svgIconPath: 'assets/logout.svg',
         value: 'logout',
+        hideTrailing: true,
         type: PageNavigationListTileType.function,
       ),
     ];

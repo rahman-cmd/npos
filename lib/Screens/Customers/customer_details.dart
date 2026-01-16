@@ -12,27 +12,33 @@ import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:mobile_pos/widgets/empty_widget/_empty_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../GlobalComponents/sales_transaction_widget.dart';
 import '../../PDF Invoice/purchase_invoice_pdf.dart';
 import '../../Provider/profile_provider.dart';
 import '../../currency.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../service/check_actions_when_no_branch.dart';
 import '../../thermal priting invoices/model/print_transaction_model.dart';
 import '../../thermal priting invoices/provider/print_thermal_invoice_provider.dart';
+import '../../service/check_user_role_permission_provider.dart';
 import '../invoice_details/purchase_invoice_details.dart';
 import 'Model/parties_model.dart';
 import 'Repo/parties_repo.dart';
+import 'add_customer.dart';
 
 // ignore: must_be_immutable
-class CustomerDetails extends StatefulWidget {
+class CustomerDetails extends ConsumerStatefulWidget {
   CustomerDetails({super.key, required this.party});
+
   Party party;
 
   @override
-  State<CustomerDetails> createState() => _CustomerDetailsState();
+  ConsumerState<CustomerDetails> createState() => _CustomerDetailsState();
 }
 
-class _CustomerDetailsState extends State<CustomerDetails> {
+class _CustomerDetailsState extends ConsumerState<CustomerDetails> {
   @override
   void initState() {
     super.initState();
@@ -88,7 +94,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
       final purchaseList = cRef.watch(purchaseTransactionProvider);
       final printerData = cRef.watch(thermalPrinterProvider);
       final businessInfo = cRef.watch(businessInfoProvider);
-      final businessData = cRef.watch(businessSettingProvider);
+      final permissionService = PermissionService(cRef);
       final _theme = Theme.of(context);
       return GlobalPopup(
         child: Scaffold(
@@ -107,7 +113,19 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                       visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                       padding: EdgeInsets.zero,
                       onPressed: () async {
-                        EditCustomer(customerModel: widget.party).launch(context);
+                        bool result = await checkActionWhenNoBranch(ref: ref, context: context);
+                        if (!permissionService.hasPermission(Permit.partiesUpdate.value)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(lang.S.of(context).updatePartyWarn),
+                            ),
+                          );
+                          return;
+                        }
+                        if (result) {
+                          AddParty(customerModel: widget.party).launch(context);
+                        }
                       },
                       icon: const Icon(
                         FeatherIcons.edit2,
@@ -121,7 +139,20 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                         visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                         padding: EdgeInsets.zero,
                         onPressed: () async {
-                          await showDeleteConfirmationAlert(context: context, id: widget.party.id.toString(), ref: cRef);
+                          bool result = await checkActionWhenNoBranch(ref: ref, context: context);
+                          if (!permissionService.hasPermission(Permit.partiesDelete.value)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(lang.S.of(context).deletePartyWarn),
+                              ),
+                            );
+                            return;
+                          }
+                          if (result) {
+                            await showDeleteConfirmationAlert(
+                                context: context, id: widget.party.id.toString(), ref: cRef);
+                          }
                         },
                         icon: const Icon(
                           FeatherIcons.trash2,
@@ -148,21 +179,20 @@ class _CustomerDetailsState extends State<CustomerDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 30),
-                          widget.party.image == null
-                              ? Container(
+                if (permissionService.hasPermission(Permit.partiesRead.value)) ...{
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 30),
+                        widget.party.image == null
+                            ? Center(
+                                child: Container(
                                   height: 100,
                                   width: 100,
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(20),
+                                    shape: BoxShape.circle,
                                     color: _theme.colorScheme.primary,
                                   ),
                                   child: Center(
@@ -177,12 +207,14 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                       ),
                                     ),
                                   ),
-                                )
-                              : Container(
+                                ),
+                              )
+                            : Center(
+                                child: Container(
                                   height: 100,
                                   width: 100,
                                   decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                    shape: BoxShape.circle,
                                     image: widget.party.image == null
                                         ? const DecorationImage(
                                             image: AssetImage('images/no_shop_image.png'),
@@ -194,72 +226,98 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                           ),
                                   ),
                                 ),
-                          const SizedBox(height: 20),
-                          Text(
-                            widget.party.name ?? 'n/a',
-                            style: _theme.textTheme.bodyMedium?.copyWith(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            widget.party.phone ?? 'n/a',
-                            style: _theme.textTheme.bodyMedium?.copyWith(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          ContactOptionsRow(party: widget.party),
-                          const SizedBox(height: 19),
-                        ],
-                      ),
-                      Text(
-                        lang.S.of(context).recentTransaction,
-                        style: _theme.textTheme.bodyMedium?.copyWith(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                              ),
+                        SizedBox(height: 16),
+                        Text(
+                          // 'Personal Info:',
+                          lang.S.of(context).personalInfo,
+                          style: _theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                widget.party.type != 'Supplier'
-                    ? providerData.when(data: (transaction) {
-                        final filteredTransactions = transaction.where((t) => t.party?.id == widget.party.id).toList();
-                        return filteredTransactions.isNotEmpty
-                            ? ListView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: filteredTransactions.length,
-                                itemBuilder: (context, index) {
-                                  final currentTransaction = filteredTransactions[index];
-                                  return salesTransactionWidget(
-                                    context: context,
-                                    ref: cRef,
-                                    businessInfo: businessInfo.value!,
-                                    sale: currentTransaction,
-                                    advancePermission: false,
-                                    showProductQTY: true,
-                                  );
-                                },
-                              )
-                            : EmptyWidget(
-                                message: TextSpan(text: lang.S.of(context).noTransaction),
-                              );
-                      }, error: (e, stack) {
-                        return Text(e.toString());
-                      }, loading: () {
-                        return const Center(child: CircularProgressIndicator());
-                      })
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: purchaseList.when(data: (pTransaction) {
-                          final filteredTransactions = pTransaction.where((t) => t.party?.id == widget.party.id).toList();
+                        SizedBox(height: 4),
+                        ...{
+                          lang.S.of(context).name: widget.party.name,
+                          lang.S.of(context).type: widget.party.type,
+                          lang.S.of(context).phoneNumber: widget.party.phone,
+                          lang.S.of(context).email: widget.party.email ?? "n/a",
+                          lang.S.of(context).dueBalance: "$currency${(widget.party.due ?? "0")}",
+                          lang.S.of(context).walletBalance: "$currency${(widget.party.wallet ?? "0")}",
+                          lang.S.of(context).address: widget.party.address ?? "n/a",
+                          // "Party Credit Limit": widget.party.creditLimit ?? "0",
+                          // "Party GST": widget.party.creditLimit ?? "0",
+                        }.entries.map((entry) {
+                          return keyValueWidget(title: entry.key, value: entry.value.toString(), context: context);
+                        }),
+                        SizedBox(height: 19),
+                        Text(
+                          // 'Billing Address:',
+                          lang.S.of(context).billingAddress,
+                          style: _theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          () {
+                            final parts = [
+                              widget.party.billingAddress?.address,
+                              widget.party.billingAddress?.city,
+                              widget.party.billingAddress?.state,
+                              widget.party.billingAddress?.zipCode,
+                              widget.party.billingAddress?.country,
+                            ].where((part) => part != null && part.isNotEmpty).toList();
 
+                            return parts.isEmpty ? 'n/a' : parts.join(', ');
+                          }(),
+                          style: _theme.textTheme.bodyMedium?.copyWith(
+                            color: kPeraColor,
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          // 'Shipping Address:',
+                          lang.S.of(context).shippingAddress,
+                          style: _theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          () {
+                            final parts = [
+                              widget.party.shippingAddress?.address,
+                              widget.party.shippingAddress?.city,
+                              widget.party.shippingAddress?.state,
+                              widget.party.shippingAddress?.zipCode,
+                              widget.party.shippingAddress?.country,
+                            ].where((part) => part != null && part.isNotEmpty).toList();
+
+                            return parts.isEmpty ? 'n/a' : parts.join(', ');
+                          }(),
+                          style: _theme.textTheme.bodyMedium?.copyWith(
+                            color: kPeraColor,
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: DAppColors.kDividerColor,
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          lang.S.of(context).recentTransaction,
+                          style: _theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // const SizedBox(height: 8),
+                  widget.party.type != 'Supplier'
+                      ? providerData.when(data: (transaction) {
+                          final filteredTransactions =
+                              transaction.where((t) => t.party?.id == widget.party.id).toList();
                           return filteredTransactions.isNotEmpty
                               ? ListView.builder(
                                   padding: EdgeInsets.zero,
@@ -268,152 +326,13 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                   itemCount: filteredTransactions.length,
                                   itemBuilder: (context, index) {
                                     final currentTransaction = filteredTransactions[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        PurchaseInvoiceDetails(
-                                          transitionModel: currentTransaction,
-                                          businessInfo: businessInfo.value!,
-                                        ).launch(context);
-                                      },
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            width: context.width(),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      "${lang.S.of(context).totalProduct} : ${currentTransaction.details!.length.toString()}",
-                                                      style: const TextStyle(fontSize: 16),
-                                                    ),
-                                                    Text('#${currentTransaction.invoiceNumber}'),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 2),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Container(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                                      decoration: BoxDecoration(
-                                                        color: currentTransaction.dueAmount! <= 0
-                                                            ? const Color(0xff0dbf7d).withValues(alpha: 0.1)
-                                                            : const Color(0xFFED1A3B).withValues(alpha: 0.1),
-                                                        borderRadius: const BorderRadius.all(Radius.circular(2)),
-                                                      ),
-                                                      child: Text(
-                                                        currentTransaction.dueAmount! <= 0 ? lang.S.of(context).paid : lang.S.of(context).unPaid,
-                                                        style: TextStyle(
-                                                          color: currentTransaction.dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(currentTransaction.purchaseDate!.substring(0, 10),
-                                                        style: _theme.textTheme.bodyMedium?.copyWith(color: DAppColors.kSecondary)),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                  '${lang.S.of(context).total} : $currency${currentTransaction.totalAmount.toString()}',
-                                                  style: _theme.textTheme.bodyMedium?.copyWith(color: DAppColors.kSecondary),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      '${lang.S.of(context).due}: $currency${currentTransaction.dueAmount.toString()}',
-                                                      style: const TextStyle(fontSize: 16),
-                                                    ),
-                                                    businessInfo.when(data: (data) {
-                                                      return Row(
-                                                        children: [
-                                                          IconButton(
-                                                            onPressed: () async {
-                                                              PrintPurchaseTransactionModel model = PrintPurchaseTransactionModel(
-                                                                purchaseTransitionModel: currentTransaction,
-                                                                personalInformationModel: data,
-                                                              );
-
-                                                              await printerData.printPurchaseThermalInvoiceNow(
-                                                                transaction: model,
-                                                                productList: model.purchaseTransitionModel!.details,
-                                                                context: context,
-                                                              );
-                                                            },
-                                                            icon: const Icon(
-                                                              FeatherIcons.printer,
-                                                              color: Colors.grey,
-                                                            ),
-                                                            visualDensity: const VisualDensity(
-                                                              horizontal: -4,
-                                                              vertical: -4,
-                                                            ),
-                                                            style: IconButton.styleFrom(
-                                                              padding: EdgeInsets.zero,
-                                                            ),
-                                                          ),
-                                                          const SizedBox(width: 8),
-                                                          businessData.when(data: (business) {
-                                                            return Row(
-                                                              children: [
-                                                                IconButton(
-                                                                  style: IconButton.styleFrom(
-                                                                      padding: EdgeInsets.zero,
-                                                                      visualDensity: const VisualDensity(
-                                                                        horizontal: -4,
-                                                                        vertical: -4,
-                                                                      )),
-                                                                  onPressed: () => PurchaseInvoicePDF.generatePurchaseDocument(currentTransaction, data, context, business),
-                                                                  icon: const Icon(
-                                                                    Icons.picture_as_pdf,
-                                                                    color: Colors.grey,
-                                                                  ),
-                                                                ),
-                                                                IconButton(
-                                                                  style: IconButton.styleFrom(
-                                                                      padding: EdgeInsets.zero,
-                                                                      visualDensity: const VisualDensity(
-                                                                        horizontal: -4,
-                                                                        vertical: -4,
-                                                                      )),
-                                                                  onPressed: () =>
-                                                                      PurchaseInvoicePDF.generatePurchaseDocument(currentTransaction, data, context, business, isShare: true),
-                                                                  icon: const Icon(
-                                                                    Icons.share_outlined,
-                                                                    color: Colors.grey,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          }, error: (e, stack) {
-                                                            return Text(e.toString());
-                                                          }, loading: () {
-                                                            return const Center(
-                                                              child: CircularProgressIndicator(),
-                                                            );
-                                                          }),
-                                                        ],
-                                                      );
-                                                    }, error: (e, stack) {
-                                                      return Text(e.toString());
-                                                    }, loading: () {
-                                                      return Text(lang.S.of(context).loading);
-                                                    }),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const Divider(
-                                            height: 15,
-                                            color: kBorderColor,
-                                          ),
-                                          const SizedBox(height: 10),
-                                        ],
-                                      ),
+                                    return salesTransactionWidget(
+                                      context: context,
+                                      ref: cRef,
+                                      businessInfo: businessInfo.value!,
+                                      sale: currentTransaction,
+                                      advancePermission: true,
+                                      showProductQTY: true,
                                     );
                                   },
                                 )
@@ -424,8 +343,197 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                           return Text(e.toString());
                         }, loading: () {
                           return const Center(child: CircularProgressIndicator());
-                        }),
-                      ),
+                        })
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: purchaseList.when(data: (pTransaction) {
+                            final filteredTransactions =
+                                pTransaction.where((t) => t.party?.id == widget.party.id).toList();
+
+                            return filteredTransactions.isNotEmpty
+                                ? ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: filteredTransactions.length,
+                                    itemBuilder: (context, index) {
+                                      final currentTransaction = filteredTransactions[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          PurchaseInvoiceDetails(
+                                            transitionModel: currentTransaction,
+                                            businessInfo: businessInfo.value!,
+                                          ).launch(context);
+                                        },
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              width: context.width(),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        "${lang.S.of(context).totalProduct} : ${currentTransaction.details!.length.toString()}",
+                                                        style: const TextStyle(fontSize: 16),
+                                                      ),
+                                                      Text('#${currentTransaction.invoiceNumber}'),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Container(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                                        decoration: BoxDecoration(
+                                                          color: currentTransaction.dueAmount! <= 0
+                                                              ? const Color(0xff0dbf7d).withValues(alpha: 0.1)
+                                                              : const Color(0xFFED1A3B).withValues(alpha: 0.1),
+                                                          borderRadius: const BorderRadius.all(Radius.circular(2)),
+                                                        ),
+                                                        child: Text(
+                                                          currentTransaction.dueAmount! <= 0
+                                                              ? lang.S.of(context).paid
+                                                              : lang.S.of(context).unPaid,
+                                                          style: TextStyle(
+                                                            color: currentTransaction.dueAmount! <= 0
+                                                                ? const Color(0xff0dbf7d)
+                                                                : const Color(0xFFED1A3B),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(currentTransaction.purchaseDate!.substring(0, 10),
+                                                          style: _theme.textTheme.bodyMedium
+                                                              ?.copyWith(color: DAppColors.kSecondary)),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Text(
+                                                    '${lang.S.of(context).total} : $currency${currentTransaction.totalAmount.toString()}',
+                                                    style: _theme.textTheme.bodyMedium
+                                                        ?.copyWith(color: DAppColors.kSecondary),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        '${lang.S.of(context).due}: $currency${currentTransaction.dueAmount.toString()}',
+                                                        style: const TextStyle(fontSize: 16),
+                                                      ),
+                                                      businessInfo.when(data: (data) {
+                                                        return Row(
+                                                          children: [
+                                                            IconButton(
+                                                              onPressed: () async {
+                                                                PrintPurchaseTransactionModel model =
+                                                                    PrintPurchaseTransactionModel(
+                                                                  purchaseTransitionModel: currentTransaction,
+                                                                  personalInformationModel: data,
+                                                                );
+
+                                                                await printerData.printPurchaseThermalInvoiceNow(
+                                                                  transaction: model,
+                                                                  productList: model.purchaseTransitionModel!.details,
+                                                                  invoiceSize: businessInfo.value?.data?.invoiceSize,
+                                                                  context: context,
+                                                                );
+                                                              },
+                                                              icon: const Icon(
+                                                                FeatherIcons.printer,
+                                                                color: Colors.grey,
+                                                              ),
+                                                              visualDensity: const VisualDensity(
+                                                                horizontal: -4,
+                                                                vertical: -4,
+                                                              ),
+                                                              style: IconButton.styleFrom(
+                                                                padding: EdgeInsets.zero,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 8),
+                                                            businessInfo.when(data: (business) {
+                                                              return Row(
+                                                                children: [
+                                                                  IconButton(
+                                                                    style: IconButton.styleFrom(
+                                                                        padding: EdgeInsets.zero,
+                                                                        visualDensity: const VisualDensity(
+                                                                          horizontal: -4,
+                                                                          vertical: -4,
+                                                                        )),
+                                                                    onPressed: () =>
+                                                                        PurchaseInvoicePDF.generatePurchaseDocument(
+                                                                      currentTransaction,
+                                                                      data,
+                                                                      context,
+                                                                      showPreview: true,
+                                                                    ),
+                                                                    icon: const Icon(
+                                                                      Icons.picture_as_pdf,
+                                                                      color: Colors.grey,
+                                                                    ),
+                                                                  ),
+                                                                  IconButton(
+                                                                    style: IconButton.styleFrom(
+                                                                        padding: EdgeInsets.zero,
+                                                                        visualDensity: const VisualDensity(
+                                                                          horizontal: -4,
+                                                                          vertical: -4,
+                                                                        )),
+                                                                    onPressed: () =>
+                                                                        PurchaseInvoicePDF.generatePurchaseDocument(
+                                                                            currentTransaction, data, context,
+                                                                            isShare: true),
+                                                                    icon: const Icon(
+                                                                      Icons.share_outlined,
+                                                                      color: Colors.grey,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            }, error: (e, stack) {
+                                                              return Text(e.toString());
+                                                            }, loading: () {
+                                                              return const Center(
+                                                                child: CircularProgressIndicator(),
+                                                              );
+                                                            }),
+                                                          ],
+                                                        );
+                                                      }, error: (e, stack) {
+                                                        return Text(e.toString());
+                                                      }, loading: () {
+                                                        return Text(lang.S.of(context).loading);
+                                                      }),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const Divider(
+                                              height: 15,
+                                              color: kBorderColor,
+                                            ),
+                                            const SizedBox(height: 10),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : EmptyWidget(
+                                    message: TextSpan(text: lang.S.of(context).noTransaction),
+                                  );
+                          }, error: (e, stack) {
+                            return Text(e.toString());
+                          }, loading: () {
+                            return const Center(child: CircularProgressIndicator());
+                          }),
+                        ),
+                } else
+                  Center(child: PermitDenyWidget()),
               ],
             ),
           ),
@@ -465,7 +573,7 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
       // Call functionality
       if (widget.party.phone == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Phone number is not available.')),
+          SnackBar(content: Text(lang.S.of(context).phoneNotAvail)),
         );
         return;
       }
@@ -473,7 +581,7 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
       bool t = await launchUrl(url);
       if (!t) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not launch the phone app.')),
+          SnackBar(content: Text(lang.S.of(context).notLaunch)),
         );
       }
     } else if (index == 1) {
@@ -500,7 +608,7 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
       } else {
         if (widget.party.phone == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Phone number is not available.')),
+            SnackBar(content: Text(lang.S.of(context).phoneNotAvail)),
           );
           return;
         }
@@ -576,4 +684,38 @@ class _ContactOptionsRowState extends State<ContactOptionsRow> {
       ],
     );
   }
+}
+
+Widget keyValueWidget({required String title, required String value, required BuildContext context}) {
+  final _theme = Theme.of(context);
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(
+          fit: FlexFit.tight,
+          flex: 3,
+          child: Text(
+            '$title ',
+            style: _theme.textTheme.bodyMedium?.copyWith(
+              color: DAppColors.kNeutral700,
+            ),
+          ),
+        ),
+        SizedBox(width: 8),
+        Flexible(
+          fit: FlexFit.tight,
+          flex: 4,
+          child: Text(
+            ': $value',
+            style: _theme.textTheme.bodyMedium?.copyWith(
+              color: kTitleColor,
+              // fontSize: 15,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

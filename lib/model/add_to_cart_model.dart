@@ -1,26 +1,31 @@
-class AddToCartModel {
-  AddToCartModel(
-      {required this.productId,
-      this.productCode,
-      this.productName,
-      this.unitPrice,
-      this.quantity = 1,
-      this.productDetails,
-      this.itemCartIndex = -1,
-      this.uniqueCheck,
-      this.stock,
-      this.productPurchasePrice,
-      this.lossProfit});
+class SaleCartModel {
+  SaleCartModel({
+    required this.productId,
+    this.productCode,
+    this.productType,
+    required this.batchName,
+    required this.stockId,
+    this.productName,
+    this.unitPrice,
+    this.quantity = 1,
+    this.itemCartIndex = -1,
+    this.stock,
+    this.productPurchasePrice,
+    this.lossProfit,
+    this.discountAmount,
+  });
 
   num productId;
-  dynamic productCode;
+  num stockId;
+  String batchName;
+  String? productType;
+  String? productCode;
   String? productName;
-  dynamic unitPrice;
-  dynamic productPurchasePrice;
-  dynamic uniqueCheck;
+  num? unitPrice;
+  num? productPurchasePrice;
   num quantity = 1;
-  dynamic productDetails;
   int itemCartIndex;
   num? stock;
   num? lossProfit;
+  num? discountAmount;
 }

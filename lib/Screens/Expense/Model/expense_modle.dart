@@ -32,9 +32,9 @@ class Expense {
     expenseDate = json['expenseDate'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    category =
-        json['category'] != null ? Category.fromJson(json['category']) : null;
+    category = json['category'] != null ? Category.fromJson(json['category']) : null;
   }
+
   num? id;
   dynamic account;
   num? amount;
@@ -83,6 +83,7 @@ class Category {
     id = json['id'];
     categoryName = json['categoryName'];
   }
+
   num? id;
   String? categoryName;
 

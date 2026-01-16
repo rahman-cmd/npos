@@ -11,37 +11,53 @@ import '../../../Provider/profile_provider.dart';
 import '../../../Provider/transactions_provider.dart';
 import '../../../Repository/constant_functions.dart';
 import '../../../http_client/custome_http_client.dart';
+import '../../../http_client/customer_http_client_get.dart';
 import '../../Customers/Provider/customer_provider.dart';
 import '../Model/due_collection_invoice_model.dart';
 import '../Model/due_collection_model.dart';
 import '../Providers/due_provider.dart';
 
 class DueRepo {
-  Future<List<DueCollection>> fetchDueCollectionList() async {
-    final uri = Uri.parse('${APIConfig.url}/dues');
+  Future<List<DueCollection>> fetchDueCollectionList({
+    String? type,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    final client = CustomHttpClientGet(client: http.Client());
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    // Manually build query string to preserve order
+    final List<String> queryList = [];
+
+    if (type != null && type.isNotEmpty) {
+      queryList.add('duration=$type');
+    }
+
+    if (type == 'custom_date' && fromDate != null && toDate != null && fromDate.isNotEmpty && toDate.isNotEmpty) {
+      queryList.add('from_date=$fromDate');
+      queryList.add('to_date=$toDate');
+    }
+
+    final String queryString = queryList.join('&');
+    final Uri uri = Uri.parse('${APIConfig.url}/dues${queryString.isNotEmpty ? '?$queryString' : ''}');
+
+    print(uri);
+
+    final response = await client.get(url: uri);
 
     if (response.statusCode == 200) {
-      final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
-
-      final dueList = parsedData['data'] as List<dynamic>;
-      return dueList.map((due) => DueCollection.fromJson(due)).toList();
+      final parsed = jsonDecode(response.body) as Map<String, dynamic>;
+      final list = parsed['data'] as List<dynamic>;
+      return list.map((json) => DueCollection.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch Due List');
+      throw Exception('Failed to fetch Due List. Status code: ${response.statusCode}');
     }
   }
 
   Future<DueCollectionInvoice> fetchDueInvoiceList({required int id}) async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/invoices?party_id=$id');
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    final response = await clientGet.get(url: uri);
 
     if (response.statusCode == 200) {
       final parsedData = jsonDecode(response.body);
@@ -57,7 +73,7 @@ class DueRepo {
     required num partyId,
     required String? invoiceNumber,
     required String paymentDate,
-    required String paymentType,
+    required List<Map<String, dynamic>> payments,
     required num payDueAmount,
   }) async {
     final uri = Uri.parse('${APIConfig.url}/dues');
@@ -65,16 +81,22 @@ class DueRepo {
       'party_id': partyId,
       'invoiceNumber': invoiceNumber,
       'paymentDate': paymentDate,
-      'payment_type_id': paymentType,
+      'payments': payments,
       'payDueAmount': payDueAmount,
     });
 
     try {
       CustomHttpClient customHttpClient = CustomHttpClient(client: http.Client(), context: context, ref: ref);
       var responseData = await customHttpClient.post(
-          url: uri, headers: {"Accept": 'application/json', 'Authorization': await getAuthToken(), 'Content-Type': 'application/json'}, body: requestBody);
+          url: uri,
+          headers: {
+            "Accept": 'application/json',
+            'Authorization': await getAuthToken(),
+            'Content-Type': 'application/json'
+          },
+          body: requestBody);
       final parsedData = jsonDecode(responseData.body);
-      print("Print Due data: ${parsedData['data']}");
+      print("Print Due data: $parsedData");
 
       if (responseData.statusCode == 200) {
         EasyLoading.showSuccess('Collected successful!');
@@ -95,7 +117,8 @@ class DueRepo {
         // return PurchaseTransaction.fromJson(parsedData);
       } else {
         EasyLoading.dismiss().then(
-          (value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Purchase creation failed: ${parsedData['message']}'))),
+          (value) => ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Due creation failed: ${parsedData['message']}'))),
         );
         return null;
       }

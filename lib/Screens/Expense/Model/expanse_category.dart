@@ -18,6 +18,7 @@ class ExpenseCategory {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
   num? id;
   String? categoryName;
   num? businessId;

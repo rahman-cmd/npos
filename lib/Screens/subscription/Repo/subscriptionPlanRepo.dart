@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,7 @@ import 'package:mobile_pos/Provider/profile_provider.dart';
 
 import '../../../Const/api_config.dart';
 import '../../../Repository/constant_functions.dart';
+import '../../../http_client/customer_http_client_get.dart';
 import '../Model/payment_credential_model.dart';
 import '../Model/subscription_plan_model.dart';
 
@@ -18,13 +20,28 @@ class SubscriptionPlanRepo {
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-  Future<List<SubscriptionPlanModel>> fetchAllPlans() async {
+  Future<List<SubscriptionPlanModelNew>> fetchAllPlans() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/plans');
 
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    final response = await clientGet.get(url: uri);
+
+    if (response.statusCode == 200) {
+      final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
+
+      final partyList = parsedData['data'] as List<dynamic>;
+      return partyList.map((category) => SubscriptionPlanModelNew.fromJson(category)).toList();
+      // Parse into Party objects
+    } else {
+      throw Exception('Failed to fetch Products');
+    }
+  }
+
+  Future<List<SubscriptionPlanModel>> fetchAllPlansPrevious() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
+    final uri = Uri.parse('${APIConfig.url}/plans');
+
+    final response = await clientGet.get(url: uri);
 
     if (response.statusCode == 200) {
       final parsedData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -38,12 +55,9 @@ class SubscriptionPlanRepo {
   }
 
   Future<PaymentCredentialModel> getPaymentCredential() async {
+    CustomHttpClientGet clientGet = CustomHttpClientGet(client: http.Client());
     final uri = Uri.parse('${APIConfig.url}/gateways');
-
-    final response = await http.get(uri, headers: {
-      'Accept': 'application/json',
-      'Authorization': await getAuthToken(),
-    });
+    final response = await clientGet.get(url: uri);
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {

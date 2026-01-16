@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

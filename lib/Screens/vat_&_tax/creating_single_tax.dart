@@ -3,18 +3,22 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_pos/Screens/vat_&_tax/model/vat_model.dart';
 import 'package:mobile_pos/Screens/vat_&_tax/repo/tax_repo.dart';
-import 'package:mobile_pos/Screens/vat_&_tax/tax_report.dart';
 import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
-class CreateSingleTax extends StatefulWidget {
+import '../../http_client/custome_http_client.dart';
+import '../../service/check_user_role_permission_provider.dart';
+
+class CreateSingleTax extends ConsumerStatefulWidget {
   const CreateSingleTax({super.key, this.taxModel});
+
   final VatModel? taxModel;
+
   @override
-  State<CreateSingleTax> createState() => _CreateSingleTaxState();
+  ConsumerState<CreateSingleTax> createState() => _CreateSingleTaxState();
 }
 
-class _CreateSingleTaxState extends State<CreateSingleTax> {
+class _CreateSingleTaxState extends ConsumerState<CreateSingleTax> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController taxNameController;
   late TextEditingController taxRateController;
@@ -38,29 +42,17 @@ class _CreateSingleTaxState extends State<CreateSingleTax> {
     super.dispose();
   }
 
-  Future<void> _saveTax({required BuildContext context, required WidgetRef ref}) async {
-    if (_formKey.currentState!.validate()) {
-      EasyLoading.show();
-      TaxRepo repo = TaxRepo();
-
-      if (widget.taxModel == null) {
-        await repo.createSingleTax(ref: ref, context: context, taxRate: num.tryParse(taxRateController.text) ?? 0, taxName: taxNameController.text, status: status);
-      } else {
-        await repo.updateSingleTax(
-            ref: ref, context: context, rate: num.tryParse(taxRateController.text) ?? 0, name: taxNameController.text, id: widget.taxModel!.id!, status: status);
-      }
-      EasyLoading.dismiss();
-      Navigator.pop(context);
-    }
-  }
+  Future<void> _saveTax({required BuildContext context, required WidgetRef ref}) async {}
 
   @override
   Widget build(BuildContext context) {
+    final _lang = lang.S.of(context);
+    final permissionService = PermissionService(ref);
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
         title: Text(
-          widget.taxModel == null ? 'Add Tax' : 'Edit Tax',
+          widget.taxModel == null ? _lang.addTax : _lang.editTax,
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -83,7 +75,7 @@ class _CreateSingleTaxState extends State<CreateSingleTax> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.taxModel == null ? 'Add New Tax' : 'Edit Tax',
+                widget.taxModel == null ? _lang.addNewTax : _lang.editTax,
                 // 'Add New Tax',
                 style: const TextStyle(color: kTitleColor, fontWeight: FontWeight.bold),
               ),
@@ -111,18 +103,18 @@ class _CreateSingleTaxState extends State<CreateSingleTax> {
               ),
               const SizedBox(height: 20.0),
               // Tax Rate Field
-              const Text(
-                'Tax Rate*',
+              Text(
+                '${_lang.taxRates}*',
                 style: TextStyle(color: kTitleColor),
               ),
               const SizedBox(height: 8.0),
               TextFormField(
                 controller: taxRateController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                   border: OutlineInputBorder(),
-                  hintText: 'Enter Tax Rate',
+                  hintText: _lang.enterTaxRates,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -137,8 +129,8 @@ class _CreateSingleTaxState extends State<CreateSingleTax> {
               const SizedBox(height: 20.0),
               Row(
                 children: [
-                  const Text(
-                    'Status',
+                  Text(
+                    _lang.status,
                     style: TextStyle(color: kTitleColor),
                   ),
                   const SizedBox(width: 8.0),
@@ -171,9 +163,72 @@ class _CreateSingleTaxState extends State<CreateSingleTax> {
                         shadowColor: kMainColor,
                         animationDuration: const Duration(milliseconds: 300),
                       ),
-                      onPressed: () async => await _saveTax(context: context, ref: ref),
-                      child: const Text(
-                        'Save',
+                      onPressed: () async {
+                        if (widget.taxModel == null) {
+                          if (!permissionService.hasPermission(Permit.vatsCreate.value)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('You do not have permission to create tax.'),
+                              ),
+                            );
+                            return;
+                          }
+                        } else {
+                          if (!permissionService.hasPermission(Permit.vatsUpdate.value)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('You do not have permission to update tax.'),
+                              ),
+                            );
+                            return;
+                          }
+                        }
+
+                        if (!_formKey.currentState!.validate()) return;
+
+                        EasyLoading.show();
+
+                        TaxRepo repo = TaxRepo();
+
+                        final taxRate = num.tryParse(taxRateController.text) ?? 0;
+                        final taxName = taxNameController.text;
+
+                        try {
+                          if (widget.taxModel == null) {
+                            await repo.createSingleTax(
+                              ref: ref,
+                              context: context,
+                              taxRate: taxRate,
+                              taxName: taxName,
+                              status: status,
+                            );
+                          } else {
+                            await repo.updateSingleTax(
+                              ref: ref,
+                              context: context,
+                              rate: taxRate,
+                              name: taxName,
+                              id: widget.taxModel!.id!,
+                              status: status,
+                            );
+                          }
+
+                          EasyLoading.dismiss();
+                          Navigator.pop(context);
+                        } catch (e) {
+                          EasyLoading.dismiss();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('An error occurred: $e'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        _lang.save,
                         style: TextStyle(
                           color: kWhite,
                           fontSize: 14,

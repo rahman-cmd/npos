@@ -8,6 +8,7 @@ class ButtonGlobal extends StatelessWidget {
   final String buttontext;
   final Color iconColor;
   final Decoration? buttonDecoration;
+
   // ignore: prefer_typing_uninitialized_variables
   var onPressed;
 
@@ -47,6 +48,7 @@ class ButtonGlobal extends StatelessWidget {
 class ButtonGlobalWithoutIcon extends StatelessWidget {
   final String buttontext;
   final Decoration buttonDecoration;
+
   // ignore: prefer_typing_uninitialized_variables
   var onPressed;
   final Color buttonTextColor;
@@ -103,6 +105,7 @@ class UpdateButton extends StatelessWidget {
   const UpdateButton({Key? key, required this.text, required this.onpressed}) : super(key: key);
   final String text;
   final VoidCallback onpressed;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

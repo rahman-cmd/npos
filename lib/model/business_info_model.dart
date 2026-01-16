@@ -1,101 +1,244 @@
-class BusinessInformation {
-  BusinessInformation({
+class BusinessInformationModel {
+  BusinessInformationModel({
+    this.message,
+    this.data,
+  });
+
+  BusinessInformationModel.fromJson(dynamic json) {
+    message = json['message'];
+    data = json['data'] != null ? BusinessInfoData.fromJson(json['data']) : null;
+  }
+  String? message;
+  BusinessInfoData? data;
+}
+
+class BusinessInfoData {
+  BusinessInfoData({
     this.id,
     this.planSubscribeId,
     this.businessCategoryId,
+    this.affiliatorId,
     this.companyName,
     this.willExpire,
     this.address,
     this.phoneNumber,
-    this.invoiceLogo,
     this.pictureUrl,
-    this.saleRoundingOption,
-    this.language,
     this.subscriptionDate,
     this.remainingShopBalance,
     this.shopOpeningBalance,
+    this.vatNo,
     this.vatName,
-    this.vatNumber,
-    this.crNo,
     this.createdAt,
     this.updatedAt,
     this.category,
     this.enrolledPlan,
     this.user,
+    this.businessCurrency,
+    this.invoiceLogo,
+    this.saleRoundingOption,
+    this.invoiceSize,
+    this.invoiceNoteLevel,
+    this.invoiceNote,
+    this.gratitudeMessage,
+    this.developByLevel,
+    this.developBy,
+    this.developByLink,
+    this.branchCount,
+    this.invoiceLanguage,
+    this.addons,
+    this.invoiceEmail,
+    this.showNote,
+    this.warrantyVoidLabel,
+    this.warrantyVoid,
+    this.meta,
+    this.showGratitudeMsg,
+    this.showInvoiceScannerLogo,
+    this.showA4InvoiceLogo,
+    this.showThermalInvoiceLogo,
+    this.showWarranty,
   });
 
-  BusinessInformation.fromJson(dynamic json) {
+  BusinessInfoData.fromJson(dynamic json) {
     id = json['id'];
-    planSubscribeId = num.tryParse(json['plan_subscribe_id'].toString());
-    businessCategoryId = num.tryParse(json['business_category_id'].toString());
+    planSubscribeId = json['plan_subscribe_id'];
+    invoiceEmail = json['email'];
+    businessCategoryId = json['business_category_id'];
+    affiliatorId = json['affiliator_id'];
     companyName = json['companyName'];
     willExpire = json['will_expire'];
     address = json['address'];
     phoneNumber = json['phoneNumber'];
     pictureUrl = json['pictureUrl'];
-    invoiceLogo = json['invoice_logo'];
-    language = json['language'];
     subscriptionDate = json['subscriptionDate'];
+    remainingShopBalance = json['remainingShopBalance'];
+    shopOpeningBalance = json['shopOpeningBalance'];
+    vatNo = json['vat_no'];
     vatName = json['vat_name'];
-    saleRoundingOption = json['sale_rounding_option'];
-    vatNumber = json['vat_no'];
-    crNo = json['cr_no'];
-    remainingShopBalance = num.tryParse(json['remainingShopBalance'].toString());
-    shopOpeningBalance = num.tryParse(json['shopOpeningBalance'].toString());
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     category = json['category'] != null ? Category.fromJson(json['category']) : null;
     enrolledPlan = json['enrolled_plan'] != null ? EnrolledPlan.fromJson(json['enrolled_plan']) : null;
     user = json['user'] != null ? User.fromJson(json['user']) : null;
+    meta = json['meta'] != null ? BusinessMeta.fromJson(json['meta']) : null;
+    businessCurrency = json['business_currency'] != null ? BusinessCurrency.fromJson(json['business_currency']) : null;
+    invoiceLogo = json['invoice_logo'];
+    thermalInvoiceLogo = json['thermal_invoice_logo'];
+    a4InvoiceLogo = json['a4_invoice_logo'];
+    invoiceScannerLogo = json['invoice_scanner_logo'];
+    saleRoundingOption = json['sale_rounding_option'];
+    invoiceSize = json['invoice_size'];
+    invoiceNoteLevel = json['note_label'];
+    invoiceNote = json['note'];
+    gratitudeMessage = json['gratitude_message'];
+    warrantyVoidLabel = json['warranty_void_label'];
+    warrantyVoid = json['warranty_void'];
+    developByLevel = json['develop_by_level'];
+    developBy = json['develop_by'];
+    developByLink = json['develop_by_link'];
+    branchCount = json['branch_count'];
+    addons = json['addons'] != null ? Addons.fromJson(json['addons']) : null;
+    invoiceLanguage = json['invoice_language'];
+    showNote = json['show_note'];
+    showGratitudeMsg = json['show_gratitude_msg'];
+    showInvoiceScannerLogo = json['show_invoice_scanner_logo'];
+    showA4InvoiceLogo = json['show_a4_invoice_logo'];
+    showThermalInvoiceLogo = json['show_thermal_invoice_logo'];
+    showWarranty = json['show_warranty'];
   }
   num? id;
   num? planSubscribeId;
   num? businessCategoryId;
+  num? affiliatorId;
   String? companyName;
-  dynamic willExpire;
+  String? willExpire;
   String? address;
   String? phoneNumber;
   String? pictureUrl;
-  String? invoiceLogo;
-  String? language;
-  String? vatName;
-  String? vatNumber;
-  String? crNo;
-  String? saleRoundingOption;
   String? subscriptionDate;
   num? remainingShopBalance;
   num? shopOpeningBalance;
+  String? vatNo;
+  String? vatName;
   String? createdAt;
   String? updatedAt;
   Category? category;
   EnrolledPlan? enrolledPlan;
   User? user;
+  BusinessCurrency? businessCurrency;
+  String? invoiceLogo;
+  String? thermalInvoiceLogo;
+  String? a4InvoiceLogo;
+  String? invoiceScannerLogo;
+  String? saleRoundingOption;
+  String? invoiceSize;
+  String? invoiceLanguage;
+  String? invoiceNoteLevel;
+  String? invoiceNote;
+  String? gratitudeMessage;
+  String? warrantyVoidLabel;
+  String? warrantyVoid;
+  String? developByLevel;
+  String? developBy;
+  int? showNote;
+  int? showGratitudeMsg;
+  int? showInvoiceScannerLogo;
+  int? showA4InvoiceLogo;
+  int? showThermalInvoiceLogo;
+  int? showWarranty;
+  String? invoiceEmail;
+  BusinessMeta? meta;
+
+  String? developByLink;
+  num? branchCount;
+  Addons? addons;
+}
+
+class BusinessMeta {
+  BusinessMeta(
+      {this.showCompanyName, this.showPhoneNumber, this.showAddress, this.showEmail, this.showVat, this.showVatName});
+
+  BusinessMeta.fromJson(dynamic json) {
+    showCompanyName = json['show_company_name'];
+    showPhoneNumber = json['show_phone_number'];
+    showAddress = json['show_address'];
+    showEmail = json['show_email'];
+    showVat = json['show_vat'];
+  }
+
+  num? showCompanyName;
+  num? showPhoneNumber;
+  num? showAddress;
+  num? showEmail;
+  num? showVat;
+  num? showVatName;
+}
+
+class Addons {
+  Addons({
+    this.affiliateAddon,
+    this.multiBranchAddon,
+    this.warehouseAddon,
+    this.thermalPrinterAddon,
+    this.hrmAddon,
+    this.domainAddon,
+  });
+
+  Addons.fromJson(dynamic json) {
+    affiliateAddon = json['AffiliateAddon'];
+    multiBranchAddon = json['MultiBranchAddon'];
+    warehouseAddon = json['WarehouseAddon'];
+    thermalPrinterAddon = json['ThermalPrinterAddon'];
+    hrmAddon = json['HrmAddon'];
+    domainAddon = json['DomainAddon'];
+  }
+  bool? affiliateAddon;
+  bool? multiBranchAddon;
+  bool? warehouseAddon;
+  bool? thermalPrinterAddon;
+  bool? hrmAddon;
+  bool? domainAddon;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['AffiliateAddon'] = affiliateAddon;
+    map['MultiBranchAddon'] = multiBranchAddon;
+    map['WarehouseAddon'] = warehouseAddon;
+    map['ThermalPrinterAddon'] = thermalPrinterAddon;
+    map['HrmAddon'] = hrmAddon;
+    map['DomainAddon'] = domainAddon;
+    return map;
+  }
+}
+
+class BusinessCurrency {
+  BusinessCurrency({
+    this.id,
+    this.name,
+    this.code,
+    this.symbol,
+    this.position,
+  });
+
+  BusinessCurrency.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+    code = json['code'];
+    symbol = json['symbol'];
+    position = json['position'];
+  }
+  num? id;
+  String? name;
+  String? code;
+  String? symbol;
+  String? position;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
-    map['plan_subscribe_id'] = planSubscribeId;
-    map['business_category_id'] = businessCategoryId;
-    map['companyName'] = companyName;
-    map['will_expire'] = willExpire;
-    map['address'] = address;
-    map['phoneNumber'] = phoneNumber;
-    map['pictureUrl'] = pictureUrl;
-    map['language'] = language;
-    map['subscriptionDate'] = subscriptionDate;
-    map['remainingShopBalance'] = remainingShopBalance;
-    map['shopOpeningBalance'] = shopOpeningBalance;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
-    if (category != null) {
-      map['category'] = category?.toJson();
-    }
-    if (enrolledPlan != null) {
-      map['enrolled_plan'] = enrolledPlan?.toJson();
-    }
-    if (user != null) {
-      map['user'] = user?.toJson();
-    }
+    map['name'] = name;
+    map['code'] = code;
+    map['symbol'] = symbol;
+    map['position'] = position;
     return map;
   }
 }
@@ -105,105 +248,96 @@ class User {
     this.id,
     this.name,
     this.role,
-    this.visibility,
+    required this.visibility,
     this.lang,
     this.email,
+    this.visibilityIsNull = false,
+    this.activeBranch,
+    this.activeBranchId,
+    this.branchId,
   });
 
-  User.fromJson(dynamic json) {
-    id = json['id'];
-    name = json['name'];
-    role = json['role'];
-    visibility = json['visibility'] != null ? Visibility.fromJson(json['visibility']) : null;
-    lang = json['lang'];
-    email = json['email'];
+  factory User.fromJson(Map<String, dynamic> json) {
+    final rawVisibility = json['visibility'];
+    Map<String, Map<String, String>> parsedVisibility = {};
+    bool visibilityIsNull = false;
+
+    if (rawVisibility == null) {
+      visibilityIsNull = true;
+    } else if (rawVisibility is Map<String, dynamic>) {
+      parsedVisibility = rawVisibility.map((moduleKey, perms) {
+        if (perms is Map<String, dynamic>) {
+          return MapEntry(
+            moduleKey,
+            perms.map((permKey, value) => MapEntry(permKey, value.toString())),
+          );
+        }
+        return MapEntry(moduleKey, <String, String>{});
+      });
+    }
+
+    return User(
+      id: json['id'],
+      email: json['email'],
+      name: json['name'],
+      role: json['role'],
+      lang: json['lang'],
+      visibility: parsedVisibility,
+      visibilityIsNull: visibilityIsNull,
+      activeBranch: json['active_branch'] != null ? ActiveBranch.fromJson(json['active_branch']) : null,
+      activeBranchId: json['active_branch_id'],
+      branchId: json['branch_id'],
+    );
   }
+
+  final bool visibilityIsNull; // new field
+
+  /// 🔍 Get all enabled permissions in format: `module.permission`
+  List<String> getAllPermissions() {
+    if (visibilityIsNull) {
+      return [];
+    }
+
+    final List<String> permissions = [];
+    visibility.forEach((module, perms) {
+      perms.forEach((action, value) {
+        if (value == "1") {
+          permissions.add('$module.$action');
+        }
+      });
+    });
+    return permissions;
+  }
+
   num? id;
   String? name;
   String? role;
-  Visibility? visibility;
+  final Map<String, Map<String, String>> visibility;
   dynamic lang;
   String? email;
+  num? branchId;
+  num? activeBranchId;
+
+  ActiveBranch? activeBranch;
+}
+
+class ActiveBranch {
+  ActiveBranch({
+    this.id,
+    this.name,
+  });
+
+  ActiveBranch.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+  }
+  num? id;
+  String? name;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['name'] = name;
-    map['role'] = role;
-    map['email'] = email;
-    if (visibility != null) {
-      map['visibility'] = visibility?.toJson();
-    }
-    map['lang'] = lang;
-    return map;
-  }
-}
-
-class Visibility {
-  Visibility({
-    this.addExpensePermission,
-    this.dueListPermission,
-    this.lossProfitPermission,
-    this.partiesPermission,
-    this.productPermission,
-    this.profileEditPermission,
-    this.purchaseListPermission,
-    this.purchasePermission,
-    this.reportsPermission,
-    this.salePermission,
-    this.salesListPermission,
-    this.stockPermission,
-    this.addIncomePermission,
-    this.dashboardPermission,
-  });
-
-  Visibility.fromJson(dynamic json) {
-    addExpensePermission = json['addExpensePermission'];
-    dueListPermission = json['dueListPermission'];
-    lossProfitPermission = json['lossProfitPermission'];
-    partiesPermission = json['partiesPermission'];
-    productPermission = json['productPermission'];
-    profileEditPermission = json['profileEditPermission'];
-    purchaseListPermission = json['purchaseListPermission'];
-    purchasePermission = json['purchasePermission'];
-    reportsPermission = json['reportsPermission'];
-    salePermission = json['salePermission'];
-    salesListPermission = json['salesListPermission'];
-    stockPermission = json['stockPermission'];
-    addIncomePermission = json['addIncomePermission'];
-    dashboardPermission = json['dashboardPermission'];
-  }
-  bool? addExpensePermission;
-  bool? dueListPermission;
-  bool? lossProfitPermission;
-  bool? partiesPermission;
-  bool? productPermission;
-  bool? profileEditPermission;
-  bool? purchaseListPermission;
-  bool? purchasePermission;
-  bool? reportsPermission;
-  bool? salePermission;
-  bool? salesListPermission;
-  bool? stockPermission;
-  bool? addIncomePermission;
-  bool? dashboardPermission;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['addExpensePermission'] = addExpensePermission;
-    map['dueListPermission'] = dueListPermission;
-    map['lossProfitPermission'] = lossProfitPermission;
-    map['partiesPermission'] = partiesPermission;
-    map['productPermission'] = productPermission;
-    map['profileEditPermission'] = profileEditPermission;
-    map['purchaseListPermission'] = purchaseListPermission;
-    map['purchasePermission'] = purchasePermission;
-    map['reportsPermission'] = reportsPermission;
-    map['salePermission'] = salePermission;
-    map['salesListPermission'] = salesListPermission;
-    map['stockPermission'] = stockPermission;
-    map['addIncomePermission'] = addIncomePermission;
-    map['dashboardPermission'] = dashboardPermission;
     return map;
   }
 }
@@ -215,6 +349,7 @@ class EnrolledPlan {
     this.businessId,
     this.price,
     this.duration,
+    this.allowMultibranch,
     this.plan,
   });
 
@@ -224,6 +359,7 @@ class EnrolledPlan {
     businessId = json['business_id'];
     price = json['price'];
     duration = json['duration'];
+    allowMultibranch = json['allow_multibranch'];
     plan = json['plan'] != null ? Plan.fromJson(json['plan']) : null;
   }
   num? id;
@@ -231,6 +367,7 @@ class EnrolledPlan {
   num? businessId;
   num? price;
   num? duration;
+  num? allowMultibranch;
   Plan? plan;
 
   Map<String, dynamic> toJson() {
@@ -240,6 +377,7 @@ class EnrolledPlan {
     map['business_id'] = businessId;
     map['price'] = price;
     map['duration'] = duration;
+    map['allow_multibranch'] = allowMultibranch;
     if (plan != null) {
       map['plan'] = plan?.toJson();
     }

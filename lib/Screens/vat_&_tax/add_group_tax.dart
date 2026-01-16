@@ -3,10 +3,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_pos/Screens/vat_&_tax/provider/text_repo.dart';
 import 'package:mobile_pos/Screens/vat_&_tax/repo/tax_repo.dart';
-import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:mobile_pos/constant.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-
+import 'package:mobile_pos/generated/l10n.dart' as lang;
+import '../../http_client/custome_http_client.dart';
+import '../../service/check_user_role_permission_provider.dart';
 import 'model/vat_model.dart';
 
 class AddGroupTax extends ConsumerStatefulWidget {
@@ -29,28 +29,7 @@ class AddTaxGroupState extends ConsumerState<AddGroupTax> {
 
   final GlobalKey<FormState> _fromKey = GlobalKey<FormState>();
 
-  void _saveTax({required BuildContext context, required WidgetRef ref}) async {
-    if (_fromKey.currentState!.validate()) {
-      if (subTaxList.isNotEmpty) {
-        EasyLoading.show();
-        TaxRepo repo = TaxRepo();
-        List<num> ids = [];
-        for (var element in subTaxList) {
-          ids.add(element.id!);
-        }
-        if (widget.taxModel != null) {
-          await repo.updateGroupTax(id: widget.taxModel!.id!, ref: ref, context: context, taxName: nameController.text, taxIds: ids, status: status);
-        } else {
-          await repo.createGroupTax(ref: ref, context: context, taxName: nameController.text, taxIds: ids, status: status);
-        }
-        EasyLoading.dismiss();
-
-        Navigator.pop(context);
-      } else {
-        EasyLoading.showError('Please select taxes');
-      }
-    }
-  }
+  void _saveTax({required BuildContext context, required WidgetRef ref}) async {}
 
   @override
   void initState() {
@@ -86,11 +65,13 @@ class AddTaxGroupState extends ConsumerState<AddGroupTax> {
 
   @override
   Widget build(BuildContext context) {
+    final _lang = lang.S.of(context);
+    final permissionService = PermissionService(ref);
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
         title: Text(
-          widget.taxModel == null ? 'Add Tax Group' : 'Edit Tax Group',
+          widget.taxModel == null ? _lang.addTaxGroup : _lang.editTaxGroup,
           // style: GoogleFonts.poppins(
           //   color: Colors.white,
           // ),
@@ -114,7 +95,8 @@ class AddTaxGroupState extends ConsumerState<AddGroupTax> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //___________________________________Tax Rates______________________________
-            Text('${widget.taxModel == null ? 'Add New' : 'Edit'} Tax with single/multiple Tax type', style: const TextStyle(color: kTitleColor, fontWeight: FontWeight.bold)),
+            Text('${widget.taxModel == null ? _lang.add : _lang.edit} ${_lang.taxWithSingleMultipleTaxType}',
+                style: const TextStyle(color: kTitleColor, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10.0),
             Text('${lang.S.of(context).name}*', style: const TextStyle(color: kTitleColor)),
             const SizedBox(height: 8.0),
@@ -138,7 +120,7 @@ class AddTaxGroupState extends ConsumerState<AddGroupTax> {
               ),
             ),
             const SizedBox(height: 20.0),
-            const Text('subtext*', style: TextStyle(color: kTitleColor)),
+            Text('${_lang.subTaxes}*', style: TextStyle(color: kTitleColor)),
             const SizedBox(height: 8.0),
             Consumer(builder: (context, ref, __) {
               final taxes = ref.watch(singleTaxProvider);
@@ -201,7 +183,7 @@ class AddTaxGroupState extends ConsumerState<AddGroupTax> {
                                       ),
                                     ),
                                   )
-                                : const Text('No Sub Tax selected', style: TextStyle(color: kTitleColor)),
+                                : Text(_lang.noSubTaxSelected, style: TextStyle(color: kTitleColor)),
 
                             //___________________________________________showModalBottomSheet______________________
                             const Padding(
@@ -219,34 +201,53 @@ class AddTaxGroupState extends ConsumerState<AddGroupTax> {
                   error: (error, stackTrace) {
                     return Text(error.toString());
                   },
-                  loading: () => Skeletonizer(
-                        enabled: true,
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0), color: Colors.transparent, border: Border.all(color: kBorderColorTextField)),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('No Sub Tax selected', style: TextStyle(color: kTitleColor)),
+                  loading: () => Container(
+                        padding: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0), color: Colors.transparent, border: Border.all(color: kBorderColorTextField)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(_lang.noSubTaxSelected, style: TextStyle(color: kTitleColor)),
 
-                              //___________________________________________showModalBottomSheet______________________
-                              Padding(
-                                padding: EdgeInsets.all(11.0),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: kGreyTextColor,
-                                ),
+                            //___________________________________________showModalBottomSheet______________________
+                            Padding(
+                              padding: EdgeInsets.all(11.0),
+                              child: Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: kGreyTextColor,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ));
+              // loading: () => Skeletonizer(
+              //       enabled: true,
+              //       child: Container(
+              //         padding: const EdgeInsets.only(left: 10),
+              //         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0), color: Colors.transparent, border: Border.all(color: kBorderColorTextField)),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           children: [
+              //             Text(_lang.noSubTaxSelected, style: TextStyle(color: kTitleColor)),
+              //
+              //             //___________________________________________showModalBottomSheet______________________
+              //             Padding(
+              //               padding: EdgeInsets.all(11.0),
+              //               child: Icon(
+              //                 Icons.keyboard_arrow_down_rounded,
+              //                 color: kGreyTextColor,
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ));
             }),
             const SizedBox(height: 20.0),
             Row(
               children: [
-                const Text(
-                  'Status',
+                Text(
+                  _lang.status,
                   style: TextStyle(color: kTitleColor),
                 ),
                 const SizedBox(width: 8.0),
@@ -281,7 +282,49 @@ class AddTaxGroupState extends ConsumerState<AddGroupTax> {
                     animationDuration: const Duration(milliseconds: 300),
                     textStyle: const TextStyle(color: Colors.white, fontFamily: 'Display', fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  onPressed: () => _saveTax(ref: ref, context: context),
+                  onPressed: () async {
+                    if (widget.taxModel == null) {
+                      if (!permissionService.hasPermission(Permit.vatsCreate.value)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('You do not have permission to create tax.'),
+                          ),
+                        );
+                        return;
+                      }
+                    } else {
+                      if (!permissionService.hasPermission(Permit.vatsUpdate.value)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('You do not have permission to update tax.'),
+                          ),
+                        );
+                        return;
+                      }
+                    }
+                    if (_fromKey.currentState!.validate()) {
+                      if (subTaxList.isNotEmpty) {
+                        EasyLoading.show();
+                        TaxRepo repo = TaxRepo();
+                        List<num> ids = [];
+                        for (var element in subTaxList) {
+                          ids.add(element.id!);
+                        }
+                        if (widget.taxModel != null) {
+                          await repo.updateGroupTax(id: widget.taxModel!.id!, ref: ref, context: context, taxName: nameController.text, taxIds: ids, status: status);
+                        } else {
+                          await repo.createGroupTax(ref: ref, context: context, taxName: nameController.text, taxIds: ids, status: status);
+                        }
+                        EasyLoading.dismiss();
+
+                        Navigator.pop(context);
+                      } else {
+                        EasyLoading.showError('Please select taxes');
+                      }
+                    }
+                  },
                   child: Text(
                     lang.S.of(context).save,
                     style: const TextStyle(color: kWhite, fontSize: 12, fontWeight: FontWeight.bold),
@@ -310,6 +353,7 @@ Future<List<VatModel>> getTaxesModalSheet({
     backgroundColor: Colors.white,
     context: mainContext,
     builder: (BuildContext context) {
+      final _lang = lang.S.of(context);
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setNewState) {
           return Column(
@@ -320,8 +364,8 @@ Future<List<VatModel>> getTaxesModalSheet({
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Sub Tax List',
+                    Text(
+                      _lang.subTaxList,
                       style: TextStyle(color: kTitleColor, fontWeight: FontWeight.w600, fontSize: 20),
                     ),
                     IconButton(
@@ -364,7 +408,7 @@ Future<List<VatModel>> getTaxesModalSheet({
                           visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                           side: const BorderSide(color: kBorderColorTextField),
                           title: Text(category.name ?? '', style: const TextStyle(color: kTitleColor, overflow: TextOverflow.ellipsis)),
-                          subtitle: Text('Text percent: ${category.rate}%', style: const TextStyle(color: kGreyTextColor)),
+                          subtitle: Text('${_lang.taxPercent}: ${category.rate}%', style: const TextStyle(color: kGreyTextColor)),
                           value: subTaxList.contains(category),
                           onChanged: (isChecked) {
                             setNewState(() {
@@ -408,7 +452,7 @@ Future<List<VatModel>> getTaxesModalSheet({
                     onPressed: () {
                       Navigator.pop(context, true);
                     },
-                    child: const Text('Done', style: TextStyle(color: kWhite, fontWeight: FontWeight.bold)),
+                    child: Text(_lang.done, style: TextStyle(color: kWhite, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),

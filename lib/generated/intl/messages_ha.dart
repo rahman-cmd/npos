@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addCustomer": MessageLookupByLibrary.simpleMessage(
       "Da fatan Za Ka Ƙara Abokin Ciniki",
     ),
+    "addCustomers": MessageLookupByLibrary.simpleMessage("Ƙara Abokin Ciniki"),
     "addDelivery": MessageLookupByLibrary.simpleMessage("Ƙara Isarwa"),
     "addExpense": MessageLookupByLibrary.simpleMessage("Ƙara Kashewa"),
     "addExpenseCat": MessageLookupByLibrary.simpleMessage(
@@ -48,20 +49,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "Da fatan Za Ka Ƙara Siyayya",
     ),
     "addNote": MessageLookupByLibrary.simpleMessage("Ƙara Bayani"),
+    "addParty": MessageLookupByLibrary.simpleMessage("Ƙara Jam\'iyya"),
     "addProduct": MessageLookupByLibrary.simpleMessage(
       "Da fatan Za Ka Ƙara Samfur",
     ),
     "addProductFirst": MessageLookupByLibrary.simpleMessage(
       "Ƙara samfurin farko",
     ),
+    "addProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "An Ƙirƙiri Samfurin Cikin Nasara!",
+    ),
+    "addProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin ƙirƙirar Samfuri.",
+    ),
     "addPurchase": MessageLookupByLibrary.simpleMessage("Ƙara Siyayya"),
     "addSale": MessageLookupByLibrary.simpleMessage(
       "Da fatan Za Ka Ƙara Siyarwa",
     ),
     "addSales": MessageLookupByLibrary.simpleMessage("Ƙara Siyarwa"),
+    "addStock": MessageLookupByLibrary.simpleMessage("Ƙara Jari"),
     "addUnit": MessageLookupByLibrary.simpleMessage("Ƙara Unit"),
     "addUserRole": MessageLookupByLibrary.simpleMessage(
       "Ƙara Rawar Mai Amfani",
+    ),
+    "addVariant": MessageLookupByLibrary.simpleMessage("Ƙara Nau\'in Samfuri"),
+    "addVariantDetails": MessageLookupByLibrary.simpleMessage(
+      "Ƙara Bayanan Nau\'in Samfuri",
     ),
     "addedToCart": MessageLookupByLibrary.simpleMessage(
       "An Ƙara Wa Katin Siyayya",
@@ -73,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Duk Ma\'aunin Kasuwanci",
     ),
     "allBusinessolutionDescrip": MessageLookupByLibrary.simpleMessage(
-      "NPOS cikakken mafita ne na kasuwanci tare da kaya, asusun, tallace-tallace, kashewa da asara / riba.",
+      "Npos cikakken mafita ne na kasuwanci tare da kaya, asusun, tallace-tallace, kashewa da asara / riba.",
     ),
     "alreadyAdded": MessageLookupByLibrary.simpleMessage("An riga an ƙara"),
     "alreadyHaveAnAccount": MessageLookupByLibrary.simpleMessage(
@@ -98,10 +111,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "backToHome": MessageLookupByLibrary.simpleMessage("Koma Gida"),
     "balance": MessageLookupByLibrary.simpleMessage("Tace"),
     "bangladesh": MessageLookupByLibrary.simpleMessage("Bangladesh"),
+    "barcodeGen": MessageLookupByLibrary.simpleMessage(
+      "Janareta Lambar Barcode",
+    ),
+    "batch": MessageLookupByLibrary.simpleMessage("Rukunin Kaya"),
+    "batchNo": MessageLookupByLibrary.simpleMessage("Lambar Rukuni"),
     "billTO": MessageLookupByLibrary.simpleMessage("Bill Zuwa"),
+    "billingAddress": MessageLookupByLibrary.simpleMessage(
+      "Adireshin Biyan Kuɗi",
+    ),
     "brand": MessageLookupByLibrary.simpleMessage("Alamar"),
     "brandName": MessageLookupByLibrary.simpleMessage("Sunan Brand"),
     "brands": MessageLookupByLibrary.simpleMessage("Brands"),
+    "bulk": MessageLookupByLibrary.simpleMessage("Loda da yawa"),
     "businessCat": MessageLookupByLibrary.simpleMessage("Kafofin Kasuwanci"),
     "businessName": MessageLookupByLibrary.simpleMessage(
       "Sunan Kamfani & Kasuwanci",
@@ -121,6 +143,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Canja Kalmar Sirri",
     ),
     "checkEmail": MessageLookupByLibrary.simpleMessage("Duba Imel"),
+    "choose": MessageLookupByLibrary.simpleMessage("Zaɓi"),
+    "chooseCountry": MessageLookupByLibrary.simpleMessage("Zaɓi Ƙasa"),
     "chooseCustomer": MessageLookupByLibrary.simpleMessage(
       "Zaɓi Abokin Ciniki",
     ),
@@ -129,9 +153,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "choseYourFeature": MessageLookupByLibrary.simpleMessage("Zaɓi Fasalinku"),
     "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-      "Fasalolin sune ɓangaren mahimmanci wanda ke sanya NPOS ya bambanta da mafita na gargajiya.",
+      "Fasalolin sune ɓangaren mahimmanci wanda ke sanya Npos ya bambanta da mafita na gargajiya.",
     ),
+    "city": MessageLookupByLibrary.simpleMessage("Birni"),
+    "cityName": MessageLookupByLibrary.simpleMessage("Sunan Birni"),
     "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
+    "clear": MessageLookupByLibrary.simpleMessage("Goge"),
     "clickToConnect": MessageLookupByLibrary.simpleMessage("Danna don Haɗa"),
     "close": MessageLookupByLibrary.simpleMessage("Rufe"),
     "collectDue": MessageLookupByLibrary.simpleMessage("Tsarawa Basira"),
@@ -175,10 +202,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "createNewPassword": MessageLookupByLibrary.simpleMessage(
       "Ƙirƙiri Sabon Kalmar Sirri",
     ),
+    "createPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba Ku Da Izinin Ƙirƙirar PDF.",
+    ),
+    "createSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin ƙirƙirar siyarwa.",
+    ),
+    "creditLimit": MessageLookupByLibrary.simpleMessage(
+      "Iyakacin Bashi na Jam\'iyya",
+    ),
     "currency": MessageLookupByLibrary.simpleMessage("Kudin"),
     "customInvoiceBranding": MessageLookupByLibrary.simpleMessage(
       "Alamar Fakturar Al\'ada",
     ),
+    "customer": MessageLookupByLibrary.simpleMessage("Abokin Ciniki"),
     "customerDue": MessageLookupByLibrary.simpleMessage(
       "Basirar Abokin Ciniki",
     ),
@@ -195,11 +232,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "An ajiye bayanin cikin nasara.",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Ranar"),
+    "dateFilterWarn": MessageLookupByLibrary.simpleMessage(
+      "Ranar Ƙarshe Ba Za Ta Iya Kasance Kafin Ranar Farko ba.",
+    ),
     "dates": MessageLookupByLibrary.simpleMessage("Ranar:"),
     "days": MessageLookupByLibrary.simpleMessage("Kwanaki"),
     "dealer": MessageLookupByLibrary.simpleMessage("Mai Kasuwa"),
     "dealerPrice": MessageLookupByLibrary.simpleMessage("Farashin Dillali"),
     "delete": MessageLookupByLibrary.simpleMessage("Goge"),
+    "deleteAcc": MessageLookupByLibrary.simpleMessage("Goge Asusun"),
+    "deleteBatchWarn": MessageLookupByLibrary.simpleMessage(
+      "Kuna Tabbatar Kuna Son Goge Wannan Rukuni?",
+    ),
+    "deletePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba Ku Da Izinin Goge Jam\'iyya.",
+    ),
     "deleting": MessageLookupByLibrary.simpleMessage("Ana Goge..."),
     "deliveryAddress": MessageLookupByLibrary.simpleMessage("Adireshin Isarwa"),
     "deliveryCharge": MessageLookupByLibrary.simpleMessage("Kudin Isarwa"),
@@ -224,11 +271,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "dueCollection": MessageLookupByLibrary.simpleMessage("Taron Basira"),
     "dueList": MessageLookupByLibrary.simpleMessage("Jerin Basira"),
     "dueReport": MessageLookupByLibrary.simpleMessage("Rahoto Basira"),
+    "dueSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba a yarda da siyarwa akan bashi ga abokan ciniki masu zuwa ba.",
+    ),
     "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
       "Mai sauƙin amfani da POS",
     ),
     "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-      "Aikace-aikacen NPOS kyauta ne, mai sauƙin amfani. A zahiri, ɗaya daga cikin mafi kyawun tsarin POS a duniya.",
+      "Aikace-aikacen Npos kyauta ne, mai sauƙin amfani. A zahiri, ɗaya daga cikin mafi kyawun tsarin POS a duniya.",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Gyara"),
     "editPhone": MessageLookupByLibrary.simpleMessage("Gyara Lamban Wayar?"),
@@ -246,9 +296,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Imel ba zai iya zama komai ba",
     ),
     "emailText": MessageLookupByLibrary.simpleMessage("Imel"),
+    "enLowStock": MessageLookupByLibrary.simpleMessage(
+      "Shigar da Kadan a Jari",
+    ),
     "endDate": MessageLookupByLibrary.simpleMessage("Ranar Ƙarshe"),
     "endYourFreePlan": MessageLookupByLibrary.simpleMessage(
       "Ka ƙare Shirin Kyauta",
+    ),
+    "entBatchNo": MessageLookupByLibrary.simpleMessage(
+      "Shigar da Lambar Rukuni",
     ),
     "enterABrandName": MessageLookupByLibrary.simpleMessage(
       "Shigar da sunan alama",
@@ -262,6 +318,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterAValidStock": MessageLookupByLibrary.simpleMessage(
       "Shigar da kaya mai inganci",
     ),
+    "enterAddress": MessageLookupByLibrary.simpleMessage("Shigar da Adireshi"),
     "enterAmount": MessageLookupByLibrary.simpleMessage("Shigar da Kudin"),
     "enterBusiness": MessageLookupByLibrary.simpleMessage(
       "Shigar da Sunan Kasuwanci / Shago",
@@ -334,17 +391,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterYourPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Shigar da lambar wayarku",
     ),
+    "expDate": MessageLookupByLibrary.simpleMessage("Ranar Ƙarewa"),
     "expense": MessageLookupByLibrary.simpleMessage("Kashi"),
     "expenseCat": MessageLookupByLibrary.simpleMessage("Kafofin Kashewa"),
     "expenseDate": MessageLookupByLibrary.simpleMessage("Ranar Kashewa"),
     "expenseFor": MessageLookupByLibrary.simpleMessage("Kashewa Ga"),
     "expenseReport": MessageLookupByLibrary.simpleMessage("Rahoto Kashewa"),
+    "expirationStatus": MessageLookupByLibrary.simpleMessage("Matsayin Ƙarewa"),
     "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
     "failedToGetPlatformVersion": MessageLookupByLibrary.simpleMessage(
       "Rashin samun sigar dandamali",
     ),
     "fashions": MessageLookupByLibrary.simpleMessage("Fashan"),
     "field": MessageLookupByLibrary.simpleMessage("Fitar"),
+    "filter": MessageLookupByLibrary.simpleMessage("Tace"),
     "firstName": MessageLookupByLibrary.simpleMessage("Sunan Farko"),
     "folder": MessageLookupByLibrary.simpleMessage(
       "Wataƙila imel ɗin ya ƙare a cikin fayil ɗin spam ɗinku.",
@@ -364,6 +424,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "fullName": MessageLookupByLibrary.simpleMessage("Cikakken Sunan"),
     "fullyPaid": MessageLookupByLibrary.simpleMessage("An Biya Gaba Ɗaya"),
     "gallery": MessageLookupByLibrary.simpleMessage("Gidan Hoto"),
+    "genPdfWarn": MessageLookupByLibrary.simpleMessage(
+      "Babu Bayanai Don Ƙirƙirar PDF",
+    ),
     "gotEmail": MessageLookupByLibrary.simpleMessage("An Tura Mu Imel"),
     "gotIt": MessageLookupByLibrary.simpleMessage("Na Gane"),
     "guest": MessageLookupByLibrary.simpleMessage("Baki"),
@@ -380,9 +443,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "incomeReport": MessageLookupByLibrary.simpleMessage(
       "Rahoto Shigar Da Kudi",
     ),
+    "incomeReportPermission": MessageLookupByLibrary.simpleMessage(
+      "Ba Ku Da Izinin Duba Rahoton Kuɗaɗen Shiga.",
+    ),
     "instagram": MessageLookupByLibrary.simpleMessage("Instagram"),
     "instrucation": MessageLookupByLibrary.simpleMessage("Umarni"),
     "inv": MessageLookupByLibrary.simpleMessage("Lamba ta Takardar Siyarwa"),
+    "inventoryPermission": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin ajiyar kaya",
+    ),
     "invoice": MessageLookupByLibrary.simpleMessage("Faktura"),
     "invoiceViewr": MessageLookupByLibrary.simpleMessage("Mai Kallon Faktura"),
     "item": MessageLookupByLibrary.simpleMessage("Kayan"),
@@ -417,15 +486,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "lossProfitReport": MessageLookupByLibrary.simpleMessage(
       "Rahoto Asara / Riba",
     ),
+    "lowStock": MessageLookupByLibrary.simpleMessage("Kadan a Jari"),
+    "lowStockReport": MessageLookupByLibrary.simpleMessage(
+      "Rahoton Kadan a Jari",
+    ),
     "lp": MessageLookupByLibrary.simpleMessage("Asara / Riba"),
     "lpDetails": MessageLookupByLibrary.simpleMessage(
       "Cikakken Bayanin Asara / Riba",
     ),
+    "manuDate": MessageLookupByLibrary.simpleMessage("Ranar Kera"),
+    "manufactureDate": MessageLookupByLibrary.simpleMessage("Ranar Kera"),
     "manufacturer": MessageLookupByLibrary.simpleMessage("Mai Ƙera"),
     "masterCard": MessageLookupByLibrary.simpleMessage("Master Card"),
     "messege": MessageLookupByLibrary.simpleMessage("Sakon"),
     "mobile": MessageLookupByLibrary.simpleMessage("Mobile:"),
     "mobiles": MessageLookupByLibrary.simpleMessage("Wayoyi"),
+    "model": MessageLookupByLibrary.simpleMessage("Samfurin"),
     "moneyReceipt": MessageLookupByLibrary.simpleMessage("Rijistar Kudi"),
     "moreInfo": MessageLookupByLibrary.simpleMessage("Ƙarin Bayani"),
     "mrp": MessageLookupByLibrary.simpleMessage("MRP"),
@@ -444,9 +520,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "noDataFound": MessageLookupByLibrary.simpleMessage(
       "Babu Bayanai Da Aka Samu",
     ),
+    "noDue": MessageLookupByLibrary.simpleMessage("Babu Bashi"),
     "noDueSelected": MessageLookupByLibrary.simpleMessage(
       "Babu An Zaɓi Basira",
     ),
+    "noMatched": MessageLookupByLibrary.simpleMessage(
+      "Ba a Samu Samfurorin Da Suka Dace ba.",
+    ),
+    "noParty": MessageLookupByLibrary.simpleMessage("Ba a Samu Jam\'iyyun ba"),
     "noProductFound": MessageLookupByLibrary.simpleMessage(
       "Babu Samfurin Da Aka Samu",
     ),
@@ -458,11 +539,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noTransaction": MessageLookupByLibrary.simpleMessage("Babu Mu\'amala"),
     "notFound": MessageLookupByLibrary.simpleMessage("Ba\'a Samu Ba"),
+    "notLaunch": MessageLookupByLibrary.simpleMessage(
+      "Ba A Iya Kaddamar Da Manhajar Waya Ba.",
+    ),
     "note": MessageLookupByLibrary.simpleMessage("Bayani"),
     "notification": MessageLookupByLibrary.simpleMessage("Sanarwa"),
     "off": MessageLookupByLibrary.simpleMessage("Kashe"),
     "on": MessageLookupByLibrary.simpleMessage("A Kan"),
+    "openCamera": MessageLookupByLibrary.simpleMessage("Buɗe Kamara"),
     "openingBalance": MessageLookupByLibrary.simpleMessage("Tace Farawa"),
+    "opinion": MessageLookupByLibrary.simpleMessage("Shigar da Ra\'ayinka"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("An Kare Kaya"),
     "packFeatures": MessageLookupByLibrary.simpleMessage(
       "Fasalolin Kudin Shiga",
@@ -472,6 +558,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paidAmount": MessageLookupByLibrary.simpleMessage("An Biya Kudin"),
     "paidVia": MessageLookupByLibrary.simpleMessage("An biya ta"),
     "parties": MessageLookupByLibrary.simpleMessage("Jam\'iyyun"),
+    "partyCreateWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin ƙirƙirar Jam\'iyya.",
+    ),
     "partyList": MessageLookupByLibrary.simpleMessage("Jerin Ƙungiyoyi"),
     "password": MessageLookupByLibrary.simpleMessage("Kalmar Sirri"),
     "passwordCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
@@ -497,6 +586,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentGateway": MessageLookupByLibrary.simpleMessage("Hanyar Biyan Kuɗi"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("Hanyar Biyan Kuɗi"),
     "paymentSuccess": MessageLookupByLibrary.simpleMessage("An Yi Biyan Kuɗi"),
+    "paymentTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Da fatan za a zaɓi nau\'in biyan kuɗi",
+    ),
     "paymentTypes": MessageLookupByLibrary.simpleMessage("Nau\'in Biyan Kuɗi"),
     "paymentWasSuccessful": MessageLookupByLibrary.simpleMessage(
       "An yi biyan kuɗi cikin nasara!",
@@ -507,6 +599,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ba a ba da izini ba!",
     ),
     "phone": MessageLookupByLibrary.simpleMessage("Lamba ta Wayar"),
+    "phoneNotAvail": MessageLookupByLibrary.simpleMessage(
+      "Ba A Samu Lambar Waya Ba.",
+    ),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Lamba ta Wayar"),
     "phoneVerification": MessageLookupByLibrary.simpleMessage(
       "Tabbatar Lamban Wayar",
@@ -586,7 +681,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseSelectAExpenseCategory": MessageLookupByLibrary.simpleMessage(
       "Da fatan za ka zaɓi kategoryar kashewa",
     ),
-    "powerdedByNPOS": MessageLookupByLibrary.simpleMessage("Powered By NPOS"),
+    "posSale": MessageLookupByLibrary.simpleMessage("Sayarwa POS"),
+    "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage("Powered By Acnoo"),
     "premiumCustomerSupport": MessageLookupByLibrary.simpleMessage(
       "Android & iOS App Support",
     ),
@@ -596,6 +692,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "previousDue": MessageLookupByLibrary.simpleMessage("Daular Da Ta Gabata"),
     "previousPayAmount": MessageLookupByLibrary.simpleMessage(
       "Adadin Da Aka Biya A Baya",
+    ),
+    "priceWarn": MessageLookupByLibrary.simpleMessage(
+      "Farashi Ba Ya Iya Zama Fanko",
     ),
     "print": MessageLookupByLibrary.simpleMessage("Buga"),
     "printing": MessageLookupByLibrary.simpleMessage("Zaɓin Bugawa"),
@@ -611,11 +710,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "productList": MessageLookupByLibrary.simpleMessage("Jerin Samfuran"),
     "productName": MessageLookupByLibrary.simpleMessage("Sunan Samfur"),
+    "productNotFound": MessageLookupByLibrary.simpleMessage(
+      "Ba a Samu Samfurin ba",
+    ),
+    "productSetting": MessageLookupByLibrary.simpleMessage("Saitunan Samfuri"),
     "productUnit": MessageLookupByLibrary.simpleMessage("Unit ɗin Samfur"),
     "products": MessageLookupByLibrary.simpleMessage("Kayayyakin"),
     "profile": MessageLookupByLibrary.simpleMessage("Bayani"),
     "profileEdit": MessageLookupByLibrary.simpleMessage("Gyara Bayani"),
     "profit": MessageLookupByLibrary.simpleMessage("Riba"),
+    "profitLoss": MessageLookupByLibrary.simpleMessage("Riba & Hasara"),
+    "profitMargin": MessageLookupByLibrary.simpleMessage("Ribar Kaso (%)"),
     "promo": MessageLookupByLibrary.simpleMessage("Rahusa"),
     "promoCode": MessageLookupByLibrary.simpleMessage("Kudin Rahusa"),
     "purchase": MessageLookupByLibrary.simpleMessage("Siyayya"),
@@ -627,6 +732,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchaseDetails": MessageLookupByLibrary.simpleMessage(
       "Cikakken Bayanin Siyayya",
     ),
+    "purchaseEx": MessageLookupByLibrary.simpleMessage("Farashin Siyarwa Ex."),
+    "purchaseExReq": MessageLookupByLibrary.simpleMessage(
+      "Farashin Siyarwa Ex. yana da buƙata",
+    ),
+    "purchaseIn": MessageLookupByLibrary.simpleMessage(
+      "Farashin Siyarwa Ciki Har da Haraji",
+    ),
+    "purchaseInReq": MessageLookupByLibrary.simpleMessage(
+      "Farashin Siyarwa Ciki Har da Haraji yana da buƙata",
+    ),
     "purchaseList": MessageLookupByLibrary.simpleMessage("Jerin Siyayya"),
     "purchaseNow": MessageLookupByLibrary.simpleMessage("Sayi Yanzu"),
     "purchasePremium": MessageLookupByLibrary.simpleMessage(
@@ -634,10 +749,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "purchasePrice": MessageLookupByLibrary.simpleMessage("Farashin Siya"),
     "purchaseReport": MessageLookupByLibrary.simpleMessage("Rahoto Siyayya"),
+    "purchaseUpdateWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin sabunta sayayya.",
+    ),
+    "purchaseWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin ƙirƙirar sayayya.",
+    ),
     "purchased": MessageLookupByLibrary.simpleMessage("An Siya"),
     "purchasedBy": MessageLookupByLibrary.simpleMessage("An saye shi ta"),
     "qty": MessageLookupByLibrary.simpleMessage("Ƙima"),
     "quantity": MessageLookupByLibrary.simpleMessage("Ƙima"),
+    "quickOver": MessageLookupByLibrary.simpleMessage("Dubawa Da Sauri"),
     "quickOverview": MessageLookupByLibrary.simpleMessage("Takaitaccen Bayani"),
     "receipt": MessageLookupByLibrary.simpleMessage("Rijista"),
     "receivedAmount": MessageLookupByLibrary.simpleMessage(
@@ -677,10 +799,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "returnedDate": MessageLookupByLibrary.simpleMessage("Ranar da aka mayar"),
     "returnedItem": MessageLookupByLibrary.simpleMessage("Abu da aka mayar"),
+    "roundingTotal": MessageLookupByLibrary.simpleMessage("Jimlar Daidaitacce"),
+    "roundings": MessageLookupByLibrary.simpleMessage("Daidaitawa (+/-)"),
     "sale": MessageLookupByLibrary.simpleMessage("Siyarwa"),
     "saleBy": MessageLookupByLibrary.simpleMessage("An sayar da shi ta"),
     "saleList": MessageLookupByLibrary.simpleMessage("Jerin Siyarwa"),
     "salePrice": MessageLookupByLibrary.simpleMessage("Farashin Siyarwa"),
+    "saleReq": MessageLookupByLibrary.simpleMessage(
+      "Farashin siyarwa yana da buƙata",
+    ),
     "sales": MessageLookupByLibrary.simpleMessage("Tallace-tallace"),
     "salesBy": MessageLookupByLibrary.simpleMessage("An Sayar Ta Hanyar:"),
     "salesDetails": MessageLookupByLibrary.simpleMessage(
@@ -693,8 +820,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "salesReport": MessageLookupByLibrary.simpleMessage("Rahoto Siyarwa"),
     "save": MessageLookupByLibrary.simpleMessage("Ajiye"),
     "saveNPublish": MessageLookupByLibrary.simpleMessage("Ajiye kuma Buga"),
+    "saveSetting": MessageLookupByLibrary.simpleMessage("Ajiye Saituna"),
+    "saveVariant": MessageLookupByLibrary.simpleMessage(
+      "Ajiye Nau\'in Samfuri",
+    ),
+    "scanCode": MessageLookupByLibrary.simpleMessage(
+      "Duba Lambar QR na Samfuri",
+    ),
     "search": MessageLookupByLibrary.simpleMessage("Nemo"),
     "searchH": MessageLookupByLibrary.simpleMessage("Nemo A Nan..."),
+    "searchWith": MessageLookupByLibrary.simpleMessage("Bincike..."),
     "seeAllPromoCode": MessageLookupByLibrary.simpleMessage(
       "Duba Duk Kudin Rahusa",
     ),
@@ -705,13 +840,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Zaɓi Kategoriyar Kasuwanci",
     ),
     "selectCategory": MessageLookupByLibrary.simpleMessage("Zaɓi Kategori"),
+    "selectCustomer": MessageLookupByLibrary.simpleMessage(
+      "Zaɓi Abokin Ciniki",
+    ),
+    "selectDate": MessageLookupByLibrary.simpleMessage("Zaɓi Ranar"),
+    "selectFDate": MessageLookupByLibrary.simpleMessage("Zaɓi Ranar Farko"),
     "selectLang": MessageLookupByLibrary.simpleMessage("Zaɓi Yarenku"),
+    "selectModel": MessageLookupByLibrary.simpleMessage("Zaɓi Samfurin"),
+    "selectOne": MessageLookupByLibrary.simpleMessage("Zaɓi Ɗaya"),
     "selectProductCategory": MessageLookupByLibrary.simpleMessage(
       "Zaɓi Kategoriyar Samfur",
     ),
     "selectProductUnit": MessageLookupByLibrary.simpleMessage(
       "Zaɓi Unit ɗin Samfur",
     ),
+    "selectTax": MessageLookupByLibrary.simpleMessage("Zaɓi Haraji"),
+    "selectToDate": MessageLookupByLibrary.simpleMessage("Zaɓi Ranar Ƙarshe"),
     "selectVariations": MessageLookupByLibrary.simpleMessage(
       "Zaɓi bambance-bambance:",
     ),
@@ -737,6 +881,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "setUpProfile": MessageLookupByLibrary.simpleMessage("Saita Bayananku"),
     "setting": MessageLookupByLibrary.simpleMessage("Saituna"),
     "share": MessageLookupByLibrary.simpleMessage("Raba"),
+    "shippingAddress": MessageLookupByLibrary.simpleMessage(
+      "Adireshin Jirgin Kaya",
+    ),
     "shopOpeningBalance": MessageLookupByLibrary.simpleMessage(
       "Tace Farkon Shago",
     ),
@@ -745,9 +892,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "signIn": MessageLookupByLibrary.simpleMessage("Shiga Ciki"),
     "signUp": MessageLookupByLibrary.simpleMessage("Yi Rajista"),
+    "single": MessageLookupByLibrary.simpleMessage("Ɗaya"),
     "size": MessageLookupByLibrary.simpleMessage("Girman"),
     "skip": MessageLookupByLibrary.simpleMessage("Tsallake"),
     "skipTheUpdate": MessageLookupByLibrary.simpleMessage("Tsallake sabuntawa"),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU / Lamba"),
     "sl": MessageLookupByLibrary.simpleMessage("SL"),
     "smartWatch": MessageLookupByLibrary.simpleMessage("Agogon Smart"),
     "socialMarketing": MessageLookupByLibrary.simpleMessage(
@@ -757,6 +906,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "staffLogin": MessageLookupByLibrary.simpleMessage("Shiga Ma\'aikata"),
     "startDate": MessageLookupByLibrary.simpleMessage("Ranar Farko"),
     "startNewSale": MessageLookupByLibrary.simpleMessage("Fara Sabon Siyarwa"),
+    "state": MessageLookupByLibrary.simpleMessage("Jihar"),
+    "stateName": MessageLookupByLibrary.simpleMessage("Sunan Jihar"),
     "stillUnpaid": MessageLookupByLibrary.simpleMessage(
       "Har Yanzu Ba\'a Biya Ba",
     ),
@@ -764,6 +915,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "stockList": MessageLookupByLibrary.simpleMessage("Jerin Kaya"),
     "stockReport": MessageLookupByLibrary.simpleMessage("Rahoto Kaya"),
     "stockValue": MessageLookupByLibrary.simpleMessage("Darajar Kaya"),
+    "stockWarn": MessageLookupByLibrary.simpleMessage(
+      "Jari Ya Kamata Ya Kasance Aƙalla 1",
+    ),
     "stocks": MessageLookupByLibrary.simpleMessage("Kaya: "),
     "subTotal": MessageLookupByLibrary.simpleMessage("Jimlar Kasa"),
     "submit": MessageLookupByLibrary.simpleMessage("Aika"),
@@ -779,6 +933,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "supplierName": MessageLookupByLibrary.simpleMessage(
       "Sunan Mai Ba Da Kayan",
     ),
+    "taxType": MessageLookupByLibrary.simpleMessage("Nau\'in Haraji"),
     "thakYouForYourPurchase": MessageLookupByLibrary.simpleMessage(
       "Na gode da siyan ku",
     ),
@@ -811,10 +966,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "totalSales": MessageLookupByLibrary.simpleMessage("Jimlar Siyarwa"),
     "totalVat": MessageLookupByLibrary.simpleMessage("Jimlar VAT"),
     "totall": MessageLookupByLibrary.simpleMessage("Jimla:"),
+    "tranSacOver": MessageLookupByLibrary.simpleMessage("Binciken Ma\'amala"),
     "transactions": MessageLookupByLibrary.simpleMessage("Mu\'amala"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Ƙara Koyi"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "type": MessageLookupByLibrary.simpleMessage("Irin"),
+    "typeSelect": MessageLookupByLibrary.simpleMessage("Zaɓi Nau\'in"),
     "unPaid": MessageLookupByLibrary.simpleMessage("Ba\'a Biya Ba"),
     "unitName": MessageLookupByLibrary.simpleMessage("Sunan Unit"),
     "unitPirce": MessageLookupByLibrary.simpleMessage("Farashin Unit"),
@@ -827,9 +984,27 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "update": MessageLookupByLibrary.simpleMessage("Sabunta"),
     "updateContact": MessageLookupByLibrary.simpleMessage("Sabunta Lamba"),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "An Gaza Sabunta Jari",
+    ),
     "updateNow": MessageLookupByLibrary.simpleMessage("Sabunta Yanzu"),
+    "updatePartyWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba Ku Da Izinin Sabunta Jam\'iyya.",
+    ),
     "updateProduct": MessageLookupByLibrary.simpleMessage("Sabunta Samfur"),
+    "updateProductSuccess": MessageLookupByLibrary.simpleMessage(
+      "Samfurin An Sabunta Cikin Nasara!",
+    ),
+    "updateProductWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin sabunta Samfuri.",
+    ),
     "updateProfile": MessageLookupByLibrary.simpleMessage("Sabunta Bayananku"),
+    "updateSaleWarn": MessageLookupByLibrary.simpleMessage(
+      "Ba ku da izinin sabunta siyarwa.",
+    ),
+    "updateSuccess": MessageLookupByLibrary.simpleMessage(
+      "An Sabunta Cikin Nasara",
+    ),
     "updateYourProfile": MessageLookupByLibrary.simpleMessage(
       "Sabunta bayanan ku don haɗa abokin cinikinku tare da mafi kyawun ra\'ayi",
     ),
@@ -838,6 +1013,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updating": MessageLookupByLibrary.simpleMessage("Ana Sabunta..."),
     "upgradeNow": MessageLookupByLibrary.simpleMessage("Sabunta Yanzu"),
+    "upload": MessageLookupByLibrary.simpleMessage("Loda"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Loda Hoto"),
+    "useGallery": MessageLookupByLibrary.simpleMessage(
+      "Yi Amfani da Gidan Hoto",
+    ),
     "useTitleCanNotBeEmpty": MessageLookupByLibrary.simpleMessage(
       "Sunan mai amfani ba zai iya zama komai ba",
     ),
@@ -846,6 +1026,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cikakken Bayanin Rawar Mai Amfani",
     ),
     "userTitle": MessageLookupByLibrary.simpleMessage("Sunan Mai Amfani"),
+    "variantAdded": MessageLookupByLibrary.simpleMessage(
+      "Nau\'in Samfuri An Ƙara Cikin Nasara!",
+    ),
+    "variantDelete": MessageLookupByLibrary.simpleMessage(
+      "Nau\'in Samfuri An Goge Cikin Nasara!",
+    ),
     "vat": MessageLookupByLibrary.simpleMessage("VAT"),
     "verification": MessageLookupByLibrary.simpleMessage("Tabbatarwa"),
     "verify": MessageLookupByLibrary.simpleMessage("Tabbatar"),
@@ -853,6 +1039,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tabbatar da Imel ɗinku",
     ),
     "verityEmail": MessageLookupByLibrary.simpleMessage("Tabbatar da Imel"),
+    "view": MessageLookupByLibrary.simpleMessage("Duba Cikakkun Bayanan"),
     "viewAll": MessageLookupByLibrary.simpleMessage("Duba Duk"),
     "walkInCustomer": MessageLookupByLibrary.simpleMessage(
       "Abokin Ciniki Mai Shiga",
@@ -897,5 +1084,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "yourPackageExpiredToday": MessageLookupByLibrary.simpleMessage(
       "Kundin Takarku Zai Kare Yau\n\nDa fatan Za Ku Siya Daga Baya",
     ),
+    "zip": MessageLookupByLibrary.simpleMessage("Lambar Wasiku"),
+    "zipCode": MessageLookupByLibrary.simpleMessage("Shigar da Lambar Wasiku"),
   };
 }

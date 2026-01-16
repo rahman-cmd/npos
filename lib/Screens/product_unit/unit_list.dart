@@ -7,11 +7,13 @@ import 'package:mobile_pos/constant.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../GlobalComponents/check_subscription.dart';
 import '../../GlobalComponents/glonal_popup.dart';
+import '../../http_client/custome_http_client.dart';
+import '../../widgets/empty_widget/_empty_widget.dart';
 import '../Products/Repo/unit_repo.dart';
-import '../Products/Widgets/widgets.dart';
-import '../product_category/category_list_screen.dart';
+import '../../service/check_user_role_permission_provider.dart';
+import '../hrm/widgets/deleteing_alart_dialog.dart';
+import '../product_category/product_category_list_screen.dart';
 import 'add_units.dart';
 
 // ignore: must_be_immutable
@@ -46,7 +48,11 @@ class _UnitListState extends State<UnitList> {
           child: Consumer(builder: (context, ref, __) {
             final unitData = ref.watch(unitsProvider);
             final businessInfo = ref.watch(businessInfoProvider);
+            final permissionService = PermissionService(ref);
             return businessInfo.when(data: (details) {
+              if (!permissionService.hasPermission(Permit.categoriesRead.value)) {
+                return Center(child: PermitDenyWidget());
+              }
               return Column(
                 children: [
                   Padding(
@@ -115,7 +121,16 @@ class _UnitListState extends State<UnitList> {
                                             },
                                       title: data[i].unitName.toString(),
                                       onDelete: () async {
-                                        bool confirmDelete = await showDeleteAlert(context: context, itemsName: 'unit');
+                                        if (!permissionService.hasPermission(Permit.unitsDelete.value)) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text('You do not have permission to delete unit.'),
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        bool confirmDelete = await showDeleteConfirmationDialog(context: context, itemName: 'unit');
                                         if (confirmDelete) {
                                           EasyLoading.show();
                                           if (await UnitsRepo().deleteUnit(context: context, unitId: data[i].id ?? 0, ref: ref)) {

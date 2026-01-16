@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'button_global.dart';
 import '../Screens/subscription/package_screen.dart';
 import '../constant.dart';
 import '../generated/l10n.dart' as lang;
 import '../model/business_info_model.dart';
 
-Widget goToPackagePagePopup({required BuildContext context, required EnrolledPlan? enrolledPlan, bool? navigateBack}) {
+Widget goToPackagePagePopup({required BuildContext context, required EnrolledPlan? enrolledPlan}) {
   return AlertDialog(
     backgroundColor: kWhite,
     surfaceTintColor: kWhite,
@@ -59,9 +58,8 @@ Widget goToPackagePagePopup({required BuildContext context, required EnrolledPla
         const SizedBox(height: 20),
         ElevatedButton(
             child: Text(lang.S.of(context).upgradeNow),
-            //'Upgrade Now',
             onPressed: () {
-              (navigateBack ?? false) ? Navigator.pop(context) : Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageScreen()));
+              Navigator.pop(context);
             }),
         const SizedBox(height: 5),
       ],

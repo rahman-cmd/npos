@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import '../constant.dart';
-import 'internet_connection_notifier.dart'; // Update with the correct path
+import 'internet_connection_notifier.dart';
 
 class GlobalPopup extends ConsumerStatefulWidget {
   final Widget child;
@@ -10,34 +9,18 @@ class GlobalPopup extends ConsumerStatefulWidget {
   const GlobalPopup({super.key, required this.child});
 
   @override
-  _GlobalPopupState createState() => _GlobalPopupState();
+  ConsumerState<GlobalPopup> createState() => _GlobalPopupState();
 }
 
 class _GlobalPopupState extends ConsumerState<GlobalPopup> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> _tryAgain() async {
-    final notifier = ref.read(internetConnectionProvider);
-    await notifier.checkConnection();
-    if (notifier.isConnected) {
-      setState(() {});
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final internetStatus = ref.watch(internetConnectionProvider);
+
     return Stack(
       children: [
         widget.child,
-        if (!ref.watch(internetConnectionProvider).isConnected)
+        if (!internetStatus.isConnected && internetStatus.appLifecycleState == AppLifecycleState.resumed)
           Positioned.fill(
             child: Container(
               padding: const EdgeInsets.all(20),
@@ -53,7 +36,13 @@ class _GlobalPopupState extends ConsumerState<GlobalPopup> {
                       style: TextStyle(color: kTitleColor, fontSize: 24),
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(onPressed: _tryAgain, child: const Text("Try Again")),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final notifier = ref.read(internetConnectionProvider);
+                        await notifier.checkConnection();
+                      },
+                      child: const Text("Try Again"),
+                    ),
                   ],
                 ),
               ),

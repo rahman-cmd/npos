@@ -7,7 +7,8 @@ class SubscriptionPlanModel {
     this.subscriptionPrice,
     this.status,
     this.createdAt,
-    this.updatedAt,});
+    this.updatedAt,
+  });
 
   SubscriptionPlanModel.fromJson(dynamic json) {
     id = json['id'];
@@ -19,6 +20,7 @@ class SubscriptionPlanModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
   num? id;
   String? subscriptionName;
   num? duration;
@@ -40,5 +42,36 @@ class SubscriptionPlanModel {
     map['updated_at'] = updatedAt;
     return map;
   }
+}
 
+class SubscriptionPlanModelNew {
+  final int id;
+  final String subscriptionName;
+  final int duration;
+  final double? offerPrice;
+  final double subscriptionPrice;
+  final int status;
+  final Map<String, dynamic> features;
+
+  SubscriptionPlanModelNew({
+    required this.id,
+    required this.subscriptionName,
+    required this.duration,
+    this.offerPrice,
+    required this.subscriptionPrice,
+    required this.status,
+    required this.features,
+  });
+
+  factory SubscriptionPlanModelNew.fromJson(Map<String, dynamic> json) {
+    return SubscriptionPlanModelNew(
+      id: json['id'],
+      subscriptionName: json['subscriptionName'],
+      duration: json['duration'],
+      offerPrice: json['offerPrice']?.toDouble(),
+      subscriptionPrice: json['subscriptionPrice'].toDouble(),
+      status: json['status'],
+      features: json['features'] is Map ? Map<String, dynamic>.from(json['features']) : {},
+    );
+  }
 }
