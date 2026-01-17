@@ -311,7 +311,7 @@ class AddSalesScreenState extends ConsumerState<AddAndUpdatePurchaseScreen> {
                               initiallyExpanded: true,
                               collapsedBackgroundColor: kMainColor2,
                               backgroundColor: kMainColor2,
-                              shape: RoundedRectangleBorder(
+                                                            shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 side: BorderSide(
                                   color: kLineColor,

@@ -1,10 +1,3 @@
-num? _parseNum(dynamic value) {
-  if (value == null) return null;
-  if (value is num) return value;
-  if (value is String) return num.tryParse(value);
-  return null;
-}
-
 class LossProfitModel {
   final List<IncomeSummaryModel>? incomeSummary;
   final List<ExpenseSummaryModel>? expenseSummary;
@@ -36,13 +29,13 @@ class LossProfitModel {
       expenseSummary: json["mergedExpenseData"] == null
           ? []
           : List<ExpenseSummaryModel>.from(json["mergedExpenseData"]!.map((x) => ExpenseSummaryModel.fromJson(x))),
-      grossSalProfit: _parseNum(json["grossSaleProfit"]),
-      grossIncomeProfit: _parseNum(json['grossIncomeProfit']),
-      totalExpenses: _parseNum(json['totalExpenses']),
-      netProfit: _parseNum(json['netProfit']),
-      cartGrossProfit: _parseNum(json['cardGrossProfit']),
-      totalCardExpense: _parseNum(json['totalCardExpenses']),
-      cardNetProfit: _parseNum(json['cardNetProfit']),
+      grossSalProfit: json["grossSaleProfit"],
+      grossIncomeProfit: json['grossIncomeProfit'],
+      totalExpenses: json['totalExpenses'],
+      netProfit: json['netProfit'],
+      cartGrossProfit: json['cardGrossProfit'],
+      totalCardExpense: json['totalCardExpenses'],
+      cardNetProfit: json['cardNetProfit'],
     );
   }
 }
@@ -58,7 +51,7 @@ class IncomeSummaryModel {
     return IncomeSummaryModel(
       type: json["type"],
       date: json["date"],
-      totalIncome: _parseNum(json["total_incomes"]),
+      totalIncome: json["total_incomes"],
     );
   }
 }
@@ -74,7 +67,7 @@ class ExpenseSummaryModel {
     return ExpenseSummaryModel(
       type: json["type"],
       date: json["date"],
-      totalExpense: _parseNum(json["total_expenses"]),
+      totalExpense: json["total_expenses"],
     );
   }
 }

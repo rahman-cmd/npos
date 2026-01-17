@@ -55,21 +55,21 @@ class SalesTransactionModel {
   });
 
   SalesTransactionModel.fromJson(dynamic json) {
-    id = num.tryParse(json['id'].toString());
-    businessId = num.tryParse(json['business_id'].toString());
+    id = json['id'];
+    businessId = json['business_id'];
     partyId = num.tryParse(json['party_id'].toString()) ?? 0;
-    userId = num.tryParse(json['user_id'].toString());
-    discountAmount = num.tryParse(json['discountAmount'].toString());
+    userId = json['user_id'];
+    discountAmount = json['discountAmount'];
     discountPercent = num.tryParse(json['discount_percent'].toString()) ?? 0;
     shippingCharge = num.tryParse(json['shipping_charge'].toString()) ?? 0;
-    dueAmount = num.tryParse(json['dueAmount'].toString());
+    dueAmount = json['dueAmount'];
     isPaid = json['isPaid'];
-    vatAmount = num.tryParse(json['vat_amount'].toString());
-    vatPercent = num.tryParse(json['vat_percent'].toString());
-    vatId = num.tryParse(json['vat_id'].toString());
-    paidAmount = num.tryParse(json['paidAmount'].toString());
-    changeAmount = num.tryParse(json['change_amount'].toString());
-    totalAmount = num.tryParse(json['totalAmount'].toString());
+    vatAmount = json['vat_amount'];
+    vatPercent = json['vat_percent'];
+    vatId = json['vat_id'];
+    paidAmount = json['paidAmount'];
+    changeAmount = json['change_amount'];
+    totalAmount = json['totalAmount'];
     paymentTypeId = int.tryParse(json['payment_type_id'].toString()) ?? 0;
     discountType = json['discount_type'];
     invoiceNumber = json['invoiceNumber'];
@@ -79,7 +79,7 @@ class SalesTransactionModel {
     roundingOption = json['rounding_option'].toString();
     roundingAmount = num.tryParse(json['rounding_amount'].toString()) ?? 0;
     actualTotalAmount = num.tryParse(json['actual_total_amount'].toString()) ?? 0;
-    detailsSumLossProfit = num.tryParse(json['lossProfit'].toString());
+    detailsSumLossProfit = json['lossProfit'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     vat = json['vat'] != null ? SalesVat.fromJson(json['vat']) : null;
     paymentType = json['payment_type'] != null ? PaymentType.fromJson(json['payment_type']) : null;
@@ -187,17 +187,17 @@ class SalesDetails {
   });
 
   SalesDetails.fromJson(dynamic json) {
-    id = num.tryParse(json['id'].toString());
-    saleId = num.tryParse(json['sale_id'].toString());
-    productId = num.tryParse(json['product_id'].toString());
-    price = num.tryParse(json['price'].toString());
-    discount = num.tryParse(json['discount'].toString()); // NEW
-    lossProfit = num.tryParse(json['lossProfit'].toString());
-    quantities = num.tryParse(json['quantities'].toString());
-    productPurchasePrice = num.tryParse(json['productPurchasePrice'].toString());
+    id = json['id'];
+    saleId = json['sale_id'];
+    productId = json['product_id'];
+    price = json['price'];
+    discount = json['discount']; // NEW
+    lossProfit = json['lossProfit'];
+    quantities = json['quantities'];
+    productPurchasePrice = json['productPurchasePrice'];
     mfgDate = json['mfg_date'];
     expireDate = json['expire_date'];
-    stockId = num.tryParse(json['stock_id'].toString());
+    stockId = json['stock_id'];
 
     // NEW: Warranty Info parsing
     warrantyInfo = json['warranty_guarantee_info'] != null
@@ -413,9 +413,9 @@ class SalesReturn {
   });
 
   SalesReturn.fromJson(dynamic json) {
-    id = num.tryParse(json['id'].toString());
-    businessId = num.tryParse(json['business_id'].toString());
-    saleId = num.tryParse(json['sale_id'].toString());
+    id = json['id'];
+    businessId = json['business_id'];
+    saleId = json['sale_id'];
     invoiceNo = json['invoice_no'];
     returnDate = json['return_date'];
     createdAt = json['created_at'];
@@ -464,12 +464,12 @@ class SalesReturnDetails {
   });
 
   SalesReturnDetails.fromJson(dynamic json) {
-    id = num.tryParse(json['id'].toString());
-    businessId = num.tryParse(json['business_id'].toString());
-    saleReturnId = num.tryParse(json['sale_return_id'].toString());
-    saleDetailId = num.tryParse(json['sale_detail_id'].toString());
-    returnAmount = num.tryParse(json['return_amount'].toString());
-    returnQty = num.tryParse(json['return_qty'].toString());
+    id = json['id'];
+    businessId = json['business_id'];
+    saleReturnId = json['sale_return_id'];
+    saleDetailId = json['sale_detail_id'];
+    returnAmount = json['return_amount'];
+    returnQty = json['return_qty'];
   }
 
   num? id;

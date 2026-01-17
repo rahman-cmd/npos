@@ -4,23 +4,6 @@ import 'package:mobile_pos/Screens/product%20racks/model/product_racks_model.dar
 import 'package:mobile_pos/Screens/shelfs/model/shelf_list_model.dart';
 import 'package:mobile_pos/Screens/warehouse/warehouse_model/warehouse_list_model.dart';
 
-num? _parseNum(dynamic value) {
-  if (value == null) return null;
-  if (value is num) return value;
-  if (value is String) {
-    // Try to parse as number, handling empty strings and whitespace
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return null;
-    return num.tryParse(trimmed);
-  }
-  // If it's not null, num, or String, try to convert to string first
-  try {
-    return num.tryParse(value.toString());
-  } catch (e) {
-    return null;
-  }
-}
-
 class Vat {
   final int? id;
   final num? rate; // Changed to num
@@ -30,7 +13,7 @@ class Vat {
   factory Vat.fromJson(Map<String, dynamic> json) {
     return Vat(
       id: json['id'],
-      rate: _parseNum(json['rate']),
+      rate: json['rate'],
     );
   }
 }
@@ -173,12 +156,12 @@ class Stock {
       warehouseId: json['warehouse_id'],
       productId: json['product_id'],
       batchNo: json['batch_no'],
-      productStock: _parseNum(json['productStock']),
-      productPurchasePrice: _parseNum(json['productPurchasePrice']),
-      profitPercent: _parseNum(json['profit_percent']),
-      productSalePrice: _parseNum(json['productSalePrice']),
-      productWholeSalePrice: _parseNum(json['productWholeSalePrice']),
-      productDealerPrice: _parseNum(json['productDealerPrice']),
+      productStock: json['productStock'],
+      productPurchasePrice: json['productPurchasePrice'],
+      profitPercent: json['profit_percent'],
+      productSalePrice: json['productSalePrice'],
+      productWholeSalePrice: json['productWholeSalePrice'],
+      productDealerPrice: json['productDealerPrice'],
       serialNumbers: json['serial_numbers'],
       variationData: (json['variation_data'] as List?)?.cast<Map<String, dynamic>>(),
       variantName: json['variant_name'],
@@ -216,8 +199,8 @@ class ComboProductComponent {
       id: json['id'],
       productId: json['product_id'],
       stockId: json['stock_id'],
-      purchasePrice: _parseNum(json['purchase_price']),
-      quantity: _parseNum(json['quantity']),
+      purchasePrice: json['purchase_price'],
+      quantity: json['quantity'],
       stock: json['stock'] != null ? Stock.fromJson(json['stock']) : null,
     );
   }
@@ -353,20 +336,20 @@ class Product {
           : null,
       variationIds: (json['variation_ids'] as List?)?.cast<String>(),
       productPicture: json['productPicture'],
-      totalLossProfit: _parseNum(json['total_profit_loss']),
+      totalLossProfit: json['total_profit_loss'],
       productType: json['product_type'],
-      productDealerPrice: _parseNum(json['productDealerPrice']),
-      totalSaleAmount: _parseNum(json['total_sale_amount']),
-      saleCount: _parseNum(json['sale_details_sum_quantities']),
-      purchaseCount: _parseNum(json['purchase_details_sum_quantities']),
-      productPurchasePrice: _parseNum(json['productPurchasePrice']),
-      productSalePrice: _parseNum(json['productSalePrice']),
-      productWholeSalePrice: _parseNum(json['productWholeSalePrice']),
-      productStock: _parseNum(json['productStock']),
+      productDealerPrice: json['productDealerPrice'],
+      totalSaleAmount: json['total_sale_amount'],
+      saleCount: json['sale_details_sum_quantities'],
+      purchaseCount: json['purchase_details_sum_quantities'],
+      productPurchasePrice: json['productPurchasePrice'],
+      productSalePrice: json['productSalePrice'],
+      productWholeSalePrice: json['productWholeSalePrice'],
+      productStock: json['productStock'],
       expireDate: json['expire_date'],
-      alertQty: _parseNum(json['alert_qty']),
-      profitPercent: _parseNum(json['profit_percent']),
-      vatAmount: _parseNum(json['vat_amount']),
+      alertQty: json['alert_qty'],
+      profitPercent: json['profit_percent'],
+      vatAmount: json['vat_amount'],
       vatType: json['vat_type'],
       size: json['size'],
       type: json['type'],
@@ -380,7 +363,7 @@ class Product {
       vatId: json['vat_id'],
       modelId: json['model_id'],
       warehouseId: json['warehouse_id'],
-      stocksSumProductStock: _parseNum(json['stocks_sum_product_stock']),
+      stocksSumProductStock: json['stocks_sum_product_stock'],
 
       // Nested Relationships
       unit: json['unit'] != null ? Unit.fromJson(json['unit']) : null,

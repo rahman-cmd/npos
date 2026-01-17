@@ -136,7 +136,7 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
     final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
-        backgroundColor: kMainColor,
+        backgroundColor: kWhite,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

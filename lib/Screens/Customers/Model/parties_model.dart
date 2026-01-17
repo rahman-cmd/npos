@@ -27,30 +27,30 @@ class Party {
   });
 
   Party.fromJson(dynamic json) {
-    id = num.tryParse(json['id'].toString());
+    id = json['id'];
     name = json['name'];
-    businessId = num.tryParse(json['business_id'].toString());
+    businessId = json['business_id'];
     email = json['email'];
     type = json['type'];
     phone = json['phone'];
-    branchId = num.tryParse(json['branch_id'].toString());
-    due = num.tryParse(json['due'].toString());
-    saleCount = num.tryParse(json['sales_count'].toString());
-    purchaseCount = num.tryParse(json['purchases_count'].toString());
-    totalSaleAmount = num.tryParse(json['total_sale_amount'].toString());
-    totalSalePaid = num.tryParse(json['total_sale_paid'].toString());
-    totalPurchaseAmount = num.tryParse(json['total_purchase_amount'].toString());
-    totalPurchasePaid = num.tryParse(json['total_purchase_paid'].toString());
-    totalSaleProfit = num.tryParse(json['total_sale_profit'].toString());
-    totalSaleLoss = num.tryParse(json['total_sale_loss'].toString());
+    branchId = json['branch_id'];
+    due = json['due'];
+    saleCount = json['sales_count'];
+    purchaseCount = json['purchases_count'];
+    totalSaleAmount = json['total_sale_amount'];
+    totalSalePaid = json['total_sale_paid'];
+    totalPurchaseAmount = json['total_purchase_amount'];
+    totalPurchasePaid = json['total_purchase_paid'];
+    totalSaleProfit = json['total_sale_profit'];
+    totalSaleLoss = json['total_sale_loss'];
     openingBalanceType = json['opening_balance_type'];
-    openingBalance = num.tryParse(json['opening_balance'].toString());
-    wallet = num.tryParse(json['wallet'].toString());
-    loyaltyPoints = num.tryParse(json['loyalty_points'].toString());
-    creditLimit = num.tryParse(json['credit_limit'].toString());
+    openingBalance = json['opening_balance'];
+    wallet = json['wallet'];
+    loyaltyPoints = json['loyalty_points'];
+    creditLimit = json['credit_limit'];
     address = json['address'];
     image = json['image'];
-    status = num.tryParse(json['status'].toString());
+    status = json['status'];
     meta = json['meta'];
     shippingAddress = json['shipping_address'] != null ? ShippingAddress.fromJson(json['shipping_address']) : null;
     if (json['sales'] != null) {
